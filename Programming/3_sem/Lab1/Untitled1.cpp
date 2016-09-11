@@ -6,6 +6,7 @@ const int N=5;
 main(){
    int i,j;
    int* *E;
+   printf("\n***********TASK1***********\n");
    E=new int*[N];
    for (i=0; i<N; i++) E[i]= new int[N];
    for (i=0; i<N; i++) {
@@ -15,25 +16,31 @@ main(){
        }
        printf("\n");
    }
-   printf("\n***********ISH***********\n");
+   printf("\n*************A*************\n");
    int *A = new int [N*N];
    int a = 0;
-   for (i=0; i<N; i++) {
-       for (j=N-i; j<N; j++, a++) { 
-           A[a] = E[i][j];
-           printf("%3d",A[a]); 
+   for (i=N-1; i>=-1*N; i--) {
+       for (j=0; j<N; j++) {
+           if (i+j<N && i+j>=0) {
+               A[a] = E[j][i+j];
+               printf("%3d",A[a]);
+               a++;
+           }
        }
    }
-   printf("\n***********A***********\n");
+   printf("\n*************B*************\n");
    int *B = new int [N*N];
    int b = 0;
-   for (i=0; i<N; i++) {
-       for (j=i; j>=0; j--, b++) { 
-           B[b] = E[i][j];
-           printf("%3d",B[b]); 
+   for (i=0; i<2*N; i++) {
+       for (j=N-1; j>=0; j--) { 
+           if (i-j<N && i-j>=0) {
+               B[b] = E[i-j][j];
+               printf("%3d",B[b]); 
+               b++;
+           }
        }
    }
-   printf("\n************B**********\n");
+   printf("\n*************C*************\n");
    int *C = new int [N*N];
    int c = 0; 
    i = j = (N-1)/2;
@@ -52,7 +59,7 @@ main(){
              printf("%3d",C[c]); 
        }
    }
-   printf("\n***********C***********\n");
+   printf("\n*************D*************\n");
    int *D = new int [N*N];
    int d = 0; 
    i = j = 0;
@@ -71,19 +78,20 @@ main(){
              printf("%3d",D[d]); 
        }
    }
-   printf("\n***********D***********\n");
+   printf("\n***********TASK2***********\n");
    int* *G;
    int g1 = rand()%10+1;
-   int g2 = rand()%10+1;
+   int g2;
    G=new int*[g1];
-   for (i=0; i<g1; i++) G[i]= new int[g2];
-   /*for (i=0; i<g1; i++) {
-       for (j=0; j<i; j++) { 
-           B[i][j]=i*(j+1);
-           printf("%3d",B[i][j]); 
+   for (i=0; i<g1; i++){
+       g2 = rand()%10+1;
+       G[i]= new int[g2];
+       for (j=0; j<g2; j++) { 
+           G[i][j]=i*(j+1);
+           printf("%3d",G[i][j]); 
        }
        printf("\n");
-   }*/
+   }
    system("Pause");
    return 0;
 }
