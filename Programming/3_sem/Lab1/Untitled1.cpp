@@ -45,18 +45,25 @@ main(){
    int c = 0; 
    i = j = (N-1)/2;
    int logI=-1, logJ=-1, q;
-   for (int step=1; step<N; step++){
+   for (int step=1; step<=N; step++){
        logI = logI*(-1); 
        logJ = logJ*(-1);
-       for(q = 0; q < step; q++, c++){
-             C[c]=E[i][j];
-             i += logI;
-             printf("%3d",C[c]); 
+       for(q = 0; q < step; q++, c++){ 
+                 C[c]=E[i][j];
+                 i += logI;
+                 printf("%3d",C[c]); 
+                 if ((i >= N) || (i < 0))
+                    i -= logI;
        }
-       for(q = 0; q < step; q++, c++){
-             C[c]=E[i][j];
-             j += logJ;
-             printf("%3d",C[c]); 
+       if (step != N){
+           for(q = 0; q < step; q++, c++){
+                      if ((j >= N) || (j < 0))
+                          j -= logJ;
+                       C[c]=E[i][j];
+                       j += logJ;
+                       printf("%3d",C[c]);
+                       
+           }
        }
    }
    printf("\n*************D*************\n");
@@ -64,15 +71,26 @@ main(){
    int d = 0; 
    i = j = 0;
    logI=-1; logJ=-1;
-   for (int step=N-1; step>=0; step--){
+   for (int step=N; step>=0; step--){
        logI = logI*(-1); 
        logJ = logJ*(-1);
-       for(q = 0; q < step; q++, d++){
+       for(q = 0; q < (step-1); q++, d++){
              D[d]=E[i][j];
              i += logI;
              printf("%3d",D[d]); 
+             if ((i >= N) || (i < 0))
+             i -= logI;
        }
-       for(q = 0; q < step; q++, d++){
+       if (step <= N-1) {
+             D[d]=E[i][j];
+             i += logI;
+             printf("%3d",D[d]);
+             if ((i >= N) || (i < 0))
+                    i -= logI; 
+             }
+       for(q = 0; q < (step-1); q++, d++){
+             if ((j >= N) || (j < 0))
+                 j -= logJ;;
              D[d]=E[i][j];
              j += logJ;
              printf("%3d",D[d]); 
