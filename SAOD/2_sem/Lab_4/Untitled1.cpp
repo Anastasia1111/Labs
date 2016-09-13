@@ -22,7 +22,7 @@ struct tree{
 void print_struct (tree *m){	
 	if ( !m ) return;
 	print_struct (m->l);
-	printf("%3d ",m->data);
+	printf("%4d",m->data);
 	CS += m->data;
 	print_struct (m->r);
 }
@@ -83,7 +83,7 @@ void RLTurn (tree *&p){
 
 void AVLTrMaking (int data, tree *&p){
        Rost = true;
-       if (p == NULL){    
+       if (p == NULL){   
             p = new tree;
             p->data = data;
             p->l = p->r = NULL;
@@ -274,11 +274,11 @@ main(){
     int n = 10;
     int key;
     int *A = new int [n];
-    tree *h;
+    tree *h = NULL;
     tree *see = NULL;
     int i,j;
     
-    puts("\n\n**********************  LAB 2  ***************************");
+    puts("\n\n**********************  LAB 4  ***************************");
     
     puts("\n");
     printf("\nInput array: \n");
@@ -292,6 +292,7 @@ main(){
         else printf("%4d",A[i]);
     }
 	printf("\nCS - %d", CS);
+	
     CS = H = S = MIDH = BR = 0; 
     CHH = 1;
     for(i = 0; i < n; i++){
@@ -299,13 +300,20 @@ main(){
     }
     printf("\nTree was maden! \n");
     print_struct (h);
-    printf("\nSDP: CS - %d, HEIGHT - %d, SIZE - %d, MIDDLEH - %d", CS, H, S, (MIDH/BR)+2);
+    printf("\nSDP: CS - %d, ", CS);
+    printf("HEIGHT - %d, ", H);
+    printf("SIZE - %d, ", S);
+    //printf("MIDDLEH - %d", (MIDH/BR)+2);
     graph(h);
+    
     bool check = define_tree(h);
     if (check)
         printf("\n It's a search tree!");
     else
         printf("\n It's not a search tree!");
+        
+    printf("\nEnter the key:");
+    scanf ( "%d", &key );
     see = t_search(h,key);
     if (see) {
     	printf("\nElement was found! %d", see->data);
@@ -319,6 +327,7 @@ main(){
         print_struct (h);
         graph(h);
     }*/
+    
     ClearTree (h);
     h = NULL;
     free (A);  
