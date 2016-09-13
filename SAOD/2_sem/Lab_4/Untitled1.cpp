@@ -7,7 +7,9 @@
 int H;
 int CHH;
 int CS;
+int S;
 int MIDH;
+int BR;
 bool Rost;
 
 struct tree{
@@ -25,6 +27,60 @@ void print_struct (tree *m){
 	print_struct (m->r);
 }
 
+void LLTurn (tree *&p){
+     tree* q = p->l;
+     p->bal = 0;
+     q->bal = 0;
+     p->l = q->r;
+     q->r = p;
+     p = q;
+}
+
+void RRTurn (tree *&p){
+     tree* q = p->r;
+     p->bal = 0;
+     q->bal = 0;
+     p->r = q->l;
+     q->l = p;
+     p = q;
+}
+
+void LRTurn (tree *&p){
+     tree* q = p->l;
+     tree* r = q->r;
+     if (r->bal < 0)
+        p->bal = 1;
+     else
+        p->bal = 0;
+     if (r->bal > 0)
+        q->bal = -1;
+     else
+        q->bal = 0;
+     q->r = r->l;
+     p->l = r->r;
+     r->l = q;
+     r->r = p;
+     p = r;
+}
+
+void RLTurn (tree *&p){
+     tree* q = p->r;
+     tree* r = q->l;
+     if (r->bal > 0)
+        p->bal = -1;
+     else
+        p->bal = 0;
+     if (r->bal < 0)
+        q->bal = 1;
+     else
+        q->bal = 0;
+     p->r = r->l;
+     q->l = r->r;
+     r->l = p;
+     r->r = q;
+     p = r;
+}
+
 void AVLTrMaking (int data, tree *&p){
        Rost = true;
        if (p == NULL){    
@@ -33,6 +89,7 @@ void AVLTrMaking (int data, tree *&p){
             p->l = p->r = NULL;
             p->bal = 0;
             Rost = true;
+            S++;
             MIDH += CHH;
             if (CHH > H)
                 H = CHH;
@@ -41,6 +98,7 @@ void AVLTrMaking (int data, tree *&p){
         else {
             if (p->data > data) {
                AVLTrMaking (data, p->l);
+               CHH++;
                if (Rost) {
                   if (p->bal > 0) {
                      p->bal = 0;
@@ -63,6 +121,7 @@ void AVLTrMaking (int data, tree *&p){
             } else {
                 if(p->data < data) {
                    AVLTrMaking (data, p->r);
+                   CHH++;
                    if (Rost) {
                       if (p->bal < 0) {
                          p->bal = 0;
@@ -82,6 +141,11 @@ void AVLTrMaking (int data, tree *&p){
                          }
                       }
                    }
+                } else {
+                  if (p->data == data) {
+                     CHH = 1;
+                     return;
+                  }
                 }
             }
         }
@@ -155,7 +219,7 @@ void graph(tree *head){
     closegraph();
 }
 
-void delete_vertex(tree *&head, int data){
+/*void delete_vertex(tree *&head, int data){
      tree* q, *r, *s;
      tree** p = &head;
      while (*p != NULL) {
@@ -188,7 +252,7 @@ void delete_vertex(tree *&head, int data){
             delete q;
             q = NULL;
      }
-}
+}*/
 
 bool define_tree(tree* head){
      tree* p = head;
@@ -228,10 +292,10 @@ main(){
         else printf("%4d",A[i]);
     }
 	printf("\nCS - %d", CS);
-    CS = H = MIDH = 0; 
+    CS = H = S = MIDH = BR = 0; 
     CHH = 1;
     for(i = 0; i < n; i++){
-        RandTrMakingTwice (A[i], h);
+        AVLTrMaking (A[i], h);
     }
     printf("\nTree was maden! \n");
     print_struct (h);
@@ -242,34 +306,19 @@ main(){
         printf("\n It's a search tree!");
     else
         printf("\n It's not a search tree!");
-    ClearTree (h);
-    h = NULL;
-    
-    puts("\n\n*************************************************");
-    
-    puts("\n");
-    CS = H = S = MIDH = BR = 0; 
-    CHH = 1;
-    for(i = 0; i < n; i++){
-        RandTrMaking (A[i], h);
-    }
-    printf("\nTree was maden! \n");
-    print_struct (h);
-    printf("\nSDP: CS - %d, HEIGHT - %d, SIZE - %d, MIDDLEH - %d", CS, H, S, (MIDH/BR)+2);
-    graph(h);
-    /*see = t_search(h,key);
+    see = t_search(h,key);
     if (see) {
     	printf("\nElement was found! %d", see->data);
     } else {
     	printf("\nElement wasn't found!");
-    }*/
-    while (h) {
-          printf("\nEnter the key:");
-          scanf ( "%d", &key );
+    }
+    /*while (h) {
+        printf("\nEnter the key:");
+        scanf ( "%d", &key );
         delete_vertex(h,key);
         print_struct (h);
         graph(h);
-    }
+    }*/
     ClearTree (h);
     h = NULL;
     free (A);  
