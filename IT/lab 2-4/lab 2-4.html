@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<HTML><HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=Windows-1251">
+<TITLE>Лабораторная 2-4</TITLE>
+</HEAD> 
+
+<BODY BGCOLOR="white" 
+ TEXT="black" LINK="blue" ALINK="red" VLINK="green">
+ <script>
+ var delay = 60;
+ var idTimer;
+ function a  (Image) {
+	Image.width += 3;
+	Image.height += 5;
+ }
+ 
+ function b (Image) {
+		Image.width -= 3;
+		Image.height -= 5;
+ }
+ </script>
+ <a href = "#"
+ onMouseOver = "clearInterval(idTimer);
+ idTimer = setInterval('a (myImage)', delay)"
+ onMouseOut = "clearInterval(idTimer);
+	idTimer = setInterval('b (myImage)', delay)" >
+<img src="ris.bmp" name="myImage" width = 300 height = 500></a>
+
+
+</BODY>
+</HTML>
+
