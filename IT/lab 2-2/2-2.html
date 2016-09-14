@@ -1,0 +1,52 @@
+﻿<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<HTML><HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset="utf-8">
+<TITLE>Лабораторная 2-1</TITLE>
+</HEAD> 
+
+<BODY BGCOLOR="white" 
+ TEXT="black" LINK="blue" ALINK="red" VLINK="green">
+
+<img name="img_ani" src="s1.gif" onLoad="idTimer = setTimeout('animation()', delay)">
+
+<FORM name="form1">
+    <input type="button" value="Быстрее" onClick="faster()">
+</FORM>
+
+<FORM name="form2">
+    <input type="button" value="Медленнее" onClick="slower()">
+</FORM>
+
+<FORM name="form3">
+    <input type="button" value="Стоп" onClick="clearTimeout(idTimer)">
+</FORM>
+
+<FORM name="form4">
+    <input type="button" value="Старт" onClick="idTimer = setTimeout('animation()', delay)">
+</FORM>
+
+
+<script language="JavaScript">
+var delay = 100, x = 1;
+var idTimer;
+function animation() 
+{
+	x++;
+	if (x > 12) x = 1;
+    document.img_ani.src="s" + x + ".gif";
+}
+function faster() {
+	if (delay >50)
+	delay -= 100; 
+}
+function slower() {
+	if (delay <1500)
+	delay += 100; 
+}
+function stopping(){
+	clearTimeout(idTimer);
+}
+</script>
+</BODY>
+</HTML>
+
