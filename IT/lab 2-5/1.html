@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<HTML><HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=Windows-1251">
+<TITLE>blank</TITLE>
+</HEAD> 
+
+<BODY BGCOLOR="white" 
+ TEXT="black" LINK="blue" ALINK="red" VLINK="green" BACKGROUND="pesok.gif">
+ <BASEFONT FACE="Courier">
+ <h2>Вычисление площади</h2>
+<FORM NAME="1st" METHOD=POST>
+
+<P>Автоматически
+<P>
+<BR>Сторона:
+<INPUT id="one" TYPE="text" ONinput="calc(this.value);">
+<P>
+<BR>Площадь:
+<INPUT id="two" TYPE="text" ONFOCUS="this.blur()">
+
+</FORM>
+
+<script>
+	function calc(value) {
+		document.getElementById("two").value = value * value;
+	};
+</script>
+
+</BODY>
+</HTML>
+
