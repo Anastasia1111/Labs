@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<HTML><HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=Windows-1251">
+<TITLE>lab 2-6</TITLE>
+</HEAD> 
+
+<BODY BGCOLOR="white" 
+ TEXT="black" LINK="blue" ALINK="red" VLINK="green">
+ <script>
+	function a() {
+		var tabl = document.getElementById("maintable");
+		tabl.border = document.getElementById("borderval").value;
+		tabl.cellSpacing = document.getElementById("cellsval").value;
+		tabl.cellPadding = document.getElementById("cellpval").value;
+	}
+ </script>
+<form name="mainform" method="post">
+<table bordercolor="BLACK" id="maintable" border="2" cellspacing="2" cellpadding="3">
+<tr>
+<td>border: <input id="borderval" type="text"></td>
+<td>cellSpacing: <input id="cellsval" type="text"></td>
+<td>cellPadding: <input id="cellpval" type="text"></td>
+</tr>
+
+<tr>
+<td><input type="button" value="Изменить" onClick="a()"></td>
+</tr>
+</table>
+
+</form>
+</BODY>
+</HTML>
+
