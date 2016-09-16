@@ -8,11 +8,54 @@
 
 <IMG name = "img">
  <script>
-	Img = new Image();
-	Img.src = "r1.gif";
-	Img.style = "position:absolute; top:110px; left:10px; cursor:hand;";
-	document.img.src = Img.src;
+	document.onmousedown = function(e) {
+
+  var DraggableEl = e.target;
+
+  if (!DraggableEl.classList.contains('draggable')) return;
+
+  var shiftX, shiftY;
+
+  DragBeginnig(e.clientX, e.clientY);
+
+  document.onmousemove = function(e) {
+    moveAt(e.clientX, e.clientY);
+  };
+
+  DraggableEl.onmouseup = function() {
+    Dragfinishing();
+  };
+
+  function DragBeginnig(clientX, clientY) {
+    shiftX = clientX - DraggableEl.getBoundingClientRect().left; 
+    shiftY = clientY - DraggableEl.getBoundingClientRect().top;
+    DraggableEl.style.position = 'fixed';
+    document.body.appendChild(DraggableEl);
+    moveAt(clientX, clientY);
+  };
+
+  function Dragfinishing() {
+    DraggableEl.style.top = parseInt(DraggableEl.style.top) + pageYOffset + 'px';
+    DraggableEl.style.position = 'absolute';
+    document.onmousemove = null;
+    DraggableEl.onmouseup = null;
+  }
+
+  function moveAt(clientX, clientY) {
+    var newX = clientX - shiftX;
+    var newY = clientY - shiftY;
+    DraggableEl.style.left = newX + 'px';
+    DraggableEl.style.top = newY + 'px';
+  }
+  return false;
+}
 </script>
+
+<img src="r1.gif" class="draggable">
+  <img src="r2.gif" class="draggable">
+  <img src="r3.gif" class="draggable">
+  <img src="r4.gif" class="draggable">
+
 </BODY>
 </HTML>
 
