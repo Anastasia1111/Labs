@@ -15,8 +15,10 @@
  }
  
  function b (Image) {
-		Image.width -= 3;
-		Image.height -= 5;
+		if (Image.width >= 300) {
+			Image.width -= 3;
+			Image.height -= 5;
+		}
  }
  </script>
  <a href = "#"
