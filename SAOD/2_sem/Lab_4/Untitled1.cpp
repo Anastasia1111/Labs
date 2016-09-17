@@ -56,6 +56,7 @@ void LRTurn (tree *&p){
         q->bal = -1;
      else
         q->bal = 0;
+     r->bal = 0;
      q->r = r->l;
      p->l = r->r;
      r->l = q;
@@ -74,6 +75,7 @@ void RLTurn (tree *&p){
         q->bal = 1;
      else
         q->bal = 0;
+     r->bal = 0;
      p->r = r->l;
      q->l = r->r;
      r->l = p;
