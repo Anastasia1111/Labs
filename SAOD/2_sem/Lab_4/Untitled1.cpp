@@ -4,12 +4,12 @@
 #include <graphics.h>
 #include <conio.h>
 
-int H;
-int CHH;
-int CS;
-int S;
-int MIDH;
-int BR;
+int H; // fact height
+int CHH; // height of local branch
+int CS; // control summ
+int S; // size (number of elem)
+int MIDH; // middle height
+int BR; // number of branches
 bool Rost;
 
 struct tree{
@@ -112,6 +112,7 @@ void AVLTrMaking (int data, tree *&p){
                      } else {
                         if (p->l->bal < 0) {
                            LLTurn(p);
+                           BR++;
                            Rost = false;
                         } else {
                            LRTurn(p);
@@ -135,6 +136,7 @@ void AVLTrMaking (int data, tree *&p){
                          } else {
                             if (p->r->bal > 0) {
                                RRTurn(p);
+                               BR++;
                                Rost = false;
                             } else {
                                RLTurn(p);
@@ -273,7 +275,7 @@ bool define_tree(tree* head){
 
 main(){
 	srand (time(NULL));
-    int n = 10;
+    int n = 1000;
     int key;
     int *A = new int [n];
     tree *h = NULL;
@@ -285,7 +287,7 @@ main(){
     puts("\n");
     printf("\nInput array: \n");
     for (i=0;i<n;i++){
-		A[i] = rand()%200 + 10;
+		A[i] = rand()%1000 + 10;
 		CS += A[i];
 		for(j=0;j<i;j++){
             if (A[j] == A[i]) break;   
@@ -306,7 +308,7 @@ main(){
     printf("HEIGHT - %d, ", H);
     printf("SIZE - %d, ", S);
     //printf("MIDDLEH - %d", (MIDH/BR)+2);
-    graph(h);
+   // graph(h);
     
     bool check = define_tree(h);
     if (check)
