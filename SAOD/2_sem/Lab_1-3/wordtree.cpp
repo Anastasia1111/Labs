@@ -59,7 +59,7 @@ struct tree{
 void print_struct (tree *m){
 	if ( !m ) return;
 	print_struct (m->l);
-	printf("%s[%d] ", m->data, m->count);
+	printf("%s[%d]\n", m->data, m->count);
 	print_struct (m->r);
 }
 
@@ -98,7 +98,7 @@ main(){
         strcpy(slv,"");
         tmp = strtok (NULL, " ");
     }
-    printf("\nTree was maden! \n");
+    printf("Tree was maden! \n");
     print_struct (h);
     
     h = NULL; 

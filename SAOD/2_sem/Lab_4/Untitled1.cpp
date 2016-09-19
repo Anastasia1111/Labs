@@ -10,7 +10,8 @@ int CS; // control summ
 int S; // size (number of elem)
 int MIDH; // middle height
 int BR; // number of branches
-bool Rost;
+int TC;
+bool R;
 
 struct tree{
        int bal;
@@ -28,6 +29,7 @@ void print_struct (tree *m){
 }
 
 void LLTurn (tree *&p){
+     TC++;
      tree* q = p->l;
      p->bal = 0;
      q->bal = 0;
@@ -37,6 +39,7 @@ void LLTurn (tree *&p){
 }
 
 void RRTurn (tree *&p){
+     TC++;
      tree* q = p->r;
      p->bal = 0;
      q->bal = 0;
@@ -46,6 +49,7 @@ void RRTurn (tree *&p){
 }
 
 void LRTurn (tree *&p){
+     TC++;
      tree* q = p->l;
      tree* r = q->r;
      if (r->bal < 0)
@@ -65,6 +69,7 @@ void LRTurn (tree *&p){
 }
 
 void RLTurn (tree *&p){
+     TC++;
      tree* q = p->r;
      tree* r = q->l;
      if (r->bal > 0)
@@ -84,39 +89,33 @@ void RLTurn (tree *&p){
 }
 
 void AVLTrMaking (int data, tree *&p){
-       Rost = true;
+       R = true;
        if (p == NULL){   
             p = new tree;
             p->data = data;
             p->l = p->r = NULL;
             p->bal = 0;
-            Rost = true;
+            R = true;
             S++;
-            MIDH += CHH;
-            if (CHH > H)
-                H = CHH;
-            CHH = 1;
         }
         else {
             if (p->data > data) {
                AVLTrMaking (data, p->l);
-               CHH++;
-               if (Rost) {
+               if (R) {
                   if (p->bal > 0) {
                      p->bal = 0;
-                     Rost = false;
+                     R = false;
                   } else {
                      if (p->bal == 0) {
                         p->bal=-1;
-                        Rost = true;
+                        R = true;
                      } else {
                         if (p->l->bal < 0) {
                            LLTurn(p);
-                           BR++;
-                           Rost = false;
+                           R = false;
                         } else {
                            LRTurn(p);
-                           Rost = false;
+                           R = false;
                         }
                      }
                   }
@@ -124,35 +123,52 @@ void AVLTrMaking (int data, tree *&p){
             } else {
                 if(p->data < data) {
                    AVLTrMaking (data, p->r);
-                   CHH++;
-                   if (Rost) {
+                   if (R) {
                       if (p->bal < 0) {
                          p->bal = 0;
-                         Rost = false;
+                         R = false;
                       } else {
                          if (p->bal == 0) {
                             p->bal = 1;
-                            Rost = true;
+                            R = true;
                          } else {
                             if (p->r->bal > 0) {
                                RRTurn(p);
-                               BR++;
-                               Rost = false;
+                               R = false;
                             } else {
                                RLTurn(p);
-                               Rost = false;
+                               R = false;
                             }
                          }
                       }
                    }
                 } else {
                   if (p->data == data) {
-                     CHH = 1;
                      return;
                   }
                 }
             }
         }
+}
+
+void middleHeight (tree *m){
+    MIDH+=CHH;
+    if ( m->l ) {
+        CHH++;
+        middleHeight (m->l);
+    }
+    if ( m->r ) {
+        CHH++;
+        middleHeight (m->r);
+    }
+    if ((!m->l) && (!m->r)){
+        //MIDH += CHH;
+        BR++;
+        if (H < CHH)
+           H = CHH;
+    }
+    CHH--;
+    return;
 }
        
 tree *t_search (tree *m, int key)
@@ -287,28 +303,30 @@ main(){
     puts("\n");
     printf("\nInput array: \n");
     for (i=0;i<n;i++){
-		A[i] = rand()%1000 + 10;
+		A[i] = rand()%(n*2) + 10;
 		CS += A[i];
 		for(j=0;j<i;j++){
             if (A[j] == A[i]) break;   
         }
         if (j < i) {CS -= A[i]; i--;}
-        else printf("%4d",A[i]);
+        else printf("%6d",A[i]);
     }
 	printf("\nCS - %d", CS);
 	
-    CS = H = S = MIDH = BR = 0; 
+    TC = CS = H = S = MIDH = BR = 0; 
     CHH = 1;
     for(i = 0; i < n; i++){
         AVLTrMaking (A[i], h);
     }
+    middleHeight (h);
     printf("\nTree was maden! \n");
     print_struct (h);
     printf("\nSDP: CS - %d, ", CS);
     printf("HEIGHT - %d, ", H);
     printf("SIZE - %d, ", S);
-    //printf("MIDDLEH - %d", (MIDH/BR)+2);
-   // graph(h);
+    printf("MIDDLEH - %2.2f, ", ((double)MIDH/S));
+    printf("TURN COUNT - %2.2f", ((double)TC/S));
+    //graph(h);
     
     bool check = define_tree(h);
     if (check)
