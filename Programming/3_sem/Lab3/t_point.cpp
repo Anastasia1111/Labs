@@ -11,34 +11,43 @@ tPoint::~tPoint()
 
 void tPoint::setPoint()
 {
-	y = rand()%480 + 1;
-	x = rand()%640 + 1;
-	color = rand()%16;	
+	y = rand()%ScreenHeight + 1;
+	x = rand()%ScreenWidth + 1;
+	color = rand()%15+1;	
 }
 
-void tPoint::LineMoving(int rBorder, int bBorder)
+void tPoint::Draw()
 {
-	int logX = 1, logY = 1;
-	while (!kbhit()) {
-		putpixel(x, y, 0);
-		putpixel(x, y, color);
-		x += logX;
-		y += logY;
-		if (x >= rBorder || x <= 0) logX *= (-1);
-		if (y >= bBorder || y <= 0) logY *= (-1);
-		
-	}
+     putpixel(x,y, color);
+}
+
+void tPoint::DirectMoving(int rBorder, int bBorder)
+{
+        int logX = 1, logY = 1;
+    	while (!kbhit()) {
+                delay(25);
+        		putpixel(x, y, 0);
+        		x += logX;
+        		y += logY;
+        		putpixel(x, y, color);
+        		if (x >= rBorder || x <= 0) logX *= (-1);
+        		if (y >= bBorder || y <= 0) logY *= (-1);
+    		
+    	}
+    	getch();
 }
 
 void tPoint::RandMoving(int rBorder, int bBorder)
 {
-	int logX = rand()%7 - 3, logY = rand()%7 - 3;
-	while (!kbhit()) {
-		putpixel(x, y, 0);
-		putpixel(x, y, color);
-		x += logX;
-		y += logY;
-		if (x >= rBorder || x <= 0) logX = rand()%7 - 3;
-		if (y >= bBorder || y <= 0) logY = rand()%7 - 3;
-	}
+        int logX = rand()%7 - 3, logY = rand()%7 - 3;
+    	while (!kbhit()) {
+                delay(25);
+        		putpixel(x, y, 0);
+        		x += logX;
+        		y += logY;
+        		putpixel(x, y, color);
+        		if (x >= rBorder || x <= 0) logX = rand()%7 - 3;
+        		if (y >= bBorder || y <= 0) logY = rand()%7 - 3;
+    	}
+    	getch();
 }

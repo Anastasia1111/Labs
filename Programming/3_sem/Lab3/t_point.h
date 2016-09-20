@@ -4,6 +4,9 @@
 #include <cstdlib>
 #include <graphics.h>
 
+#define ScreenWidth 800
+#define ScreenHeight 600
+
 class tPoint 
 {
 	public:
@@ -14,7 +17,9 @@ class tPoint
     		
     		void setPoint();
     		
-    		void LineMoving(int rBorder, int bBorder);
+    		void Draw();
+    		
+    		void DirectMoving(int rBorder, int bBorder);
     		
     		void RandMoving(int rBorder, int bBorder);
 		
