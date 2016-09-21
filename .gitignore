@@ -254,7 +254,6 @@ ModelManifest.xml
 save/
 *.save
 *.cfg
-*.exe
 
 # Other
 *.o
