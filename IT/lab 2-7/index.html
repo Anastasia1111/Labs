@@ -1,0 +1,39 @@
+<HTML><HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=Windows-1251">
+<TITLE>lab 2-7</TITLE>
+</HEAD> 
+
+<BODY BGCOLOR="white" TEXT="black" LINK="blue" ALINK="red" VLINK="green">
+
+
+
+<form id="tex" method=post>
+ Введите строку: <INPUT id="inptext" TYPE="text">
+<P>
+<INPUT id="firbut" VALUE="Выполнить" OnClick="textblOnClick()" TYPE="button">
+<INPUT id="secbut" VALUE="Очистить" OnClick="clearText()" TYPE="button">
+<P>
+<textarea id="textblock" readonly form="tex" value="Текст в столбик:" 
+placeholder="Вводите в поле ВЫШЕ строку" cols="25" rows="10">
+</textarea>
+</form>
+
+<script>
+
+
+function textblOnClick() {
+	var a = document.getElementById("inptext").value;
+	var c = document.getElementById('textblock'); 
+	for(var i = 0; a.charAt(i) != ""; i++){
+		c.innerHTML += a.charAt(i);
+	}
+}
+
+function clearText() {
+	var b = document.getElementById("inptext").value;
+	document.getElementById('textblock').innerHTML = "";
+}
+</script>
+</BODY>
+</HTML>
+
