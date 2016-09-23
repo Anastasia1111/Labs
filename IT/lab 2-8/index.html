@@ -79,7 +79,7 @@ function textblOnClick() {
 		output('2', c4);
 		output('3', c3);
 		output('4', c2);
-		c.value = a.length;
+		output('5', a.length);
 		mid = mid / (c.value);
 		d.value = mid;
 	}
@@ -92,13 +92,17 @@ function output(num, val) {
 		a = parseInt(c.value, 10);
 	}
 	c.value = a + val;
-	mid += (6 - num) * val;
+	if (num < 5) {
+		mid += (6 - num) * val;
+	}
 }
 
 function clearText() {
 	for(var i = 1; i < 7; i++){
-		document.getElementById('outtext' + i).value = '';
+		document.getElementById('outtext' + i).value = 
+		document.getElementById('outtext' + i).value.replace(document.getElementById('outtext' + i).value,'');
 	}
+	mid = 0;
 }
 
 </script>
