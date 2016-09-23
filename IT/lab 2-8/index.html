@@ -1,0 +1,110 @@
+<HTML><HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=Windows-1251">
+
+	<style>
+	td {
+		text-align: center;
+	}
+	</style>
+<TITLE>lab 2-8</TITLE>
+</HEAD> 
+
+<BODY BACKGROUND="dekor.gif" BGCOLOR="white" 
+ TEXT="black" LINK="blue" ALINK="red" VLINK="green">
+
+<form id="tex" method=post>
+<DIV align="center">
+Введите оценки: <INPUT id="inptext" TYPE="text">
+<P>
+<INPUT id="firbut" align="center" VALUE="Выполнить" OnClick="textblOnClick()" TYPE="button">
+<P>
+Сводка по экзамену
+<table border=1 width="80%">
+	<tr>
+		<td align="center">Оценка</td>
+		<td>Число сдавших на оценку</td>
+	</tr>
+	<tr>
+		<td>Отлично</td>
+		<td><INPUT id="outtext1" size="3" TYPE="text"></td>
+	</tr>
+	<tr>
+		<td>Хорошо</td>
+		<td><INPUT id="outtext2" size="3" TYPE="text"></td>
+	</tr>
+	<tr>
+		<td>Удовлетворительно</td>
+		<td><INPUT id="outtext3" size="3" TYPE="text"></td>
+	</tr>
+	<tr>
+		<td>Неудовлетворительно</td>
+		<td><INPUT id="outtext4" size="3" TYPE="text"></td>
+	</tr>
+</table>
+</form>
+
+Количество сдававших: <INPUT id="outtext5" size="3" TYPE="text">
+Средний балл: <INPUT id="outtext6" size="3" TYPE="text">
+<P>
+<INPUT id="secbut" align="center" VALUE="Очистить" OnClick="clearText()" TYPE="button">
+<script>
+
+var mid = 0;
+
+function textblOnClick() {
+	var a = document.getElementById("inptext").value;
+	var c = document.getElementById('outtext5');
+	var d = document.getElementById('outtext6');
+	var i = 0;
+	var c5 = 0, c4 = 0, c3 = 0, c2 = 0;
+	for(; a.charAt(i) != ""; i++){
+		
+		if (a.charAt(i) == '5') {
+			c5++;
+		} else {
+		if (a.charAt(i) == '4') {
+			c4++;
+		} else {
+		if (a.charAt(i) == '3') {
+			c3++;
+		} else {
+		if (a.charAt(i) == '2' || a.charAt(i) == '1') {
+			c2++;
+		} else {
+			return;
+		}}}}
+	}
+	if(i == (a.length)){
+		output('1', c5);
+		output('2', c4);
+		output('3', c3);
+		output('4', c2);
+		c.value = a.length;
+		mid = mid / (c.value);
+		d.value = mid;
+	}
+}
+
+function output(num, val) {
+	var a = 0;
+	var c = document.getElementById('outtext' + num);
+	if (c.value != ''){
+		a = parseInt(c.value, 10);
+	}
+	c.value = a + val;
+	mid += (6 - num) * val;
+}
+
+function clearText() {
+	for(var i = 1; i < 7; i++){
+		document.getElementById('outtext' + i).value = '';
+	}
+}
+
+</script>
+
+</DIV>
+
+</BODY>
+</HTML>
+
