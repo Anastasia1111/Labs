@@ -210,18 +210,18 @@ void middleHeight (tree *m){
 void BalL (tree *&p)
 {
      if (p->bal == -1) {
-        p->bal = 0; 
-        U = true;
+        p->bal = 0;
      } else {
         if (p->bal == 0) {
            p->bal = 1;
            U = false;
         } else {
            if (p->bal == 1) {
-              if (p->r->bal >= 0)
+              if (p->r->bal >= 0) {
                  RR1Turn(p);
-              else
+              } else {
                  RLTurn(p);
+			  }
            }
         }
      }
@@ -233,7 +233,7 @@ void BalR (tree *&p)
         p->bal = 0;
      } else {
         if (p->bal == 0) {
-           p->bal = 1;
+           p->bal = -1;
            U = false;
         } else {
            if (p->bal == -1) {
@@ -258,11 +258,11 @@ tree *t_search (tree *m, int key)
 }
        
 void ClearTree(tree *S){
-    if ( S->l )
+	if ( S->l )
         ClearTree ( S->l );
     if ( S->r )
         ClearTree ( S->r );
-    free (S);
+    delete S;
 }
 
 int shir(int n){
@@ -293,6 +293,8 @@ void graphtree(tree *head, int xhead, int yhead, int level){
 }
 
 void graph(tree *head){
+	if (!head) return;
+	
     int graphx = 3 + shir(H);
     int graphy = 5 + 2 * H - 1;
     initwindow(graphx * 20, graphy * 20);
@@ -314,18 +316,17 @@ void graph(tree *head){
     closegraph();
 }
 
-void del (tree *&r)
+void del (tree *&r, tree *&q)
 {
-     tree *q = new tree;
      if (r->r != NULL) {
-        del(r->r);
+        del(r->r, q);
         if (U)
            BalR(r);
      } else {
         q->data = r->data;
         q = r;
         r = r->l;
-        U - true; 
+        U = true; 
      }
 }
 
@@ -333,9 +334,9 @@ void delete_vertex (tree *&p, int x)
 {
      tree* q;
      U = false;
-     if (p == NULL)
+     if (p == NULL) {
           return;
-     else {
+     } else {
 		if (x < p->data) {
 			delete_vertex(p->l, x);
 			if (U)
@@ -356,7 +357,7 @@ void delete_vertex (tree *&p, int x)
 						p = q->l;
 						U = true;
 					} else {
-						del(q->l);
+						del(q->l, q);
 						if (U)
 							BalL(p);
 					}
@@ -384,7 +385,7 @@ bool define_tree(tree* head){
 
 main(){
 	srand (time(NULL));
-    int n = 10;
+    int n = 5;
     int key;
     int *A = new int [n];
     tree *h = NULL;
@@ -441,12 +442,12 @@ main(){
         scanf ( "%d", &key );
         delete_vertex(h,key);
         print_struct (h);
-        printf("\nTURN COUNT - %2.2f", ((double)TC/S));
         graph(h);
     }
+    printf("TURN COUNT - %2.2f", ((double)TC/n));
     
-    ClearTree (h);
+    //ClearTree (h);
     h = NULL;
-    free (A);  
+    delete A;  
     system ("pause");
 }
