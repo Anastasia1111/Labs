@@ -1,33 +1,22 @@
-#ifndef T_POINT
-#define T_POINT
+#ifndef T_POINT_H
+#define T_POINT_H
 
 #include <cstdlib>
 #include <graphics.h>
 
-#define ScreenWidth 800
-#define ScreenHeight 600
+#include "geometry.h"
 
-class tPoint 
+class tPoint : Geometry
 {
 	public:
            
-    		tPoint(); 
+    		tPoint() : Geometry()
+			{
+			};
     		
-    		~tPoint();
+    		void Draw(int _color);
     		
-    		void setPoint();
-    		
-    		void Draw();
-    		
-    		void DirectMoving(int rBorder, int bBorder);
-    		
-    		void RandMoving(int rBorder, int bBorder);
-		
-	private:
-            
-    		int x;
-    		int y;
-    		int color;
+    		void Rotate();
 
 };
 

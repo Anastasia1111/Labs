@@ -19,11 +19,15 @@ class Geometry
     		
     		void RandMoving(int rBorder, int bBorder);
     		
-    		virtual void Rotate();
+    		void Rotate()
+			{
+			};
 			
-			virtual void Draw(int _color);
+			void Draw(int _color)
+			{
+			};
 		
-	private:
+	protected:
             
     		int x;
     		int y;
