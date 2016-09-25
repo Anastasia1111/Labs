@@ -16,6 +16,7 @@ void Line::set(int _x, int _y, int _color, int _length)
 
 void Line::Draw(int _color)
 {
+	setcolor(_color);
 	int x1 = x - length/2;
 	int y1 = y;
 	int x2 = x + length/2;

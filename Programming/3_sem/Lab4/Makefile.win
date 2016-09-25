@@ -5,8 +5,8 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = 
-OBJ  = main.o geometry.o t_point.o line.o $(RES)
-LINKOBJ  = main.o geometry.o t_point.o line.o $(RES)
+OBJ  = main.o geometry.o t_point.o line.o circle.o rectangle.o triangle.o ellipse.o rhombus.o $(RES)
+LINKOBJ  = main.o geometry.o t_point.o line.o circle.o rectangle.o triangle.o ellipse.o rhombus.o $(RES)
 LIBS =  -L"I:/Dev-Cpp/lib" -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32  
 INCS =  -I"I:/Dev-Cpp/include" 
 CXXINCS =  -I"I:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"I:/Dev-Cpp/include/c++/3.4.2/backward"  -I"I:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"I:/Dev-Cpp/include/c++/3.4.2"  -I"I:/Dev-Cpp/include" 
@@ -37,3 +37,18 @@ t_point.o: t_point.cpp
 
 line.o: line.cpp
 	$(CPP) -c line.cpp -o line.o $(CXXFLAGS)
+
+circle.o: circle.cpp
+	$(CPP) -c circle.cpp -o circle.o $(CXXFLAGS)
+
+rectangle.o: rectangle.cpp
+	$(CPP) -c rectangle.cpp -o rectangle.o $(CXXFLAGS)
+
+triangle.o: triangle.cpp
+	$(CPP) -c triangle.cpp -o triangle.o $(CXXFLAGS)
+
+ellipse.o: ellipse.cpp
+	$(CPP) -c ellipse.cpp -o ellipse.o $(CXXFLAGS)
+
+rhombus.o: rhombus.cpp
+	$(CPP) -c rhombus.cpp -o rhombus.o $(CXXFLAGS)
