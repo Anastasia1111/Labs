@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <graphics.h>
+#include <math.h>
 
 #include "geometry.h"
 

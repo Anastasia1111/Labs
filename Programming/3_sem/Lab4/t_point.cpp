@@ -7,5 +7,4 @@ void tPoint::Draw(int _color)
 
 void tPoint::Rotate()
 {
-	// drawpoly ( int num+1 ,  int array ) 
 }

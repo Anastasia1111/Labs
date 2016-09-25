@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <graphics.h>
+#include <math.h>
 
 #define ScreenWidth 800
 #define ScreenHeight 600

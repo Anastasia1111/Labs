@@ -25,5 +25,32 @@ void Line::Draw(int _color)
 
 void Line::Rotate()
 {
-	// drawpoly ( int num+1 ,  int array ) 
+	int angle = 0;
+	int len = length/2;
+	int *arrc = new int (4);
+	int endangle;
+	int lencos, lensin;
+	while (!kbhit()) {
+		setcolor(0);
+		endangle = (int)(angle * (M_PI/30));
+		lencos = (int)(len * cos(endangle));
+		lensin = (int)(len * sin(endangle));
+		arrc[0] = x - lencos;
+		arrc[1] = y - lensin; 
+		arrc[2] = x + lencos;
+		arrc[3] = y + lensin;
+		drawpoly(2, arrc);
+		setcolor(color);
+		angle++;
+		if (angle > 5) angle = 0;
+		endangle = (int)(angle * (M_PI/30));
+		lencos = (int)(len * cos(endangle));
+		lensin = (int)(len * sin(endangle));
+		arrc[0] = x - lencos;
+		arrc[1] = y - lensin; 
+		arrc[2] = x + lencos;
+		arrc[3] = y + lensin;
+		drawpoly(2, arrc);
+	}
+	getch();
 }
