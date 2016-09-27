@@ -24,4 +24,14 @@ void Ellipse::Draw(int _color)
 
 void Ellipse::Rotate()
 {
+	setcolor(0);
+	
+	ellipse(x, y, 0, 360, xradius, yradius);
+	
+	setcolor(color);
+	int buff = xradius;
+	xradius = yradius;
+	yradius = buff;
+	
+	ellipse(x, y, 0, 360, xradius, yradius);
 }
