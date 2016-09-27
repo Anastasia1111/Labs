@@ -23,7 +23,7 @@ void Triangle::Draw(int _color)
 	int x1 = x;
 	int y1 = (int)(y - R);
 	int x2 = x - side/2;
-	int y2 = (int)(y + h);
+	int y2 = (int)(y1 + h);
 	int x3 = x + side/2;
 	int y3 = y2;
 	line (x1, y1, x2, y2);
@@ -34,7 +34,6 @@ void Triangle::Draw(int _color)
 void Triangle::Rotate()
 {
 	float R = side*(sqrt(3)/3);
-	float h = side*(sqrt(3)/2);
 	
 	int angle = 0;
 	double endangle, endangle1;
@@ -62,9 +61,9 @@ void Triangle::Rotate()
 		arrc[0] = x + side/2 * sinus;
 		arrc[1] = (int)(y - R * cosinus);
 		arrc[2] = x - side/2 * sinus1;
-		arrc[3] = (int)(y + R * cosinus1);
+		arrc[3] = (int)(y - R + (R+h) * cosinus1);
 		arrc[4] = x + side/2 * sinus2;
-		arrc[5] = y + R * cosinus2;
+		arrc[5] = y - R + (R+h) * cosinus2;
 		
 		drawpoly(3, arrc);
 		
