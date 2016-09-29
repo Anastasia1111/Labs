@@ -34,63 +34,75 @@ void Triangle::Draw(int _color)
 void Triangle::Rotate()
 {
 	float R = side*(sqrt(3)/3);
+	float h = side*(sqrt(3)/2);
 	
 	int angle = 0;
-	double endangle, endangle1;
+	double endangle, endangle1, endangle2;
 	double sinus, cosinus;
 	double sinus1, cosinus1;
 	double sinus2, cosinus2;
 	
 	int *arrc = new int (6);
 	
+	
+	while(!kbhit()) {
+		
 		setcolor(0);
+	
+		arrc[0] = x;
+		arrc[1] = (int)(y - R);
+		arrc[2] = x - side/2;
+		arrc[3] = (int)(arrc[1] + h);
+		arrc[4] = x + side/2;
+		arrc[5] = arrc[3];
 		
-		endangle = angle * (3.14/30);
-		endangle1 = (angle + 12) * (3.14/30);
-		endangle2 = (angle + 4) * (3.14/30);
-		if (angle >= 18) endangle1 = (angle - 18) * (3.14/30);
-		if (angle >= 26) endangle2 = (angle - 26) * (3.14/30);
-		
-		sinus = sin(endangle);
-		cosinus = cos(endangle);
-		sinus1 = sin(endangle1);
-		cosinus1 = cos(endangle1);
-		sinus2 = sin(endangle2);
-		cosinus2 = cos(endangle2);
-		
-		arrc[0] = x + side/2 * sinus;
-		arrc[1] = (int)(y - R * cosinus);
-		arrc[2] = x - side/2 * sinus1;
-		arrc[3] = (int)(y - R + (R+h) * cosinus1);
-		arrc[4] = x + side/2 * sinus2;
-		arrc[5] = y - R + (R+h) * cosinus2;
-		
-		drawpoly(3, arrc);
+		line (arrc[0], arrc[1],arrc[2],arrc[3]);
+	    line (arrc[2],arrc[3],arrc[4],arrc[5]);
+		line (arrc[4],arrc[5],arrc[0],arrc[1]);
 		
 		setcolor(color);
+
+		arrc[0] = x;
+		arrc[1] = (int)(y + R);
+		arrc[2] = x - side/2;
+		arrc[3] = (int)(arrc[1] - h);
+		arrc[4] = x + side/2;
+		arrc[5] = arrc[3];
+			
+		line (arrc[0], arrc[1],arrc[2],arrc[3]);
+        line (arrc[2],arrc[3],arrc[4],arrc[5]);
+		line (arrc[4],arrc[5],arrc[0],arrc[1]);
 		
-		angle++;
-		if (angle > 30) angle = 0;
+		delay(100);
 		
-		endangle = angle * (3.14/30);
-		endangle1 = (angle + 12) * (3.14/30);
-		endangle2 = (angle + 4) * (3.14/30);
-		if (angle >= 18) endangle1 = (angle - 18) * (3.14/30);
-		if (angle >= 26) endangle2 = (angle - 26) * (3.14/30);
+		setcolor(0);
 		
-		sinus = sin(endangle);
-		cosinus = cos(endangle);
-		sinus1 = sin(endangle1);
-		cosinus1 = cos(endangle1);
-		sinus2 = sin(endangle2);
-		cosinus2 = cos(endangle2);
+		arrc[0] = x;
+		arrc[1] = (int)(y + R);
+		arrc[2] = x - side/2;
+		arrc[3] = (int)(arrc[1] - h);
+		arrc[4] = x + side/2;
+		arrc[5] = arrc[3];
 		
-		arrc[0] = x + side/2 * sinus;
-		arrc[1] = (int)(y - R * cosinus);
-		arrc[2] = x - side/2 * sinus1;
-		arrc[3] = (int)(y + R * cosinus1);
-		arrc[4] = x + side/2 * sinus2;
-		arrc[5] = y + R * cosinus2;
+		line (arrc[0], arrc[1],arrc[2],arrc[3]);
+        line (arrc[2],arrc[3],arrc[4],arrc[5]);
+		line (arrc[4],arrc[5],arrc[0],arrc[1]);
 		
-		drawpoly(4, arrc);
+		setcolor(color);
+	
+		arrc[0] = x;
+		arrc[1] = (int)(y - R);
+		arrc[2] = x - side/2;
+		arrc[3] = (int)(arrc[1] + h);
+		arrc[4] = x + side/2;
+		arrc[5] = arrc[3];
+		
+		line (arrc[0], arrc[1],arrc[2],arrc[3]);
+	    line (arrc[2],arrc[3],arrc[4],arrc[5]);
+		line (arrc[4],arrc[5],arrc[0],arrc[1]);
+		
+		delay(100);
+	}
+	getch();
+	delete arrc;
 }

@@ -1,15 +1,15 @@
 # Project: Lab4
 # Makefile created by Dev-C++ 4.9.9.2
 
-CPP  = g++.exe
-CC   = gcc.exe
+CPP  = g++rus.exe
+CC   = gccrus.exe
 WINDRES = windres.exe
 RES  = 
 OBJ  = main.o geometry.o t_point.o line.o circle.o rectangle.o triangle.o ellipse.o rhombus.o $(RES)
 LINKOBJ  = main.o geometry.o t_point.o line.o circle.o rectangle.o triangle.o ellipse.o rhombus.o $(RES)
-LIBS =  -L"C:/Dev-Cpp/lib" -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32  
-INCS =  -I"C:/Dev-Cpp/include" 
-CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+LIBS =  -L"c:/Lang/dev-cpp/lib" -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32  
+INCS =  -I"c:/Lang/dev-cpp/include" 
+CXXINCS =  -I"c:/Lang/dev-cpp/lib/gcc/mingw32/3.4.2/include"  -I"c:/Lang/dev-cpp/include/c++/3.4.2/backward"  -I"c:/Lang/dev-cpp/include/c++/3.4.2/mingw32"  -I"c:/Lang/dev-cpp/include/c++/3.4.2"  -I"c:/Lang/dev-cpp/include" 
 BIN  = Lab4.exe
 CXXFLAGS = $(CXXINCS)  
 CFLAGS = $(INCS)  

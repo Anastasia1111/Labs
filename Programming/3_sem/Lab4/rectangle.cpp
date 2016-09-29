@@ -1,3 +1,4 @@
+#include <cmath>
 #include "rectangle.h"
 
 Rectangle::Rectangle()
@@ -27,14 +28,8 @@ void Rectangle::Draw(int _color)
 
 void Rectangle::Rotate()
 {
-	float kor = sqrt(3);
-	float d = kor*side;
-	
-	int angle = 0;
-	double endangle;
-	double sinus, cosinus;
-	
-	int *arrc = new int (8);
+     
+	 int *arrc = new int (8);
 	
 		setcolor(0);
 		
@@ -52,12 +47,12 @@ void Rectangle::Rotate()
 		setcolor(color);
 		
 		arrc[0] = x;
-		arrc[1] = (int)(y - sqrt(sqr(side/2) + sqr(d/2));
-		arrc[2] = (int)(x - sqrt(sqr(side/2) + sqr(d/2));
+		arrc[1] = (int)(y - sqrt((width/2)*(width/2) + (height/2)*(height/2)));
+		arrc[2] = (int)(x - sqrt((width/2)*(width/2) + (height/2)*(height/2)));
 		arrc[3] = y;
 		arrc[4] = x;
-		arrc[5] = (int)(y + sqrt(sqr(side/2) + sqr(d/2));
-		arrc[6] = (int)(x + sqrt(sqr(side/2) + sqr(d/2));
+		arrc[5] = (int)(y + sqrt((width/2)*(width/2) + (height/2)*(height/2)));
+		arrc[6] = (int)(x + sqrt((width/2)*(width/2) + (height/2)*(height/2)));
 		arrc[7] = y;
 		
 		drawpoly(4, arrc);

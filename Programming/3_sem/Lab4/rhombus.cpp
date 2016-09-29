@@ -45,7 +45,7 @@ void Rhombus::Rotate()
 	
 	int *arrc = new int (8);
 	
-		setcolor(0);
+	setcolor(0);
 		
 		endangle = angle * (3.14/30);
 		sinus = sin(endangle);
@@ -60,7 +60,13 @@ void Rhombus::Rotate()
 		arrc[6] = (int)(x + d/2 * cosinus);
 		arrc[7] = (int)(y + side/2 * sinus);
 		
-		drawpoly(4, arrc);
+		line (arrc[0], arrc[1],arrc[2],arrc[3]);
+        line (arrc[2],arrc[3],arrc[4],arrc[5]);
+		line (arrc[4],arrc[5],arrc[6],arrc[7]);
+		line (arrc[6],arrc[7],arrc[0],arrc[1]);
+	
+	while(!kbhit()) {
+		
 		
 		setcolor(color);
 		
@@ -80,5 +86,33 @@ void Rhombus::Rotate()
 		arrc[6] = (int)(x + d/2 * cosinus);
 		arrc[7] = (int)(y + side/2 * sinus);
 		
-		drawpoly(4, arrc);
+		
+		line (arrc[0], arrc[1],arrc[2],arrc[3]);
+        line (arrc[2],arrc[3],arrc[4],arrc[5]);
+		line (arrc[4],arrc[5],arrc[6],arrc[7]);
+		line (arrc[6],arrc[7],arrc[0],arrc[1]);
+		delay(100);
+		
+		setcolor(0);
+		
+		endangle = angle * (3.14/30);
+		sinus = sin(endangle);
+		cosinus = cos(endangle);
+		
+		arrc[0] = (int)(x + d/2 * sinus);
+		arrc[1] = (int)(y - side/2 * cosinus);
+		arrc[2] = (int)(x - d/2 * cosinus);
+		arrc[3] = (int)(y - side/2 * sinus);
+		arrc[4] = (int)(x - d/2 * sinus);
+		arrc[5] = (int)(y + side/2 * cosinus);
+		arrc[6] = (int)(x + d/2 * cosinus);
+		arrc[7] = (int)(y + side/2 * sinus);
+		
+		line (arrc[0], arrc[1],arrc[2],arrc[3]);
+        line (arrc[2],arrc[3],arrc[4],arrc[5]);
+		line (arrc[4],arrc[5],arrc[6],arrc[7]);
+		line (arrc[6],arrc[7],arrc[0],arrc[1]);
+    }
+    getch();
+    delete arrc;
 }

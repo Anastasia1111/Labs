@@ -31,16 +31,16 @@ void Line::Rotate()
 	int *arrc = new int (4);
 	double endangle;
 	int lencos, lensin;
+	setcolor(0);
+	endangle = angle * (3.14/30);
+	lencos = (int)(len * cos(endangle));
+	lensin = (int)(len * sin(endangle));
+	arrc[0] = x - lencos;
+	arrc[1] = y - lensin; 
+	arrc[2] = x + lencos;
+	arrc[3] = y + lensin;
+	drawpoly(2, arrc);
 	while (!kbhit()) {
-		setcolor(0);
-		endangle = angle * (3.14/30);
-		lencos = (int)(len * cos(endangle));
-		lensin = (int)(len * sin(endangle));
-		arrc[0] = x - lencos;
-		arrc[1] = y - lensin; 
-		arrc[2] = x + lencos;
-		arrc[3] = y + lensin;
-		drawpoly(2, arrc);
 		setcolor(color);
 		angle++;
 		if (angle > 30) angle = 0;
@@ -52,6 +52,17 @@ void Line::Rotate()
 		arrc[2] = x + lencos;
 		arrc[3] = y + lensin;
 		drawpoly(2, arrc);
+		delay(100);
+		setcolor(0);
+		endangle = angle * (3.14/30);
+		lencos = (int)(len * cos(endangle));
+		lensin = (int)(len * sin(endangle));
+		arrc[0] = x - lencos;
+		arrc[1] = y - lensin; 
+		arrc[2] = x + lencos;
+		arrc[3] = y + lensin;
+		drawpoly(2, arrc);
 	}
 	getch();
+	delete arrc;
 }

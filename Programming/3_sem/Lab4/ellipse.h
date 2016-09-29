@@ -7,11 +7,11 @@
 
 #include "geometry.h"
 
-class Ellipse : Geometry
+class Ellips : Geometry
 {
 	public:
            
-    		Ellipse();
+    		Ellips();
     		
     		void set(int _x, int _y, int _color, int _xradius, int _yradius);
     		
