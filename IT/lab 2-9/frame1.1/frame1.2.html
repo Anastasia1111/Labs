@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<HTML><HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=Windows-1251">
+<TITLE>blank</TITLE>
+<link rel="stylesheet" type="text/css" href="../mycs.css">
+<script src="../framecont.js"></script>
+</HEAD> 
+
+<BODY BGCOLOR="white" 
+ TEXT="black" LINK="blue" ALINK="red" VLINK="green">
+	<B>Выбирайте элемент:</b>
+	<P>
+	<form>
+		Номер картинки:
+		<P>
+		<SELECT NAME="mymenu1">
+		<OPTION VALUE="../r/r1.gif" SELECTED> r1
+		<OPTION VALUE="../r/r2.gif"> r2
+		<OPTION VALUE="../r/r3.gif"> r3
+		<OPTION VALUE="../r/r4.gif"> r4
+		</SELECT>
+		<P>
+		Номер фрейма:
+		<P>
+		<SELECT NAME="mymenu2">
+		<OPTION VALUE="w1" SELECTED> 1
+		<OPTION VALUE="w2"> 2
+		<OPTION VALUE="w3"> 3
+		<OPTION VALUE="w4"> 4
+		</SELECT>
+		<P>
+		<input type="button" OnClick="window.open(this.form.mymenu1.value, this.form.mymenu2.value);" value="Сопоставить">
+	</form>
+</BODY>
+</HTML>
+
