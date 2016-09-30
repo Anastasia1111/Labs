@@ -68,7 +68,7 @@ function textblOnClick() {
 		if (a.charAt(i) == '3') {
 			c3++;
 		} else {
-		if (a.charAt(i) == '2' || a.charAt(i) == '1') {
+		if (a.charAt(i) == '2') {
 			c2++;
 		} else {
 			return;
@@ -80,8 +80,7 @@ function textblOnClick() {
 		output('3', c3);
 		output('4', c2);
 		output('5', a.length);
-		mid = mid / (c.value);
-		d.value = mid;
+		d.value = mid / (c.value);
 	}
 }
 
