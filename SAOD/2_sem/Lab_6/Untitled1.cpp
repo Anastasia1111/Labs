@@ -143,8 +143,13 @@ void graphtree(tree *head, int xhead, int yhead, int level){
     if (head->r){
         x = xhead + 20;
         y = yhead + 20;
-        line(x, y, x + 20 * k, y + 20);
-        graphtree(head->r, x + 20 * k, y + 20, level + 1);
+        if (head->bal) {
+			line(x, y, x + 20 * k, y);
+			graphtree(head->r, x + 20 * k, yhead, level + 1);
+		} else {
+			line(x, y, x + 20 * k, y + 20);
+			graphtree(head->r, x + 20 * k, y + 20, level + 1);
+		}
     }
 }
 
@@ -174,7 +179,7 @@ void graph(tree *head){
 
 main(){
 	srand (time(NULL));
-    int n = 20;
+    int n = 31;
     int key;
     int *A = new int [n];
     tree *h = NULL;
