@@ -38,33 +38,33 @@ void B2INSERT (int data, tree *&p){
 		VR = true;
 		S++;
 	} else {
-        if (p->data > data) {
-            B2INSERT (data, p->l);
-            if (VR) {
-                if (p->bal == 0) {
+		if (p->data > data) {
+			B2INSERT (data, p->l);
+			if (VR) {
+				if (p->bal == 0) {
 					q = p->l;
 					p->l = q->r;
 					q->r = p;
 					p = q;
-                 	q->bal = 1;
-                 	VR = false;
-                 	HR = true;
-              	} else {
-                 	p->bal = 0;
-                 	VR = true;
-                 	HR = false;
-              	}
-           	} else {
+					q->bal = 1;
+					VR = false;
+					HR = true;
+				} else {
+					p->bal = 0;
+					VR = true;
+					HR = false;
+				}
+			} else {
 				HR = false;
 			}
-    	} else {
-	        if (p->data < data) {
-	            B2INSERT (data, p->r);
-	            if (VR) {
-                 	p->bal = 1;
-                 	VR = false;
-                 	HR = true;
-	            } else {
+		} else {
+			if (p->data < data) {
+				B2INSERT (data, p->r);
+				if (VR) {
+					p->bal = 1;
+					VR = false;
+					HR = true;
+				} else {
 					if (HR) {
 						if (p->bal == 1) {
 							q = p->r;
@@ -73,15 +73,15 @@ void B2INSERT (int data, tree *&p){
 							p->r = q->l;
 							q->l = p;
 							p = q;
-		                 	VR = true;
-		                 	HR = false;
-		              	} else {
-		                 	HR = false;
-		              	}
+							VR = true;
+							HR = false;
+						} else {
+							HR = false;
+						}
 					}
-              	}
-	    	}
-        }
+				}
+			}
+		}
 	}
 }
 
@@ -181,7 +181,7 @@ void graph(tree *head){
 
 main(){
 	srand (time(NULL));
-    int n = 10;
+    int n = 15;
     int key;
     int *A = new int [n];
     tree *h = NULL;
