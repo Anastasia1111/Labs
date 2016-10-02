@@ -65,18 +65,20 @@ void B2INSERT (int data, tree *&p){
                  	VR = false;
                  	HR = true;
 	            } else {
-					if (p->bal == 1) {
-						q = p->r;
-						p->bal = 0;
-						q->bal = 0;
-						p->r = q->l;
-						q->l = p;
-						p = q;
-	                 	VR = true;
-	                 	HR = false;
-	              	} else {
-	                 	HR = false;
-	              	}
+					if (HR) {
+						if (p->bal == 1) {
+							q = p->r;
+							p->bal = 0;
+							q->bal = 0;
+							p->r = q->l;
+							q->l = p;
+							p = q;
+		                 	VR = true;
+		                 	HR = false;
+		              	} else {
+		                 	HR = false;
+		              	}
+					}
               	}
 	    	}
         }
@@ -179,7 +181,7 @@ void graph(tree *head){
 
 main(){
 	srand (time(NULL));
-    int n = 31;
+    int n = 10;
     int key;
     int *A = new int [n];
     tree *h = NULL;
