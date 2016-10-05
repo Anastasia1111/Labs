@@ -19,17 +19,27 @@ function RandomArray () {
 
 function BinarySearch(t,A)
 {
-    var i = 0, j = 8, k;   
+    var i = 0, j = 8, r = 4, k;   
+
+	var td1 = document.getElementById('table1').getElementsByTagName('td');
 
     while (i <= j)
-    {  
+    {
+		td1[r].innerHTML = i;
+		r++;
+		td1[r].innerHTML = j;
+		r++;
 		k = Math.floor((i+j)/2);
-		if (t === A[k]) return k;
+		td1[r].innerHTML = k;
+		r++;
+		td1[r].innerHTML = A[k];
+		r++;
+		if (t == A[k]) return (k + 1);
 		else if (t < A[k]) j = k-1;
 		else i = k+1;
     }
 
-    return -1;
+    return 0;
 }
 
 
