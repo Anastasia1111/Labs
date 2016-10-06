@@ -13,6 +13,9 @@ class Line : public Geometry
            
     		Line();
     		
+    		Line(int _x, int _y, int _color) : Geometry(_x, _y, _color) 
+			{};
+    		
     		void set(int _x, int _y, int _color, int _length);
     		
     		void Draw(int _color);

@@ -14,17 +14,20 @@ class Geometry
            
     		Geometry();
     		
-    		void set(int _x, int _y, int _color);
+    		Geometry(int _x, int _y, int _color):x(_x), y(_y), color(_color) 
+			{};
     		
-    		void DirectMoving(int rBorder, int bBorder);
+    		virtual void set(int _x, int _y, int _color);
     		
-    		void RandMoving(int rBorder, int bBorder);
+    		virtual void DirectMoving(int rBorder, int bBorder);
+    		
+    		virtual void RandMoving(int rBorder, int bBorder);
     		
     		virtual void Rotate()
 			{
 			};
 			
-			void Draw(int _color)
+			virtual void Draw(int _color)
 			{
 			};
 		
