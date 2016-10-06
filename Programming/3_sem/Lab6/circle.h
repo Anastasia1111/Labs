@@ -1,5 +1,5 @@
-#ifndef LINE_H
-#define LINE_H
+#ifndef CIRCLE_H
+#define CIRCLE_H
 
 #include <cstdlib>
 #include <graphics.h>
@@ -7,11 +7,14 @@
 
 #include "geometry.h"
 
-class Line : public Geometry
+class Circle : public Geometry
 {
 	public:
            
-    		Line();
+    		Circle();
+    		
+    		Circle(int _x, int _y, int _color) : Geometry( _x,  _y,  _color) 
+			{};
     		
     		void set(int _x, int _y, int _color, int _length);
     		
@@ -21,7 +24,7 @@ class Line : public Geometry
 		
 	private:
             
-    		int length;
+    		int radius;
 
 };
 
