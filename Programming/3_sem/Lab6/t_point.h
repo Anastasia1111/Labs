@@ -11,8 +11,7 @@ class tPoint : public Geometry
 	public:
            
     		tPoint() : Geometry()
-			{
-			};
+			{};
 			
 			tPoint(int _x, int _y, int _color) : Geometry( _x,  _y,  _color) 
 			{};

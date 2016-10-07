@@ -1,21 +1,5 @@
 #include "ellipse.h"
 
-Ellips::Ellips()
-{
-	x = y = color = 0;
-	xradius = 1;
-	yradius = 2;
-}
-
-void Ellips::set(int _x, int _y, int _color, int _xradius, int _yradius)
-{
-	y = _y;
-	x = _x;
-	color = _color;
-	xradius = _xradius;
-	yradius = _yradius;
-}
-
 void Ellips::Draw(int _color)
 {
 	setcolor(_color);

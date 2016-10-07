@@ -11,12 +11,14 @@ class Line : public Geometry
 {
 	public:
            
-    		Line();
-    		
-    		Line(int _x, int _y, int _color) : Geometry(_x, _y, _color) 
+    		Line() : Geometry(), length(1)
 			{};
     		
-    		void set(int _x, int _y, int _color, int _length);
+    		Line(int _x, int _y, int _color) : Geometry(_x, _y, _color), length(1) 
+			{};
+
+			Line(int _x, int _y, int _color, int _length) : Geometry(_x, _y, _color), length(_length) 
+			{};
     		
     		void Draw(int _color);
     		

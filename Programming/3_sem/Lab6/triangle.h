@@ -11,12 +11,14 @@ class Triangle : public Geometry
 {
 	public:
            
-    		Triangle();
-    		
-    		Triangle(int _x, int _y, int _color) : Geometry( _x,  _y,  _color) 
+    		Triangle() : Geometry(), side(1)
 			{};
     		
-    		void set(int _x, int _y, int _color, int _side);
+    		Triangle(int _x, int _y, int _color) : Geometry( _x,  _y,  _color), side(1) 
+			{};
+    		
+    		Triangle(int _x, int _y, int _color, int _side) : Geometry( _x,  _y,  _color), side(_side) 
+			{};
     		
     		void Draw(int _color);
     		

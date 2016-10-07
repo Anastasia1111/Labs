@@ -11,12 +11,14 @@ class Circle : public Geometry
 {
 	public:
            
-    		Circle();
-    		
-    		Circle(int _x, int _y, int _color) : Geometry( _x,  _y,  _color) 
+    		Circle() : Geometry(), radius(1)
 			{};
     		
-    		void set(int _x, int _y, int _color, int _length);
+    		Circle(int _x, int _y, int _color) : Geometry( _x,  _y,  _color), radius(1) 
+			{};
+    		
+    		Circle(int _x, int _y, int _color, int _radius) : Geometry( _x,  _y,  _color), radius(_radius) 
+			{};
     		
     		void Draw(int _color);
     		

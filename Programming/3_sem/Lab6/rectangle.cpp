@@ -1,21 +1,6 @@
 #include <cmath>
 #include "rectangle.h"
 
-Rectangle::Rectangle()
-{
-	x = y = color = 0;
-	width = height = 1;
-}
-
-void Rectangle::set(int _x, int _y, int _color, int _height, int _width)
-{
-	y = _y;
-	x = _x;
-	color = _color;
-	width = _width;
-	height = _height;
-}
-
 void Rectangle::Draw(int _color)
 {
 	setcolor(_color);

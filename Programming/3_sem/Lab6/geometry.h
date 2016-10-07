@@ -12,16 +12,15 @@ class Geometry
 {
 	public:
            
-    		Geometry();
-    		
-    		Geometry(int _x, int _y, int _color):x(_x), y(_y), color(_color) 
+    		Geometry() : x(0), y(0), color(0)
 			{};
     		
-    		virtual void set(int _x, int _y, int _color);
+    		Geometry(int _x, int _y, int _color) : x(_x), y(_y), color(_color)
+			{};
     		
-    		virtual void DirectMoving(int rBorder, int bBorder);
+    		void DirectMoving(int rBorder, int bBorder);
     		
-    		virtual void RandMoving(int rBorder, int bBorder);
+    		void RandMoving(int rBorder, int bBorder);
     		
     		virtual void Rotate()
 			{

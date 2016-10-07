@@ -11,12 +11,14 @@ class Rectangle : public Geometry
 {
 	public:
            
-    		Rectangle();
-    		
-    		Rectangle(int _x, int _y, int _color) : Geometry( _x, _y, _color) 
+    		Rectangle() : Geometry(), height(1), width(1)
 			{};
     		
-    		void set(int _x, int _y, int _color, int _height, int _width);
+    		Rectangle(int _x, int _y, int _color) : Geometry( _x, _y, _color), height(1), width(1)
+			{};
+    		
+    		Rectangle(int _x, int _y, int _color, int _height, int _width) : Geometry( _x,  _y,  _color), height(_height), width(_width)
+			{};
     		
     		void Draw(int _color);
     		

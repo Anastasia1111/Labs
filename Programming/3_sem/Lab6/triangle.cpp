@@ -1,19 +1,5 @@
 #include "triangle.h"
 
-Triangle::Triangle()
-{
-	x = y = color = 0;
-	side = 1;
-}
-
-void Triangle::set(int _x, int _y, int _color, int _side)
-{
-	y = _y;
-	x = _x;
-	color = _color;
-	side = _side;
-}
-
 void Triangle::Draw(int _color)
 {
 	float R = side*(sqrt(3)/3);

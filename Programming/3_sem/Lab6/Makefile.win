@@ -1,18 +1,18 @@
 # Project: Lab6
 # Makefile created by Dev-C++ 4.9.9.2
 
-CPP  = g++.exe
-CC   = gcc.exe
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
 WINDRES = windres.exe
 RES  = 
 OBJ  = main.o geometry.o t_point.o line.o circle.o rectangle.o triangle.o ellipse.o rhombus.o $(RES)
 LINKOBJ  = main.o geometry.o t_point.o line.o circle.o rectangle.o triangle.o ellipse.o rhombus.o $(RES)
-LIBS =  -L"lib" -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32  
-INCS =  -I"include" 
-CXXINCS =  -I"lib/gcc/mingw32/3.4.2/include"  -I"include/c++/3.4.2/backward"  -I"include/c++/3.4.2/mingw32"  -I"include/c++/3.4.2"  -I"include" 
+LIBS =  -L"I:/Dev-Cpp/lib" -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32  -g3 
+INCS =  -I"I:/Dev-Cpp/include" 
+CXXINCS =  -I"I:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"I:/Dev-Cpp/include/c++/3.4.2/backward"  -I"I:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"I:/Dev-Cpp/include/c++/3.4.2"  -I"I:/Dev-Cpp/include" 
 BIN  = Lab6.exe
-CXXFLAGS = $(CXXINCS)  
-CFLAGS = $(INCS)  
+CXXFLAGS = $(CXXINCS)   -g3
+CFLAGS = $(INCS)   -g3
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom

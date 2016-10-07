@@ -1,17 +1,5 @@
 #include "geometry.h"
 
-Geometry::Geometry()
-{
-	x = y = color = 0;
-}
-
-void Geometry::set(int _x, int _y, int _color)
-{
-	y = _y;
-	x = _x;
-	color = _color;	
-}
-
 void Geometry::DirectMoving(int rBorder, int bBorder)
 {
         int logX = 1, logY = 1;

@@ -1,19 +1,5 @@
 #include "line.h"
 
-Line::Line()
-{
-	x = y = color = 0;
-	length = 1;
-}
-
-void Line::set(int _x, int _y, int _color, int _length)
-{
-	y = _y;
-	x = _x;
-	color = _color;
-	length = _length;
-}
-
 void Line::Draw(int _color)
 {
 	setcolor(_color);

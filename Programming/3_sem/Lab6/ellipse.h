@@ -11,12 +11,14 @@ class Ellips : public Geometry
 {
 	public:
            
-    		Ellips();
-    		
-    		Ellips(int _x, int _y, int _color) : Geometry(_x, _y, _color) 
+    		Ellips() : Geometry(), xradius(1), yradius(2)
 			{};
     		
-    		void set(int _x, int _y, int _color, int _xradius, int _yradius);
+    		Ellips(int _x, int _y, int _color) : Geometry(_x, _y, _color), xradius(1), yradius(2) 
+			{};
+			
+			Ellips(int _x, int _y, int _color, int _xradius, int _yradius) : Geometry(_x, _y, _color), xradius(_xradius), yradius(_yradius) 
+			{};
     		
     		void Draw(int _color);
     		

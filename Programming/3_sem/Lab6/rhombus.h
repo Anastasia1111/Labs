@@ -11,12 +11,14 @@ class Rhombus : public Geometry
 {
 	public:
            
-    		Rhombus();
-    		
-    		Rhombus(int _x, int _y, int _color) : Geometry( _x,  _y,  _color) 
+    		Rhombus() : Geometry(), side(1)
 			{};
     		
-    		void set(int _x, int _y, int _color, int _side);
+    		Rhombus(int _x, int _y, int _color) : Geometry( _x,  _y,  _color), side(1) 
+			{};
+    		
+    		Rhombus(int _x, int _y, int _color, int _side) : Geometry( _x,  _y,  _color), side(_side) 
+			{};
     		
     		void Draw(int _color);
     		
