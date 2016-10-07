@@ -34,8 +34,8 @@ function clockworking() {
 		document.d2.src = "LAB11/dg" + now.getDate()%10 + ".gif"
 
 
-		document.mo1.src = "LAB11/dg" + parseInt(now.getMonth()/10) + ".gif"
-		document.mo2.src = "LAB11/dg" + now.getMonth()%10 + ".gif"
+		document.mo1.src = "LAB11/dg" + parseInt((now.getMonth()+1)/10) + ".gif"
+		document.mo2.src = "LAB11/dg" + (now.getMonth()+1)%10 + ".gif"
 
 	
 	document.y1.src = "LAB11/dg" + curr_year.charAt(0) + ".gif"
