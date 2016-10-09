@@ -1,6 +1,5 @@
 function opening (fir, sec){
-function send() {
-            var ch = parent.document.getElementById("1.1");
+
+            var ch = parent.document.frames.document.frames[0];
             ch.document.frames[sec-1].document.getElementById('w'+ sec).src = fir;
-        }
 }
