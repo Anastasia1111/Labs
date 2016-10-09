@@ -6,8 +6,8 @@ function moveTip(e) {
 
 		// Для браузера IE6-8
 	if (document.all)  { 
-		x = event.clientX + document.body.scrollLeft; 
-		y = event.clientY + document.body.scrollTop; 
+		x = event.clientX; 
+		y = event.clientY; 
 
 		// Для остальных браузеров
 	} else   { 
@@ -15,13 +15,8 @@ function moveTip(e) {
 		y = e.pageY;
 	}
 
-	if ((x + w + 10) < document.body.clientWidth) { 
-		floatTipStyle.left = x + 'px';
 
-	} else { 
-		floatTipStyle.left = x - w + 'px';
-	}
-
+	floatTipStyle.left = x + 'px';
 	floatTipStyle.top = y + 20 + 'px';
 }
 
