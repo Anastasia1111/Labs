@@ -2,8 +2,6 @@
 <HTML><HEAD>
 <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=Windows-1251">
 <TITLE>blank</TITLE>
-<link rel="stylesheet" type="text/css" href="../mycs.css">
-<script src="../framecont.js"></script>
 </HEAD> 
 
 <BODY BGCOLOR="white" 
@@ -23,13 +21,13 @@
 		Номер фрейма:
 		<P>
 		<SELECT NAME="mymenu2">
-		<OPTION VALUE="1" SELECTED> w1
-		<OPTION VALUE="2"> w2
-		<OPTION VALUE="3"> w3
-		<OPTION VALUE="4"> w4
+		<OPTION VALUE="w1" SELECTED> w1
+		<OPTION VALUE="w2"> w2
+		<OPTION VALUE="w3"> w3
+		<OPTION VALUE="w4"> w4
 		</SELECT>
 		<P>
-		<input type="button" OnClick="opening(this.form.mymenu1.value, this.form.mymenu2.value);" value="Сопоставить">
+		<input type="button" OnClick="window.open(this.form.mymenu1.value, this.form.mymenu2.value);" value="Сопоставить">
 	</form>
 </BODY>
 </HTML>
