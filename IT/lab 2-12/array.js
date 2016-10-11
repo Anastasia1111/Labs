@@ -53,13 +53,17 @@ function PrintArray () {
 
 }
 
+function Sort(a,b)
+{
+	return (a-b);
+} 
 
 function readingValue (arrnum) {
 	
 	var val = document.getElementsByTagName('input')[arrnum].value;
 
 	array1[arrnum] = val;
-	array1.sort();
+	array1.sort(Sort);
 	PrintArray();
 	
 }

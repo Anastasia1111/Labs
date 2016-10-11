@@ -40,12 +40,17 @@ function readingValue (arrnum) {
 	PrintArray();
 }
 
+function Sort(a,b)
+{
+	return (a-b);
+} 
+
 function sorting() {
 	
 	for(var i = 0; i < 10; i++) {
 		array2[i] = array1[i];
 	}
 	
-	array2.sort();
+	array2.sort(Sort);
 	PrintArray();
 }
