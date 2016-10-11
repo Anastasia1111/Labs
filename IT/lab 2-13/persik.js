@@ -30,7 +30,6 @@ function getChar(event) {
 function parse(num, val) {
 	
 	var nvalue = parseInt(val,num) || 0;
-	nvalue = nvalue.toString().length < val.toString().length ? 0 : nvalue; 
 	var avalue = nvalue.toString(2)
 	var bvalue = nvalue.toString(8)
 	var cvalue = nvalue.toString(16)
