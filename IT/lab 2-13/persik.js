@@ -8,7 +8,7 @@ document.onkeypress = function(e) {
 
   //if (chr == null) return;
 
-  if (chr < '0' || chr > '9') {
+  if (chr.search(/[A-Fa-f0-9]/) != 0) {
     return false;
   }
 }
