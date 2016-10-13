@@ -1,93 +1,84 @@
-<html>
-    <head>
-        <title>index</title>
-    </head>
-    <body>
-        <xml id="xml">
-        <?xml version="1.0" encoding="Windows-1251"?>
-        <?xml-stylesheet type="text/xsl" href="mystyle.xsl"?>
-        <solar>
-            <planet caption="РњРµСЂРєСѓСЂРёР№">
-                <satellite_number>0</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">0.06</weight>
-                <diametr unit="РєРј">2440</diametr>
-                <revolution_period unit="С‡Р°СЃ">1410</revolution_period>
-                <circulation_period unit="РіРѕРґ">0.24</circulation_period>
-                <distance unit="Р°.Рµ.">0.39</distance>
-            </planet>
+<?xml version="1.0" encoding="Windows-1251"?>
+<?xml-stylesheet type="text/xsl" href="mystyle.xsl"?>
+    <solar>
+    <planet caption="Меркурий">
+        <satellite_number>0</satellite_number>
+        <weight unit="масса Земли">0.06</weight>
+        <diametr unit="км">2440</diametr>
+        <revolution_period unit="час">1410</revolution_period>
+        <circulation_period unit="год">0.24</circulation_period>
+        <distance unit="а.е.">0.39</distance>
+    </planet>
 
-            <planet caption="Р’РµРЅРµСЂР°">
-                <satellite_number>0</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">0.82</weight>
-                <diametr unit="РєРј">6050</diametr>
-                <revolution_period unit="С‡Р°СЃ">5834</revolution_period>
-                <circulation_period unit="РіРѕРґ">0.61</circulation_period>
-                <distance unit="Р°.Рµ.">0.72</distance>
-            </planet>
+    <planet caption="Венера">
+        <satellite_number>0</satellite_number>
+        <weight unit="масса Земли">0.82</weight>
+        <diametr unit="км">6050</diametr>
+        <revolution_period unit="час">5834</revolution_period>
+        <circulation_period unit="год">0.61</circulation_period>
+        <distance unit="а.е.">0.72</distance>
+    </planet>
 
-            <planet caption="Р—РµРјР»СЏ">
-                <satellite_number>1</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">1.00</weight>
-                <diametr unit="РєРј">6378</diametr>
-                <revolution_period unit="С‡Р°СЃ">24</revolution_period>
-                <circulation_period unit="РіРѕРґ">1.00</circulation_period>
-                <distance unit="Р°.Рµ.">1.00</distance>
-            </planet>
+    <planet caption="Земля">
+        <satellite_number>1</satellite_number>
+        <weight unit="масса Земли">1.00</weight>
+        <diametr unit="км">6378</diametr>
+        <revolution_period unit="час">24</revolution_period>
+        <circulation_period unit="год">1.00</circulation_period>
+        <distance unit="а.е.">1.00</distance>
+    </planet>
 
-            <planet caption="РњР°СЂСЃ">
-                <satellite_number>2</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">0.11</weight>
-                <diametr unit="РєРј">3390</diametr>
-                <revolution_period unit="С‡Р°СЃ">24.5</revolution_period>
-                <circulation_period unit="РіРѕРґ">1.88</circulation_period>
-                <distance unit="Р°.Рµ.">1.55</distance>
-            </planet>
+    <planet caption="Марс">
+        <satellite_number>2</satellite_number>
+        <weight unit="масса Земли">0.11</weight>
+        <diametr unit="км">3390</diametr>
+        <revolution_period unit="час">24.5</revolution_period>
+        <circulation_period unit="год">1.88</circulation_period>
+        <distance unit="а.е.">1.55</distance>
+    </planet>
 
-            <planet caption="Р®РїРёС‚РµСЂ">
-                <satellite_number>16</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">318.0</weight>
-                <diametr unit="РєРј">71400</diametr>
-                <revolution_period unit="С‡Р°СЃ">10.0</revolution_period>
-                <circulation_period unit="РіРѕРґ">11.86</circulation_period>
-                <distance unit="Р°.Рµ.">5.20</distance>
-            </planet>
+    <planet caption="Юпитер">
+        <satellite_number>16</satellite_number>
+        <weight unit="масса Земли">318.0</weight>
+        <diametr unit="км">71400</diametr>
+        <revolution_period unit="час">10.0</revolution_period>
+        <circulation_period unit="год">11.86</circulation_period>
+        <distance unit="а.е.">5.20</distance>
+    </planet>
 
-            <planet caption="РЎР°С‚СѓСЂРЅ">
-                <satellite_number>17</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">95.1</weight>
-                <diametr unit="РєРј">60400</diametr>
-                <revolution_period unit="С‡Р°СЃ">10.2</revolution_period>
-                <circulation_period unit="РіРѕРґ">29.46</circulation_period>
-                <distance unit="Р°.Рµ.">9.54</distance>
-            </planet>
+    <planet caption="Сатурн">
+        <satellite_number>17</satellite_number>
+        <weight unit="масса Земли">95.1</weight>
+        <diametr unit="км">60400</diametr>
+        <revolution_period unit="час">10.2</revolution_period>
+        <circulation_period unit="год">29.46</circulation_period>
+        <distance unit="а.е.">9.54</distance>
+    </planet>
 
-            <planet caption="РЈСЂР°РЅ">
-                <satellite_number>16</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">14.6</weight>
-                <diametr unit="РєРј">24300</diametr>
-                <revolution_period unit="С‡Р°СЃ">17.0</revolution_period>
-                <circulation_period unit="СЃСѓС‚РєРё">84.02</circulation_period>
-                <distance unit="Р°.Рµ.">19.19</distance>
-            </planet>
+    <planet caption="Уран">
+        <satellite_number>16</satellite_number>
+        <weight unit="масса Земли">14.6</weight>
+        <diametr unit="км">24300</diametr>
+        <revolution_period unit="час">17.0</revolution_period>
+        <circulation_period unit="сутки">84.02</circulation_period>
+        <distance unit="а.е.">19.19</distance>
+    </planet>
 
-            <planet caption="РќРµРїС‚СѓРЅ">
-                <satellite_number>8</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">17.2</weight>
-                <diametr unit="РєРј">25050</diametr>
-                <revolution_period unit="С‡Р°СЃ">17.8</revolution_period>
-                <circulation_period unit="СЃСѓС‚РєРё">164.78</circulation_period>
-                <distance unit="Р°.Рµ.">30.07</distance>
-            </planet>
+    <planet caption="Нептун">
+        <satellite_number>8</satellite_number>
+        <weight unit="масса Земли">17.2</weight>
+        <diametr unit="км">25050</diametr>
+        <revolution_period unit="час">17.8</revolution_period>
+        <circulation_period unit="сутки">164.78</circulation_period>
+        <distance unit="а.е.">30.07</distance>
+    </planet>
 
-            <planet caption="РџР»СѓС‚РѕРЅ">
-                <satellite_number>1</satellite_number>
-                <weight unit="РјР°СЃСЃР° Р—РµРјР»Рё">0.002</weight>
-                <diametr unit="РєРј">1500</diametr>
-                <revolution_period unit="С‡Р°СЃ">153.6</revolution_period>
-                <circulation_period unit="СЃСѓС‚РєРё">247.70</circulation_period>
-                <distance unit="Р°.Рµ.">39.52</distance>
-            </planet>
-        </solar>
-        </xml>
-    </body>
-</html>
+    <planet caption="Плутон">
+        <satellite_number>1</satellite_number>
+        <weight unit="масса Земли">0.002</weight>
+        <diametr unit="км">1500</diametr>
+        <revolution_period unit="час">153.6</revolution_period>
+        <circulation_period unit="сутки">247.70</circulation_period>
+        <distance unit="а.е.">39.52</distance>
+    </planet>
+</solar>

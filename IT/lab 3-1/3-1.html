@@ -7,8 +7,9 @@
  TEXT="black" LINK="blue" ALINK="red" VLINK="green">
 <div id="MainMenu" style = " padding: 10px 15px; z-index: 20; background: rgba(23,3,135,0.3); color:navy; font-family: Arial, sans-serif; font-size: 25px; ">
 
-<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu1')" onmouseout = "this.style.background = 'rgba(155,155,155,1)'; timer = setTimeout(function(){Hide('Menu1')},delay);">
+<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu1')" onmouseout = "this.style.background = 'rgba(155,155,155,1)'; timer1 = setTimeout(function(){Hide('Menu1')},delay);">
 Menu1
+</span> 
 	<div id="Menu1" style = "display: none;
 	content: attr(data-title); 
 	position: fixed; 
@@ -18,8 +19,8 @@ Menu1
 	font-size: 20px; 
 	padding: 5px 10px; 
 	border: 1px solid #333; "
-	onmouseover = "clearTimeout(timer);"
-	onmouseout = "timer = setTimeout(function(){Hide('Menu1')},delay)">
+	onmouseover = "clearTimeout(timer1);"
+	onmouseout = "timer1 = setTimeout(function(){Hide('Menu1')},delay)">
 		<div onmouseover = "this.style.background = 'rgba(23,3,135,0.9)';"
 		onmouseout = "this.style.background = 'rgba(255,255,255,0)';">Menu1.1</div>
 		<div onmouseover = "this.style.background = 'rgba(23,3,135,0.9)';"
@@ -31,10 +32,10 @@ Menu1
 
 
 	</div>
-</span> 
   
-<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu2')" onmouseout = "this.style.background = 'rgba(155,155,155,1)';timer = setTimeout(function(){Hide('Menu2')},delay)">
+<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu2')" onmouseout = "this.style.background = 'rgba(155,155,155,1)';timer2 = setTimeout(function(){Hide('Menu2')},delay)">
 Menu2
+</span>
 	<div id="Menu2" style = "display: none;
 	content: attr(data-title); 
 	position: fixed; 
@@ -44,14 +45,13 @@ Menu2
 	font-size: 20px; 
 	padding: 5px 10px; 
 	border: 1px solid #333; "
-	onmouseover = "clearTimeout(timer);"
-	onmouseout = "timer = setTimeout(function(){Hide('Menu2')},delay)">
+	onmouseover = "clearTimeout(timer2);"
+	onmouseout = "timer2 = setTimeout(function(){Hide('Menu2')},delay)">
 		<div onmouseover = "this.style.background = 'rgba(23,3,135,0.9)';"
 		onmouseout = "this.style.background = 'rgba(255,255,255,0)';">Menu2.1</div>
-	</div> 
-</span>
+	</div>
 	 
-<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu3')" onmouseout = "this.style.background = 'rgba(155,155,155,1)';timer = setTimeout(function(){Hide('Menu3')},delay)">
+<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu3')" onmouseout = "this.style.background = 'rgba(155,155,155,1)';timer3 = setTimeout(function(){Hide('Menu3')},delay)">
 Menu3
 </span> 
 <div id="Menu3" style = "display: none;
@@ -63,12 +63,12 @@ Menu3
 	font-size: 20px; 
 	padding: 5px 10px; 
 	border: 1px solid #333; "
-	onmouseover = "clearTimeout(timer);"
-	onmouseout = "timer = setTimeout(function(){Hide('Menu3')},delay)">
+	onmouseover = "clearTimeout(timer3);"
+	onmouseout = "timer3 = setTimeout(function(){Hide('Menu3')},delay)">
 		<div onmouseover = "this.style.background = 'rgba(23,3,135,0.9)';"
 		onmouseout = "this.style.background = 'rgba(255,255,255,0)';">Menu3.1</div>
 	</div>   
-<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu4')" onmouseout = "this.style.background = 'rgba(155,155,155,1)';timer = setTimeout(function(){Hide('Menu4')},delay)">
+<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu4')" onmouseout = "this.style.background = 'rgba(155,155,155,1)';timer4 = setTimeout(function(){Hide('Menu4')},delay)">
 Menu4
 </span> 
 <div id="Menu4" style = "display: none;
@@ -80,33 +80,20 @@ Menu4
 	font-size: 20px; 
 	padding: 5px 10px; 
 	border: 1px solid #333; "
-	onmouseover = "clearTimeout(timer);"
-	onmouseout = "timer = setTimeout(function(){Hide('Menu4')},delay)">
+	onmouseover = "clearTimeout(timer4);"
+	onmouseout = "timer4 = setTimeout(function(){Hide('Menu4')},delay)">
 		<div onmouseover = "this.style.background = 'rgba(23,3,135,0.9)';"
 		onmouseout = "this.style.background = 'rgba(255,255,255,0)';">Menu4.1</div>
 	</div>   
-<span style = "background: rgba(155,155,155,1);" onmouseover = "this.style.background = 'rgba(23,3,135,0.9)'; Show('Menu5')" onmouseout = "this.style.background = 'rgba(155,155,155,1)';timer = setTimeout(function(){Hide('Menu5')},delay)">
-Menu5
-</span> 
-<div id="Menu5" style = "display: none;
-	content: attr(data-title); 
-	position: fixed; 
-	left: 370; top: 45;  
-	z-index: 1; 
-	background: rgba(23,3,135,0.6); 
-	font-size: 20px; 
-	padding: 5px 10px; 
-	border: 1px solid #333; "
-	onmouseover = "clearTimeout(timer);"
-	onmouseout = "timer = setTimeout(function(){Hide('Menu5')},delay)">
-		<div onmouseover = "this.style.background = 'rgba(23,3,135,0.9)';"
-		onmouseout = "this.style.background = 'rgba(255,255,255,0)';">Menu5.1</div>
-	</div>   
-</div>
+
 
 
 <script>
-	var timer;
+	var timer1;
+	var timer2;
+	var timer3;
+	var timer4;
+
 	delay = 300;
 	function Show(name){
 		document.getElementById(name).style.display='block';
