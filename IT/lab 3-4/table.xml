@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="Windows-1251"?>
+<?xml-stylesheet type="text/xsl" href="mystyle.xsl"?>
+<students>
+    <student name="student-1">
+        <facul></facul>
+        <course></course>
+        <group></group>
+        <fst></fst>
+        <snd></snd>
+        <trd></trd>
+        <fourth></fourth>
+        <fifth></fifth>
+        <sixth></sixth>
+        <svnth></svnth>
+    </student>
+</students>
