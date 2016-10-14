@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="WINDOWS-1251"?>
 
 <university>
-   <faculty caption="ИВТ">
-      <course caption="1">
-        <group caption="ВМ-06">
-          <student caption="Иванов Иван">
+   <faculty>
+      <caption>ИВТ</caption> 
+      <course>
+        <caption>1</caption> 
+        <group>
+          <caption>ВМ-06</caption> 
+          <student>
+            <caption>Иванов Иван</caption> 
             <matan>2</matan>
             <linalg>2</linalg>
             <grafik>1</grafik>
@@ -13,7 +17,51 @@
             <eng>0</eng>
             <fra>1</fra>
           </student>
-          <student caption="Петров Петр">
+          <student>
+            <caption>Петров Петр</caption> 
+            <matan>1</matan>
+            <linalg>2</linalg>
+            <grafik>0</grafik>
+            <pavu>2</pavu>
+            <infor>1</infor>
+            <eng>1</eng>
+            <fra>2</fra>
+          </student>
+          <student>
+            <caption>Сидоров Сидр</caption> 
+            <matan>1</matan>
+            <linalg>1</linalg>
+            <grafik>0</grafik>
+            <pavu>2</pavu>
+            <infor>0</infor>
+            <eng>2</eng>
+            <fra>2</fra>
+          </student>
+        </group>
+        <group>
+          <caption>ВМ-07</caption> 
+          <student>
+            <caption>Иванов Игорь</caption> 
+            <matan>2</matan>
+            <linalg>2</linalg>
+            <grafik>1</grafik>
+            <pavu>2</pavu>
+            <infor>2</infor>
+            <eng>0</eng>
+            <fra>1</fra>
+          </student>
+          <student>
+            <caption>Козлов Петр</caption> 
+            <matan>1</matan>
+            <linalg>2</linalg>
+            <grafik>0</grafik>
+            <pavu>2</pavu>
+            <infor>1</infor>
+            <eng>1</eng>
+            <fra>2</fra>
+          </student>
+          <student>
+            <caption>Попов Андрей</caption> 
             <matan>1</matan>
             <linalg>2</linalg>
             <grafik>0</grafik>
@@ -23,20 +71,13 @@
             <fra>2</fra>
           </student>
         </group>
-        <group caption="ВМ-06">
-          <student caption="Иванов Игорь">
-            <matan>2</matan>
-            <linalg>2</linalg>
-            <grafik>1</grafik>
-            <pavu>2</pavu>
-            <infor>2</infor>
-            <eng>0</eng>
-            <fra>1</fra>
-          </student>
       </course>
-      <course caption="2">
-        <group caption="ВМ-95">
-          <student caption="Иванова Анна">
+      <course>
+        <caption>2</caption> 
+        <group>
+          <caption>ВМ-95</caption> 
+          <student>
+            <caption>Иванова Анна</caption> 
             <matan>1</matan>
             <vchmat>2</vchmat>
             <ibm>1</ibm>
@@ -45,7 +86,8 @@
             <eng>1</eng>
             <fra>2</fra>
           </student>
-          <student caption="Петров Олег">
+          <student>
+            <caption>Петров Олег</caption> 
             <matan>2</matan>
             <vchmat>2</vchmat>
             <ibm>1</ibm>
@@ -54,7 +96,8 @@
             <eng>0</eng>
             <fra>1</fra>
           </student>
-          <student caption="Гаврилов Никита">
+          <student>
+            <caption>Гаврилов Никита</caption> 
             <matan>2</matan>
             <vchmat>2</vchmat>
             <ibm>1</ibm>
@@ -64,8 +107,10 @@
             <fra>1</fra>
           </student>
         </group>
-        <group caption="ВМ-96">
-          <student caption = "Гусевоз Иван">
+        <group>
+          <caption>ВМ-96</caption> 
+          <student>
+            <caption>Гусевоз Иван</caption> 
             <matan>2</matan>
             <vchmat>2</vchmat>
             <ibm>1</ibm>
@@ -73,12 +118,35 @@
             <teravt>2</teravt>
             <eng>0</eng>
             <fra>1</fra>
+          </student>
+          <student>
+            <caption>Рюрикович Петр</caption> 
+            <matan>2</matan>
+            <vchmat>2</vchmat>
+            <ibm>1</ibm>
+            <mlta>2</mlta>
+            <teravt>2</teravt>
+            <eng>0</eng>
+            <fra>1</fra>
+          </student>
+          <student>
+            <caption>Куприн Игнат</caption> 
+            <matan>0</matan>
+            <vchmat>0</vchmat>
+            <ibm>0</ibm>
+            <mlta>0</mlta>
+            <teravt>0</teravt>
+            <eng>0</eng>
+            <fra>0</fra>
           </student>
         </group>
       </course>
-      <course caption="3">
-        <group caption="ВМ-87">
-          <student caption="Приблудов Иван">
+      <course>
+        <caption>3</caption> 
+        <group>
+          <caption>ВМ-87</caption> 
+          <student>
+            <caption>Приблудов Иван</caption> 
             <metro>1</metro>
             <model>2</model>
             <ABC>2</ABC>
@@ -87,7 +155,8 @@
             <bd>2</bd>
             <fra>2</fra>
           </student>
-          <student caption="Сидоров Валерий">
+          <student>
+            <caption>Сидоров Валерий</caption> 
             <metro>2</metro>
             <model>2</model>
             <ABC>1</ABC>
@@ -97,8 +166,10 @@
             <fra>1</fra>
           </student>
         </group>
-        <group caption="ВМ-88">
-          <student caption="Иванов Егор">
+        <group>
+          <caption>ВМ-88</caption> 
+          <student>
+            <caption>Иванов Егор</caption> 
             <metro>2</metro>
             <model>2</model>
             <ABC>1</ABC>
@@ -107,7 +178,8 @@
             <bd>0</bd>
             <fra>1</fra>
           </student>
-          <student caption="Петров Николай">
+          <student>
+            <caption>Петров Николай</caption> 
             <metro>2</metro>
             <model>2</model>
             <ABC>1</ABC>
@@ -116,7 +188,8 @@
             <bd>0</bd>
             <fra>1</fra>
           </student>
-          <student caption="Петров Виктор">
+          <student>
+            <caption>Петров Виктор</caption> 
             <metro>2</metro>
             <model>2</model>
             <ABC>1</ABC>
@@ -125,7 +198,8 @@
             <bd>0</bd>
             <fra>1</fra>
           </student>
-          <student caption="Сидорова Татьяна">
+          <student>
+            <caption>Сидорова Татьяна</caption> 
             <metro>2</metro>
             <model>2</model>
             <ABC>1</ABC>
@@ -137,10 +211,14 @@
         </group>
       </course>
    </faculty>
-   <faculty caption="МРМ">  
-      <course caption="1">
-        <group caption="С-07">
-          <student caption="Иванова Наталья">
+   <faculty>  
+      <caption>МРМ</caption> 
+      <course>
+        <caption>1</caption> 
+        <group>
+          <caption>С-07</caption> 
+          <student>
+            <caption>Иванова Наталья</caption> 
             <matan>2</matan>
             <linalg>1</linalg>
             <grafik>1</grafik>
@@ -149,7 +227,8 @@
             <eng>2</eng>
             <fra>0</fra>
           </student>
-          <student caption="Петров Петр">
+          <student>
+            <caption>Петров Петр</caption> 
             <matan>1</matan>
             <linalg>2</linalg>
             <grafik>0</grafik>
@@ -158,7 +237,8 @@
             <eng>1</eng>
             <fra>2</fra>
           </student>
-          <student caption="Уваров Владимир"> 
+          <student>
+            <caption>Уваров Владимир</caption> 
             <matan>1</matan>
             <linalg>2</linalg>
             <grafik>0</grafik>
@@ -168,10 +248,46 @@
             <fra>2</fra>
           </student>
         </group>
+        <group>
+          <caption>РМ-09</caption> 
+          <student>
+            <caption>Ленин Иван</caption> 
+            <matan>2</matan>
+            <linalg>2</linalg>
+            <hist>1</hist>
+            <pavu>2</pavu>
+            <infor>2</infor>
+            <eng>0</eng>
+            <fra>1</fra>
+          </student>
+          <student>
+            <caption>Куланов Петр</caption> 
+            <matan>1</matan>
+            <linalg>2</linalg>
+            <hist>1</hist>
+            <pavu>2</pavu>
+            <infor>1</infor>
+            <eng>1</eng>
+            <fra>2</fra>
+          </student>
+          <student>
+            <caption>Сидорова Софья</caption> 
+            <matan>1</matan>
+            <linalg>2</linalg>
+            <grafik>0</grafik>
+            <hist>1</hist>
+            <infor>1</infor>
+            <eng>1</eng>
+            <fra>2</fra>
+          </student>
+        </group>
       </course>
-      <course caption="2">
-        <group caption="С-97">
-          <student caption="Иванов Иван">
+      <course>
+        <caption>2</caption> 
+        <group>
+          <caption>С-97</caption> 
+          <student>
+            <caption>Иванов Иван</caption> 
             <matan>2</matan>
             <saod>2</saod>
             <fizik>1</fizik>
@@ -180,7 +296,8 @@
             <eng>2</eng>
             <fra>1</fra>
           </student>
-          <student caption="Петров Петр">
+          <student>
+            <caption>Петров Петр</caption> 
             <matan>2</matan>
             <saod>2</saod>
             <fizik>1</fizik>
@@ -189,7 +306,8 @@
             <eng>0</eng>
             <fra>1</fra>
           </student>
-          <student caption="Сидоров Сидр">
+          <student>
+            <caption>Сидоров Сидр</caption> 
             <matan>2</matan>
             <saod>2</saod>
             <fizik>1</fizik>
@@ -199,8 +317,10 @@
             <fra>1</fra>
           </student>
         </group>
-        <group caption="РМ-96">
-          <student caption="Иванов Иван">
+        <group>
+          <caption>РМ-96</caption> 
+          <student>
+            <caption>Иванов Иван</caption> 
             <matan>2</matan>
             <fizik>2</fizik>
             <ibm>1</ibm>
@@ -209,7 +329,8 @@
             <eng>0</eng>
             <fra>1</fra>
           </student>
-          <student caption="Петров Петр">
+          <student>
+            <caption>Петров Петр</caption> 
             <matan>2</matan>
             <fizik>2</fizik>
             <ibm>1</ibm>
@@ -218,7 +339,8 @@
             <eng>0</eng>
             <fra>1</fra>
           </student>
-          <student caption="Сидоров Сидр">
+          <student>
+            <caption>Сидоров Сидр</caption> 
             <matan>2</matan>
             <fizik>2</fizik>
             <ibm>1</ibm>
@@ -229,9 +351,12 @@
           </student>
         </group>
       </course>
-      <course caption="3">
-        <group caption="С-88">
-          <student caption="Иванов Иван">
+      <course>
+        <caption>3</caption> 
+        <group>
+          <caption>С-88</caption> 
+          <student>
+            <caption>Иванов Иван</caption> 
             <spo>1</spo>
             <sxem>2</sxem>
             <ibm>1</ibm>
@@ -240,7 +365,8 @@
             <vich_tech>0</vich_tech>
             <fra>0</fra>
           </student>
-          <student caption="Петров Петр"> 
+          <student>
+            <caption>Петров Петр</caption> 
             <spo>2</spo>
             <sxem>2</sxem>
             <ibm>1</ibm>
@@ -249,7 +375,7 @@
             <vich_tech>0</vich_tech>
             <fra>1</fra>
           </student>
-          <student caption="">
+          <student>
             <caption>Сидоров Сидр</caption> 
             <spo>2</spo>
             <sxem>2</sxem>
@@ -257,6 +383,39 @@
             <tmo>2</tmo>
             <econ>2</econ>
             <vich_tech>0</vich_tech>
+            <fra>1</fra>
+          </student>
+        </group>
+        <group>
+          <caption>РМ-811</caption> 
+          <student>
+            <caption>Иванов Иван</caption> 
+            <metro>2</metro>
+            <cult>2</cult>
+            <ecol>1</ecol>
+            <inf_tech>2</inf_tech>
+            <econ>2</econ>
+            <tdgraf>0</tdgraf>
+            <fra>1</fra>
+          </student>
+          <student>
+            <caption>Нихренасебефамилия Петр</caption> 
+            <metro>2</metro>
+            <cult>2</cult>
+            <ecol>1</ecol>
+            <inf_tech>2</inf_tech>
+            <econ>2</econ>
+            <tdgraf>0</tdgraf>
+            <fra>1</fra>
+          </student>
+          <student>
+            <caption>Сидоров Сидр</caption> 
+            <metro>2</metro>
+            <cult>2</cult>
+            <ecol>1</ecol>
+            <inf_tech>2</inf_tech>
+            <econ>2</econ>
+            <tdgraf>0</tdgraf>
             <fra>1</fra>
           </student>
         </group>
