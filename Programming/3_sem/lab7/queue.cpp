@@ -24,6 +24,9 @@ Queue *Queue::pop()
 	int x = tail->data;
 	cout << "Первое значение в очереди: " << x << " -> удалено." << endl;
 	Queue *last = this;
+	while ((last->next) && ((last->next) != tail)){
+		last = (Queue *)(last->next);
+	}
 	try
 	{
 		if (tail == this)
@@ -36,10 +39,8 @@ Queue *Queue::pop()
 	{
 		cout << str << endl;
 	}
-	while (last->next){
-		last = (Queue *)last->next;
-	}
 	tail = last;
+	tail->next = NULL;
 	
 	return this;
 }

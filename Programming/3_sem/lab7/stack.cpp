@@ -15,8 +15,22 @@ Stack *Stack::add(int value)
 
 Stack *Stack::pop()
 {
+	Stack *n;
 	cout << "Последнее значение стэка: " << data << " -> удалено" << endl;
-	Stack *n = (Stack *)this->next;
-	delete this; // отвратительно, знаю.
+	n = (Stack *)this->next;
+	try
+	{
+		if(!(this->next)){
+			throw "Список состоит из одного элемента, удалите его в main, пожалуйста";
+		}
+		delete this; // отвратительно, знаю.
+		
+	}
+	catch(char *str)
+	{
+		cout << str << endl;
+		return this;
+	}
+
 	return n;
 }
