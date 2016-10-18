@@ -5,11 +5,11 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = 
-OBJ  = main.o list.o $(RES)
-LINKOBJ  = main.o list.o $(RES)
-LIBS =  -L"lib" -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32  
-INCS =  -I"include" 
-CXXINCS =  -I"lib/gcc/mingw32/3.4.2/include"  -I"include/c++/3.4.2/backward"  -I"include/c++/3.4.2/mingw32"  -I"include/c++/3.4.2"  -I"include" 
+OBJ  = main.o list.o stack.o queue.o $(RES)
+LINKOBJ  = main.o list.o stack.o queue.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32  
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
 BIN  = lab7.exe
 CXXFLAGS = $(CXXINCS)  
 CFLAGS = $(INCS)  
@@ -31,3 +31,9 @@ main.o: main.cpp
 
 list.o: list.cpp
 	$(CPP) -c list.cpp -o list.o $(CXXFLAGS)
+
+stack.o: stack.cpp
+	$(CPP) -c stack.cpp -o stack.o $(CXXFLAGS)
+
+queue.o: queue.cpp
+	$(CPP) -c queue.cpp -o queue.o $(CXXFLAGS)
