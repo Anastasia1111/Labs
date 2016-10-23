@@ -15,32 +15,40 @@ Queue *Queue::add(int value)
 	}
 	last->next = new Queue(value);
 	tail = last;*/
-	Queue *last = new Queue(value, this, this->tail);
-	return last;
-}
-
-Queue *Queue::pop()
-{
-	int x = tail->data;
-	cout << "Первое значение в очереди: " << x << " -> удалено." << endl;
-	Queue *last = this;
-	while ((last->next) && ((last->next) != tail)){
-		last = (Queue *)(last->next);
-	}
+	tail->next = new Queue(value);
 	try
 	{
-		if (tail == this)
+		if(!(tail->next))
 		{
-			throw "Список состоит из одного элемента, удалите его в main, пожалуйста";
+			throw "New element was not created";
 		}
-		delete tail;
+		tail = (Queue *)tail->next;
+		return this;
 	}
 	catch(char *str)
 	{
 		cout << str << endl;
 	}
-	tail = last;
-	tail->next = NULL;
+}
+
+Queue *Queue::pop()
+{
+	int x = data;
+	cout << "First queue data: " << x << " -> deleted." << endl;
+	Queue *n = (Queue *)next;
 	
-	return this;
+	try
+	{
+		if (count)
+		{
+			throw 1;
+		}
+		delete this;
+	}
+	catch(...)
+	{
+		cout << "Queue contain one element. Delete it in main, pleeeeeeeeeease!" << endl;
+	}
+	
+	return n;
 }

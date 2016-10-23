@@ -22,9 +22,7 @@ class List {
 			count++;
 		};
 		
-		~List();
-		
-		void print();
+		virtual ~List();
 		
 		void show();
 		

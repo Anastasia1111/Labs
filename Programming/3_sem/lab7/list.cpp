@@ -6,13 +6,6 @@ List::~List(){
 	count--;
 }
 
-void List::print()
-{
-	cout << data << endl;
-	if(next != NULL){
-	}
-}
-
 List *List::add(int value)
 {
 	List *last = new List(value, this);

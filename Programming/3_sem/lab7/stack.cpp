@@ -9,26 +9,39 @@ Stack::~Stack()
 
 Stack *Stack::add(int value)
 {
-	Stack *last = new Stack(value,this);
-	return last;
+	Stack *input = NULL;
+	input = new Stack(value,this);
+	try
+	{
+		if(!(input))
+		{
+			throw "New element was not created";
+		}
+		return input;
+	}
+	catch(char *str)
+	{
+		cout << str << endl;
+	}
+	
 }
 
 Stack *Stack::pop()
 {
 	Stack *n;
-	cout << "Последнее значение стэка: " << data << " -> удалено" << endl;
+	cout << "Last stack data: " << data << " -> deleted" << endl;
 	n = (Stack *)this->next;
 	try
 	{
-		if(!(this->next)){
-			throw "Список состоит из одного элемента, удалите его в main, пожалуйста";
+		if(count){
+			throw 1;
 		}
 		delete this; // отвратительно, знаю.
 		
 	}
-	catch(char *str)
+	catch(...)
 	{
-		cout << str << endl;
+		cout << "Stack contain one element. Delete it in main, pleeeeeeeeeease!" << endl;
 		return this;
 	}
 
