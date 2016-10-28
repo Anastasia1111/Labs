@@ -18,6 +18,19 @@ struct record
 	char dob[10];
 };
 
+struct qElement
+{
+	record* rcrd;
+	qElement* next;
+};
+
+struct vertex
+{
+	record* rcrd;
+	vertex* left;
+	vertex* right;
+};
+
 record* database;
 int* index;
 
@@ -156,23 +169,6 @@ void Heap(int l, int r)
 	}
 }
 
-/*void heap_sort(int R)
-{
-    for (int l=r/2; l>=0; l--)
-    {
-        Heap(l, r);
-    }
-    int r = R, buf;
-    while(r>0)
-    {
-        buf = arr[0];
-        arr[0] = arr[r-1];
-        arr[r-1] = buf;
-        r--;
-        Heap(0,r);
-    }
-}*/
-
 void HeapSort()
 {
 	for (int l = DBSize/2; l>=0; l--)
@@ -196,6 +192,10 @@ int main()
 	
 	HeapSort();
 	printDB();
+	
+	// Queue making
+	
+	// Tree making
 	
 	return 0;
 }
