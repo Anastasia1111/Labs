@@ -107,44 +107,85 @@ int compare_strings(char* str1, char* str2, int size)
 
 int compare_records(int num1, int num2)
 {
-	int flag = compare_strings(database[num1].dob, database[num2].dob, 2);
-	if (!flag) {
-		flag = compare_strings(database[num1].fio, database[num2].fio, 30);
+	if (database[num1].dob[0]<database[num2].dob[0]) 
+	{
+		return -1;
+	} else {
+		if (database[num1].dob[0]>database[num2].dob[0])
+		{
+			return 1;
+		} else {
+			if (database[num1].dob[1]<database[num2].dob[1]) 
+			{
+				return -1;
+			} else {
+				if (database[num1].dob[1]>database[num2].dob[1]) 
+				{
+					return 1;
+				} else {
+					if (compare_strings(database[num1].fio,database[num2].fio,30)==-1) 
+					{
+						return -1;
+					} else {
+						return 1;
+					}
+				}
+			}
+		}
 	}
-	return flag;
 }
 
 void Heap(int l, int r)
 {
-	int x = index[l], i = l, j;
-	while (1) {
-		j = 2*i;
-		if (j>r) 
-			break;
-		if ((j<r)&&(compare_records(index[j+1],index[j])>-1)) 
-			j++;
-		if (compare_records(x,index[j])>-1)
-			break;
-		index[i] = index[j];
-		i = j;
+	int j = 2*l, t, buf;
+	while (j+1 < r) {
+		t = j+1;
+		if ((t+1)<r && (compare_records(index[t+1],index[t])>-1))
+		{
+			t++;
+		}
+		if (compare_records(index[l],index[t])==-1)
+		{
+			buf = index[l];
+			index[l] = index[t];
+			index[t] = buf;
+			l = t;
+			j = 2*l;
+		} 
+		else break;
 	}
-	index[i] = x;
 }
+
+/*void heap_sort(int R)
+{
+    for (int l=r/2; l>=0; l--)
+    {
+        Heap(l, r);
+    }
+    int r = R, buf;
+    while(r>0)
+    {
+        buf = arr[0];
+        arr[0] = arr[r-1];
+        arr[r-1] = buf;
+        r--;
+        Heap(0,r);
+    }
+}*/
 
 void HeapSort()
 {
-	int l = DBSize/2;
-	while (l>=0) {
-		Heap(l, DBSize-1);
-		l--;
-	}
-	int r = DBSize;
+	for (int l = DBSize/2; l>=0; l--)
+    {
+        Heap(l, DBSize);
+    }
+	int r = DBSize, buf;
 	while (r>0) {
-		int buf = index[0];
+		buf = index[0];
 		index[0] = index[r-1];
 		index[r-1] = buf;
 		r--;
-		Heap(0, r-1);
+		Heap(0, r);
 	}
 }
 
