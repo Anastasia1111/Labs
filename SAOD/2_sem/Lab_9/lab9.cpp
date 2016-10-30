@@ -32,7 +32,7 @@ int main(void)
 	/****************/
 	while (1){
 		m = SearchScan(haystack + i, strlen(haystack + i), needle, strlen(needle));
-		if (m + i == strlen(haystack) - strlen(needle))
+		if (m + i > strlen(haystack) - strlen(needle))
 		{
 			break;
 		}
@@ -71,7 +71,7 @@ int SearchScan(char *haystack, int n, char *needle, int m)
 			j++;
 			C++;
 		}
-	} while ( (j != m) && (i < (n - m)) );
+	} while ( (j != m) && (i < (n - m + 1)) );
 	return i;
 }
 
