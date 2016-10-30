@@ -1,4 +1,4 @@
-// Вариант №41 B2 C2 S1 D2
+// Variant #41 B2 C2 S1 D2 E3
 
 #include <cstdio>
 #include <cstring>
@@ -18,10 +18,16 @@ struct record
 	char dob[10];
 };
 
-struct qElement
+struct qEl
 {
-	record* rcrd;
-	qElement* next;
+	qEl* next;
+	record rcrd;
+};
+
+struct queue
+{
+	qEl* head;
+	qEl* tail;
 };
 
 struct vertex
@@ -33,6 +39,7 @@ struct vertex
 
 record* database;
 int* index;
+queue* srch_res;
 
 void readDB()
 {
@@ -185,6 +192,33 @@ void HeapSort()
 	}
 }
 
+void initQueue()
+{
+	srch_res = new queue;
+	srch_res->tail = (qEl*)&srch_res->head;
+}
+
+void addToQueue(record data)
+{
+	qEl *new_el = new qEl;
+	new_el->rcrd = data;
+	srch_res->tail->next = new_el;
+	srch_res->tail = new_el;
+}
+
+void printQueue()
+{
+	qEl* cur_el = srch_res->head;
+	while (cur_el!=srch_res->tail)
+	{
+		printf("%30s  %03d  %22s  %10s\n",	cur_el->rcrd.fio,
+											cur_el->rcrd.dept,
+											cur_el->rcrd.post,
+											cur_el->rcrd.dob);
+		cur_el = cur_el->next;
+	}	
+}	
+
 int main()
 {
 	readDB();
@@ -194,6 +228,12 @@ int main()
 	printDB();
 	
 	// Queue making
+	initQueue();
+	for (int i=0; i<10; i++) {
+		addToQueue(database[index[i]]);
+	}
+	printQueue();
+	system("PAUSE");
 	
 	// Tree making
 	
