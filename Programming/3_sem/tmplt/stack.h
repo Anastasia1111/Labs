@@ -41,7 +41,7 @@ class Stack : public List <type>
 			type x = this->data;
 			cout << "Last stack data: " << x << " -> deleted" << endl;
 			n = (Stack *)this->next;
-			
+			delete this;
 			return n;
 		};
 		

@@ -5,7 +5,7 @@
 #include "stack.h"
 #include <ctime>
 
-#define TYPE char
+#define TYPE int
 
 using namespace std;
 
