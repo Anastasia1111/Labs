@@ -1,0 +1,68 @@
+body {
+	font-family: Times;
+	text-align: left;
+	background-color: #103070;
+	font-size: large;
+	color: white;
+}
+
+td {
+	border: 1px solid #333;
+	background: white;
+	font-size: 13px;
+	color: black;
+}
+
+#floatTip {
+	display: none;
+	content: attr(data-title); 
+	position: absolute; 
+	left: 20; top: 30; 
+	z-index: 1; 
+	background: rgba(128,128,128,0.9); 
+	font-family: Arial, sans-serif; 
+	font-style: italic;
+	font-size: 11px; 
+	padding: 5px 10px; 
+	border: 1px solid #333;
+	color: white;
+}
+
+#infotext {
+	color: yellow;
+	font-style: italic;
+}
+
+.clockwindow {
+	position: absolute;
+	background-color: rgba(255,255,255,0.7);
+	max-width: 295px;
+	padding: 0px;
+}
+
+#text1 {
+	font-family: Impact;
+	font-size: 16px;
+	text-align: left;
+	background: rgba(0,0,0,0);
+	font-size: large;
+	color: white;
+	padding-bottom: 7px;
+	padding-top: 7px;
+	border-bottom-color: gray;
+    border-bottom-style: double;
+    border-bottom-width: 3px;
+}
+
+#text2 {
+	color: gray;
+}
+
+#text3 {
+	font-family: Consolas;
+}
+
+.imgclick {
+	max-width: 70px;
+	max-height: 70px;
+}
