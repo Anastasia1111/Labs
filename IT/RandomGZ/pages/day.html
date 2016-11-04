@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+		<STYLE>
+			body {
+				background: url(../fons/date.jpg) 100% 100% no-repeat;
+				background-size: cover;
+			}
+			h1, h4, div {
+				text-align: center;
+				color: black;
+			}
+		</STYLE>
+	</head>
+
+	<body onload="getRandomDay();" LINK="grey" ALINK="red" VLINK="white">
+		<h1>Случайный день недели</h1>
+		<p>
+		<h4>
+		"Начну учиться с понедельника! Хотя нет, в понедельник ещё САОД... 
+		Лучше со вторника! Или со среды? Может с четверга?" <BR>
+		Если вы не можете определиться, когда начать то, или иное дело, <BR>
+		то сервис "Случайный день недели"
+		создан специально для вас! Дерзайте!
+		</h4>
+		</p>
+		<script src="../js/rand.js"></script>
+		<script language="javascript">
+			function getRandomDay(){
+				var day = getRandomInt(1,7);
+				if (day==1)
+				{
+					day = "Понедельник"
+				}
+				if (day==2)
+				{
+					day = "Вторник"
+				}
+				if (day==3)
+				{
+					day = "Среда"
+				}
+				if (day==4)
+				{
+					day = "Четверг"
+				}
+				if (day==5)
+				{
+					day = "Пятница"
+				}
+				if (day==6)
+				{
+					day = "Суббота"
+				}
+				if (day==7)
+				{
+					day = "Воскресенье"
+				}
+				document.getElementById("day").innerHTML = day;
+			}
+		</script>
+		<H2><div id="day" align=center>Если вы это видите, значит что-то не так!</div></H2>
+		<br>
+		<center>
+			<input type="button" value="Сгенерерировать ещё" onclick="getRandomDay();">
+		</center>
+	</body>
+</html>

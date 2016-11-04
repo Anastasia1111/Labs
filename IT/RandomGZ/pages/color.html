@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+		<STYLE>
+			body {
+				background: url(../fons/paint.jpg) 100% 100% no-repeat;
+				background-size: cover;
+			}
+			h1, h4, div {
+				text-align: center;
+				color: black;
+			}
+			#sqr {
+				width:100px;
+				height:100px;
+				position: relative;
+				margin: auto;
+			}
+		</STYLE>
+	</head>
+
+	<body onLoad="getRandomColor();" LINK="grey" ALINK="red" VLINK="white">
+		<h1>Случайный цвет</h1>
+		<p>
+		<h4>
+		На этой страничке можно получить квадрат случайного цвета и его HEX-код. 
+		Это просто и интересно. <BR>
+		Достаточно одного клика по кнопке внизу и можно начинать любоваться геометрической фигурой.
+		</h4>
+		</p>
+		<script src="../js/rand.js"></script>
+		<script language="javascript">
+		function getRandomColor(){
+			var a = getRandomInt(0, 15);
+			var b = getRandomInt(0, 15);
+			var c = getRandomInt(0, 15);
+			var d = getRandomInt(0, 15);
+			var e = getRandomInt(0, 15);
+			var f = getRandomInt(0, 15);
+			var color="#"+a.toString(16)+b.toString(16)+c.toString(16)+d.toString(16)+e.toString(16)+f.toString(16);
+			document.getElementById("sqr").style.backgroundColor = color;
+			document.getElementById("code").innerHTML = color;
+		}
+		</script>
+		<br>
+		<div id="sqr"></div>
+		<br>
+		<div>
+		Код случайного цвета: <span id="code"></span>
+		</div>
+		<br>
+		<center>
+			<input type="button" value="Сгенерерировать цвет" onclick="getRandomColor();">
+		</center>
+	</body>
+</html>
