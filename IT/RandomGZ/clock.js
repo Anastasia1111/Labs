@@ -1,15 +1,9 @@
 var idTimer = 0;
 var delay = 500;
 	
-function getRandomInt(min, max)
-{
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function clockworking() {
 	
 	var default_now = new Date();
-	var rand_tz = getRandomInt(-12, 12);
 	var now = new Date(default_now.getTime() + (rand_tz-7)*3600000);
 	
 	var curr_year = String(now.getFullYear());
