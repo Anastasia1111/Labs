@@ -36,9 +36,41 @@
 		</STYLE>
 	</HEAD> 
 
-	<BODY TEXT="black" LINK="black" ALINK="red" VLINK="black">
-		<DIV CLASS="t1">СЛУЧАЙНЫЙ САЙТ</DIV>
-		<DIV CLASS="t2">СЛУЧАЙНЫЙ САЙТ</DIV>
+	<BODY onLoad="getRandomLink();" TEXT="black" LINK="black" ALINK="red" VLINK="black">
+		<DIV CLASS="t1">САМЫЙ СЛУЧАЙНЫЙ САЙТ</DIV>
+		<DIV CLASS="t2">САМЫЙ СЛУЧАЙНЫЙ САЙТ</DIV>
+		
+		<script src="../js/rand.js"></script>
+		<script language="javascript">
+			function getRandomLink(){
+				var link = getRandomInt(1,6);
+				if (link==1)
+				{
+					link = "clock.html"
+				}
+				if (link==2)
+				{
+					link = "vk.html"
+				}
+				if (link==3)
+				{
+					link = "digit.html"
+				}
+				if (link==4)
+				{
+					link = "color.html"
+				}
+				if (link==5)
+				{
+					link = "day.html"
+				}
+				if (link>5)
+				{
+					link = "../secret/luck.html"
+				}
+				document.getElementById("randlnk").href = link;
+			}
+		</script>
 		
 		<H4 class=link>
 		<A HREF="main.html" target="win" onmouseover="document.img0.src='../icons/picture.gif'" onmouseout="document.img0.src='../icons/internet.gif'">
@@ -71,14 +103,10 @@
 		Рандомный день недели
 		</A>
 		
-		<A HREF="d6.html" TARGET="win" onmouseover="document.img6.src='../icons/picture.gif'" onmouseout="document.img6.src='../icons/internet.gif'">
+		<A ID="randlnk" HREF="../secret/luck.html" TARGET="win" onmouseover="document.img6.src='../icons/picture.gif'" 
+		onmouseout="document.img6.src='../icons/internet.gif'" onClick="getRandomLink();">
 		<IMG SRC="../icons/internet.gif" CLASS="image" NAME="img6">
-		Пункт 6
-		</A>
-		
-		<A HREF="d7.html" TARGET="win" onmouseover="document.img7.src='../icons/picture.gif'" onmouseout="document.img7.src='../icons/internet.gif'">
-		<IMG SRC="../icons/internet.gif" CLASS="image" NAME="img7">
-		Пункт 7
+		Рандомный рандом
 		</A>
 		</H4>
 	</BODY>
