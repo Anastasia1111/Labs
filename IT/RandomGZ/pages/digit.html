@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+		<STYLE>
+			body {
+				background: url(../fons/digit.jpg) 100% 100% no-repeat;
+				background-size: cover;
+			}
+			h1, h4, div {
+				text-align: center;
+				color: white;
+			}
+		</STYLE>
+	</head>
+
+	<body LINK="grey" ALINK="red" VLINK="white">
+		<h1>Генератор случайных чисел</h1>
+		<p>
+		<h4>
+		Генератор случайных чисел - очень полезный сервис. С его помощью можно решать множество самых разнообразных задач. <BR>
+		Например, данный сайт почти полностью основан на генерации случайных чисел. <BR>
+		Диапазон выдаваемых вам чисел вы можете настроить сами введя нижнюю и верхнюю (не обязательно в таком порядке) границы в поля снизу.
+		</h3>
+		</p>
+		<script src="../js/rand.js"></script>
+		<script language="javascript">
+			function getRandomDigit()
+			{
+				var d1 = document.getElementById("from").value*1;
+				var d2 = document.getElementById("to").value*1;
+				var res = getRandomInt(d1, d2);
+				document.getElementById("dig").innerHTML = res;
+			}
+		</script>
+		<br>
+		<div align=center>
+			Случайное число от:
+			<input type="text" size="7" maxlength="7" id="from"> 
+			и до 
+			<input type="text" size="7" maxlength="7" id="to">
+		</div>
+		<br>
+		<div id="dig">Установите границы</div>
+		<br>
+		<center>
+			<input type="button" value="Сгенерировать число" onclick="getRandomDigit();">
+		</center>
+	</body>
+</html>
