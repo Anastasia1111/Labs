@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//RU">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+		<STYLE>
+			body {
+				background: url(https://img2.goodfon.ru/original/1366x768/8/bf/vk-vkontakte-grey-vk.jpg) 100% 100% no-repeat;
+				background-size: cover;
+			}
+			h1, h4, div {
+				text-align: center;
+				color: white;
+			}
+		</STYLE>
+	</head>
+
+	<body onload="getRandomInt();" LINK="grey" ALINK="red" VLINK="white">
+		<h1>Случайный человек ВКонтакте</h1>
+		<p>
+		<h4>
+		На этой страничке можно получить ссылку на случайного человека из социальной сети "ВКонтакте". 
+		Это довольно просто. <BR>
+		Достаточно одного клика по кнопочке внизу и можно переходить по ссылке. <BR>
+		Иногда случай - это довольно таки интересно. 
+		Особенно общение со случайным человеком из "Вконтакте".
+		</h3>
+		</p>
+		<script src="../js/rand.js"></script>
+		<script language="javascript">
+			function getRandomId()
+			{
+				var d = getRandomInt(0,100000000);
+				var id = d.toString();
+				document.getElementById("vk").innerHTML="<a href=\"http://vk.com/id"+id+"\" target=\"_blank\">Испытай удачу с незнакомцем!</a>";
+			}
+		</script>
+		<br>
+		<div id="vk" align=center>Нажми на кнопку!</div>
+		<br>
+		<center>
+			<input type="button" value="Сгенерерировать ID" onclick="getRandomId();">
+		</center>
+	</body>
+</html>
