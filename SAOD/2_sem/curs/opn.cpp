@@ -47,7 +47,6 @@ void readDB()
 	pF = fopen("testBase2.dat","rb");
 	database = new record [DBSize];
 	int count = fread((record*)database, sizeof(record), DBSize, pF);
-	cout<<count<<endl;
 	if (count != DBSize) {
 		puts("\nERROR! Something unexpected caused a problem! Database wastn't readed!\n");
 		system("PAUSE");
@@ -218,31 +217,82 @@ void addToQueue(record* data)
 
 void printQueue()
 {
+	char ch;
+	int i;
+	int first = 0;
+	int last = 20;
 	qEl* cur_el = srch_res->head;
-	while (cur_el!=srch_res->tail)
+	while (1)
 	{
-		printf("%30s  %03d  %22s  %10s\n",	cur_el->rcrd->fullname,
-											cur_el->rcrd->dept,
-											cur_el->rcrd->post,
-											cur_el->rcrd->dob);
-		cur_el = cur_el->next;
-	}	
+		system("CLS");
+		for (i=first; (i<last)&&(cur_el!=srch_res->tail); i++) {
+			printf("%04d) %30s  %03d  %22s  %10s\n",i+1,cur_el->rcrd->fullname,
+														cur_el->rcrd->dept,
+														cur_el->rcrd->post,
+														cur_el->rcrd->dob);
+			cur_el = cur_el->next;
+		}
+		puts("\nNEXT 20: RIGHT\nEXIT: Esc");
+		ch = getch();
+		switch(ch)
+		{
+			case 77:
+				{
+					if (cur_el!=srch_res->tail) {
+						first += 20;
+						last += 20;
+						break;
+					}
+				}
+			case 27:
+				{
+					system("CLS");
+					return;
+				}
+		}
+	}
+	puts("\nERROR! Something unexpected caused a problem!\n");
+	system("PAUSE");
+	exit(1);
 }
 
-/*int BSearch2(int key) {
+int binSearch(char* key)
+{
 	int l = 0;
-	int r = n-1;
+	int r = DBSize-1;
 	int m;
 	while (l<r) {
 		m = (l+r)/2;
-		if (a[m]<key) {
+		if (compare_dob(index[m]->dob,key)==-1) {
 			l = m+1; 
 		} else {
 			r = m;
 		}
 	}
-	if (a[r]==key) return r;
-}*/
+	if (compare_dob(index[r]->dob, key)==0) return r;
+	return -1;
+}
+
+void makeQueue()
+{
+	char key[11];
+	puts("WARNING! Key of search is ONLY day of birth! WARNING!\n");
+	puts("Type the search key: ");
+	gets(key);
+	if (key[3]=='\0') {
+		int id = binSearch(key);
+		if (id>=0) {
+			while (compare_dob(index[id]->dob,key)==0) {
+				addToQueue(index[id]);
+				id++;
+			}
+		}
+	} else {
+		puts("\nERROR! Recived value too big!\n");
+		system("PAUSE");
+		exit(1);
+	}
+}
 
 int main()
 {
@@ -254,11 +304,8 @@ int main()
 	
 	// Queue making
 	initQueue();
-	for (int i=0; i<10; i++) {
-		addToQueue(index[i]);
-	}
+	makeQueue();
 	printQueue();
-	system("PAUSE");
 	
 	// Tree making
 	
