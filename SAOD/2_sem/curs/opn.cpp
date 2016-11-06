@@ -32,6 +32,7 @@ struct queue
 
 struct vertex
 {
+	char bal;
 	record* rcrd;
 	vertex* left;
 	vertex* right;
@@ -40,6 +41,7 @@ struct vertex
 record* database;
 record** index;
 queue* srch_res;
+vertex* tree;
 
 void readDB()
 {
@@ -286,12 +288,129 @@ void makeQueue()
 				addToQueue(index[id]);
 				id++;
 			}
+		} else {
+			puts("Requested value isn't found!\n");
+			system("PAUSE");
 		}
 	} else {
 		puts("\nERROR! Recived value too big!\n");
 		system("PAUSE");
 		exit(1);
 	}
+}
+
+void freeQueue(){
+     qEl* tmp;
+     qEl* head = srch_res->head;
+     while (head!=srch_res->tail){
+           tmp = head;
+           head = head->next;
+           delete tmp;
+     }
+     srch_res->tail = srch_res->head = head = NULL;
+}
+
+vertex* TreeSearch (vertex* root, short int key)
+{
+	if ( !root ) return NULL;
+	if (key == root->rcrd->dept) {
+		return root;
+	} else {
+		if (key < root->rcrd->dept) {
+			return TreeSearch (root->left,key);
+		} else {
+			return TreeSearch (root->right,key);
+		}
+	}
+}
+
+void searchInTree()
+{
+	short int key;
+	puts("WARNING! Key of search is ONLY number of departament! WARNING!\n");
+	puts("Type the search key: ");
+	scanf("%d",&key);
+	vertex* res = TreeSearch(tree, key);
+	if (res!=NULL) {
+		while (res->rcrd->dept==key) {
+			addToQueue(res->rcrd);
+			res = res->right;
+		}
+	} else {
+		puts("Requested value isn't found!\n");
+		system("PAUSE");
+	}
+	puts("\nERROR! Something unexpected caused a problem!\n");
+	system("PAUSE");
+	exit(1);
+}
+
+void addToBBT(record* data, bool &HG, bool &VG)
+{
+	vertex* neighbor;
+	if (tree == NULL){   
+		tree = new vertex;
+		tree->rcrd = data;
+		tree->left = tree->right = NULL;
+		tree->bal = 0;
+		VG = true;
+	} else {
+		if (p->data > data) {
+			B2INSERT (data, p->l);
+			if (VR) {
+				if (p->bal == 0) {
+					q = p->l;
+					p->l = q->r;
+					q->r = p;
+					p = q;
+					q->bal = 1;
+					VR = false;
+					HR = true;
+				} else {
+					p->bal = 0;
+					VR = true;
+					HR = false;
+				}
+			} else {
+				HR = false;
+			}
+		} else {
+			if (p->data <= data) {
+				B2INSERT (data, p->r);
+				if (VR) {
+					p->bal = 1;
+					VR = false;
+					HR = true;
+				} else {
+					if (HR) {
+						if (p->bal == 1) {
+							q = p->r;
+							p->bal = 0;
+							q->bal = 0;
+							p->r = q->l;
+							q->l = p;
+							p = q;
+							VR = true;
+							HR = false;
+						} else {
+							HR = false;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void makeTree()
+{
+	qEl* curr_el = srch_res->head;
+	bool HG = true;
+	bool VG = true;
+	while(curr_el != srch_res->tail){
+        addToBBT(curr_el->rcrd,HG,VG);
+        curr_el = curr_el->next;
+    }
 }
 
 int main()
@@ -303,9 +422,12 @@ int main()
 	printDB();
 	
 	// Queue making
-	initQueue();
-	makeQueue();
-	printQueue();
+	while(1){
+		initQueue();
+		makeQueue();
+		printQueue();
+		freeQueue();
+	}
 	
 	// Tree making
 	
