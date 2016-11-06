@@ -234,22 +234,22 @@ void printQueue()
 														cur_el->rcrd->dob);
 			cur_el = cur_el->next;
 		}
-		puts("\nNEXT 20: RIGHT\nEXIT: Esc");
+		puts("\nNEXT 20: ANY KEY\nEXIT: Esc");
 		ch = getch();
 		switch(ch)
 		{
-			case 77:
+			case 27:
+				{
+					system("CLS");
+					return;
+				}
+			default:
 				{
 					if (cur_el!=srch_res->tail) {
 						first += 20;
 						last += 20;
 						break;
 					}
-				}
-			case 27:
-				{
-					system("CLS");
-					return;
 				}
 		}
 	}
@@ -291,6 +291,7 @@ void makeQueue()
 		} else {
 			puts("Requested value isn't found!\n");
 			system("PAUSE");
+			exit(1);
 		}
 	} else {
 		puts("\nERROR! Recived value too big!\n");
@@ -327,73 +328,78 @@ vertex* TreeSearch (vertex* root, short int key)
 void searchInTree()
 {
 	short int key;
+	system("CLS");
 	puts("WARNING! Key of search is ONLY number of departament! WARNING!\n");
 	puts("Type the search key: ");
 	scanf("%d",&key);
 	vertex* res = TreeSearch(tree, key);
 	if (res!=NULL) {
-		while (res->rcrd->dept==key) {
+		do {
 			addToQueue(res->rcrd);
 			res = res->right;
-		}
+			res = TreeSearch(res, key);
+		} while (res!=NULL);
+		
+		return;
 	} else {
 		puts("Requested value isn't found!\n");
 		system("PAUSE");
-	}
+		return;
+	} 
 	puts("\nERROR! Something unexpected caused a problem!\n");
 	system("PAUSE");
 	exit(1);
 }
 
-void addToBBT(record* data, bool &HG, bool &VG)
+void addToBBT(record* data, vertex* &root, bool &HG, bool &VG)
 {
 	vertex* neighbor;
-	if (tree == NULL){   
-		tree = new vertex;
-		tree->rcrd = data;
-		tree->left = tree->right = NULL;
-		tree->bal = 0;
+	if (root == NULL){   
+		root = new vertex;
+		root->rcrd = data;
+		root->left = root->right = NULL;
+		root->bal = 0;
 		VG = true;
 	} else {
-		if (p->data > data) {
-			B2INSERT (data, p->l);
-			if (VR) {
-				if (p->bal == 0) {
-					q = p->l;
-					p->l = q->r;
-					q->r = p;
-					p = q;
-					q->bal = 1;
-					VR = false;
-					HR = true;
+		if (root->rcrd->dept > data->dept) {
+			addToBBT(data, root->left, HG, VG);
+			if (VG) {
+				if (root->bal == 0) {
+					neighbor = root->left;
+					root->left = neighbor->right;
+					neighbor->right = root;
+					root = neighbor;
+					neighbor->bal = 1;
+					VG = false;
+					HG = true;
 				} else {
-					p->bal = 0;
-					VR = true;
-					HR = false;
+					root->bal = 0;
+					VG = true;
+					HG = false;
 				}
 			} else {
-				HR = false;
+				HG = false;
 			}
 		} else {
-			if (p->data <= data) {
-				B2INSERT (data, p->r);
-				if (VR) {
-					p->bal = 1;
-					VR = false;
-					HR = true;
+			if (root->rcrd->dept <= data->dept) {
+				addToBBT(data, root->right, HG, VG);
+				if (VG) {
+					root->bal = 1;
+					VG = false;
+					HG = true;
 				} else {
-					if (HR) {
-						if (p->bal == 1) {
-							q = p->r;
-							p->bal = 0;
-							q->bal = 0;
-							p->r = q->l;
-							q->l = p;
-							p = q;
-							VR = true;
-							HR = false;
+					if (HG) {
+						if (root->bal == 1) {
+							neighbor = root->right;
+							root->bal = 0;
+							neighbor->bal = 0;
+							root->right = neighbor->left;
+							neighbor->left = root;
+							root = neighbor;
+							VG = true;
+							HG = false;
 						} else {
-							HR = false;
+							HG = false;
 						}
 					}
 				}
@@ -408,9 +414,19 @@ void makeTree()
 	bool HG = true;
 	bool VG = true;
 	while(curr_el != srch_res->tail){
-        addToBBT(curr_el->rcrd,HG,VG);
+        addToBBT(curr_el->rcrd, tree, HG, VG);
         curr_el = curr_el->next;
     }
+}
+
+void printTree(vertex* root){	
+	if ( !root ) return;
+	printTree (root->left);
+	printf("%30s  %03d  %22s  %10s\n",	root->rcrd->fullname,
+										root->rcrd->dept,
+										root->rcrd->post,
+										root->rcrd->dob);
+	printTree (root->right);
 }
 
 int main()
@@ -422,14 +438,20 @@ int main()
 	printDB();
 	
 	// Queue making
-	while(1){
-		initQueue();
-		makeQueue();
-		printQueue();
-		freeQueue();
-	}
+	initQueue();
+	makeQueue();
+	printQueue();
 	
 	// Tree making
+	
+	makeTree();
+	printTree(tree);
+	system("PAUSE");
+	freeQueue();
+	initQueue();
+	searchInTree();
+	printQueue();
+	freeQueue();
 	
 	return 0;
 }
