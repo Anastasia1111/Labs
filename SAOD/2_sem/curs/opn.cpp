@@ -12,7 +12,7 @@ using namespace std;
 
 struct record
 {
-	char fio[30];
+	char fullname[30];
 	short int dept;
 	char post[22];
 	char dob[10];
@@ -70,7 +70,7 @@ void printDB()
 	{
 		system("CLS");
 		for (i=first; i<last; i++) {
-			printf("%04d) %30s  %03d  %22s  %10s\n",i+1,index[i]->fio,
+			printf("%04d) %30s  %03d  %22s  %10s\n",i+1,index[i]->fullname,
 														index[i]->dept,
 														index[i]->post,
 														index[i]->dob);
@@ -109,50 +109,58 @@ void printDB()
 	exit(1);
 }
 
-int compare_strings(char* str1, char* str2, int size)
+int compare_dob(char* dob1, char* dob2)
 {
-	for (int i=0; i<size; i++) {
-		if (str1[i]<str2[i]) {
-			return -1;
+	if (dob1[0]<dob2[0]) 
+	{
+		return -1;
+	} else {
+		if (dob1[0]>dob2[0])
+		{
+			return 1;
 		} else {
-			if (str1[i]>str2[i]) {
-				return 1;
+			if (dob1[1]<dob2[1]) 
+			{
+				return -1;
 			} else {
-				i++;
+				if (dob1[1]>dob2[1]) 
+				{
+					return 1;
+				} else {
+					return 0;
+				}
 			}
 		}
+	}
+}
+
+int compare_fullname(char* fn1, char* fn2)
+{
+	for (int i=0; i<30; i++) {
+		if (fn1[i]<fn2[i]) {
+			return -1;
+		} else {
+			if (fn1[i]>fn2[i]) {
+				return 1;
+			}
+		}
+		i++;
 	}
 	return 0;
 }
 
 int compare_records(record* id1, record* id2)
 {
-	if (id1->dob[0]<id2->dob[0]) 
-	{
-		return -1;
-	} else {
-		if (id1->dob[0]>id2->dob[0])
+	int flag = compare_dob(id1->dob, id2->dob);
+	if (flag==0) {
+		if (compare_fullname(id1->fullname, id2->fullname)==-1) 
 		{
-			return 1;
+			return -1;
 		} else {
-			if (id1->dob[1]<id2->dob[1]) 
-			{
-				return -1;
-			} else {
-				if (id1->dob[1]>id2->dob[1]) 
-				{
-					return 1;
-				} else {
-					if (compare_strings(id1->fio,id2->fio,30)==-1) 
-					{
-						return -1;
-					} else {
-						return 1;
-					}
-				}
-			}
+			return 1;
 		}
 	}
+	return flag;
 }
 
 void Heap(int l, int r)
@@ -213,13 +221,28 @@ void printQueue()
 	qEl* cur_el = srch_res->head;
 	while (cur_el!=srch_res->tail)
 	{
-		printf("%30s  %03d  %22s  %10s\n",	cur_el->rcrd->fio,
+		printf("%30s  %03d  %22s  %10s\n",	cur_el->rcrd->fullname,
 											cur_el->rcrd->dept,
 											cur_el->rcrd->post,
 											cur_el->rcrd->dob);
 		cur_el = cur_el->next;
 	}	
-}	
+}
+
+/*int BSearch2(int key) {
+	int l = 0;
+	int r = n-1;
+	int m;
+	while (l<r) {
+		m = (l+r)/2;
+		if (a[m]<key) {
+			l = m+1; 
+		} else {
+			r = m;
+		}
+	}
+	if (a[r]==key) return r;
+}*/
 
 int main()
 {
