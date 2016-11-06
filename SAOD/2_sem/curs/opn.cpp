@@ -38,10 +38,10 @@ struct vertex
 	vertex* right;
 };
 
-record* database;
-record** index;
-queue* srch_res;
-vertex* tree;
+record* database = NULL;
+record** index = NULL;
+queue* srch_res = NULL;
+vertex* tree = NULL;
 
 void readDB()
 {
@@ -59,6 +59,12 @@ void readDB()
 	for (int i=0; i<DBSize; i++)
 		index[i] = &database[i];
 	fclose(pF);
+}
+
+void freeDB()
+{
+	delete[] database;
+	delete[] index;
 }
 
 void printDB()
@@ -203,10 +209,26 @@ void HeapSort()
 	}
 }
 
+void freeQueue(){
+     qEl* tmp;
+     qEl* head = srch_res->head;
+     while (head!=srch_res->tail){
+           tmp = head;
+           head = head->next;
+           delete tmp;
+     }
+     srch_res->tail = srch_res->head = head = NULL;
+}
+
 void initQueue()
 {
+	if (srch_res==NULL) {
 	srch_res = new queue;
 	srch_res->tail = (qEl*)&srch_res->head;
+	} else {
+		freeQueue();
+		initQueue();
+	}
 }
 
 void addToQueue(record* data)
@@ -278,6 +300,7 @@ int binSearch(char* key)
 void makeQueue()
 {
 	char key[11];
+	system("CLS");
 	puts("WARNING! Key of search is ONLY day of birth! WARNING!\n");
 	puts("Type the search key: ");
 	gets(key);
@@ -298,17 +321,6 @@ void makeQueue()
 		system("PAUSE");
 		exit(1);
 	}
-}
-
-void freeQueue(){
-     qEl* tmp;
-     qEl* head = srch_res->head;
-     while (head!=srch_res->tail){
-           tmp = head;
-           head = head->next;
-           delete tmp;
-     }
-     srch_res->tail = srch_res->head = head = NULL;
 }
 
 vertex* TreeSearch (vertex* root, short int key)
@@ -380,7 +392,7 @@ void addToBBT(record* data, vertex* &root, bool &HG, bool &VG)
 				HG = false;
 			}
 		} else {
-			if (root->rcrd->dept <= data->dept) {
+			if (root->rcrd->dept < data->dept) {
 				addToBBT(data, root->right, HG, VG);
 				if (VG) {
 					root->bal = 1;
@@ -428,26 +440,89 @@ void printTree(vertex* root){
 	printTree (root->right);
 }
 
+void freeTree(vertex* root){
+	if (root->left) {
+        freeTree (root->left);
+	}
+    if (root->right) {
+        freeTree (root->right);
+	}
+    delete root;
+}
+
 int main()
 {
-	readDB();
-	printDB();
-	
-	HeapSort();
-	printDB();
-	
-	// Queue making
-	initQueue();
-	makeQueue();
-	printQueue();
-	
-	// Tree making
-	
-	makeTree();
-	printTree(tree);
-	system("PAUSE");
-	searchInTree();
-	freeQueue();
-	
-	return 0;
+	char selector;
+	while(1){
+		system("CLS");
+		puts("MENU:\n\
+1. Load database\n\
+2. Print database\n\
+3. Sort database\n\
+4. Make queue (Find a key)\n\
+5. Make tree\n\
+6. Print tree\n\
+7. Search in tree\n\
+8. Free all the memory (ONLY FOR EXPERIENCED USERS)\n\
+ESC. Exit\n");
+		selector = getch();
+		switch(selector)
+		{
+			case '1':
+				{
+					freeDB();
+					readDB();
+					break;
+				}
+			case '2':
+				{
+					printDB();
+					break;
+				}
+			case '3':
+				{
+					HeapSort();
+					break;
+				}
+			case '4':
+				{
+					initQueue();
+					makeQueue();
+					printQueue();
+					break;
+				}
+			case '5':
+				{
+					makeTree();
+					break;
+				}
+			case '6':
+				{
+					printTree(tree);
+					system("PAUSE");
+					break;
+				}
+			case '7':
+				{
+					searchInTree();
+					break;
+				}
+			case '8':
+				{
+					freeTree(tree);
+					freeQueue();
+					freeDB();
+					break;
+				}
+			case 27:
+				{
+					system("CLS");
+					return 0;
+				}
+			default:
+				{
+					puts("\nWRONG KEY\n");
+				}
+		}
+	}
 }
