@@ -150,11 +150,11 @@ int compare_fullname(char* fn1, char* fn2)
 	return 0;
 }
 
-int compare_records(record* id1, record* id2)
+int compare_records(record* rcrd1, record* rcrd2)
 {
-	int flag = compare_dob(id1->dob, id2->dob);
+	int flag = compare_dob(rcrd1->dob, rcrd2->dob);
 	if (flag==0) {
-		if (compare_fullname(id1->fullname, id2->fullname)==-1) 
+		if (compare_fullname(rcrd1->fullname, rcrd2->fullname)==-1) 
 		{
 			return -1;
 		} else {
@@ -238,11 +238,6 @@ void printQueue()
 		ch = getch();
 		switch(ch)
 		{
-			case 27:
-				{
-					system("CLS");
-					return;
-				}
 			default:
 				{
 					if (cur_el!=srch_res->tail) {
@@ -250,6 +245,11 @@ void printQueue()
 						last += 20;
 						break;
 					}
+				}
+			case 27:
+				{
+					system("CLS");
+					return;
 				}
 		}
 	}
@@ -334,12 +334,11 @@ void searchInTree()
 	scanf("%d",&key);
 	vertex* res = TreeSearch(tree, key);
 	if (res!=NULL) {
-		do {
-			addToQueue(res->rcrd);
-			res = res->right;
-			res = TreeSearch(res, key);
-		} while (res!=NULL);
-		
+		printf("Result:\n%30s  %03d  %22s  %10s\n",	res->rcrd->fullname,
+													res->rcrd->dept,
+													res->rcrd->post,
+													res->rcrd->dob);
+		system("PAUSE");
 		return;
 	} else {
 		puts("Requested value isn't found!\n");
@@ -447,10 +446,7 @@ int main()
 	makeTree();
 	printTree(tree);
 	system("PAUSE");
-	freeQueue();
-	initQueue();
 	searchInTree();
-	printQueue();
 	freeQueue();
 	
 	return 0;
