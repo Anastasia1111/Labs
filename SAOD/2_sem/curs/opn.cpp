@@ -21,7 +21,7 @@ struct record
 struct qEl
 {
 	qEl* next;
-	record rcrd;
+	record* rcrd;
 };
 
 struct queue
@@ -38,7 +38,7 @@ struct vertex
 };
 
 record* database;
-int* index;
+record** index;
 queue* srch_res;
 
 void readDB()
@@ -54,9 +54,9 @@ void readDB()
 		exit(1);
 	}
 	
-	index = new int [DBSize];
+	index = new record* [DBSize];
 	for (int i=0; i<DBSize; i++)
-		index[i] = i;
+		index[i] = &database[i];
 	fclose(pF);
 }
 
@@ -70,10 +70,10 @@ void printDB()
 	{
 		system("CLS");
 		for (i=first; i<last; i++) {
-			printf("%04d) %30s  %03d  %22s  %10s\n",i+1,database[index[i]].fio,
-														database[index[i]].dept,
-														database[index[i]].post,
-														database[index[i]].dob);
+			printf("%04d) %30s  %03d  %22s  %10s\n",i+1,index[i]->fio,
+														index[i]->dept,
+														index[i]->post,
+														index[i]->dob);
 		}
 		puts("\nNEXT 20: RIGHT\nPREVIOUS 20: LEFT\nEXIT: Esc");
 		ch = getch();
@@ -125,25 +125,25 @@ int compare_strings(char* str1, char* str2, int size)
 	return 0;
 }
 
-int compare_records(int num1, int num2)
+int compare_records(record* id1, record* id2)
 {
-	if (database[num1].dob[0]<database[num2].dob[0]) 
+	if (id1->dob[0]<id2->dob[0]) 
 	{
 		return -1;
 	} else {
-		if (database[num1].dob[0]>database[num2].dob[0])
+		if (id1->dob[0]>id2->dob[0])
 		{
 			return 1;
 		} else {
-			if (database[num1].dob[1]<database[num2].dob[1]) 
+			if (id1->dob[1]<id2->dob[1]) 
 			{
 				return -1;
 			} else {
-				if (database[num1].dob[1]>database[num2].dob[1]) 
+				if (id1->dob[1]>id2->dob[1]) 
 				{
 					return 1;
 				} else {
-					if (compare_strings(database[num1].fio,database[num2].fio,30)==-1) 
+					if (compare_strings(id1->fio,id2->fio,30)==-1) 
 					{
 						return -1;
 					} else {
@@ -157,7 +157,8 @@ int compare_records(int num1, int num2)
 
 void Heap(int l, int r)
 {
-	int j = 2*l, t, buf;
+	int j = 2*l, t;
+	record* buf;
 	while (j+1 < r) {
 		t = j+1;
 		if ((t+1)<r && (compare_records(index[t+1],index[t])>-1))
@@ -182,7 +183,8 @@ void HeapSort()
     {
         Heap(l, DBSize);
     }
-	int r = DBSize, buf;
+	int r = DBSize;
+	record* buf;
 	while (r>0) {
 		buf = index[0];
 		index[0] = index[r-1];
@@ -198,7 +200,7 @@ void initQueue()
 	srch_res->tail = (qEl*)&srch_res->head;
 }
 
-void addToQueue(record data)
+void addToQueue(record* data)
 {
 	qEl *new_el = new qEl;
 	new_el->rcrd = data;
@@ -211,10 +213,10 @@ void printQueue()
 	qEl* cur_el = srch_res->head;
 	while (cur_el!=srch_res->tail)
 	{
-		printf("%30s  %03d  %22s  %10s\n",	cur_el->rcrd.fio,
-											cur_el->rcrd.dept,
-											cur_el->rcrd.post,
-											cur_el->rcrd.dob);
+		printf("%30s  %03d  %22s  %10s\n",	cur_el->rcrd->fio,
+											cur_el->rcrd->dept,
+											cur_el->rcrd->post,
+											cur_el->rcrd->dob);
 		cur_el = cur_el->next;
 	}	
 }	
@@ -230,7 +232,7 @@ int main()
 	// Queue making
 	initQueue();
 	for (int i=0; i<10; i++) {
-		addToQueue(database[index[i]]);
+		addToQueue(index[i]);
 	}
 	printQueue();
 	system("PAUSE");
