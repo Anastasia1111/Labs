@@ -218,6 +218,7 @@ void freeQueue(){
            delete tmp;
      }
      srch_res->tail = srch_res->head = head = NULL;
+     srch_res = NULL;
 }
 
 void initQueue()
@@ -303,24 +304,22 @@ void makeQueue()
 	system("CLS");
 	puts("WARNING! Key of search is ONLY day of birth! WARNING!\n");
 	puts("Type the search key: ");
-	gets(key);
-	if (key[3]=='\0') {
-		int id = binSearch(key);
-		if (id>=0) {
-			while (compare_dob(index[id]->dob,key)==0) {
-				addToQueue(index[id]);
-				id++;
-			}
-		} else {
-			puts("Requested value isn't found!\n");
-			system("PAUSE");
-			exit(1);
+	cin>>key;
+	int id = binSearch(key);
+	if (id>=0) {
+		while (compare_dob(index[id]->dob,key)==0) {
+			addToQueue(index[id]);
+			id++;
 		}
+		return;
 	} else {
-		puts("\nERROR! Recived value too big!\n");
+		puts("Requested value isn't found!\n");
 		system("PAUSE");
-		exit(1);
+		return;
 	}
+	puts("\nERROR! Something unexpected caused a problem!\n");
+	system("PAUSE");
+	exit(1);
 }
 
 vertex* TreeSearch (vertex* root, short int key)
@@ -345,12 +344,21 @@ void searchInTree()
 	puts("Type the search key: ");
 	scanf("%d",&key);
 	vertex* res = TreeSearch(tree, key);
+	vertex* first_res = res;
 	if (res!=NULL) {
-		printf("Result:\n%30s  %03d  %22s  %10s\n",	res->rcrd->fullname,
-													res->rcrd->dept,
-													res->rcrd->post,
-													res->rcrd->dob);
-		system("PAUSE");
+		do {
+			addToQueue(res->rcrd);
+			res = res->right;
+			res = TreeSearch(res, key);
+		} while (res!=NULL);
+		res = TreeSearch(first_res->left, key);
+		if (res!=NULL) {
+			do {
+				addToQueue(res->rcrd);
+				res = res->left;
+				res = TreeSearch(res, key);
+			} while (res!=NULL);
+		}
 		return;
 	} else {
 		puts("Requested value isn't found!\n");
@@ -392,7 +400,7 @@ void addToBBT(record* data, vertex* &root, bool &HG, bool &VG)
 				HG = false;
 			}
 		} else {
-			if (root->rcrd->dept < data->dept) {
+			if (root->rcrd->dept <= data->dept) {
 				addToBBT(data, root->right, HG, VG);
 				if (VG) {
 					root->bal = 1;
@@ -504,7 +512,9 @@ ESC. Exit\n");
 				}
 			case '7':
 				{
+					initQueue();
 					searchInTree();
+					printQueue();
 					break;
 				}
 			case '8':
