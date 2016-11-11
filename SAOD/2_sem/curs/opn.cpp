@@ -63,12 +63,22 @@ void readDB()
 
 void freeDB()
 {
-	delete[] database;
-	delete[] index;
+	if (database!=NULL){
+		delete[] database;
+		delete[] index;
+		database = NULL;
+		index = NULL;
+	}
 }
 
 void printDB()
 {
+	if (database==NULL){
+		system("CLS");
+		puts("Database hasn't readed yet!\n");
+		system("PAUSE");
+		return;
+	}
 	char ch;
 	int i;
 	int first = 0;
@@ -170,7 +180,24 @@ int compare_records(record* rcrd1, record* rcrd2)
 	return flag;
 }
 
-void Heap(int l, int r)
+int binSearch(char* key)
+{
+	int l = 0;
+	int r = DBSize-1;
+	int m;
+	while (l<r) {
+		m = (l+r)/2;
+		if (compare_dob(index[m]->dob,key)==-1) {
+			l = m+1; 
+		} else {
+			r = m;
+		}
+	}
+	if (compare_dob(index[r]->dob, key)==0) return r;
+	return -1;
+}
+
+void heap(int l, int r)
 {
 	int j = 2*l, t;
 	record* buf;
@@ -192,11 +219,17 @@ void Heap(int l, int r)
 	}
 }
 
-void HeapSort()
+void heapSort()
 {
+	if (database==NULL){
+		system("CLS");
+		puts("Database hasn't readed yet!\n");
+		system("PAUSE");
+		return;
+	}
 	for (int l = DBSize/2; l>=0; l--)
     {
-        Heap(l, DBSize);
+        heap(l, DBSize);
     }
 	int r = DBSize;
 	record* buf;
@@ -205,27 +238,30 @@ void HeapSort()
 		index[0] = index[r-1];
 		index[r-1] = buf;
 		r--;
-		Heap(0, r);
+		heap(0, r);
 	}
 }
 
 void freeQueue(){
-     qEl* tmp;
-     qEl* head = srch_res->head;
-     while (head!=srch_res->tail){
-           tmp = head;
-           head = head->next;
-           delete tmp;
-     }
-     srch_res->tail = srch_res->head = head = NULL;
-     srch_res = NULL;
+	if (srch_res!=NULL){
+	    qEl* tmp;
+	    qEl* head = srch_res->head;
+	    while (head!=srch_res->tail){
+	        tmp = head;
+	        head = head->next;
+	        delete tmp;
+	    }
+	    delete head;
+	    srch_res->tail = srch_res->head = NULL;
+	    srch_res = NULL;
+	}
 }
 
 void initQueue()
 {
 	if (srch_res==NULL) {
-	srch_res = new queue;
-	srch_res->tail = (qEl*)&srch_res->head;
+		srch_res = new queue;
+		srch_res->tail = (qEl*)&srch_res->head;
 	} else {
 		freeQueue();
 		initQueue();
@@ -234,10 +270,41 @@ void initQueue()
 
 void addToQueue(record* data)
 {
-	qEl *new_el = new qEl;
+	qEl* new_el = new qEl;
 	new_el->rcrd = data;
 	srch_res->tail->next = new_el;
 	srch_res->tail = new_el;
+}
+
+int searchInDB()
+{
+	if (database==NULL){
+		system("CLS");
+		puts("Database hasn't readed yet!\n");
+		system("PAUSE");
+		return 0;
+	}
+	char key[3];
+	system("CLS");
+	puts("WARNING! Key of search is ONLY day of birth! WARNING!\n");
+	puts("Type the search key: ");
+	scanf("%s",&key);
+	int id = binSearch(key);
+	if (id>=0) {
+		initQueue();
+		while (compare_dob(index[id]->dob,key)==0) {
+			addToQueue(index[id]);
+			id++;
+		}
+		return 1;
+	} else {
+		puts("Requested value isn't found!\n");
+		system("PAUSE");
+		return 0;
+	}
+	puts("\nERROR! Something unexpected caused a problem!\n");
+	system("PAUSE");
+	exit(1);
 }
 
 void printQueue()
@@ -250,7 +317,7 @@ void printQueue()
 	while (1)
 	{
 		system("CLS");
-		for (i=first; (i<last)&&(cur_el!=srch_res->tail); i++) {
+		for (i=first; (i<last)&&(cur_el!=srch_res->tail->next); i++) {
 			printf("%04d) %30s  %03d  %22s  %10s\n",i+1,cur_el->rcrd->fullname,
 														cur_el->rcrd->dept,
 														cur_el->rcrd->post,
@@ -263,7 +330,7 @@ void printQueue()
 		{
 			default:
 				{
-					if (cur_el!=srch_res->tail) {
+					if (cur_el!=srch_res->tail->next) {
 						first += 20;
 						last += 20;
 						break;
@@ -281,51 +348,13 @@ void printQueue()
 	exit(1);
 }
 
-int binSearch(char* key)
-{
-	int l = 0;
-	int r = DBSize-1;
-	int m;
-	while (l<r) {
-		m = (l+r)/2;
-		if (compare_dob(index[m]->dob,key)==-1) {
-			l = m+1; 
-		} else {
-			r = m;
-		}
-	}
-	if (compare_dob(index[r]->dob, key)==0) return r;
-	return -1;
-}
-
-void makeQueue()
-{
-	char key[11];
-	system("CLS");
-	puts("WARNING! Key of search is ONLY day of birth! WARNING!\n");
-	puts("Type the search key: ");
-	cin>>key;
-	int id = binSearch(key);
-	if (id>=0) {
-		while (compare_dob(index[id]->dob,key)==0) {
-			addToQueue(index[id]);
-			id++;
-		}
-		return;
-	} else {
-		puts("Requested value isn't found!\n");
-		system("PAUSE");
-		return;
-	}
-	puts("\nERROR! Something unexpected caused a problem!\n");
-	system("PAUSE");
-	exit(1);
-}
-
 vertex* TreeSearch (vertex* root, short int key)
 {
 	if ( !root ) return NULL;
 	if (key == root->rcrd->dept) {
+		TreeSearch (root->left,key);
+		addToQueue(root->rcrd);
+		TreeSearch (root->right,key);
 		return root;
 	} else {
 		if (key < root->rcrd->dept) {
@@ -336,34 +365,27 @@ vertex* TreeSearch (vertex* root, short int key)
 	}
 }
 
-void searchInTree()
+int searchInTree()
 {
+	if (tree==NULL){
+		system("CLS");
+		puts("Tree hasn't created yet!\n");
+		system("PAUSE");
+		return 0;
+	}
 	short int key;
 	system("CLS");
 	puts("WARNING! Key of search is ONLY number of departament! WARNING!\n");
 	puts("Type the search key: ");
 	scanf("%d",&key);
+	initQueue();
 	vertex* res = TreeSearch(tree, key);
-	vertex* first_res = res;
 	if (res!=NULL) {
-		do {
-			addToQueue(res->rcrd);
-			res = res->right;
-			res = TreeSearch(res, key);
-		} while (res!=NULL);
-		res = TreeSearch(first_res->left, key);
-		if (res!=NULL) {
-			do {
-				addToQueue(res->rcrd);
-				res = res->left;
-				res = TreeSearch(res, key);
-			} while (res!=NULL);
-		}
-		return;
+		return 1;
 	} else {
 		puts("Requested value isn't found!\n");
 		system("PAUSE");
-		return;
+		return 0;
 	} 
 	puts("\nERROR! Something unexpected caused a problem!\n");
 	system("PAUSE");
@@ -429,23 +451,44 @@ void addToBBT(record* data, vertex* &root, bool &HG, bool &VG)
 
 void makeTree()
 {
-	qEl* curr_el = srch_res->head;
-	bool HG = true;
-	bool VG = true;
-	while(curr_el != srch_res->tail){
-        addToBBT(curr_el->rcrd, tree, HG, VG);
-        curr_el = curr_el->next;
-    }
+	if (srch_res!=NULL){
+		qEl* curr_el = srch_res->head;
+		bool HG = true;
+		bool VG = true;
+		while(curr_el != srch_res->tail->next){
+	        addToBBT(curr_el->rcrd, tree, HG, VG);
+	        curr_el = curr_el->next;
+	    }
+	} else {
+		system("CLS");
+		puts("Queue hasn't created yet!\n");
+		system("PAUSE");
+		return;
+	} 
 }
 
-void printTree(vertex* root){	
+void addFromTreeToQueue(vertex* root){	
 	if ( !root ) return;
-	printTree (root->left);
-	printf("%30s  %03d  %22s  %10s\n",	root->rcrd->fullname,
-										root->rcrd->dept,
-										root->rcrd->post,
-										root->rcrd->dob);
-	printTree (root->right);
+	addFromTreeToQueue(root->left);
+	addToQueue(root->rcrd);
+	addFromTreeToQueue(root->right);
+}
+
+int printTree()
+{
+	if (tree!=NULL) {
+		initQueue();
+		addFromTreeToQueue(tree);
+		return 1;
+	} else {
+		system("CLS");
+		puts("Tree hasn't created yet!\n");
+		system("PAUSE");
+		return 0;
+	} 
+	puts("\nERROR! Something unexpected caused a problem!\n");
+	system("PAUSE");
+	exit(1);
 }
 
 void freeTree(vertex* root){
@@ -489,37 +532,43 @@ ESC. Exit\n");
 				}
 			case '3':
 				{
-					HeapSort();
+					heapSort();
 					break;
 				}
 			case '4':
 				{
-					initQueue();
-					makeQueue();
-					printQueue();
+					if(searchInDB()){
+						printQueue();
+					}
 					break;
 				}
 			case '5':
 				{
+					if(tree!=NULL){
+						freeTree(tree);
+					}
 					makeTree();
 					break;
 				}
 			case '6':
 				{
-					printTree(tree);
-					system("PAUSE");
+					if(printTree()){
+						printQueue();
+					}
 					break;
 				}
 			case '7':
 				{
-					initQueue();
-					searchInTree();
-					printQueue();
+					if(searchInTree()){
+						printQueue();
+					}
 					break;
 				}
 			case '8':
 				{
-					freeTree(tree);
+					if(tree!=NULL){
+						freeTree(tree);
+					}
 					freeQueue();
 					freeDB();
 					break;
