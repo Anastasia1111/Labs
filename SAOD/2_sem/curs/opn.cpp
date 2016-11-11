@@ -43,8 +43,20 @@ record** index = NULL;
 queue* srch_res = NULL;
 vertex* tree = NULL;
 
+void freeDB()
+{
+	if (database!=NULL){
+		delete[] database;
+		delete[] index;
+		database = NULL;
+		index = NULL;
+	}
+}
+
 void readDB()
 {
+	freeDB();
+	
 	FILE *pF;
 	pF = fopen("testBase2.dat","rb");
 	database = new record [DBSize];
@@ -59,16 +71,6 @@ void readDB()
 	for (int i=0; i<DBSize; i++)
 		index[i] = &database[i];
 	fclose(pF);
-}
-
-void freeDB()
-{
-	if (database!=NULL){
-		delete[] database;
-		delete[] index;
-		database = NULL;
-		index = NULL;
-	}
 }
 
 void printDB()
@@ -180,23 +182,6 @@ int compare_records(record* rcrd1, record* rcrd2)
 	return flag;
 }
 
-int binSearch(char* key)
-{
-	int l = 0;
-	int r = DBSize-1;
-	int m;
-	while (l<r) {
-		m = (l+r)/2;
-		if (compare_dob(index[m]->dob,key)==-1) {
-			l = m+1; 
-		} else {
-			r = m;
-		}
-	}
-	if (compare_dob(index[r]->dob, key)==0) return r;
-	return -1;
-}
-
 void heap(int l, int r)
 {
 	int j = 2*l, t;
@@ -259,13 +244,11 @@ void freeQueue(){
 
 void initQueue()
 {
-	if (srch_res==NULL) {
-		srch_res = new queue;
-		srch_res->tail = (qEl*)&srch_res->head;
-	} else {
+	if (srch_res!=NULL){
 		freeQueue();
-		initQueue();
 	}
+	srch_res = new queue;
+	srch_res->tail = (qEl*)&srch_res->head;
 }
 
 void addToQueue(record* data)
@@ -274,6 +257,23 @@ void addToQueue(record* data)
 	new_el->rcrd = data;
 	srch_res->tail->next = new_el;
 	srch_res->tail = new_el;
+}
+
+int binSearch(char* key)
+{
+	int l = 0;
+	int r = DBSize-1;
+	int m;
+	while (l<r) {
+		m = (l+r)/2;
+		if (compare_dob(index[m]->dob,key)==-1) {
+			l = m+1; 
+		} else {
+			r = m;
+		}
+	}
+	if (compare_dob(index[r]->dob, key)==0) return r;
+	return -1;
 }
 
 int searchInDB()
@@ -309,6 +309,12 @@ int searchInDB()
 
 void printQueue()
 {
+	if (srch_res==NULL){
+		system("CLS");
+		puts("Queue hasn't created yet!\n");
+		system("PAUSE");
+		return;
+	}
 	char ch;
 	int i;
 	int first = 0;
@@ -449,22 +455,35 @@ void addToBBT(record* data, vertex* &root, bool &HG, bool &VG)
 	}
 }
 
-void makeTree()
+void freeTree(vertex* root){
+	if (root->left) {
+        freeTree (root->left);
+	}
+    if (root->right) {
+        freeTree (root->right);
+	}
+    delete root;
+}
+
+int makeTree()
 {
-	if (srch_res!=NULL){
-		qEl* curr_el = srch_res->head;
-		bool HG = true;
-		bool VG = true;
-		while(curr_el != srch_res->tail->next){
-	        addToBBT(curr_el->rcrd, tree, HG, VG);
-	        curr_el = curr_el->next;
-	    }
-	} else {
+	if (srch_res==NULL){
 		system("CLS");
 		puts("Queue hasn't created yet!\n");
 		system("PAUSE");
-		return;
-	} 
+		return 0;
+	}
+	if (tree!=NULL){
+		freeTree(tree);
+	}
+	qEl* curr_el = srch_res->head;
+	bool HG = true;
+	bool VG = true;
+	while(curr_el != srch_res->tail->next){
+        addToBBT(curr_el->rcrd, tree, HG, VG);
+        curr_el = curr_el->next;
+    }
+    return 1;
 }
 
 void addFromTreeToQueue(vertex* root){	
@@ -476,29 +495,15 @@ void addFromTreeToQueue(vertex* root){
 
 int printTree()
 {
-	if (tree!=NULL) {
-		initQueue();
-		addFromTreeToQueue(tree);
-		return 1;
-	} else {
+	if (tree==NULL){
 		system("CLS");
 		puts("Tree hasn't created yet!\n");
 		system("PAUSE");
 		return 0;
-	} 
-	puts("\nERROR! Something unexpected caused a problem!\n");
-	system("PAUSE");
-	exit(1);
-}
-
-void freeTree(vertex* root){
-	if (root->left) {
-        freeTree (root->left);
 	}
-    if (root->right) {
-        freeTree (root->right);
-	}
-    delete root;
+	initQueue();
+	addFromTreeToQueue(tree);
+	return 1;
 }
 
 int main()
@@ -511,17 +516,17 @@ int main()
 2. Print database\n\
 3. Sort database\n\
 4. Make queue (Find a key)\n\
-5. Make tree\n\
-6. Print tree\n\
-7. Search in tree\n\
-8. Free all the memory (ONLY FOR EXPERIENCED USERS)\n\
+5. Print queue\n\
+6. Make tree\n\
+7. Print tree\n\
+8. Search in tree\n\
+9. Free all the memory (ONLY FOR EXPERIENCED USERS)\n\
 ESC. Exit\n");
 		selector = getch();
 		switch(selector)
 		{
 			case '1':
 				{
-					freeDB();
 					readDB();
 					break;
 				}
@@ -544,27 +549,30 @@ ESC. Exit\n");
 				}
 			case '5':
 				{
-					if(tree!=NULL){
-						freeTree(tree);
-					}
-					makeTree();
+					printQueue();
 					break;
 				}
 			case '6':
+				{
+					if(!makeTree()){
+						break;
+					}
+				}
+			case '7':
 				{
 					if(printTree()){
 						printQueue();
 					}
 					break;
 				}
-			case '7':
+			case '8':
 				{
 					if(searchInTree()){
 						printQueue();
 					}
 					break;
 				}
-			case '8':
+			case '9':
 				{
 					if(tree!=NULL){
 						freeTree(tree);
