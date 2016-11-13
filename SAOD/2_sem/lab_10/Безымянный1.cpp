@@ -104,39 +104,86 @@ int main(void)
 //******************************************************************************
 //coding length series
 //******************************************************************************
-	
-	/*string mess = "m@0 e`";
-	string m4 = "";
-	short int counter = 1;
-	for (i = mess.length() * 8 - 1; i >=0; i--)
+	i = 0;
+	char mess[] = "  ` `   `` `";
+	cout << "String for length series:" << endl;
+	cout << mess << "endl" << endl;
+	cout << "String for length series:" << endl;
+	while (i < 6)
 	{
-		if((mess >> i) % 2 == 0)
+		for(j = 7; j >= 0; --j)
+		{
+			if((mess[i] >> j) % 2 == 1)
+			{
+				cout << "1";
+			} else {
+				cout << "0";
+			}
+		}
+		cout << " ";
+		i++;	
+	}
+	cout << endl;
+	mbuff = "";
+	int count = 0;
+	char buff;
+	i = 0;
+	cout << "Code string:" << endl;
+	while (i < 6)
+	{
+		for(j = 7; j >= 0; --j)
 		{
 			count++;
-		} else {
-			j = 15;//exponenta	
-			while (((counter >> j) % 2) == 0 && j >= 0)
+			if(((mess[i] >> j) % 2 == 1))
 			{
-				j--;
-			}
-			for (k = j; k > 0; --k)//print exponenta
-			{
-				m4 = m4 + '0';
-			}
-			m4 = m4 + " 1 ";
-			for (k = j-1; k >= 0; --k)//print mantissa
-			{
-				if((counter >> k) % 2 == 1)
+				buff = (char)count;
+				count = 7;
+				while (((buff >> count) % 2) == 0 && count >= 0)
 				{
-					m4 = m4 + "1";
-				} else {
-					m4 = m4 + "0";
+					count--;
 				}
+				for (k = count; k > 0; --k)//print exponenta
+				{
+					mbuff = mbuff + '0';
+				}
+				mbuff = mbuff + "1";
+				for (k = count - 1; k >= 0; --k)//print mantissa
+				{
+					if((buff >> k) % 2 == 1)
+					{
+						mbuff = mbuff + "1";
+					} else {
+						mbuff = mbuff + "0";
+					}
+				}
+				mbuff += " ";
+				count = 0;
 			}
-			cout << m4;
-			counter = 1;
 		}
-	}*/
+		++i;
+	}
+	count++;
+	buff = (char)count;
+	count = 7;
+	while (((buff >> count) % 2) == 0 && count >= 0)
+	{
+		count--;
+	}
+	for (k = count; k > 0; --k)//print exponenta
+	{
+		mbuff = mbuff + '0';
+	}
+	mbuff = mbuff + "1";
+	for (k = count - 1; k >= 0; --k)//print mantissa
+	{
+		if((buff >> k) % 2 == 1)
+		{
+			mbuff = mbuff + "1";
+		} else {
+			mbuff = mbuff + "0";
+		}
+	}
+	cout << mbuff << endl;
 	system("pause");
 	return 0;
 }
