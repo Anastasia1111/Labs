@@ -5,11 +5,11 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = 
-OBJ  = main.o list.o $(RES)
-LINKOBJ  = main.o list.o $(RES)
-LIBS =  -L"lib" -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32  
-INCS =  -I"include" 
-CXXINCS =  -I"lib/gcc/mingw32/3.4.2/include"  -I"include/c++/3.4.2/backward"  -I"include/c++/3.4.2/mingw32"  -I"include/c++/3.4.2"  -I"include" 
+OBJ  = main.o $(RES)
+LINKOBJ  = main.o $(RES)
+LIBS =  -L"I:/Dev-Cpp/lib"  
+INCS =  -I"I:/Dev-Cpp/include" 
+CXXINCS =  -I"I:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"I:/Dev-Cpp/include/c++/3.4.2/backward"  -I"I:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"I:/Dev-Cpp/include/c++/3.4.2"  -I"I:/Dev-Cpp/include" 
 BIN  = lab7.exe
 CXXFLAGS = $(CXXINCS)  
 CFLAGS = $(INCS)  
@@ -28,6 +28,3 @@ $(BIN): $(OBJ)
 
 main.o: main.cpp
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
-
-list.o: list.cpp
-	$(CPP) -c list.cpp -o list.o $(CXXFLAGS)

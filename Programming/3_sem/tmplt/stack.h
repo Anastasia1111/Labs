@@ -4,50 +4,37 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "list.h"
-
-template <typename type>
-class Stack : public List <type>
-{
-	public:
-		
-		Stack<type>(): List<type>(){};
-		
-		Stack<type>(type _data): List<type>(_data){};
-		
-		~Stack<type>(){};
-		
-		Stack<type>* add(type value)
-		{
-			Stack *input = NULL;
-			input = new Stack(value,this);
-			try
-			{
-				if(!(input))
-				{
-					throw 1;
-				}
-				return input;
-			}
-			catch(...)
-			{
-				cout << "New element was not created" << endl;
-			}
-		};
-		
-		Stack<type>* pop()
-		{
-			Stack *n;
-			type x = this->data;
-			cout << "Last stack data: " << x << " -> deleted" << endl;
-			n = (Stack *)this->next;
-			delete this;
-			return n;
-		};
-		
+template<typename T>
+class Stack{
 	protected:
-			
-		Stack<type>(type _data, Stack *_next): List<type>(_data, _next){};
+		struct el{
+			T data;
+			el * next;
+		} * head;
+	public:
+		Stack():head(0){};
+		
+		bool empty(){
+			return !head;
+		};
+		
+		void push(T data){
+			el * temp = new el;
+			temp->data = data;
+			temp->next = head;
+			head = temp;
+		};
+		
+		void pop(){
+			if(!empty()){
+				el * temp = head;
+				head = head->next;
+				delete temp;
+			}
+		};
+		
+		T front(){
+			return head->data;
+		};
 };
-
 #endif

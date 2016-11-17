@@ -4,47 +4,44 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "list.h"
-
-template <typename type>
-class Queue : public List <type>
-{
-public:
-	
-	Queue<type> *tail;
-	
-	Queue<type>(): List<type>(), tail(this){};
-	
-	Queue<type>(type _data): List<type>(_data), tail(this){};
-	
-	~Queue<type>(){};
-	
-	Queue<type> *add(type value)
-	{
-		tail->next = new Queue(value);
-		try
-		{
-			if(!(tail->next))
-			{
-				throw 1;
+template<typename T>
+class Queue{
+	protected:
+		struct el{
+			T data;
+			el * next;
+		} * head,* tail;
+	public:
+		Queue():head(0),tail(0){};
+		
+		bool empty(){
+			return !head;
+		};
+		
+		void push(T data){
+			el * temp = new el;
+			temp->data = data;
+			temp->next = 0;
+			if(empty()){
+				head = tail=temp;
 			}
-			tail = (Queue *)tail->next;
-			return this;
-		}
-		catch(...)
-		{
-			cout << "New element was not created" << endl;
-		}
-	};
-	
-	Queue<type> *pop()
-	{
-		type x = this->data;
-		cout << "First queue data: " << x << " -> deleted." << endl;
-		Queue *n = (Queue *)this->next;
-		delete this;
-		return n;
-	};
+			else{
+				tail->next = temp;
+				tail = temp;
+			}
+		};
+		
+		void pop(){
+			if(!empty()){
+				el * temp = head;
+				head = head->next;
+				delete temp;
+			}
+		};
+		
+		T front(){
+			return head->data;
+		};
 };
 
 #endif

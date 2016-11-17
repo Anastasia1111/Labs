@@ -1,7 +1,7 @@
 [Project]
 FileName=lab7.dev
 Name=lab7
-UnitCount=5
+UnitCount=3
 Type=1
 Ver=1
 ObjFiles=
@@ -31,16 +31,6 @@ CompilerSettings=
 
 [Unit1]
 FileName=main.cpp
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit2]
-FileName=list.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -98,7 +88,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=stack.h
+FileName=queue.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -107,8 +97,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit5]
-FileName=list.cpp
+[Unit2]
+FileName=stack.h
 CompileCpp=1
 Folder=
 Compile=1

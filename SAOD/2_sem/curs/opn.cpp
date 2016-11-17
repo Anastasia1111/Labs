@@ -94,7 +94,6 @@ ESC. Exit\n");
 			case '1':
 				{
 					readDB();
-					break;
 				}
 			case '2':
 				{
@@ -104,6 +103,7 @@ ESC. Exit\n");
 			case '3':
 				{
 					heapSort();
+					printDB();
 					break;
 				}
 			case '4':
