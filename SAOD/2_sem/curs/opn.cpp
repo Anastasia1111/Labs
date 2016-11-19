@@ -1,5 +1,7 @@
 // Variant #41 B2 C2 S1 D2 E3
+#pragma pack(push, 1)
 
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -38,10 +40,18 @@ struct vertex
 	vertex* right;
 };
 
+struct chr
+{
+	int prob;
+	unsigned char ch;
+};
+
 record* database = NULL;
 record** index = NULL;
 queue* srch_res = NULL;
 vertex* tree = NULL;
+chr* alphabet = NULL;
+string* CodeWord = NULL;
 
 void freeDB();
 void readDB();
@@ -64,6 +74,12 @@ vertex* TreeSearch (vertex* root, short int key);
 int compare_dob(char* dob1, char* dob2);
 int compare_fullname(char* fn1, char* fn2);
 int compare_records(record* rcrd1, record* rcrd2);
+void encode();
+int find_probability();
+bool comparator(chr a, chr b);
+void freeCode();
+void codeFano(char l, char r);
+char med(char l, char r);
 void menu();
 
 int main()
@@ -87,6 +103,7 @@ void menu()
 7. Print tree\n\
 8. Search in tree\n\
 9. Free all the memory (ONLY FOR EXPERIENCED USERS)\n\
+C. Encode database (ONLY FOR EXPERIENCED USERS)\n\
 ESC. Exit\n");
 		selector = getch();
 		switch(selector)
@@ -140,11 +157,20 @@ ESC. Exit\n");
 				}
 			case '9':
 				{
+					freeCode();
 					if(tree!=NULL){
 						freeTree(tree);
 					}
 					freeQueue();
 					freeDB();
+					break;
+				}
+			case 'Ñ':
+			case 'ñ':
+			case 'C':
+			case 'c':
+				{
+					encode();
 					break;
 				}
 			case 27:
@@ -168,7 +194,8 @@ void readDB()
 	pF = fopen("testBase2.dat","rb");
 	database = new record [DBSize];
 	int count = fread((record*)database, sizeof(record), DBSize, pF);
-	if (count != DBSize) {
+	if (count != DBSize)
+	{
 		puts("\nERROR! Something unexpected caused a problem! Database wastn't readed!\n");
 		system("PAUSE");
 		exit(1);
@@ -476,7 +503,8 @@ void freeDB()
 	}
 }
 
-void freeQueue(){
+void freeQueue()
+{
 	if (srch_res!=NULL){
 	    qEl* tmp;
 	    qEl* head = srch_res->head;
@@ -491,7 +519,8 @@ void freeQueue(){
 	}
 }
 
-void freeTree(vertex* root){
+void freeTree(vertex* root)
+{
 	if (root->left) {
         freeTree (root->left);
 	}
@@ -499,6 +528,16 @@ void freeTree(vertex* root){
         freeTree (root->right);
 	}
     delete root;
+}
+
+void freeCode()
+{
+	if (alphabet!=NULL || CodeWord!=NULL){
+		delete[] alphabet;
+		delete[] CodeWord;
+		alphabet = NULL;
+		CodeWord = NULL;
+	}
 }
 
 void printDB()
@@ -621,4 +660,152 @@ int printTree()
 	initQueue();
 	addFromTreeToQueue(tree);
 	return 1;
+}
+
+void encode()
+{
+	if (database==NULL){
+		system("CLS");
+		puts("Database hasn't readed yet!\n");
+		system("PAUSE");
+		return;
+	}
+	FILE *pF;
+	pF = fopen("encoding_results.dat","wb");
+	
+	if (pF != NULL)
+	{
+		freeCode();
+		alphabet = new chr[256];
+		
+		for (int i=0; i<256; i++){
+			alphabet[i].prob = 0;
+			alphabet[i].ch = i;
+		}
+		
+		char CWNum = find_probability();
+		
+		CodeWord = new string[CWNum];
+		
+		for (int i=0; i<CWNum; i++){
+			CodeWord[i] = "";
+		}
+		
+		codeFano(0,CWNum);
+		
+		char* DB = (char *)database;
+		int size = sizeof(record)*DBSize;
+		char buf = 0;
+		char bit_count = 0;
+		int CWSize = 0;
+		for(int i=0; i<size; i++)
+		{
+			for(int j=0; j<CWNum; j++){
+				if (DB[i]==alphabet[j].ch)
+				{
+					CWSize = CodeWord[j].size();
+					for (int k=0; k<CWSize; k++){
+						if (bit_count==8)
+						{
+							fputc((int)buf, pF);
+							/*cout<<buf;
+							getch();*/
+							buf = 0;
+							bit_count = 0;
+						}
+						if(CodeWord[j][k]=='1')
+						{
+							buf++;
+						}
+						buf << 1;
+						bit_count++;
+					}
+				}
+			}
+		}
+		if(bit_count!=0)
+		{
+			fputc((int)buf, pF);
+			buf = 0;
+			bit_count = 0;
+		}
+	} else {
+		puts("\nERROR! Something unexpected caused a problem! Encoding results wastn't created!\n");
+		system("PAUSE");
+		exit(1);
+	}
+	
+	system("PAUSE");
+	fseek(pF, 0, SEEK_END);
+	long size = ftell(pF);
+	
+	cout << "Size of encoding_results.dat: " << size << " bytes\n";
+
+	fclose(pF);
+}
+
+bool comparator(chr a, chr b)
+{
+	return a.prob<b.prob;
+}
+
+int find_probability()
+{
+	unsigned char* DB = (unsigned char *)database;
+	int size = sizeof(record)*DBSize;
+	for (int i=0; i<size; i++){
+		/*cout<<DB[i]<<(int)DB[i]<<"="<<alphabet[DB[i]].ch<<(int)alphabet[DB[i]].ch<<endl;
+		system("PAUSE");*/
+		alphabet[DB[i]].prob++;
+	}
+	std::sort(alphabet, alphabet+256, comparator);
+	std::reverse(alphabet, alphabet+256);
+	
+	int real_num = 0;
+	int prob = 0;
+	while(alphabet[real_num].prob){
+		/*cout<<alphabet[real_num].ch<<"("<<(int)alphabet[real_num].ch<<")"<<"("<<alphabet[real_num].prob<<")"<<endl;
+		system("PAUSE");*/
+		prob += alphabet[real_num].prob;
+		real_num++;
+	}
+	/*int flag = 0;
+	if(size==prob) flag = 1;
+	cout<<real_num<<" "<<flag<<endl;*/
+	return real_num;
+}
+
+char med(char l, char r)
+{
+	int sumL = 0;
+	for(int i=l; i<r-1; i++){
+		sumL += alphabet[i].prob;
+	}
+	int sumR = alphabet[r-1].prob;
+	char m = r-1;
+	while(sumL>=sumR)
+	{
+		m--;
+		sumL -= alphabet[m].prob;
+		sumR += alphabet[m].prob;
+	}
+	return m;
+}
+
+void codeFano(char l, char r)
+{
+	if (l<r)
+	{
+		char m = med(l,r);
+		for (char i=l; i<r; i++){
+			if (i<=m)
+			{
+				CodeWord[i] += '0';
+			} else {
+				CodeWord[i] += '1';
+			}
+		}
+		codeFano(l, m);
+		codeFano(m+1, r);
+	}
 }
