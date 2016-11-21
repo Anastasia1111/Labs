@@ -717,7 +717,7 @@ void encode()
 						{
 							buf++;
 						}
-						buf << 1;
+						buf <<= 1;
 						bit_count++;
 					}
 				}
@@ -725,6 +725,8 @@ void encode()
 		}
 		if(bit_count!=0)
 		{
+			for(int j=bit_count; j<8; j++)
+				buf<<=1;
 			fputc((int)buf, pF);
 			buf = 0;
 			bit_count = 0;

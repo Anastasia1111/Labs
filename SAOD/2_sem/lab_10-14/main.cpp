@@ -91,7 +91,6 @@ void Omega(string &m3, short int &j, short int &i)
             }
         }
     } else {
-        cout << "---------------------+" << endl;
     }
 }
 
@@ -99,24 +98,43 @@ void LengthSeries();
 void FileRead()
 {
     char buff = 0;
-    int count = 0; // number of 0
+    char buf = 0;
+    string m = "";
+    int bit_count = 0; // number of 0
     FILE* pF = fopen("code.dat", "rb+");
     FILE* pF1 = fopen("code1.dat", "wb+");
     do
     {
-        fgets(&buff, 1, pF);
-        for(int j = 7; j >= 0; --j)
-        {
-            if((buff >> j) % 2 == 1)
-            {
-                // make an coding and write code into another file
-                count = 0;
-            } else {
-                count++;
-            }
-        }
-
+        fgets(&buff, 2, pF);
+        puts(&buff);
+        short int size = sizeof(char)*8-1;
+        short int chr = buff+1;
+        Omega(m,size,chr);
+		for (int k=0; k<m.size(); k++){
+			
+			if (bit_count==8)
+			{
+				fputc((int)buf, pF1);
+				buf = 0;
+				bit_count = 0;
+			}
+			if(m[k]=='1')
+			{
+				buf++;
+			}
+			buf <<= 1;
+			bit_count++;
+		}
     }while( !(feof(pF)) );
+	if(bit_count!=0)
+	{
+		for(int j=bit_count; j<8; j++)
+			buff<<=1;
+		fputc((int)buf, pF);
+		buf = 0;
+		bit_count = 0;
+	}
+    
     fclose(pF);
     fclose(pF1);
 }
@@ -236,6 +254,9 @@ int main(void)
         }
     }
     cout << mbuff << endl;
+    
+    FileRead();
+    
     system("pause");
     return 0;
 }

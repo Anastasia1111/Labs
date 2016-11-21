@@ -51,8 +51,7 @@ main()
 	double Q[n];
 	int L[n];
 	char C[n][n/2];
-	char message[] = "w upjy0hn[' 5e4=3 2E35T'P [0W;SFVBSDNKLi \
-	iuygt np9eu5y-34t6[uspfojjhhj     ghjghjhj'pj9ytje7pku231glkjrhb dn wg;pu e8y n896y";
+	char message[] = "hhh89897iujhkkjkkjvjhkjkljhkk h kgkg kgk hk gghg9y7897877856dybcc  jv j 77868u f f788ehdkjdkdhdhsdfkhsdkdslhflsdvvnf  jdfjhdfjhbjxcvxcvjhxcvjhxcvjhxcv vbjsvbkd gk";
 	
 	int k;
 	for (k = 0; k < n; k++)
@@ -120,13 +119,23 @@ main()
 	
 	for(i = 1; i < n; ++i)
 	{
-		printf("%4c.  ", A[i]);
+		printf("%4c.  %1.4f  %2i  ", A[i], P[i], L[i]);
 		for(j = 1; j <= L[i]; ++j)
 		{
 			printf("%c", C[i][j]);
 		}
+		
 		printf("\n");
 	}
+	
+	double h = 0, ml = 0;
+	for(i = 1; i < 94; ++i)
+	{
+		if(P[i] > 0.00000000001)
+			h += -1*P[i] * log2(P[i]);
+		ml += L[i] * P[i-1];
+	}
+	printf("\nEntropia: %1.4f, Mid length: %1.4f",h,ml);
 	
 	system("pause");
 	return 0;
