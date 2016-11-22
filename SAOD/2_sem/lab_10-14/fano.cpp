@@ -59,7 +59,6 @@ void codeFano(int l, int r)
 	if (l<r-1)
 	{
 		int m = med(l,r);
-		cout<<m<<endl;
 		for (int i=l; i<r; i++){
 			if (i<=m)
 			{
@@ -68,17 +67,7 @@ void codeFano(int l, int r)
 				CodeWord[i] += '1';
 			}
 		}
-		/*for(int i = l; i < r; ++i)
-		{
-			cout<<left<<alphabet[i].ch<<" | ";
-			cout<<setw(10)<<left<<(double)alphabet[i].prob<<" | ";
-			cout<<setw(10)<<left<<CodeWord[i]<<" | ";
-			cout<<left<<CodeWord[i].size()<<endl;
-		}
-		system("PAUSE");*/
-		cout<<"from m="<<m<<" go to left"<<"(l="<<l<<",r="<<m<<")"<<endl;
 		codeFano(l, m+1);
-		cout<<"from m="<<m<<" go to right"<<"(l="<<m+1<<",r="<<r<<")"<<endl;
 		codeFano(m+1, r);
 	}
 }
@@ -102,20 +91,22 @@ int encode(string msg)
 	
 	codeFano(0,CWNum);
 	
-	/*FILE *pF;
+	return CWNum;
+}
+
+void encodeInFile(string msg, int CWNum){
+	FILE *pF;
 	pF = fopen("encoding_results.dat","wb");
-	
+	int size = msg.size();
 	if (pF != NULL)
 	{
-		char* DB = (char *)database;
-		int size = sizeof(record)*DBSize;
 		char buf = 0;
 		char bit_count = 0;
 		int CWSize = 0;
 		for(int i=0; i<size; i++)
 		{
 			for(int j=0; j<CWNum; j++){
-				if (DB[i]==alphabet[j].ch)
+				if (msg[i]==alphabet[j].ch)
 				{
 					CWSize = CodeWord[j].size();
 					for (int k=0; k<CWSize; k++){
@@ -149,42 +140,44 @@ int encode(string msg)
 		exit(1);
 	}
 	
-	system("PAUSE");
 	fseek(pF, 0, SEEK_END);
-	long size = ftell(pF);
+	int fsize = ftell(pF);
 	
-	cout << "Size of encoding_results.dat: " << size << " bytes\n";
+	cout << "Size (virtual) of uncoded file: "<<size<<" bytes\nSize of encoding_results.dat: " << fsize << " bytes\n";
 
-	fclose(pF);*/
-	
-	return CWNum;
+	fclose(pF);
 }
 
 main()
 {
 	int i, j;
-	string message = "vvodi suda lubuy chush!1111adin 0451";
+	string message = "vvodi suda lubuy chush!1111adin 0451 PSHHH PSHHH YOBA ololol popychsa popyachsa bvjlv;kblk bmlvb; m j j ji ljkvbklbvmbufofjjlgmbmblkvmbl.kvmlgjtfjlkmfgweertyuio;jmnm,vnmvlm  INGIMMNBYKLMKm mkLL  VMBDOFLKM FLMB  ib vkdoisdlkvjfdljdmkl fjklvblfj;f QWERTYUIOP{}ASDFGHJKL:ZXCVBNM<>?!@#$%^&*()_+|1234567890-=qwertyuiop[]sdfghjkl;'zxcvbnm,./\" yuiojgmfoofjogjigkp;bj,je5238454o";
 	
 	int n = encode(message);
-	int prob_sum = message.size();
+	int msg_size = message.size();
+	
+	cout<<" | A |     P      |    code    |  L  |"<<endl;
+	cout<<" +---+------------+------------+-----+"<<endl;
 	for(i = 0; i < n; ++i)
 	{
-		/*printf("%4c.  %1.4f  %s  %2i", alphabet[i].ch, alphabet[i].prob/prob_sum, CodeWord[i], CodeWord[i].size());
-		printf("\n");*/
-		cout<<left<<alphabet[i].ch<<" | ";
-		cout<<setw(10)<<left<<(double)alphabet[i].prob/prob_sum<<" | ";
+		cout<<" | "<<left<<alphabet[i].ch<<" | ";
+		cout<<setw(10)<<left<<(double)alphabet[i].prob/msg_size<<" | ";
 		cout<<setw(10)<<left<<CodeWord[i]<<" | ";
-		cout<<left<<CodeWord[i].size()<<endl;
+		cout<<setw(3)<<left<<CodeWord[i].size()<<" | "<<endl;
+		cout<<" +---+------------+------------+-----+"<<endl;
 	}
 	
-	double h = 0, ml = 0, prob;
+	double h = 0, ml = 0, prob_sum = 0, prob;
 	for(i = 0; i < n; ++i)
 	{
-		prob = (double)alphabet[i].prob/prob_sum;
+		prob = (double)alphabet[i].prob/msg_size;
 		h += -1*prob * log2(prob);
 		ml += CodeWord[i].size() * prob;
+		prob_sum += prob; 
 	}
-	printf("\nEntropia: %1.4f, Mid length: %1.4f",h,ml);
+	printf("Sum of probabilities: %1.4f\nEntropia: %1.4f, Mid length: %1.4f\n",prob_sum,h,ml);
+	
+	encodeInFile(message,n);
 	
 	system("pause");
 	return 0;
