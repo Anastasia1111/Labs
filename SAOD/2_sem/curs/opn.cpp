@@ -2,10 +2,12 @@
 #pragma pack(push, 1)
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
 #include <conio.h>
 
 #define DBSize 4000
@@ -670,31 +672,33 @@ void encode()
 		system("PAUSE");
 		return;
 	}
+	
+	freeCode();
+	alphabet = new chr[256];
+	
+	for (int i=0; i<256; i++){
+		alphabet[i].prob = 0;
+		alphabet[i].ch = i;
+	}
+	
+	char CWNum = find_probability();
+	
+	CodeWord = new string[CWNum];
+	
+	for (int i=0; i<CWNum; i++){
+		CodeWord[i] = "";
+	}
+	
+	codeFano(0,CWNum);
+	
 	FILE *pF;
 	pF = fopen("encoding_results.dat","wb");
 	
+	int size = sizeof(record)*DBSize;
+	
 	if (pF != NULL)
 	{
-		freeCode();
-		alphabet = new chr[256];
-		
-		for (int i=0; i<256; i++){
-			alphabet[i].prob = 0;
-			alphabet[i].ch = i;
-		}
-		
-		char CWNum = find_probability();
-		
-		CodeWord = new string[CWNum];
-		
-		for (int i=0; i<CWNum; i++){
-			CodeWord[i] = "";
-		}
-		
-		codeFano(0,CWNum);
-		
-		char* DB = (char *)database;
-		int size = sizeof(record)*DBSize;
+		unsigned char* DB = (unsigned char *)database;
 		char buf = 0;
 		char bit_count = 0;
 		int CWSize = 0;
@@ -708,8 +712,6 @@ void encode()
 						if (bit_count==8)
 						{
 							fputc((int)buf, pF);
-							/*cout<<buf;
-							getch();*/
 							buf = 0;
 							bit_count = 0;
 						}
@@ -737,13 +739,37 @@ void encode()
 		exit(1);
 	}
 	
-	system("PAUSE");
 	fseek(pF, 0, SEEK_END);
-	long size = ftell(pF);
+	int fsize = ftell(pF);
 	
-	cout << "Size of encoding_results.dat: " << size << " bytes\n";
+	system("CLS");
+	cout<<" | A[i] |     P[i]     |       code       |  L[i]  |"<<endl;
+	cout<<" +------+--------------+------------------+--------+"<<endl;
+	for(int i = 0; i < CWNum; ++i)
+	{
+		cout<<" | "<<setw(3)<<left<<alphabet[i].ch<<" | ";
+		cout<<setw(13)<<left<<(double)alphabet[i].prob/size<<" | ";
+		cout<<setw(16)<<left<<CodeWord[i]<<" | ";
+		cout<<setw(6)<<left<<CodeWord[i].size()<<" | "<<endl;
+		cout<<" +------+--------------+------------------+--------+"<<endl;
+	}
+	
+	double entropy = 0, mid_length = 0, prob_sum = 0, prob;
+	for(int i = 0; i < CWNum; ++i)
+	{
+		prob = (double)alphabet[i].prob/size;
+		entropy += -1*prob * log2(prob);
+		mid_length += CodeWord[i].size() * prob;
+		prob_sum += prob; 
+	}
+	printf("Sum of probabilities: %1.4f\nEntropia: %1.4f, Mid length: %1.4f\n", prob_sum, entropy, mid_length);
+	
+	cout << "Size of uncoded file: "<<size<<" bytes\nSize of encoding_results.dat: " << fsize << " bytes"<<endl;
+	cout << "Compression ratio: "<<(int)(fsize*100/size)<<"%"<<endl;
 
 	fclose(pF);
+	
+	system("PAUSE");
 }
 
 bool comparator(chr a, chr b)
@@ -756,24 +782,15 @@ int find_probability()
 	unsigned char* DB = (unsigned char *)database;
 	int size = sizeof(record)*DBSize;
 	for (int i=0; i<size; i++){
-		/*cout<<DB[i]<<(int)DB[i]<<"="<<alphabet[DB[i]].ch<<(int)alphabet[DB[i]].ch<<endl;
-		system("PAUSE");*/
 		alphabet[DB[i]].prob++;
 	}
 	std::sort(alphabet, alphabet+256, comparator);
 	std::reverse(alphabet, alphabet+256);
 	
 	int real_num = 0;
-	int prob = 0;
 	while(alphabet[real_num].prob){
-		/*cout<<alphabet[real_num].ch<<"("<<(int)alphabet[real_num].ch<<")"<<"("<<alphabet[real_num].prob<<")"<<endl;
-		system("PAUSE");*/
-		prob += alphabet[real_num].prob;
 		real_num++;
 	}
-	/*int flag = 0;
-	if(size==prob) flag = 1;
-	cout<<real_num<<" "<<flag<<endl;*/
 	return real_num;
 }
 
@@ -796,7 +813,7 @@ char med(char l, char r)
 
 void codeFano(char l, char r)
 {
-	if (l<r)
+	if (l<r-1)
 	{
 		char m = med(l,r);
 		for (char i=l; i<r; i++){
@@ -807,7 +824,7 @@ void codeFano(char l, char r)
 				CodeWord[i] += '1';
 			}
 		}
-		codeFano(l, m);
+		codeFano(l, m+1);
 		codeFano(m+1, r);
 	}
 }
