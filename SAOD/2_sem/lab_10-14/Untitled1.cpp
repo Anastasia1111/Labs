@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
+#include <math.h>
 #include <iostream>
 #include <iomanip>
 
@@ -14,23 +15,23 @@ int main(void)
 	puts("|     +------------------------+------------------------+---------------------+");
 	puts("|     |     F + V              |     Gamma-code         |  Omega-code         |");
 	puts("+-----+------------------------+------------------------+---------------------+");
-	short int i = 0;
+	short int i = 200;
 	short int j;
 	short int l;
 	int k;
 	string m1, m2, m3;
 	string mbuff = " ";
-	while (i < 33)
+	while (i < 250)
 	{
 		cout << "+" << setw(5) << i << "+";
 		
 		m1 = m2 = m3 = "";
-		j = 15;//exponenta	
+		j = sizeof(short int) * 8 - 1;//exponenta	
 		while (((i >> j) % 2) == 0 && j >= 0)
 		{
 			j--;
 		}
-		for (k = 3; k >= 0; --k)//print exponenta
+		for (k = sizeof(short int) + 1; k >= 0; --k)//print exponenta
 		{
 			if(((j+1) >> k) % 2 == 1) // j + 1 for true exp
 			{
