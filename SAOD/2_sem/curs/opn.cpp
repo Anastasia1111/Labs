@@ -77,6 +77,7 @@ int compare_dob(char* dob1, char* dob2);
 int compare_fullname(char* fn1, char* fn2);
 int compare_records(record* rcrd1, record* rcrd2);
 void encode();
+void decode();
 int find_probability();
 bool comparator(chr a, chr b);
 void freeCode();
@@ -106,6 +107,7 @@ void menu()
 8. Search in tree\n\
 9. Free all the memory (ONLY FOR EXPERIENCED USERS)\n\
 C. Encode database (ONLY FOR EXPERIENCED USERS)\n\
+D. Decode encoded file (ONLY FOR EXPERIENCED USERS)\n\
 ESC. Exit\n");
 		selector = getch();
 		switch(selector)
@@ -173,6 +175,14 @@ ESC. Exit\n");
 			case 'c':
 				{
 					encode();
+					break;
+				}
+			case 'd':
+			case 'D':
+			case 'â':
+			case 'Â':
+				{
+					decode();
 					break;
 				}
 			case 27:
@@ -767,6 +777,79 @@ void encode()
 	cout << "Size of uncoded file: "<<size<<" bytes\nSize of encoding_results.dat: " << fsize << " bytes"<<endl;
 	cout << "Compression ratio: "<<(int)(fsize*100/size)<<"%"<<endl;
 
+	fclose(pF);
+	
+	system("PAUSE");
+}
+
+void decode()
+{
+	if (alphabet==NULL || CodeWord==NULL){
+		system("CLS");
+		puts("Database hasn't encoded yet!\n");
+		system("PAUSE");
+		return;
+	}
+	
+	FILE *pF;
+	pF = fopen("encoding_results.dat","rb");
+	
+	if (pF != NULL)
+	{
+		int CWNum = 0;
+		while(alphabet[CWNum].prob){
+			CWNum++;
+		}
+		unsigned char buf = 0;
+		int b = 0;
+		unsigned char bit = 0;
+		char ch_bit = ' ';
+		int j, k = 0;
+		while(1)
+		{
+  			buf = fgetc(pF);
+			j = 0;
+			//printf("Byte %d\n",buf);
+			cout<<"I HATE INCREMENT j="<<j<<" b="<<b<<" k="<<k<<" buf="<<buf<<endl;
+  			while(b<8){
+				//cout<<"CHECK IN";
+				if (k==CodeWord[j].size()){
+					cout<<alphabet[j].ch;
+					//cout<<"check"<<j;
+					k = 0;
+					j = 0;
+				}
+				bit = buf << (7-b);
+				bit >>= 7;
+				
+				if (bit){
+					ch_bit = '1';
+				} else {
+					ch_bit = '0';
+				}
+				//cout<<ch_bit;
+				
+				while(j<CWNum && k<CodeWord[j].size() && ch_bit!=CodeWord[j][k])
+				{
+					/*cout<<alphabet[j].ch;
+					getch();*/
+					cout<<"I LOVE INCREMENT j="<<j<<" b="<<b<<" k="<<k<<endl;
+					j++;
+				}
+				if (j>=CWNum){
+					//cout<<"EXTRA OUT";
+					break;
+				}
+				b++;
+				k++;
+				//cout<<"CHECK OUT";
+			}
+			/*cout<<endl;
+			system("PAUSE");*/
+			b = 0;
+			if(feof(pF)) break;
+		}
+	}
 	fclose(pF);
 	
 	system("PAUSE");
