@@ -77,6 +77,7 @@ int compare_dob(char* dob1, char* dob2);
 int compare_fullname(char* fn1, char* fn2);
 int compare_records(record* rcrd1, record* rcrd2);
 void encode();
+void decode();
 int find_probability();
 bool comparator(chr a, chr b);
 void freeCode();
@@ -106,6 +107,7 @@ void menu()
 8. Search in tree\n\
 9. Free all the memory (ONLY FOR EXPERIENCED USERS)\n\
 C. Encode database (ONLY FOR EXPERIENCED USERS)\n\
+D. Decode encoded file (ONLY FOR EXPERIENCED USERS)\n\
 ESC. Exit\n");
 		selector = getch();
 		switch(selector)
@@ -173,6 +175,14 @@ ESC. Exit\n");
 			case 'c':
 				{
 					encode();
+					break;
+				}
+			case 'd':
+			case 'D':
+			case 'â':
+			case 'Â':
+				{
+					decode();
 					break;
 				}
 			case 27:
@@ -715,11 +725,11 @@ void encode()
 							buf = 0;
 							bit_count = 0;
 						}
+						buf <<= 1;
 						if(CodeWord[j][k]=='1')
 						{
 							buf++;
 						}
-						buf <<= 1;
 						bit_count++;
 					}
 				}
@@ -769,6 +779,59 @@ void encode()
 
 	fclose(pF);
 	
+	system("PAUSE");
+}
+
+void decode()
+{
+	if (alphabet==NULL || CodeWord==NULL){
+		system("CLS");
+		puts("Database hasn't encoded yet!\n");
+		system("PAUSE");
+		return;
+	}
+	
+	FILE *pF, *pDF;
+	pF = fopen("encoding_results.dat","rb");
+	pDF = fopen("decoding_results.dat","wb");
+	
+	if (pF != NULL)
+	{
+		system("CLS");
+		puts("Decoding...");
+		int CWNum = 0;
+		while(alphabet[CWNum].prob){
+			CWNum++;
+		}
+		unsigned char buf = 0;
+		int bit_count = 0;
+		unsigned char bit = 0;
+		string str_bit = "";
+		while(!feof(pF))
+		{
+  			buf = fgetc(pF);
+			bit_count = 0;
+  			for(; bit_count<8; bit_count++){
+				bit = buf << bit_count;
+				bit >>= 7;
+				if (bit){
+					str_bit += '1';
+				} else {
+					str_bit += '0';
+				}
+				for(int j=0; j<CWNum; j++){
+					if (!str_bit.compare(CodeWord[j])){
+						//cout<<alphabet[j].ch;
+						fputc((int)alphabet[j].ch, pDF);
+						str_bit = "";
+					}
+				}
+			}
+		}
+	}
+	fclose(pF);
+	fclose(pDF);
+	system("CLS");
 	system("PAUSE");
 }
 
