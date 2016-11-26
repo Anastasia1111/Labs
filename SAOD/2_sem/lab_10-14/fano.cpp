@@ -116,11 +116,11 @@ void encodeInFile(string msg, int CWNum){
 							buf = 0;
 							bit_count = 0;
 						}
+						buf <<= 1;
 						if(CodeWord[j][k]=='1')
 						{
 							buf++;
 						}
-						buf <<= 1;
 						bit_count++;
 					}
 				}
@@ -146,6 +146,55 @@ void encodeInFile(string msg, int CWNum){
 	cout << "Size (virtual) of uncoded file: "<<size<<" bytes\nSize of encoding_results.dat: " << fsize << " bytes\n";
 
 	fclose(pF);
+}
+
+void decode()
+{
+	if (alphabet==NULL || CodeWord==NULL){
+		system("CLS");
+		puts("Message hasn't encoded yet!\n");
+		system("PAUSE");
+		return;
+	}
+	
+	FILE *pF;
+	pF = fopen("encoding_results.dat","rb");
+	
+	if (pF != NULL)
+	{
+		int CWNum = 0;
+		while(alphabet[CWNum].prob){
+			CWNum++;
+		}
+		unsigned char buf = 0;
+		int bit_count = 0;
+		unsigned char bit = 0;
+		string str_bit = "";
+		while(!feof(pF))
+		{
+  			buf = fgetc(pF);
+			bit_count = 0;
+  			for(; bit_count<8; bit_count++){
+				bit = buf << bit_count;
+				bit >>= 7;
+				if (bit){
+					str_bit += '1';
+				} else {
+					str_bit += '0';
+				}
+				for(int j=0; j<CWNum; j++){
+					if (!str_bit.compare(CodeWord[j])){
+						cout<<alphabet[j].ch;
+						str_bit = "";
+					}
+				}
+			}
+		}
+		cout<<endl;
+	}
+	fclose(pF);
+	
+	system("PAUSE");
 }
 
 main()
@@ -178,6 +227,8 @@ main()
 	printf("Sum of probabilities: %1.4f\nEntropia: %1.4f, Mid length: %1.4f\n",prob_sum,h,ml);
 	
 	encodeInFile(message,n);
+	system("PAUSE");
+	decode();
 	
 	system("pause");
 	return 0;

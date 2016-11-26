@@ -725,11 +725,11 @@ void encode()
 							buf = 0;
 							bit_count = 0;
 						}
+						buf <<= 1;
 						if(CodeWord[j][k]=='1')
 						{
 							buf++;
 						}
-						buf <<= 1;
 						bit_count++;
 					}
 				}
@@ -791,67 +791,47 @@ void decode()
 		return;
 	}
 	
-	FILE *pF;
+	FILE *pF, *pDF;
 	pF = fopen("encoding_results.dat","rb");
+	pDF = fopen("decoding_results.dat","wb");
 	
 	if (pF != NULL)
 	{
+		system("CLS");
+		puts("Decoding...");
 		int CWNum = 0;
 		while(alphabet[CWNum].prob){
 			CWNum++;
 		}
 		unsigned char buf = 0;
-		int b = 0;
+		int bit_count = 0;
 		unsigned char bit = 0;
-		char ch_bit = ' ';
-		int j, k = 0;
-		while(1)
+		string str_bit = "";
+		while(!feof(pF))
 		{
   			buf = fgetc(pF);
-			j = 0;
-			//printf("Byte %d\n",buf);
-			cout<<"I HATE INCREMENT j="<<j<<" b="<<b<<" k="<<k<<" buf="<<buf<<endl;
-  			while(b<8){
-				//cout<<"CHECK IN";
-				if (k==CodeWord[j].size()){
-					cout<<alphabet[j].ch;
-					//cout<<"check"<<j;
-					k = 0;
-					j = 0;
-				}
-				bit = buf << (7-b);
+			bit_count = 0;
+  			for(; bit_count<8; bit_count++){
+				bit = buf << bit_count;
 				bit >>= 7;
-				
 				if (bit){
-					ch_bit = '1';
+					str_bit += '1';
 				} else {
-					ch_bit = '0';
+					str_bit += '0';
 				}
-				//cout<<ch_bit;
-				
-				while(j<CWNum && k<CodeWord[j].size() && ch_bit!=CodeWord[j][k])
-				{
-					/*cout<<alphabet[j].ch;
-					getch();*/
-					cout<<"I LOVE INCREMENT j="<<j<<" b="<<b<<" k="<<k<<endl;
-					j++;
+				for(int j=0; j<CWNum; j++){
+					if (!str_bit.compare(CodeWord[j])){
+						//cout<<alphabet[j].ch;
+						fputc((int)alphabet[j].ch, pDF);
+						str_bit = "";
+					}
 				}
-				if (j>=CWNum){
-					//cout<<"EXTRA OUT";
-					break;
-				}
-				b++;
-				k++;
-				//cout<<"CHECK OUT";
 			}
-			/*cout<<endl;
-			system("PAUSE");*/
-			b = 0;
-			if(feof(pF)) break;
 		}
 	}
 	fclose(pF);
-	
+	fclose(pDF);
+	system("CLS");
 	system("PAUSE");
 }
 
