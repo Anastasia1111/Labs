@@ -23,7 +23,6 @@ void FixVar(string &m1, short int &j, short int &i)
             m1 = m1 + '0';
         }
     }
-    m1 = m1 + ' ';
     for (k = j-1; k >= 0; --k)//print mantissa
     {
         if((i >> k) % 2 == 1)
@@ -45,7 +44,7 @@ void Gamma(string &m2, short int &j, short int &i)
         {
             m2 = m2 + '0';
         }
-        m2 = m2 + " 1 ";
+        m2 = m2 + "1";
         for (k = j-1; k >= 0; --k)//print mantissa
         {
             if((i >> k) % 2 == 1)
@@ -62,11 +61,11 @@ void Gamma(string &m2, short int &j, short int &i)
 void Omega(string &m3, short int &j, short int &i)
 {
     int k, l;
-    string mbuff = " ";
+    string mbuff = "";
     if(j == -1) j++;
     if(i)
     {
-        m3 = " 0";
+        m3 = "0";
         l = i;
         //j + 1 = real exponenta
         while ((j+1) >= 2)
@@ -81,7 +80,7 @@ void Omega(string &m3, short int &j, short int &i)
                 }
             }
             m3 = mbuff + m3;
-            mbuff = ' ';
+            mbuff.clear();
             l = j;
             j = sizeof(short int)* 8 - 1;
             while (((l >> j) % 2) == 0 && j >= 0)
@@ -90,53 +89,67 @@ void Omega(string &m3, short int &j, short int &i)
             }
         }
     } else {
-		
     }
 }
 
-void FileRead()
+void FileRead(const char *filename,void (*f)(string &, short int &, short int &))
 {
-    char buff = 0;
-    char buf = 0;
+	int i;
+    char buff[] = {0, 0};
+    char buf[] = {0, 0};
+    short int lenc = 0;
     string m = "";
-    int bit_count = 0; // number of 0
+    short int j;
     FILE* pF = fopen("code.dat", "rb+");
-    FILE* pF1 = fopen("code1.dat", "wb+");
+    FILE* pF1 = fopen(filename, "wb+");
     do
     {
-        fgets(&buff, 2, pF);
-        puts(&buff);
-        short int size = sizeof(char)*8-1;
-        short int chr = buff+1;
-        Omega(m,size,chr);
-		for (int k=0; k<m.size(); k++){
-			
-			if (bit_count==8)
-			{
-				fputc((int)buf, pF1);
-				buf = 0;
-				bit_count = 0;
+        fgets(buff, 2, pF);
+        for(int l = 7; l >= 0; --l)
+        {
+	        if((buff[0] >> l) % 2 == 0)
+	        {
+				lenc++;
+			} else {
+				j = sizeof(short int) * 8 - 1;
+				while (((lenc >> j) % 2) == 0 && j >= 0)
+			    {
+			        j--;
+			    }
+				f(m,j,lenc);
+				lenc = 0;
+				i = 0;
+				while(i < m.length())
+				{
+					for(int k = 0; k < 8; ++k)
+					{
+						if(i < m.length())
+						{
+							buf[0] += (m[i] - '0');
+						}
+						++i;
+						buf[0] = buf[0] << 1;
+					}
+					fputc(buf[0], pF1);
+					buf[0] = 0;
+				}
+				
+				m.clear();
 			}
-			if(m[k]=='1')
-			{
-				buf++;
-			}
-			buf <<= 1;
-			bit_count++;
 		}
     }while( !(feof(pF)) );
-	if(bit_count!=0)
-	{
-		for(int j=bit_count; j<8; j++)
-			buff<<=1;
-		fputc((int)buf, pF);
-		buf = 0;
-		bit_count = 0;
-	}
+    
+	int x = ftell(pF);
+	int y = ftell(pF1);
+    printf("size of original: %i\n", x);
+    printf("size of coded: %i\n", y);
+    printf("k compressing: %2.4f\n", (double)y / x);
+    
     
     fclose(pF);
     fclose(pF1);
 }
+
 
 int main(void)
 {
@@ -256,9 +269,20 @@ int main(void)
     }
     cout << mbuff << endl;
     
-    //FileRead();
-    
     system("pause");
+    
+    void (*f)(string &, short int &, short int &);
+    cout << endl << "F+V:" << endl;
+	f = FixVar;
+	FileRead("FixVar.dat", f);
+	cout << endl << "Omega:" << endl;
+	f = Omega;
+	FileRead("Omega.dat", f);
+	cout << endl << "Gamma:" << endl;
+	f = Gamma;
+	FileRead("Gamma.dat", f);
+	system("pause");
+	
     return 0;
 }
 
