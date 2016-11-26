@@ -92,7 +92,7 @@ void Omega(string &m3, short int &j, short int &i)
     }
 }
 
-void FileRead(const char *filename,void (*f)(string &, short int &, short int &))
+void FileReCoWrite(const char *filename,void (*f)(string &, short int &, short int &))
 {
 	int i;
     char buff[] = {0, 0};
@@ -274,13 +274,13 @@ int main(void)
     void (*f)(string &, short int &, short int &);
     cout << endl << "F+V:" << endl;
 	f = FixVar;
-	FileRead("FixVar.dat", f);
+	FileReCoWrite("FixVar.dat", f);
 	cout << endl << "Omega:" << endl;
 	f = Omega;
-	FileRead("Omega.dat", f);
+	FileReCoWrite("Omega.dat", f);
 	cout << endl << "Gamma:" << endl;
 	f = Gamma;
-	FileRead("Gamma.dat", f);
+	FileReCoWrite("Gamma.dat", f);
 	system("pause");
 	
     return 0;

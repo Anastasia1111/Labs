@@ -1,9 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <string>
+#include <iostream>
 #include <math.h>
 
-#define size 94
+#define size 255
+
+using namespace std;
 
 void InsertSort(double* p, char *a)
 {
@@ -23,15 +27,9 @@ void InsertSort(double* p, char *a)
 	}
 }
 
-void p_a_calc(char *mess, int n, double *&p, char *a)
+void p_a_calc(string mess, int n, double *&p, char *a)
 {
 	int i = 0, j = 0;
-	
-	for (i = 0; i < size; ++i)
-	{
-		p[i] = 0.0;
-		a[i] = i + 32;
-	}
 	
 	for (i = 0; i < n; ++i)
 	{
@@ -72,11 +70,79 @@ void codewords_calc(char **codewords, int *l, double *q)
 	}
 }
 
+void FileRead (string &m, const char *filename)
+{
+	FILE *pf;
+	pf = fopen(filename, "rb+");
+	char buff[] = {0,0};
+	do
+	{
+		fgets(buff, 2, pf);
+		m += buff[0];
+	} while(!feof(pf));
+	fclose(pf);
+}
+
+void CodeMess (string &mess, string &codemess, char *a, char **codewords)
+{
+	codemess = '\0';
+	
+	char j;
+	int k;
+	int bit_count = 0;
+	char buffcode;
+	
+	for (int i = 0; i < mess.length(); ++i)
+	{
+		j = mess[i];
+		printf("%c", j);
+		k = 0;
+		while(j != a[k])
+		{
+			++k;
+		}
+		//free j;
+		
+		for(int j = 0; j < strlen(codewords[k]); ++j)
+		{
+			if(bit_count == 8)
+			{
+				codemess = codemess + buffcode;
+				buffcode = 0;
+				bit_count = 0;
+			}
+			if(codewords[k][j] == '1')
+			{
+				buffcode += 1;
+			}
+			buffcode <<= 1;
+			++bit_count;
+		}
+	}
+	cout << codemess << endl;
+}
+
+
+void PrintInFile (string &m, const char *filename)
+{
+	FILE *pf;
+	pf = fopen(filename, "wb+");
+	char buff[] = {0,0};
+	int i = 0;
+	do
+	{
+		buff[0] = m[i];
+		fputc(buff[0], pf);
+		i++;
+	} while(i < m.length());
+	fclose(pf);
+}
 
 main()
 {
 	int i, j;
-	char *mess = "qwertyuiop[];dzglknj[erausojn.g,nx'jhothsn'k;lsh[APUSETH[0SBSB;BW;MMPMEE*(&%*$^%$@#asdfghjk";
+	string mess = "";
+	string codemess = "";
 	double *p = new double [size];
 	char *a = new char [size];
 	double *q = new double [size];
@@ -84,11 +150,20 @@ main()
 	
 	char **codewords = new char *[size];
 	
-	p_a_calc(mess, strlen(mess), p, a);
+	for (i = 0; i < size; ++i)
+	{
+		p[i] = 0.0;
+		a[i] = i;
+	}
+	
+	FileRead(mess, "engfile.dat");
+	cout << mess << endl;
+	p_a_calc(mess, mess.length(), p, a);
 	InsertSort(p, a);
 	q_l_calc(p, q, l);
 	codewords_calc(codewords, l, q);
-
+	CodeMess(mess, codemess, a, codewords);
+	PrintInFile(codemess, "codefile.dat");
 	
 	for (i = 0; i < size; ++i)
 	{
@@ -98,17 +173,27 @@ main()
 		puts("");
 	}
 	
+	FileRead(mess, "codefile.dat");
+	
 	double h = 0, ml = 0;
-	for(i = 1; i < 94; ++i)
+	for(i = 0; i < size; ++i)
 	{
 		if(p[i] > 0)
 		{
-			h += -1*p[i] * log2(p[i]);
-			ml += l[i] * p[i-1];
+			h += -1 * p[i] * log2(p[i]);
+			ml += l[i] * p[i];
 		}
 	}
 	
 	printf("\nEntropia: %1.4f, Mid length: %1.4f",h,ml);
+	
+	delete p;
+	delete a;
+	delete q;
+	delete l;
+	for(i = 0; i < size; ++i)
+		delete codewords[i];
+	delete codewords;	
 	
 	system("pause");
 }
