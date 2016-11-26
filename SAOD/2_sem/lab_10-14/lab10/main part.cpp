@@ -56,7 +56,6 @@ void Gamma(string &m2, short int &j, short int &i)
             }
         }
     } else {
-        cout << "------------------------+";
     }
 };
 
@@ -91,10 +90,10 @@ void Omega(string &m3, short int &j, short int &i)
             }
         }
     } else {
+		
     }
 }
 
-void LengthSeries();
 void FileRead()
 {
     char buff = 0;
@@ -164,9 +163,11 @@ int main(void)
 //**************************Gamma***********************************************
         Gamma(m2, j, i);
         if(i) {cout << setw(24) << m2 << "|";}
+        else {cout << "------------------------+";}
 //**************************Omega***********************************************
         Omega(m3, j, i);
         if(i){cout << setw(21) << m3 << "|" << endl;}
+        else {cout << "---------------------+ ";}
         cout << "+-----+------------------------+------------------------+---------------------+" << endl;
         ++i;
     }
@@ -255,7 +256,7 @@ int main(void)
     }
     cout << mbuff << endl;
     
-    FileRead();
+    //FileRead();
     
     system("pause");
     return 0;
