@@ -4,12 +4,15 @@
 #include <iostream>
 #include <math.h>
 
-#define size 94
+#define size 256
 
 using namespace std;
 
-char *a = NULL;
-double *p = NULL;
+struct alph
+{
+	char a;
+	double p;
+} *A = NULL;
 double *p1 = NULL;
 
 string *codewords = NULL;
@@ -20,29 +23,29 @@ int Down (int n, int j);
 void p_a_calc(string mess, int n);
 void InsertSort();
 void printalph();
+bool compar(alph a, alph b);
 
 //***********************************************
 
 main()
 {
 	int i;
-	a = new char[size];
-	p = new double [size];
+	A = new alph[size];
 	p1 = new double [size];
 	codewords = new string[size];
-	string mess = "dwabsdfghdgh iij y3n5987wiughgiu2tgi tw gbk fj gdlk";
+	string mess = "sjhg 5u 3q8twykghjs oq34y93ogesjghl erjkh qp98tw ghpo dfh";
 	
 	for (i = 0; i < size; ++i)
 	{
-		a[i] = i + 32;
-		p[i] = 0.0;
+		A[i].a = i;
+		A[i].p = 0.0;
 		codewords[i] = "";
 	}
 	
 	p_a_calc(mess, mess.length());
 	for (i = 0; i < size; ++i)
 	{
-		p1[i] = p[i];
+		p1[i] = A[i].p;
 	}
 	i = 0;
 	while (p1[i])
@@ -56,17 +59,17 @@ main()
 	double h = 0, ml = 0;
 	for(i = 0; i < size; ++i)
 	{
-		if(p[i] > 0)
+		if(A[i].p > 0)
 		{
-			h += -1 * p[i] * log2(p[i]);
-			ml += codewords[i].length() * p[i];
+			h += -1 * A[i].p * log2(A[i].p);
+			ml += codewords[i].length() * A[i].p;
 		}
 	}
 	
 	printf("\nEntropia: %1.4f, Mid length: %1.4f\n",h,ml);
 	system("pause");
-	delete a;
-	delete p;
+	delete A;
+	delete p1;
 	delete codewords;
 	return 0;
 }
@@ -79,18 +82,19 @@ void p_a_calc(string mess, int n)
 	
 	for (i = 0; i < n; ++i)
 	{
-		j = mess[i] - 32;
-		p[j] = p[j] + 1.0;
+		j = mess[i];
+		A[j].p = A[j].p + 1.0;
 	}
 	
 	for (i = 0; i < size; ++i)
 	{
-		p[i] = p[i] / n;
+		A[i].p = A[i].p / n;
 	}
-	InsertSort();
+	sort(A, A + size, compar);
+	reverse(A, A+size);
 }
 
-void InsertSort()
+/*void InsertSort()
 {
 	int i, j;
 	double t1;
@@ -106,7 +110,7 @@ void InsertSort()
 		p[j+1] = t1;
 		a[j+1] = t2;
 	}
-}
+}*/
 
 void Huffman (int n)
 {
@@ -119,7 +123,6 @@ void Huffman (int n)
 	} else {
 		q = p1[n-2] + p1[n-1];
 		j = Up (n, q);
-		printf("hey! %i\n", n);
 		Huffman (n-1);
 		Down (n, j);
 	}
@@ -159,7 +162,12 @@ void printalph()
 {
 	for (int i = 0; i < size; ++i)
 	{
-		printf("%4i. %c:  prob: %1.5f ", i, a[i], p[i]);
+		printf("%4i. %c:  prob: %1.5f ", i, A[i].a, A[i].p);
 		cout << codewords[i] << " Length:" << codewords[i].length() << endl;
 	}
 }
+
+bool compar(alph a, alph b)
+{
+	return a.p < b.p;
+};
