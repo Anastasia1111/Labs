@@ -33,7 +33,7 @@ void p_a_calc(string mess, int n, double *&p, char *a)
 	
 	for (i = 0; i < n; ++i)
 	{
-		j = mess[i] - 32;
+		j = mess[i];
 		p[j] = p[j] + 1.0;
 	}
 	
@@ -55,16 +55,15 @@ void q_l_calc(double *p, double *q, int *l)
 	}
 }
 
-void codewords_calc(char **codewords, int *l, double *q)
+void codewords_calc(string *codewords, int *l, double *q)
 {
 	int i, j;
 	for(i = 0; i < size; ++i)
 	{
-		codewords[i] = new char [l[i]];
 		for(j = 0; j < l[i]; ++j)
 		{
 			q[i] = q[i] * 2;
-			codewords[i][j] = (char)(q[i] + 48);
+			codewords[i] += (char)(q[i] + 48);
 			if(q[i] > 1) q[i] -= 1; 
 		}
 	}
@@ -83,9 +82,9 @@ void FileRead (string &m, const char *filename)
 	fclose(pf);
 }
 
-void CodeMess (string &mess, string &codemess, char *a, char **codewords)
+void CodeMess (string &mess, string &codemess, char *a, string *codewords)
 {
-	codemess = '\0';
+	codemess = "";
 	
 	char j;
 	int k;
@@ -103,7 +102,7 @@ void CodeMess (string &mess, string &codemess, char *a, char **codewords)
 		}
 		//free j;
 		
-		for(int j = 0; j < strlen(codewords[k]); ++j)
+		for(int j = 0; j < codewords[k].length(); ++j)
 		{
 			if(bit_count == 8)
 			{
@@ -119,7 +118,11 @@ void CodeMess (string &mess, string &codemess, char *a, char **codewords)
 			++bit_count;
 		}
 	}
-	cout << codemess << endl;
+	while(bit_count != 8)
+	{
+		buffcode <<= 1;
+		++bit_count;
+	}
 }
 
 
@@ -138,6 +141,51 @@ void PrintInFile (string &m, const char *filename)
 	fclose(pf);
 }
 
+void Decoder(char *a, double *p, string *codewords, const char *filename)
+{
+	FILE *pF, *pDF;
+	pF = fopen(filename, "rb");
+	pDF = fopen("decoding_results.dat","wb");
+	int j;
+	if (pF != NULL)
+	{
+		int CWNum = 0;
+		while(p[CWNum])
+		{
+			CWNum++;
+		}
+		unsigned char buf = 0;
+		int bit_count = 0;
+		unsigned char bit = 0;
+		string str_bit = "";
+		int i = 0;
+		do
+		{
+  			buf = fgetc(pF);
+  			for(bit_count = 0; bit_count != 8; bit_count++){
+				bit = buf << bit_count;
+				bit >>= 7;
+				if (bit){
+					str_bit += '1';
+				} else {
+					str_bit += '0';
+				}
+				cout << str_bit<< endl;
+				for(j = 0; j < CWNum; j++)
+				{
+					if (!str_bit.compare(codewords[j]))
+					{
+						fputc((int)a[j], pDF);
+						str_bit.clear();
+						str_bit = "";
+					}
+				}
+			}
+			i++;
+		}while(!feof(pF) && i < 10);
+	}
+}
+
 main()
 {
 	int i, j;
@@ -148,7 +196,7 @@ main()
 	double *q = new double [size];
 	int *l = new int [size];
 	
-	char **codewords = new char *[size];
+	string *codewords = new string[size];
 	
 	for (i = 0; i < size; ++i)
 	{
@@ -162,19 +210,20 @@ main()
 	InsertSort(p, a);
 	q_l_calc(p, q, l);
 	codewords_calc(codewords, l, q);
-	CodeMess(mess, codemess, a, codewords);
-	PrintInFile(codemess, "codefile.dat");
-	
 	for (i = 0; i < size; ++i)
 	{
 		printf("%3i. %c = %f - %i - ", i+1, a[i], p[i], l[i]);
-		for(j = 0; j < l[i]; ++j)
-			printf("%c", codewords[i][j]);
-		puts("");
+		cout << codewords[i] << endl;
 	}
-	
-	FileRead(mess, "codefile.dat");
-	
+	cout << mess.length() << endl;
+	CodeMess(mess, codemess, a, codewords);
+	cout << codemess << endl;
+	cout << codemess.length() << endl;
+	PrintInFile(codemess, "codefile.dat");
+	mess.clear();
+	codemess.clear();
+	system("pause");
+	Decoder(a, p, codewords, "codefile.dat");
 	double h = 0, ml = 0;
 	for(i = 0; i < size; ++i)
 	{
@@ -191,8 +240,6 @@ main()
 	delete a;
 	delete q;
 	delete l;
-	for(i = 0; i < size; ++i)
-		delete codewords[i];
 	delete codewords;	
 	
 	system("pause");
