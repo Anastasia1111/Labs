@@ -92,7 +92,85 @@ void Omega(string &m3, short int &j, short int &i)
     }
 }
 
-void FileReCoWrite(const char *filename,void (*f)(string &, short int &, short int &))
+/*void LenSer(string mess)
+{
+	while (i < mess.length())
+    {
+        for(j = 7; j >= 0; --j)
+        {
+            if((mess[i] >> j) % 2 == 1)
+            {
+                cout << "1";
+            } else {
+                cout << "0";
+            }
+        }
+        cout << " ";
+        i++;
+    }
+    cout << endl;
+    string mbuff = "";
+    int count = 0;
+    char buff;
+    i = 0;
+    cout << "\n\nCode string:\n\n" << endl;
+    while (i < mess.length())
+    {
+        for(j = 7; j >= 0; --j)
+        {
+            count++;
+            if(((mess[i] >> j) % 2 == 1))
+            {
+                buff = (char)count;
+                count = 7;
+                while (((buff >> count) % 2) == 0 && count >= 0)
+                {
+                    count--;
+                }
+                for (k = count; k > 0; --k)//print exponenta
+                {
+                    mbuff = mbuff + "0";
+                }
+                mbuff = mbuff + "1";
+                for (k = count - 1; k >= 0; --k)//print mantissa
+                {
+                    if((buff >> k) % 2 == 1)
+                    {
+                        mbuff = mbuff + "1";
+                    } else {
+                        mbuff = mbuff + "0";
+                    }
+                }
+                count = 0;
+            }
+        }
+        ++i;
+    }
+    count++;
+    buff = (char)count;
+    count = 7;
+    while (((buff >> count) % 2) == 0 && count >= 0)
+    {
+        count--;
+    }
+    for (k = count; k > 0; --k)//print exponenta
+    {
+        mbuff = mbuff + '0';
+    }
+    mbuff = mbuff + "1";
+    for (k = count - 1; k >= 0; --k)//print mantissa
+    {
+        if((buff >> k) % 2 == 1)
+        {
+            mbuff = mbuff + "1";
+        } else {
+            mbuff = mbuff + "0";
+        }
+    }
+    cout << mbuff << endl;
+}*/
+
+void FileReCoWrite(const char *filename, void (*f)(string &, short int &, short int &))
 {
 	int i;
     char buff[] = {0, 0};
@@ -189,7 +267,7 @@ int main(void)
 //coding length series
 //******************************************************************************
     i = 0;
-    char mess[] = " `";
+    char mess[] = "     `````   `` ```";
     cout << "String for length series:" << endl;
     cout << mess << "endl" << endl;
     cout << "String for length series:\n\n" << endl;

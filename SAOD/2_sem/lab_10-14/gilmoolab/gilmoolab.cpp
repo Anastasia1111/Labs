@@ -34,8 +34,91 @@ main()
 	int i;
 	A = new alph[size];
 	codewords = new string[size];
-	string mess = "ggggjhsgjkhgkjhajkgahgkjhgk57387539867&^%&^$%$gfuiuhghojhd/lor;o/trkgsjopistjoisptiogpssgijopsgtiojsgtogoskpgimosgkomgojsmtsoijmgsjiogsojgmsoigmsogjmsoigpjmsoipgmsieutgmsoitpgmsgijmgsipjmgismsoigmsigsigmsuignmusigmsoispmgsiobmsbs,boisbm,oisibmbosibmsoimsoipbmbs7oip6msb5iops4mb3iopsbmsobipmbsopim6748u6839u63980628096t682mt90umg9us0nu89syngs9mg9sugmn9u0sgmg09ïâïëäâüòïëâòüïåâïüëâäëïüëäâüòåùîöóòåùöòïàïøûïò øûïòûãøåïØÃĞÒØÃÈĞØÍÌÏÈÙÍÌÈÙ*ÈÙÀÈÒÀÀÙÃÀÈÒÃÙÀÈÃÙÀØØÈÀÃÀÈ5258905890272697209676262086708uiaghopuayhouapghuagpohugaipohgug%^$#^HKJHKJHKJHJFJNBMGGNGÒÏÛÒÏÄÏÒÄÎÛÈÒÌÜÛÆÄÏÜÆÛÙÅÎjahkajghkajghkajlghkjaghkjagkjabnjkabnkajlbnlahbéöóêåíãøùçùúäîáüìòèÿôö";
-	
+string mess = "cout << mess << endl << mess.length() << endl;\n\
+	\n\
+	\n\
+	for (i = 0; i < size; ++i)\n\
+	{\n\
+		A[i].a = i;\n\
+		A[i].p = 0.0;\n\
+		codewords[i] = \"\";\n\
+	}\n\
+	\n\
+	p_a_calc(mess, mess.length());\n\
+	for (i = 0; i < size; ++i)\n\
+	{\n\
+		p1[i] = A[i].p;\n\
+	}\n\
+	i = 0;\n\
+	while (p1[i] != 0.0)\n\
+		++i;\n\
+	int n = i;\n\
+	Huffman (n);\n\
+	\n\
+	cout << \"Coding (Huffman):\" << endl;\n\
+	printalph();\n\
+	\n\
+	system(\"pause\");\n\
+	double h = 0, ml = 0;\n\
+	for(i = 0; i < size; ++i)\n\
+	{\n\
+		if(A[i].p > 0)\n\
+		{\n\
+			h += -1 * A[i].p * log2(A[i].p);\n\
+			ml += codewords[i].length() * A[i].p;\n\
+		}\n\
+	}\n\
+	\n\
+	printf(\"\nEntropia: %1.4f, Mid length: %1.4f\n\",h,ml);\n\
+	system(\"pause\");\n\
+	\n\
+	encodeInFile(mess,n);\n\
+	system(\"PAUSE\");\n\
+	decode();\n\
+	system(\"pause\");\n\
+	delete A;\n\
+	delete p1;\n\
+	delete codewords;\n\
+	return 0;\n\
+}\n\
+\n\
+\n\
+void p_a_calc(string mess, int n)\n\
+{\n\
+	int i = 0, j = 0;\n\
+	\n\
+	for (i = 0; i < n; ++i)\n\
+	{\n\
+		j = mess[i];\n\
+		if(j < 0)\n\
+			j += 256;\n\
+		A[j].p = A[j].p + 1.0;\n\
+	}\n\
+	\n\
+	for (i = 0; i < size; ++i)\n\
+	{\n\
+		A[i].p = A[i].p / n;\n\
+	}\n\
+	sort(A, A + size, compar);\n\
+	reverse(A, A+size);\n\
+}\n\
+\n\
+void Huffman (int n)\n\
+{\n\
+	int j;\n\
+	double q;\n\
+	if (n == 2)\n\
+	{\n\
+		codewords[n-2] = \"0\";\n\
+		codewords[n-1] = \"1\";\n\
+	} else {\n\
+		q = p1[n-2] + p1[n-1];\n\
+		j = Up (n, q);\n\
+		Huffman (n-1);\n\
+		Down (n, j);\n\
+  }\n\
+}";
+
 	for (i = 0; i < size; ++i)
 	{
 		A[i].a = i;
@@ -60,6 +143,7 @@ main()
 	}
 	
 	printf("\nEntropia: %1.4f, Mid length: %1.4f\n",h,ml);
+	printf("entropia / 8: %f\n", h / 8);
 	system("pause");
 	int n = 0;
 	while(A[n].p){
@@ -200,7 +284,7 @@ void encodeInFile(string msg, int CWNum){
 	int fsize = ftell(pF);
 	
 	cout << "str_length (virtual) of uncoded file: "<<str_length<<" bytes\nstr_length of encoding_results.dat: " << fsize << " bytes\n";
-
+	cout << "compressing:" << (double)fsize/str_length << endl;
 	fclose(pF);
 }
 
