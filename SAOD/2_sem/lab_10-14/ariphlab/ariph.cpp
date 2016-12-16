@@ -12,51 +12,18 @@ using namespace std;
 struct alph
 {
 	unsigned char a;
-	int pnumer;
-	int pdenom;
-	int qnumer;
-	int qdenom;
+	double p;
+	double q;
 } *A = NULL;
 
-int Rnumer;
-int Rdenom;
+unsigned int r = 4294967295;
 
-char Read(FILE *rf);
-void creating ();
-void p_a_calc(string mess, int n);
+void creating();
 void printalph();
-int ariph (string mess, int n, int &fnum, int &fden);
-void writeBinInFile (FILE *RCf, int numer, int denom, int unsize);
-void readBinFromFile (FILE *rf, int &numer, int &denom);
-void decalph (FILE *rf, int symnum);
-void flNumSum(int &aNum, int &aDen, int &bNum, int &bDen, int &ResNum, int &ResDen);
+void p_a_calc(string mess, int n);
+int ariph (string mess, int n, FILE *RCf);
 
-int NOD(int a, int b)
-{
-    while (a && b)
-        if (a >= b)
-           a -= b;
-        else
-           b -= a;
-    return a | b;
-}
- 
-int NOK (int a, int b)
-{
-    return a * b / NOD (a, b);
-}
-
-void sokr(int &num, int &denom)
-{
-	enum prost {2, 3, 5, 7, 11, 13, 17, 19}
-	for (prost i = 2; i < )
-	while (!(denom%i)){
-		num /= i;
-		denom /= i;
-	}
-}
-
-main()
+int main()
 {
 	string mess = "cout << mess << endl << mess.length() << endl;\n\
 	\n\
@@ -140,43 +107,21 @@ void Huffman (int n)\n\
 		j = Up (n, q);\n\
 		Huffman (n-1);\n\
 		Down (n, j);\n\
-  }\n\
+	}\n\
 }";
 	int len = mess.length();
-	string codemess = "";
 	FILE *RCf = fopen("ariphtext.dat", "wb+");
-	int fnum, fden;
 	
 	creating ();
 	p_a_calc(mess, len);
 	printalph();
 	system("pause");
 	
-	int messlen = ariph (mess, len, fnum, fden);
-	printf("%i / %i (length: %i)", fnum, fden, messlen);
+	int messlen = ariph (mess, len, RCf);
+	printf("%i symbols encoded", messlen);
+	
 	system("pause");
-	
-	/*fseek(Pf, 0, SEEK_END);
-	int unsize = ftell(Pf);
-	writeBinInFile (RCf, fnum, fden, unsize);
-	fclose (RCf);
-	cout << "Writing in file..." << endl;
-	system("pause");
-	
-	RCf = fopen("ariphtext.dat", "rb+");
-	readBinFromFile(RCf, fnum, fden);
-	decalph (RCf, messlen);
-	
-	fclose (Pf);
-	fclose (RCf);*/
-}
-
-char Read(FILE *rf)
-{
-	if (rf != NULL && !feof(rf))
-	{
-		return fgetc(rf);
-	}
+	fclose(RCf);
 	return 0;
 }
 
@@ -187,10 +132,8 @@ void creating ()
 	for (int i = 0; i < MSIZE; ++i)
 	{
 		A[i].a = i;
-		A[i].pnumer = 0;
-		A[i].pdenom = 0;
-		A[i].qnumer = 0;
-		A[i].qdenom = 0;
+		A[i].q = 0;
+		A[i].p = 0;
 	}
 }
 
@@ -201,17 +144,17 @@ void p_a_calc(string mess, int n)
 	
 	for(i = 0; i < n; ++i){
 		j = mess[i];
-		++A[j].pnumer;
+		++A[j].p;
 	}
 	
 	for (i = 0; i < MSIZE; ++i)
 	{
-		A[i].pdenom = A[i].qdenom = n;
+		A[i].p /= n;
 	}
-	A[0].qnumer = A[0].pnumer;
+	A[0].q = A[0].p;
 	for (i = 1; i < MSIZE; ++i)
 	{
-		A[i].qnumer = A[i-1].qnumer + A[i].pnumer;
+		A[i].q = A[i-1].q + A[i].p;
 	}
 }
 
@@ -219,38 +162,30 @@ void printalph()
 {
 	for (int i = 0; i < MSIZE; ++i)
 	{
-		if(A[i].pnumer != 0)
+		if(A[i].p != 0)
 		{
-			printf("%4i. [%c]:  prob: %1.5f ", i, A[i].a, (double)A[i].pnumer / A[i].pdenom);
-			cout << (double)A[i].qnumer / A[i].qdenom;
-			printf("  (%i) (%i)\n", A[i].qnumer, A[i].qdenom);
+			printf("%4i. [%c]:  prob: %1.5f ", i, A[i].a, A[i].p);
+			printf("  %1.5f\n", A[i].q);
 		}
 	}
 }
 
-int ariph (string mess, int n, int &fnum, int &fden)
+int ariph (string mess, int n, FILE *RCf)
 {
-	int lnum = 0;
-	int lden = 1; // L = 0
-	
-	int hnum = 1;
-	int hden = 1; // H = 1
-	
-	Rnumer = Rdenom = 1; // R = 1
-	
-	int i = 0;
-	int j = 0;
-	
-	int m = 0;
-	int mnum, mden, m1num, m1den;
-	
-	printf("\nRnumer = %i, Rdenom = %i \n\n", Rnumer, Rdenom);
+	unsigned int h = 16777215;
+	unsigned int hpr = 16777215;
+	unsigned int l = 0;
+	unsigned int lpr = 0;
+	int k = 0;
 	
 	unsigned char C;
-	int l = 0;
-	for(l = 0; l < n; ++l){
-		C = mess[l];
-		++i;
+	int m = 0;
+	int j = 0;
+	int i;
+	for(i = 0; i < n; ++i){
+		C = mess[i];
+		printf("%c", C);
+		++k;
 		for (j = 0; j < MSIZE; j++)
 		{
 			if(C == A[j].a)
@@ -260,172 +195,25 @@ int ariph (string mess, int n, int &fnum, int &fden)
 			}
 		}
 		
-		int nlnum = -1 * lnum;
-		mnum = Rnumer * A[m].qnumer;
-		mden = Rdenom * A[m].qdenom;
-		m1num = Rnumer * A[m-1].qnumer;
-		m1den = Rdenom * A[m-1].qdenom;
-		flNumSum(lnum, lden, mnum, mden, hnum, hden); // h = l + r*q
-		if (m)
-			flNumSum(lnum, lden, m1num, m1den, lnum, lden); // l = l + r*q
-		flNumSum(hnum, hden, nlnum, lden, Rnumer, Rdenom); // r = h - l
-		printf("Lnumer = %i, Ldenom = %i \n", lnum, lden);
-		printf("Hnumer = %i, Hdenom = %i \n", hnum, hden);
-		printf("Rnumer = %i, Rdenom = %i \n\n", Rnumer, Rdenom);
+		if(m)
+			l = lpr + (unsigned int)(r * A[m-1].q);
+	//	printf("%u ",(unsigned int)(r * A[m-1].q));
+		h = lpr + (unsigned int)(r * A[m].q);
+	//	printf("%u ",(unsigned int)(r * A[m].q));
+	//	printf("(%u)(%u)\n", l, h);
+		lpr = l;
+		hpr = h;
+	//	printf("%u \n", l^h);
+		if((l^h) <= 65535) // last byte is equal
+		{
+			char c = (char)(l >> 16);
+			fputc((int)c, RCf);
+			l <<= 8;// delete last byte
+			h <<= 8;
+			h += 255;
+		}
+		r = h - l;
+	//	printf("%u",r);
 	}
-	flNumSum(lnum, lden, hnum, hden, fnum, fden);
-	fden *= 2;
-	return i;
+	return k;
 }
-
-void writeBinInFile (FILE *RCf, int numer, int denom, int unsize)
-{
-	printf("numer = %i, denom = %i\n", numer, denom);
-	string binCode = "";
-	int n = (int) (log2(Rdenom) - log2(Rnumer));
-	cout << "aprox = " << n << endl;
-	int i;
-	char buf = 0;
-	char bit_count = 0;
-	for (i = 0; i < n; ++i)
-	{
-		numer = numer * 2;
-		if (numer >= denom)
-		{
-			binCode = binCode + '1';
-			numer -= denom;
-		} else {
-			binCode = binCode + '0';
-		}
-	}
-	if (binCode[i-1] == '0')
-	{
-		do
-		{
-			numer = numer * 2;
-			if (numer >= denom)
-			{
-				binCode = binCode + '1';
-				numer -= denom;
-			} else {
-				binCode = binCode + '0';
-			}
-			++i;
-		} while (binCode[i-1] != '1');
-	}
-	if (RCf != NULL)
-	{
-		for (int k = 0; k < binCode.length(); k++)
-		{
-			if (bit_count==8)
-			{
-				fputc((int)buf, RCf);
-				buf = 0;
-				bit_count = 0;
-			}
-			buf <<= 1;
-			if(binCode[k]=='1')
-			{
-				buf++;
-			}
-			bit_count++;
-		}
-		if(bit_count!=0)
-		{
-			for(int j=bit_count; j<8; j++)
-				buf<<=1;
-			fputc((int)buf, RCf);
-			buf = 0;
-			bit_count = 0;
-		}
-	} else {
-		puts("\nERROR! Something unexpected caused a plem! Encoding results wastn't created!\n");
-		system("PAUSE");
-		exit(1);
-	}
-	
-	fseek(RCf, 0, SEEK_END);
-	int fsize = ftell(RCf);
-	
-	cout << "size (virtual) of uncoded file: "<<unsize<<" bytes\nsize of ariphtext.dat: " << fsize << " bytes\n";
-	cout << "compressing:" << (double)fsize/unsize * 100 << endl;
-}
-
-void flNumSum(int &aNum, int &aDen, int &bNum, int &bDen, int &ResNum, int &ResDen)
-{
-	int k;
-	k = NOK(aDen, bDen);
-	aNum *= k/aDen;
-	bNum *= k/bDen;
-	aDen = bDen = k;
-	ResNum = aNum + bNum;
-	ResDen = k;
-}
-
-void readBinFromFile (FILE *rf, int &numer, int &denom)
-{
-	string BinCode = "";
-	int calcnum = 1;
-	int calcden = 2;
-	if (rf != NULL)
-	{
-		unsigned char buf = 0;
-		int bit_count = 0;
-		unsigned char bit = 0;
-		string str_bit = "";
-		while(1)
-		{
-  			buf = fgetc(rf);
-  			if(feof(rf))
-  				break;
-			bit_count = 0;
-  			for(; bit_count<8; bit_count++){
-				bit = buf << bit_count;
-				bit >>= 7;
-				if (bit){
-					BinCode += '1';
-					flNumSum(numer, denom, calcnum, calcden, numer, denom);
-				} else {
-					BinCode += '0';
-				}
-				calcden *= 2;
-			}
-		}
-		cout << BinCode << endl;
-	}
-}
-
-void decalph (FILE *rf, int symnum)
-{
-	int lnum = 0;
-	int lden = A[0].qdenom; // L
-	
-	int hnum = A[0].qdenom;
-	int hden = A[0].qdenom; // H
-	
-	Rnumer = Rdenom = A[0].qdenom; // R
-	
-	int valnum = 0;
-	int valden = 1;
-	int i, j;
-	
-	readBinFromFile (rf, valnum, valden);
-	for (i = 0; i < symnum; ++i)
-	{
-		for (j = 0; j < MSIZE; ++j)
-		{
-			int nlnum = -1 * lnum;
-			int jnum = Rnumer * A[j].qnumer;
-			int jden = Rdenom * A[j].qdenom;
-			int j1num = Rnumer * A[j-1].qnumer;
-			int j1den = Rdenom * A[j-1].qdenom;
-			flNumSum(lnum, lden, jnum, jden, hnum, hden); // h = l + r*q
-			if (j)
-				flNumSum(lnum, lden, j1num, j1den, lnum, lden); // l = l + r*q
-			flNumSum(hnum, hden, nlnum, lden, Rnumer, Rdenom); // r = h - l
-			if (1)
-				break;
-		}
-		cout << A[j].a;
-	}
-};
