@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <locale.h>
+#include <climits>
 
 #define MSIZE 256
 
@@ -16,7 +17,7 @@ struct alph
 	double q;
 } *A = NULL;
 
-unsigned int r = 4294967295;
+unsigned int r = UINT_MAX;
 
 void creating();
 void printalph();
@@ -176,8 +177,8 @@ void printalph()
 
 int ariph (string mess, int n, FILE *RCf)
 {
-	unsigned int h = 4294967295;
-	unsigned int hpr = 4294967295;
+	unsigned int h = UINT_MAX;
+	unsigned int hpr = UINT_MAX;
 	unsigned int l = 0;
 	unsigned int lpr = 0;
 	int k = 0;
@@ -201,13 +202,9 @@ int ariph (string mess, int n, FILE *RCf)
 		
 		if(m)
 			l = lpr + (unsigned int)(r * A[m-1].q);
-	//	printf("%u ",(unsigned int)(r * A[m-1].q));
 		h = lpr + (unsigned int)(r * A[m].q);
-	//	printf("%u ",(unsigned int)(r * A[m].q));
-	//	printf("(%u)(%u)\n", l, h);
 		lpr = l;
 		hpr = h;
-	//	printf("%u \n", l^h);
 		if((l^h) <= 16777215) // last byte is equal
 		{
 			char c = (char)(l >> 24);
@@ -217,29 +214,27 @@ int ariph (string mess, int n, FILE *RCf)
 			h += 255;
 		}
 		r = h - l;
-	//	printf("%u",r);
 	}
-	char last = (char)((l + r/2) >> 24);
-	fputc((int)last, RCf);
-	last = (char) ((l + r/2) >> 16);
-	fputc((int)last, RCf);
-	last = (char) ((l + r/2) >> 8);
-	fputc((int)last, RCf);
-	last = (char) (l + r/2);
-	fputc((int)last, RCf);
+	
+	char last;
+	for(i = 24; i >= 0; i -= 8)
+	{
+		last = (char) ((l + r/2) >> i);
+		fputc((int)last, RCf);
+	}
 	return k;
 }
 
 int decode (string mess, FILE *RCf, int length)
 {
-	unsigned int h = 4294967295;
-	unsigned int hpr = 4294967295;
+	unsigned int h = UINT_MAX;
+	unsigned int hpr = UINT_MAX;
 	unsigned int l = 0;
 	unsigned int lpr = 0;
 	unsigned char c;
 	unsigned int number = 0;
 	string codemess = "";
-	r = 4294967295;
+	r = UINT_MAX;
 	int i, j;
 	int codecount = 0;
 	while(!feof(RCf))
@@ -252,15 +247,12 @@ int decode (string mess, FILE *RCf, int length)
 		number <<= 8;
 		if(codecount < codemess.length())
 		{
-			number += codemess[codecount];
+			number += (unsigned char) codemess[codecount];
 			++codecount;
 		}
 	}	
 	for(i = 0; i < length; ++i)
 	{
-		r = h - l;
-		lpr = l;
-		hpr = h;
 		for(j = 0; j < MSIZE; ++j)
 		{
 			if(j)
@@ -268,23 +260,25 @@ int decode (string mess, FILE *RCf, int length)
 			h = lpr + (unsigned int)(r * A[j].q);
 			if((l <= number) && (number < h))
 			{
+				mess = mess + (char) (A[j].a);
 				break;	
 			}
 		}
-		mess = mess + (char) A[j].a;
 		if((l^h) <= 16777215) // last byte is equal
 		{
 			l <<= 8;// delete last byte
 			h <<= 8;
 			h += 255;
-			!feof(RCf) ? c = fgetc(RCf) : c = 0;
 			number <<= 8;
 			if(codecount < codemess.length())
 			{
-				number += codemess[codecount];
+				number += (unsigned char) codemess[codecount];
 				++codecount;
 			}
 		}
+		r = h - l;
+		lpr = l;
+		hpr = h;
 	}
 	cout << mess << endl;
 }
