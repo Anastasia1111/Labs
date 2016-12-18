@@ -113,19 +113,20 @@ void Huffman (int n)\n\
 }";
 	int len = mess.length();
 	FILE *RCf = fopen("ariphtext.dat", "wb+");
-	
 	creating ();
 	p_a_calc(mess, len);
 	printalph();
 	system("pause");
+	puts("\n\n");
 	
 	int messlen = ariph (mess, len, RCf);
 	printf("%i symbols encoded", messlen);
 	fclose(RCf);
 	system("pause");
+	puts("\n\n");
 	RCf = fopen("ariphtext.dat", "rb+");
 	string decodemess = "";
-	messlen = decode (decodemess, RCf, len);
+	messlen = decode (decodemess, RCf, messlen);
 	system("pause");
 	return 0;
 }
@@ -187,7 +188,7 @@ int ariph (string mess, int n, FILE *RCf)
 	int m = 0;
 	int j = 0;
 	int i;
-	for(i = 0; i < n; ++i){
+	for(i = 0; i < mess.length(); ++i){
 		C = mess[i];
 		printf("%c", C);
 		++k;
@@ -202,10 +203,10 @@ int ariph (string mess, int n, FILE *RCf)
 		
 		if(m)
 			l = lpr + (unsigned int)(r * A[m-1].q);
+		else 
+			l = lpr;
 		h = lpr + (unsigned int)(r * A[m].q);
-		lpr = l;
-		hpr = h;
-		if((l^h) <= 16777215) // last byte is equal
+		while((l^h) <= 16777215) // last byte is equal
 		{
 			char c = (char)(l >> 24);
 			fputc((int)c, RCf);
@@ -214,6 +215,8 @@ int ariph (string mess, int n, FILE *RCf)
 			h += 255;
 		}
 		r = h - l;
+		lpr = l;
+		hpr = h;
 	}
 	
 	char last;
@@ -237,18 +240,13 @@ int decode (string mess, FILE *RCf, int length)
 	r = UINT_MAX;
 	int i, j;
 	int codecount = 0;
-	while(!feof(RCf))
-	{
-		c = fgetc(RCf);
-		codemess = codemess + (char)c;
-	}
 	for(i = 0; i < 4; ++i)
 	{
 		number <<= 8;
-		if(codecount < codemess.length())
+		if(!feof(RCf))
 		{
-			number += (unsigned char) codemess[codecount];
-			++codecount;
+			c = fgetc(RCf);
+			number += (unsigned char) c;
 		}
 	}	
 	for(i = 0; i < length; ++i)
@@ -257,6 +255,8 @@ int decode (string mess, FILE *RCf, int length)
 		{
 			if(j)
 				l = lpr + (unsigned int)(r * A[j-1].q);
+			else 
+				l = lpr;
 			h = lpr + (unsigned int)(r * A[j].q);
 			if((l <= number) && (number < h))
 			{
@@ -264,16 +264,16 @@ int decode (string mess, FILE *RCf, int length)
 				break;	
 			}
 		}
-		if((l^h) <= 16777215) // last byte is equal
+		while((l^h) <= 16777215) // last byte is equal
 		{
 			l <<= 8;// delete last byte
 			h <<= 8;
 			h += 255;
 			number <<= 8;
-			if(codecount < codemess.length())
+			if(!feof(RCf))
 			{
-				number += (unsigned char) codemess[codecount];
-				++codecount;
+				c = fgetc(RCf);
+				number += (unsigned char) c;
 			}
 		}
 		r = h - l;
@@ -281,4 +281,5 @@ int decode (string mess, FILE *RCf, int length)
 		hpr = h;
 	}
 	cout << mess << endl;
+	cout << mess.length() << " is decoded" << endl;
 }
