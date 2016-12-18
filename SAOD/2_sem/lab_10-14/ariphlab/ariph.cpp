@@ -120,7 +120,12 @@ void Huffman (int n)\n\
 	puts("\n\n");
 	
 	int messlen = ariph (mess, len, RCf);
-	printf("%i symbols encoded", messlen);
+	printf("\n%i symbols encoded\n", messlen);
+	fseek(RCf, 0, SEEK_END);
+	int fsize = ftell(RCf);
+	cout << "-----------------------------------------------------" << endl;
+	cout << "Size (virtual) of uncoded file: "<<mess.length()<<" bytes\nSize of encode file: " << fsize << " bytes\n";
+	cout << "compressing:" << (double)fsize/mess.length() << endl;
 	fclose(RCf);
 	system("pause");
 	puts("\n\n");
