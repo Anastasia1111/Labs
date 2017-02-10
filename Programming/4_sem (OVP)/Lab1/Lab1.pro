@@ -29,8 +29,11 @@ DEFINES += \
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    addrec.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    addrec.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    addrec.ui

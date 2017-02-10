@@ -1,9 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "addrec.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    dialogWin(new AddRec(this)) //Создаем диалог настроек
 {
     ui->setupUi(this);
     connect(ui->action_open, SIGNAL(triggered()), this, SLOT(slotOpen()),
@@ -68,7 +70,7 @@ void MainWindow::slotSave()
         QByteArray lData;
         //Читаем текст и добавляем QByteArray, записываем в файл
         //и закрываем файл после записи
-        for (int i=0; i<ui->listWidget_2->count(); i++) {
+        for (int i=0; i < ui->listWidget_2->count(); i++) {
             lData.append(ui->listWidget_2->item(i)->text());
         }
 
@@ -94,4 +96,65 @@ void MainWindow::slotAboutProgram()
                        QString("%1 v. %2")
                        .arg(qApp->applicationName())
                        .arg(qApp->applicationVersion()));
+}
+void MainWindow::on_pushButton_Start_clicked()
+{
+    ui->listWidget_1->clear();
+    ui->listWidget_2->clear();
+
+    QStringList Strings = ui->plainTextEdit->toPlainText().split(QRegExp("(\\s|\\n|\\r)+"), QString::SkipEmptyParts);
+    foreach (QString s, Strings)
+    {
+        QString Str = s.trimmed();
+        if (Str.isEmpty()) continue;
+        if (ui->radioButton_All->isChecked()) ui->listWidget_1->addItem(Str);
+        if (ui->radioButton_Digits->isChecked())
+        {
+            if (Str.contains(QRegExp("\\d"))) ui->listWidget_1->addItem(Str);
+        }
+        if (ui->radioButton_Email->isChecked())
+        {
+            if (Str.contains(QRegExp("\\w+@\\w+\\.\\w+"))) ui->listWidget_1->addItem(Str);
+        }
+    }
+}
+
+void MainWindow::on_pushButton_Clear_clicked()
+{
+    ui->listWidget->clear();
+    ui->listWidget_1->clear();
+    ui->listWidget_2->clear();
+    ui->plainTextEdit->clear();
+    ui->lineEdit->clear();
+    ui->radioButton_All->setChecked(true);
+    ui->checkBox_section1->setChecked(true);
+}
+
+void MainWindow::on_pushButton_Search_clicked()
+{
+    QString key = ui->lineEdit->text();
+
+    ui->listWidget->clear();
+
+    QString Str;
+
+    if (ui->checkBox_section1->isChecked())
+    {
+        for (int i=0; i < ui->listWidget_1->count(); i++) {
+            Str = QString(ui->listWidget_1->item(i)->text());
+            if (Str.contains(key)) ui->listWidget->addItem(Str);
+        }
+    }
+    if (ui->checkBox_section2->isChecked())
+    {
+        for (int i=0; i < ui->listWidget_2->count(); i++) {
+            Str = QString(ui->listWidget_2->item(i)->text());
+            if (Str.contains(key)) ui->listWidget->addItem(Str);
+        }
+    }
+}
+
+void MainWindow::on_pushButton_add_clicked()
+{
+    dialogWin->show();
 }
