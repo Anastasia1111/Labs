@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Лаб. 1</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
@@ -126,7 +126,11 @@
        </widget>
       </item>
       <item row="2" column="0" rowspan="3">
-       <widget class="QListWidget" name="listWidget"/>
+       <widget class="QListWidget" name="listWidget">
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -156,7 +160,7 @@
       <string>Выход</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_clean1">
+    <widget class="QPushButton" name="pushButton_clear1">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -221,7 +225,7 @@
       <string>Добавить</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_clean2">
+    <widget class="QPushButton" name="pushButton_clear2">
      <property name="geometry">
       <rect>
        <x>320</x>
@@ -298,6 +302,9 @@
      <property name="selectionMode">
       <enum>QAbstractItemView::ExtendedSelection</enum>
      </property>
+     <property name="sortingEnabled">
+      <bool>false</bool>
+     </property>
     </widget>
     <widget class="QListWidget" name="listWidget_2">
      <property name="geometry">
@@ -307,6 +314,12 @@
        <width>141</width>
        <height>171</height>
       </rect>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="sortingEnabled">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QComboBox" name="comboBox_1">
@@ -522,6 +535,38 @@
     <hint type="destinationlabel">
      <x>408</x>
      <y>333</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_clear1</sender>
+   <signal>clicked()</signal>
+   <receiver>listWidget_1</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>394</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>90</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_clear2</sender>
+   <signal>clicked()</signal>
+   <receiver>listWidget_2</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>367</x>
+     <y>394</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>360</x>
+     <y>248</y>
     </hint>
    </hints>
   </connection>
