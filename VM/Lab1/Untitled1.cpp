@@ -7,6 +7,33 @@ float arr[size][size+1] = {-2, 1, -1, -1,
 							3, 2, -2, -2};
 float ans[size] = {0, 0, 0};
 
+void swap(int fst, int sec)
+{
+	int i;
+	float buff;
+	for(i = 0; i < (size + 1); ++i)
+	{
+		buff = arr[fst][i];
+		arr[fst][i] = arr[sec][i];
+		arr[sec][i] = buff;
+	}
+}
+
+int compare(int colNum)
+{
+	float buff = arr[colNum][colNum];
+	int i;
+	int num = colNum;// number of row with max "a"
+	for(i = colNum + 1; i < size; ++i)
+	{
+		if(arr[colNum][i] > buff)
+		{
+			buff = arr[colNum][i];
+			num = i;
+		}
+	}
+}
+
 int main()
 {
 	int i, j, k;
