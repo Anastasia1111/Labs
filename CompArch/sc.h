@@ -1,6 +1,21 @@
 #ifndef SC_H
 #define SC_H
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#define ramSize 100
+int RAM[ramSize];
+int REG;/* 0-14 = accumulator
+		*16-22 = command pointer
+		*24-28 = flag register
+		* 	24 (code 1):overfilling
+		*	25 (code 2):division on 0
+		*	26 (code 3):exit over limits of memory
+		* 	27 (code 4):step inpulses ignoring
+		* 	28 (code 5):wrong command
+		* */ 
+
 int sc_memoryInit(); /* инициализирует оперативную память Simple Computer, задавая 
 всем её ячейкам нулевые значения. В качестве «оперативной памяти» используется 
 массив целых чисел, определенный статически в рамках библиотеки. Размер массива

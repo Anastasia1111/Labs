@@ -1,25 +1,11 @@
 #include "sc.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
 #define SET_FLAG_TRUE(x) |(1<<(x))
 #define SET_FLAG_FALSE(x) &(~(1<<(x)))
 #define GET_FLAG(val,x) (((val)>>(x))&1)
 #define DECODE_SEVENBIT_MASK &(~(~(0)<<7))
-#define ramSize 100
 
-int commands[8] = {10, 11, 20, 21, 30, 31, 32, 33};
-int RAM[ramSize];
-int REG;/* 0-14 = accumulator
-		*16-22 = command pointer
-		*24-28 = flag register
-		* 	24 (code 1):overfilling
-		*	25 (code 2):division on 0
-		*	26 (code 3):exit over limits of memory
-		* 	27 (code 4):step inpulses ignoring
-		* 	28 (code 5):wrong command
-		* */ 
 
 int sc_memoryInit ()
 {
@@ -144,12 +130,16 @@ int sc_commandDecode (int value, int *command, int *operand)
 		return 1; //not command
 	}
 	
-	if(((value >> (8-1)) DECODE_SEVENBIT_MASK ) < 10 && ((value >> (8-1)) DECODE_SEVENBIT_MASK ) > 76)
+	if(((value >> (8-1)) DECODE_SEVENBIT_MASK ) == 10 || ((value >> (8-1)) DECODE_SEVENBIT_MASK ) == 11 || 
+	((value >> (8-1)) DECODE_SEVENBIT_MASK ) == 20 || ((value >> (8-1)) DECODE_SEVENBIT_MASK ) == 21 || 
+	(((value >> (8-1)) DECODE_SEVENBIT_MASK ) >= 30 && ((value >> (8-1)) DECODE_SEVENBIT_MASK ) <= 33) || 
+	(((value >> (8-1)) DECODE_SEVENBIT_MASK ) >= 40 && ((value >> (8-1)) DECODE_SEVENBIT_MASK ) <= 76))
 	{
+		*command = value >> (8-1);
+	} else {
 		REG = (REG) SET_FLAG_TRUE(5 + 24);
 		return 2; // not existing command
 	}
-	*command = value >> (8-1);
 	
 	/*if(((value >> (1-1)) DECODE_SEVENBIT_MASK ) < 0 && ((value >> (1-1)) DECODE_SEVENBIT_MASK ) >= 256)
 		return 3; // not operand */ 
