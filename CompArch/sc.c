@@ -8,6 +8,8 @@
 #define GET_FLAG(val,x) (((val)>>(x))&1)
 #define DECODE_SEVENBIT_MASK &(~(~(0)<<7))
 #define ramSize 100
+
+int commands[8] = {10, 11, 20, 21, 30, 31, 32, 33};
 int RAM[ramSize];
 int REG;/* 0-14 = accumulator
 		*16-22 = command pointer
@@ -21,7 +23,8 @@ int REG;/* 0-14 = accumulator
 
 int sc_memoryInit ()
 {
-	for(int i = 0; i < ramSize; ++i)
+	int i;
+	for(i = 0; i < ramSize; ++i)
 	{
 		RAM[i] = 0;
 	}
@@ -112,21 +115,24 @@ int sc_regGet (int registr, int *value) // 0 <= registr <= 4
 }
 
 int sc_commandEncode (int command, int operand, int *value)
-{
-	if(command < 10 && command > 76)
-		return 1; // error with command
-		
+{		
 	if(operand < 0 && operand >= 256)
 		return 2; // error with operand
 		
 	if(value == NULL)
 		return 3; // error with value
-		
-	// encoding
-	*value = 0;
-	//*value = (*value) SET_FLAG_TRUE(14);
-	*value = (*value) | (command << (8-1));
-	*value = (*value) | (operand << (1-1));
+	
+	if(command == 10 || command == 11 || command == 20 || command == 21 || 
+	(command >= 30 && command <= 33) || (command >= 40 && command <= 76))
+	{	
+		// encoding
+		*value = 0;
+		//*value = (*value) SET_FLAG_TRUE(14);
+		*value = (*value) | (command << (8-1));
+		*value = (*value) | (operand << (1-1));
+	} else {
+		return 1;
+	}
 	return 0;
 } 
 

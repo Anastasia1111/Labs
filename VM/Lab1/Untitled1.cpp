@@ -26,21 +26,26 @@ int compare(int colNum)
 	int num = colNum;// number of row with max "a"
 	for(i = colNum + 1; i < size; ++i)
 	{
-		if(arr[colNum][i] > buff)
+		if(arr[i][colNum] > buff)
 		{
-			buff = arr[colNum][i];
+			buff = arr[i][colNum];
 			num = i;
 		}
 	}
+	return num;
 }
 
 int main()
 {
 	int i, j, k;
+	int numer;
 	float q;
 	
 	for(i = 0; i < size-1; ++i)
 	{
+		numer = compare(i);
+		if(numer != i)
+			swap(numer, i);
 		for(j = i+1; j < size; ++j)
 		{
 			q = arr[j][i]/arr[i][i];
