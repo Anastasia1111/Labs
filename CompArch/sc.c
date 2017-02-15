@@ -86,7 +86,7 @@ int sc_regInit (void)
 
 int sc_regSet (int registr, int value) // 0 <= registr <= 4 
 {
-	if(registr > 0 && registr < 6 && value >= 0 && value < 2)
+	if(registr >= 0 && registr < 5 && value >= 0 && value < 2)
 	{
 		if(value == 1)
 		{
@@ -102,7 +102,7 @@ int sc_regSet (int registr, int value) // 0 <= registr <= 4
 
 int sc_regGet (int registr, int *value) // 0 <= registr <= 4
 {
-	if(registr > 0 && registr < 6 && value != NULL)
+	if(registr >= 0 && registr < 5 && value != NULL)
 	{
 		*value = GET_FLAG(REG, registr + 24);
 	} else {
@@ -124,7 +124,7 @@ int sc_commandEncode (int command, int operand, int *value)
 		
 	// encoding
 	*value = 0;
-	*value = (*value) SET_FLAG_TRUE(14);
+	//*value = (*value) SET_FLAG_TRUE(14);
 	*value = (*value) | (command << (8-1));
 	*value = (*value) | (operand << (1-1));
 	return 0;
@@ -132,18 +132,18 @@ int sc_commandEncode (int command, int operand, int *value)
 
 int sc_commandDecode (int value, int *command, int *operand)
 {
-	if(GET_FLAG(value, 14) == 0)
+	if(GET_FLAG(value, 14) == 1)
 	{
 		REG = (REG) SET_FLAG_TRUE(5 + 24);
 		return 1; //not command
 	}
 	
-	if(((value >> (8-1)) DECODE_SEVENBIT_MASK ) < 10 && ((value >> 7) DECODE_SEVENBIT_MASK ) > 76)
+	if(((value >> (8-1)) DECODE_SEVENBIT_MASK ) < 10 && ((value >> (8-1)) DECODE_SEVENBIT_MASK ) > 76)
 	{
 		REG = (REG) SET_FLAG_TRUE(5 + 24);
 		return 2; // not existing command
 	}
-	*command = ((value >> (8-1)) DECODE_SEVENBIT_MASK );
+	*command = value >> (8-1);
 	
 	/*if(((value >> (1-1)) DECODE_SEVENBIT_MASK ) < 0 && ((value >> (1-1)) DECODE_SEVENBIT_MASK ) >= 256)
 		return 3; // not operand */ 
