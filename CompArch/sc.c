@@ -5,7 +5,7 @@
 #define SET_FLAG_FALSE(x) &(~(1<<(x)))
 #define GET_FLAG(val,x) (((val)>>(x))&1)
 #define DECODE_SEVENBIT_MASK &(~(~(0)<<7))
-
+#define FLAG_INIT &(~(0)>>8)
 
 int sc_memoryInit ()
 {
@@ -69,7 +69,7 @@ int sc_memoryLoad (char *filename)
 
 int sc_regInit (void)
 {
-	REG = 0;
+	REG = (REG) FLAG_INIT;
 	return 0;
 }
 
