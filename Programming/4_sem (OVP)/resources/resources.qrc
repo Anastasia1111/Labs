@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/actions">
+        <file alias="paste">images/clipboard-paste-button.png</file>
+        <file alias="copy">images/copy-content.png</file>
+        <file alias="cut">images/cut-content-button.png</file>
+        <file alias="undo">images/keyboard-left-arrow-button.png</file>
+        <file alias="redo">images/keyboard-right-arrow-button.png</file>
+        <file alias="new">images/new-page-document.png</file>
+        <file alias="open">images/open-folder.png</file>
+        <file alias="save">images/save-button.png</file>
+        <file alias="exit">images/exit-to-app-button.png</file>
+        <file alias="about">images/help-round-button.png</file>
+        <file alias="select_all">images/select-all.png</file>
+        <file alias="paint">images/painter-palette.png</file>
+        <file alias="pen">images/edit.png</file>
+    </qresource>
+</RCC>

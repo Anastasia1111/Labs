@@ -250,7 +250,8 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-# TRPO Coursework-specific files
+# Study-specific files
+project-builds/
 save/
 *.save
 *.cfg
