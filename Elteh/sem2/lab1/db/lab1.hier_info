@@ -1,0 +1,15 @@
+|lab1
+Y2 <= inst8.DB_MAX_OUTPUT_PORT_TYPE
+X4 => inst8.IN0
+X3 => inst8.IN1
+Y1 <= inst.DB_MAX_OUTPUT_PORT_TYPE
+X1 => inst.IN0
+X2 => inst.IN1
+Y3 <= inst9.DB_MAX_OUTPUT_PORT_TYPE
+X6 => inst9.IN0
+X5 => inst9.IN1
+Y4 <= inst10.DB_MAX_OUTPUT_PORT_TYPE
+X8 => inst10.IN0
+X7 => inst10.IN1
+
+
