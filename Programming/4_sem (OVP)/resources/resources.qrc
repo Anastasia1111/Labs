@@ -13,5 +13,8 @@
         <file alias="select_all">images/select-all.png</file>
         <file alias="paint">images/painter-palette.png</file>
         <file alias="pen">images/edit.png</file>
+        <file alias="X">images/X.png</file>
+        <file alias="check">images/Checkmark.png</file>
+        <file alias="warning">images/Warning.png</file>
     </qresource>
 </RCC>

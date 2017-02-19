@@ -96,6 +96,7 @@ void MainWindow::slotAboutProgram()
                        .arg(qApp->applicationName())
                        .arg(qApp->applicationVersion()));
 }
+
 void MainWindow::on_pushButton_Start_clicked()
 {
     ui->listWidget_1->clear();

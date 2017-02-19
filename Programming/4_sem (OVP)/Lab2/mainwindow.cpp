@@ -8,12 +8,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setMouseTracking(true);
 
     labelX = new QLabel(this);
     labelY = new QLabel(this);
     statusBar()->addWidget(labelY);
     statusBar()->addWidget(labelX);
+    statusBar()->addWidget(sliderPen);
+
+    startTimer(0);
+
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(slotAboutProgram()),
+            Qt::UniqueConnection);
 }
 
 MainWindow::~MainWindow()
@@ -21,19 +26,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::mouseMoveEvent(QMouseEvent* e)
+void MainWindow::timerEvent(QTimerEvent* e)
 {
-    QPoint p = e->pos();
-    QRect widgetRect = ui->graphicsView->rect();
+    QPoint p = this->mapFromGlobal(QCursor::pos());
+    QRect windowRect = this->rect();
 
-    if(widgetRect.contains(p))
+    if(windowRect.contains(p))
     {
-        ui->graphicsView->grabMouse();
+        labelX->setText("X=" + QString().setNum(p.x()));
+        labelY->setText("Y=" + QString().setNum(windowRect.height() - p.y()));
     }
-    else
-    {
-        ui->graphicsView->releaseMouse();
-    }
-    labelX->setText("X=" + QString().setNum(e->x()));
-    labelY->setText("Y=" + QString().setNum(e->y()));
+}
+
+void MainWindow::slotAboutProgram()
+{
+    QMessageBox::about(this, "About",
+                       QString("%1 v. %2")
+                       .arg(qApp->applicationName())
+                       .arg(qApp->applicationVersion()));
 }

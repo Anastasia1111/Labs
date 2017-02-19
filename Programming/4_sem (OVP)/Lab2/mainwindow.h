@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QDir>
 
 namespace Ui {
 class MainWindow;
@@ -23,8 +26,13 @@ private:
     QLabel* labelY;
     QSlider* sliderPen;
 
+private slots:
+    //void slotOpen();
+    //void slotSave();
+    void slotAboutProgram();
+
 protected:
-    virtual void mouseMoveEvent(QMouseEvent* e);
+    virtual void timerEvent(QTimerEvent* e);
 };
 
 #endif // MAINWINDOW_H
