@@ -1,19 +1,7 @@
 #include "sc.h"
 
-#define ramSize 100
-int RAM[ramSize];
-int REG = 0;/* 0-14 = accumulator
-		*16-22 = command pointer
-		*24-28 = flag register
-		* 	24 (code 1):overfilling
-		*	25 (code 2):division on 0
-		*	26 (code 3):exit over limits of memory
-		* 	27 (code 4):step inpulses ignoring
-		* 	28 (code 5):wrong command
-		* */ 
-
-#define SET_FLAG_TRUE(x) |(1<<(x + 24))
-#define SET_FLAG_FALSE(x) &(~(1<<(x + 24)))
+#define SET_FLAG_TRUE(reg, x) (reg)|(1<<(x + 24))
+#define SET_FLAG_FALSE(reg, x) (reg)&(~(1<<(x + 24)))
 #define GET_FLAG(val,x) (((val)>>(x + 24))&1)
 #define GET_FLAG_COMMAND(val) (((val)>>14)&1)
 #define DECODE_SEVENBIT_MASK(x) (x)&(~(~(0)<<7))
@@ -91,9 +79,9 @@ int sc_regSet (int registr, int value) // 0 <= registr <= 4
 	{
 		if(value == 1)
 		{
-			REG = (REG) SET_FLAG_TRUE(registr);
+			REG = SET_FLAG_TRUE(REG, registr);
 		} else {
-			REG = (REG) SET_FLAG_FALSE(registr);
+			REG = SET_FLAG_FALSE(REG, registr);
 		}
 	} else {
 		return 1;
@@ -114,13 +102,13 @@ int sc_regGet (int registr, int *value) // 0 <= registr <= 4
 
 int sc_commandEncode (int command, int operand, int *value)
 {		
-	if(operand < 0 && operand >= 256)
+	if(operand < 0 || operand >= 256)
 		return 2; // error with operand
 		
 	if(value == NULL)
 		return 3; // error with value
 	
-	if(command == 10 || command == 11 || command == 20 || command == 21 || 
+	if((command == 10) || (command == 11) || (command == 20) || (command == 21) || 
 	(command >= 30 && command <= 33) || (command >= 40 && command <= 76))
 	{	
 		// encoding
@@ -137,7 +125,7 @@ int sc_commandDecode (int value, int *command, int *operand)
 {
 	if(GET_FLAG_COMMAND(value) == 1)
 	{
-		REG = (REG) SET_FLAG_TRUE(5);
+		REG = SET_FLAG_TRUE(REG, 5);
 		return 1; //not command
 	}
 	
@@ -148,7 +136,7 @@ int sc_commandDecode (int value, int *command, int *operand)
 	{
 		*command = value >> (8-1);
 	} else {
-		REG = (REG) SET_FLAG_TRUE(5);
+		REG = SET_FLAG_TRUE(REG, 5);
 		return 2; // not existing command
 	}
 	*operand = ( DECODE_SEVENBIT_MASK(value >> (1-1)) );

@@ -1,8 +1,7 @@
 #Makefile
 
-main: main.o libSimpleComputer.a
+main: clean main.o libSimpleComputer.a
 	gcc -o main main.o -L. -lSimpleComputer
-	echo main is ready!
 
 main.o: main.c
 	gcc -c main.c
@@ -14,5 +13,4 @@ sc.o: sc.c
 	gcc -c sc.c
 
 clean:
-	rm -f *.o
-	echo Clean
+	rm -f *.o *.a
