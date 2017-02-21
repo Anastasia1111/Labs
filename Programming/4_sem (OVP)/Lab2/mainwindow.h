@@ -11,6 +11,7 @@ class MainWindow;
 }
 class QLabel;
 class QSlider;
+class QGraphicsScene;
 
 class MainWindow : public QMainWindow
 {
@@ -22,14 +23,26 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QLabel* labelX;
-    QLabel* labelY;
+    QLabel* labelXY;
     QSlider* sliderPen;
+    QGraphicsScene* renderScene;
 
 private slots:
-    //void slotOpen();
-    //void slotSave();
-    void slotAboutProgram();
+    void on_actionNew_triggered();
+
+    void on_actionAbout_triggered();
+
+    void on_actionColor_triggered();
+
+    void on_actionRedo_triggered();
+
+    void on_actionUndo_triggered();
+
+    void on_actionExit_triggered();
+
+    void on_actionSave_triggered();
+
+    void on_actionOpen_triggered();
 
 protected:
     virtual void timerEvent(QTimerEvent* e);

@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    a.setApplicationName("Lab2");
+    a.setApplicationName("Laboratory Work #2\n(Simple Paint)");
     a.setApplicationVersion(QString("%1.%2")
                             .arg(MAJOR_VERSION)
                             .arg(MINOR_VERSION));

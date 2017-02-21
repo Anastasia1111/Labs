@@ -9,20 +9,22 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    labelX = new QLabel(this);
-    labelY = new QLabel(this);
-    statusBar()->addWidget(labelY);
-    statusBar()->addWidget(labelX);
-    statusBar()->addWidget(sliderPen);
+    labelXY = new QLabel(this);
+    sliderPen = new QSlider(Qt::Horizontal, this);
+    sliderPen->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    statusBar()->addWidget(labelXY);
+    statusBar()->addPermanentWidget(sliderPen);
+
+    renderScene = new QGraphicsScene(this);
 
     startTimer(0);
-
-    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(slotAboutProgram()),
-            Qt::UniqueConnection);
 }
 
 MainWindow::~MainWindow()
 {
+    delete labelXY;
+    delete sliderPen;
+    delete renderScene;
     delete ui;
 }
 
@@ -33,15 +35,86 @@ void MainWindow::timerEvent(QTimerEvent* e)
 
     if(windowRect.contains(p))
     {
-        labelX->setText("X=" + QString().setNum(p.x()));
-        labelY->setText("Y=" + QString().setNum(windowRect.height() - p.y()));
+        labelXY->setText("X=" + QString().setNum(p.x()) +
+                         " Y=" + QString().setNum(windowRect.height() - p.y()));
     }
 }
 
-void MainWindow::slotAboutProgram()
+void MainWindow::on_actionNew_triggered()
 {
-    QMessageBox::about(this, "About",
+    if (!ui->picDrawingSurface->scene()) {
+        ui->picDrawingSurface->setScene(renderScene);
+        ui->picDrawingSurface->setSceneRect(QRect(0,0, ui->picDrawingSurface->width(), ui->picDrawingSurface->height()));
+    } else {
+        renderScene->clear();
+        ui->picDrawingSurface->update();
+    }
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    //Вызвать системный диалог открытия файла в домашней папке пользователя
+    QString lFileName = QFileDialog::getOpenFileName(this, "Open file...",
+                        QDir::homePath(),"JPEG Image (*.jpg);; Bitmap Image (*.bmp);;"
+                                         "GIF Image (*.gif);; PNG Image (*.png)");
+    //указываем фильтры для просмотра файлов
+    if (lFileName.isEmpty()) //Если пользователь не выбрал ни одного файла
+    {
+        return; //выйти из метода
+    }
+
+    if (!ui->picDrawingSurface->scene()) {
+        this->on_actionNew_triggered();
+    }
+    renderScene->addPixmap(QPixmap(lFileName));
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QMessageBox::about(this, "About programm",
                        QString("%1 v. %2")
                        .arg(qApp->applicationName())
                        .arg(qApp->applicationVersion()));
+}
+
+void MainWindow::on_actionColor_triggered()
+{
+
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    this->close();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    if (!ui->picDrawingSurface->scene()) {
+        return; // ... выйти из метода
+    }
+
+    //Вызвать системный диалог сохранения файла в домашней папке пользователя
+    QString lFileName = QFileDialog::getSaveFileName(this, "Save file...",
+                        QDir::homePath(),"JPEG Image (*.jpg);; Bitmap Image (*.bmp);;"
+                                         "PNG Image (*.png)");
+    //Если пользователь не выбрал имя файла для сохранения...
+    if(lFileName.isEmpty())
+    {
+        return; // ... выйти из метода
+    }
+
+    QPixmap image(ui->picDrawingSurface->width(),ui->picDrawingSurface->height());
+    QPainter painter(&image);
+    renderScene->render(&painter);
+    image.save(lFileName);
 }
