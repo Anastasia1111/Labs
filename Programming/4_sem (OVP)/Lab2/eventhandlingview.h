@@ -12,14 +12,20 @@ class EventHandlingView : public QGraphicsView
     Q_OBJECT
 public:
     explicit EventHandlingView(QWidget *parent = 0);
+    ~EventHandlingView();
 
 signals:
 
 public slots:
     void mousePressEvent(QMouseEvent *e);
-    void mouseMoveEvent(QMouseEvent *move);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
 
 private:
+    bool drawing;
+    QPointF oldLocation;
+    QPainterPath* currentPath;
+    QPen* currentPen;
 
 };
 
