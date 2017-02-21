@@ -41,6 +41,9 @@ int main(int argc, char **argv)
 	code = sc_memorySave("RAMsave.txt");
 	printf("sc_memorySave('RAMsave.txt') = %1d\n", code);
 	
+	code = sc_memoryInit();
+	printf("sc_memoryInit() = %1d\n", code);
+	
 	code = sc_memoryLoad("RAMsave.txt");
 	printf("sc_memoryLoad('RAMsave.txt') = %1d\n", code);
 	
