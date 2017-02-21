@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QLabel>
 #include <QMouseEvent>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,33 +41,47 @@ void MainWindow::timerEvent(QTimerEvent* e)
     }
 }
 
-void MainWindow::on_actionNew_triggered()
+int MainWindow::on_actionNew_triggered()
 {
     if (!ui->picDrawingSurface->scene()) {
         ui->picDrawingSurface->setScene(renderScene);
-        ui->picDrawingSurface->setSceneRect(QRect(0,0, ui->picDrawingSurface->width(), ui->picDrawingSurface->height()));
+        return 1;
     } else {
-        renderScene->clear();
-        ui->picDrawingSurface->update();
+        QMessageBox question(QMessageBox::Question, "Save file?", "Do you want to save image before creating something new?",
+                             QMessageBox::Ok, this);
+        question.addButton(QMessageBox::No);
+        question.addButton(QMessageBox::Cancel);
+        question.exec();
+        if (question.clickedButton() == question.button(QMessageBox::Ok)){
+            on_actionSave_triggered();
+            return 1;
+        } else {
+            if (question.clickedButton() == question.button(QMessageBox::No)){
+                renderScene->clear();
+                ui->picDrawingSurface->update();
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    //Вызвать системный диалог открытия файла в домашней папке пользователя
-    QString lFileName = QFileDialog::getOpenFileName(this, "Open file...",
-                        QDir::homePath(),"JPEG Image (*.jpg);; Bitmap Image (*.bmp);;"
-                                         "GIF Image (*.gif);; PNG Image (*.png)");
-    //указываем фильтры для просмотра файлов
-    if (lFileName.isEmpty()) //Если пользователь не выбрал ни одного файла
-    {
-        return; //выйти из метода
-    }
+    if (on_actionNew_triggered()){ //создаем или очищаем сцену
+        //Вызвать системный диалог открытия файла в домашней папке пользователя
+        QString lFileName = QFileDialog::getOpenFileName(this, "Open file...",
+                            QDir::homePath(),"JPEG Image (*.jpg);; Bitmap Image (*.bmp);;"
+                                             "GIF Image (*.gif);; PNG Image (*.png)");
+        //указываем фильтры для просмотра файлов
+        if (lFileName.isEmpty()) //Если пользователь не выбрал ни одного файла
+        {
+            return; //выйти из метода
+        }
 
-    if (!ui->picDrawingSurface->scene()) {
-        this->on_actionNew_triggered();
+        renderScene->addPixmap(QPixmap(lFileName));
     }
-    renderScene->addPixmap(QPixmap(lFileName));
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -113,7 +128,7 @@ void MainWindow::on_actionSave_triggered()
         return; // ... выйти из метода
     }
 
-    QPixmap image(ui->picDrawingSurface->width(),ui->picDrawingSurface->height());
+    QPixmap image(ui->picDrawingSurface->width(), ui->picDrawingSurface->height());
     QPainter painter(&image);
     renderScene->render(&painter);
     image.save(lFileName);

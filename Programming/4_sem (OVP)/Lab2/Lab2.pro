@@ -16,7 +16,7 @@ TEMPLATE = app
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 MAJOR_VERSION = 1
-MINOR_VERSION = 2
+MINOR_VERSION = 3
 DEFINES += \
 	MAJOR_VERSION=$$MAJOR_VERSION \
 	MINOR_VERSION=$$MINOR_VERSION \
@@ -29,9 +29,11 @@ DEFINES += \
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+    mainwindow.cpp \
+    eventhandlingview.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h\
+    eventhandlingview.h
 
 FORMS    += mainwindow.ui
 

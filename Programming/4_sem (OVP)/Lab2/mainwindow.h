@@ -28,7 +28,7 @@ private:
     QGraphicsScene* renderScene;
 
 private slots:
-    void on_actionNew_triggered();
+    int on_actionNew_triggered();
 
     void on_actionAbout_triggered();
 
@@ -45,7 +45,7 @@ private slots:
     void on_actionOpen_triggered();
 
 protected:
-    virtual void timerEvent(QTimerEvent* e);
+    virtual void timerEvent(QTimerEvent *e);
 };
 
 #endif // MAINWINDOW_H
