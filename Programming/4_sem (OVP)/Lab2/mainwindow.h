@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QDir>
 
+#include "paintscene.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -25,7 +27,7 @@ private:
     Ui::MainWindow *ui;
     QLabel* labelXY;
     QSlider* sliderPen;
-    QGraphicsScene* renderScene;
+    PaintScene *scene;  // Объявляем кастомную графическую сцену
 
 
 private slots:
@@ -47,7 +49,6 @@ private slots:
 
 protected:
     virtual void timerEvent(QTimerEvent *e);
-    void paintEvent(QPaintEvent *event);
 };
 
 #endif // MAINWINDOW_H

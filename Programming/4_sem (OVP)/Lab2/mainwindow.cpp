@@ -16,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     statusBar()->addWidget(labelXY);
     statusBar()->addPermanentWidget(sliderPen);
 
-    renderScene = new QGraphicsScene(this);
+    scene = new PaintScene(this); // Инициализируем графическую сцену
+    scene->setSceneRect(0,0, 1920, 1080);
 
     startTimer(0);
 }
@@ -25,7 +26,7 @@ MainWindow::~MainWindow()
 {
     delete labelXY;
     delete sliderPen;
-    delete renderScene;
+    delete scene;
     delete ui;
 }
 
@@ -44,7 +45,7 @@ void MainWindow::timerEvent(QTimerEvent* e)
 int MainWindow::on_actionNew_triggered()
 {
     if (!ui->picDrawingSurface->scene()) {
-        ui->picDrawingSurface->setScene(renderScene);
+        ui->picDrawingSurface->setScene(scene);
         return 1;
     } else {
         QMessageBox question(QMessageBox::Question, "Save file?", "Do you want to save image before creating something new?",
@@ -57,7 +58,7 @@ int MainWindow::on_actionNew_triggered()
             return 1;
         } else {
             if (question.clickedButton() == question.button(QMessageBox::No)){
-                renderScene->clear();
+                scene->clear();
                 ui->picDrawingSurface->update();
                 return 1;
             } else {
@@ -79,8 +80,7 @@ void MainWindow::on_actionOpen_triggered()
         {
             return; //выйти из метода
         }
-
-        renderScene->addPixmap(QPixmap(lFileName));
+        scene->addPixmap(QPixmap(lFileName));
     }
 }
 
@@ -128,20 +128,8 @@ void MainWindow::on_actionSave_triggered()
         return; // ... выйти из метода
     }
 
-    QPixmap image(ui->picDrawingSurface->width(), ui->picDrawingSurface->height());
+    QPixmap image(1920, 1080);
     QPainter painter(&image);
-    renderScene->render(&painter);
+    scene->render(&painter);
     image.save(lFileName);
-}
-
-
-void MainWindow::paintEvent(QPaintEvent *event)
-{
-    QPen *currentPen = new QPen();
-    Q_UNUSED(event);
-    QPainter painter(this);
-
-    painter.setPen(*currentPen);
-    painter.drawLine(150, 200, 10, 200);
-    update();
 }

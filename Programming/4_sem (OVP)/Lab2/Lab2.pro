@@ -30,10 +30,10 @@ DEFINES += \
 
 SOURCES += main.cpp\
     mainwindow.cpp \
-    eventhandlingview.cpp
+    paintscene.cpp
 
-HEADERS  += mainwindow.h\
-    eventhandlingview.h
+HEADERS  += mainwindow.h \
+    paintscene.h
 
 FORMS    += mainwindow.ui
 
