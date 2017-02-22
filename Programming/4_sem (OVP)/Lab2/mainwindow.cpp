@@ -133,3 +133,15 @@ void MainWindow::on_actionSave_triggered()
     renderScene->render(&painter);
     image.save(lFileName);
 }
+
+
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    QPen *currentPen = new QPen();
+    Q_UNUSED(event);
+    QPainter painter(this);
+
+    painter.setPen(*currentPen);
+    painter.drawLine(150, 200, 10, 200);
+    update();
+}

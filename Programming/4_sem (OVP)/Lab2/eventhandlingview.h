@@ -17,14 +17,13 @@ public:
 signals:
 
 public slots:
-    void mousePressEvent(QMouseEvent *e);
+    /*void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);*/
+    //void paintEvent(QPaintEvent *event);
 
 private:
-    bool drawing;
-    QPointF oldLocation;
-    QPainterPath* currentPath;
+    QPoint oldLocation;
     QPen* currentPen;
 
 };

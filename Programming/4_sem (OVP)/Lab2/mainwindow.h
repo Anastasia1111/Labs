@@ -27,6 +27,7 @@ private:
     QSlider* sliderPen;
     QGraphicsScene* renderScene;
 
+
 private slots:
     int on_actionNew_triggered();
 
@@ -46,6 +47,7 @@ private slots:
 
 protected:
     virtual void timerEvent(QTimerEvent *e);
+    void paintEvent(QPaintEvent *event);
 };
 
 #endif // MAINWINDOW_H

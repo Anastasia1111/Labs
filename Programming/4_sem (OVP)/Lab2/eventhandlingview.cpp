@@ -2,8 +2,7 @@
 #include <QPointF>
 #include <QDebug>
 
-EventHandlingView::EventHandlingView(QWidget *parent) : QGraphicsView(parent),
-    drawing(false)
+EventHandlingView::EventHandlingView(QWidget *parent) : QGraphicsView(parent)
 {
     currentPen = new QPen(QColor("black"));
 }
@@ -13,7 +12,7 @@ EventHandlingView::~EventHandlingView()
     delete currentPen;
 }
 
-void EventHandlingView::mousePressEvent(QMouseEvent *e)
+/*void EventHandlingView::mousePressEvent(QMouseEvent *e)
 {
     if (!this->scene())
     {
@@ -21,27 +20,23 @@ void EventHandlingView::mousePressEvent(QMouseEvent *e)
         return;
     }
     if (e->button() == Qt::LeftButton){
-        drawing = true;
-        QPointF pt = mapToScene(e->pos());
-        oldLocation = pt;
-        currentPath = new QPainterPath(oldLocation);
+        QPoint localPoint = this->mapFromGlobal(QCursor::pos());
+        oldLocation = localPoint;
     }
 }
 
 void EventHandlingView::mouseReleaseEvent(QMouseEvent *e)
 {
-    drawing = false;
-    try {
-        delete currentPath;
-    }
-    catch (...) {};
+
 }
 
 void EventHandlingView::mouseMoveEvent(QMouseEvent *e)
 {
-    QPointF pt = mapToScene(e->pos());
-    currentPath->lineTo(pt);
-    this->scene()->addPath(*currentPath, *currentPen);
-    oldLocation = pt;
+    QPainterPath currPath(oldLocation);
+    QPoint localPoint = this->mapFromGlobal(QCursor::pos());
+    currPath.lineTo(localPoint);
+    this->scene()->addPath(currPath, *currentPen);
+    oldLocation = localPoint;
     this->update();
-}
+}*/
+
