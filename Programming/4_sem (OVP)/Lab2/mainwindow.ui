@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Paint Lite</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/resources.qrc">
+    <normaloff>:/actions/paint</normaloff>:/actions/paint</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="mouseTracking">
     <bool>false</bool>
@@ -142,6 +146,12 @@
    </property>
    <property name="allowedAreas">
     <set>Qt::LeftToolBarArea</set>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>64</width>
+     <height>64</height>
+    </size>
    </property>
    <property name="floatable">
     <bool>false</bool>

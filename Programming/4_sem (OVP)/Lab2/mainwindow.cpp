@@ -133,3 +133,20 @@ void MainWindow::on_actionSave_triggered()
     scene->render(&painter);
     image.save(lFileName);
 }
+
+void MainWindow::closeEvent(QCloseEvent *e)  // show prompt when user wants to close app
+{
+    QMessageBox question(QMessageBox::Question, "Save file?", "Do you want to save image before exit?",
+                         QMessageBox::Ok, this);
+    question.addButton(QMessageBox::No);
+    question.addButton(QMessageBox::Cancel);
+    question.exec();
+    if (question.clickedButton() == question.button(QMessageBox::Ok)){
+        on_actionSave_triggered();
+        e->accept();
+    } else {
+        if (question.clickedButton() == question.button(QMessageBox::Cancel)){
+            e->ignore();
+        }
+    }
+}

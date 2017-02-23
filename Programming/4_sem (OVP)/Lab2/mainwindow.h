@@ -49,6 +49,7 @@ private slots:
 
 protected:
     virtual void timerEvent(QTimerEvent *e);
+    virtual void closeEvent(QCloseEvent *e);
 };
 
 #endif // MAINWINDOW_H
