@@ -3,7 +3,9 @@
 PaintScene::PaintScene(QObject *parent) : QGraphicsScene(parent)
 {
     setBackgroundBrush(Qt::white);
-    currentPen = new QPen(Qt::black);
+    penColor = Qt::black;
+    penWidth = 1;
+    currentPen = new QPen(penColor);
 }
 
 PaintScene::~PaintScene()
@@ -13,14 +15,22 @@ PaintScene::~PaintScene()
 
 void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
-    // При нажатии кнопки мыши отрисовываем эллипс
-    addEllipse(e->scenePos().x(),
-               e->scenePos().y(),
-               1,
-               1,
-               QPen(Qt::NoPen),
-               QBrush(Qt::black));
-    // Сохраняем координаты точки нажатия
+    if (e->button() == Qt::LeftButton){
+        addEllipse(e->scenePos().x() - penWidth/2,
+                   e->scenePos().y() - penWidth/2,
+                   penWidth,
+                   penWidth,
+                   QPen(Qt::NoPen),
+                   QBrush(penColor));
+    }
+    if (e->button() == Qt::RightButton){
+        addEllipse(e->scenePos().x() - penWidth/2,
+                   e->scenePos().y() - penWidth/2,
+                   penWidth,
+                   penWidth,
+                   QPen(Qt::NoPen),
+                   QBrush(Qt::white));
+    }
     oldLocation = e->scenePos();
 }
 
@@ -31,12 +41,37 @@ void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
 void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
-    // Отрисовываем линии с использованием предыдущей координаты
-    addLine(oldLocation.x(),
-            oldLocation.y(),
-            e->scenePos().x(),
-            e->scenePos().y(),
-            *currentPen);
-    // Обновляем данные о предыдущей координате
+
+    if (e->buttons() & Qt::LeftButton){
+        addLine(oldLocation.x(),
+                oldLocation.y(),
+                e->scenePos().x(),
+                e->scenePos().y(),
+                *currentPen);
+    }
+    if (e->buttons() & Qt::RightButton){
+        addLine(oldLocation.x(),
+                oldLocation.y(),
+                e->scenePos().x(),
+                e->scenePos().y(),
+                QPen(Qt::white, penWidth, Qt::SolidLine, Qt::RoundCap));
+    }
     oldLocation = e->scenePos();
+}
+
+void PaintScene::setPenColor(QColor color)
+{
+    currentPen->setColor(color);
+    penColor = color;
+}
+
+void PaintScene::setPenWidth(int width)
+{
+    currentPen->setWidth(width);
+    penWidth = width;
+}
+
+QColor PaintScene::getPenColor()
+{
+    return penColor;
 }

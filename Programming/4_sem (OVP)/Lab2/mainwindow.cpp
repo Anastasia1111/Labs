@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QLabel>
 #include <QMouseEvent>
+#include <QColorDialog>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,11 +14,16 @@ MainWindow::MainWindow(QWidget *parent) :
     labelXY = new QLabel(this);
     sliderPen = new QSlider(Qt::Horizontal, this);
     sliderPen->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    sliderPen->setMinimum(1);
+    sliderPen->setMaximum(20);
+    sliderPen->setValue(5);
     statusBar()->addWidget(labelXY);
     statusBar()->addPermanentWidget(sliderPen);
 
     scene = new PaintScene(this); // Инициализируем графическую сцену
     scene->setSceneRect(0,0, 1920, 1080);
+
+    connect(sliderPen, SIGNAL(valueChanged(int)), scene, SLOT(setPenWidth(int)));
 
     startTimer(0);
 }
@@ -45,6 +51,7 @@ void MainWindow::timerEvent(QTimerEvent* e)
 int MainWindow::on_actionNew_triggered()
 {
     if (!ui->picDrawingSurface->scene()) {
+        scene->setPenWidth(sliderPen->value());
         ui->picDrawingSurface->setScene(scene);
         return 1;
     } else {
@@ -94,12 +101,14 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionColor_triggered()
 {
-
+    QColor color(QColorDialog().getColor(scene->getPenColor(),this,"Select Color"));
+    if (color.isValid()){
+        scene->setPenColor(color);
+    }
 }
 
 void MainWindow::on_actionRedo_triggered()
 {
-
 }
 
 void MainWindow::on_actionUndo_triggered()
