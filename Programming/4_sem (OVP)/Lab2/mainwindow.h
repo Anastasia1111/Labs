@@ -47,6 +47,12 @@ private slots:
 
     void on_actionOpen_triggered();
 
+    void on_actionSolid_triggered();
+
+    void on_actionDot_triggered();
+
+    void on_actionDashDotDot_triggered();
+
 protected:
     virtual void timerEvent(QTimerEvent *e);
     virtual void closeEvent(QCloseEvent *e);

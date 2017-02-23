@@ -53,6 +53,7 @@ int MainWindow::on_actionNew_triggered()
     if (!ui->picDrawingSurface->scene()) {
         scene->setPenWidth(sliderPen->value());
         ui->picDrawingSurface->setScene(scene);
+        scene->clear();
         return 1;
     } else {
         QMessageBox question(QMessageBox::Question, "Save file?", "Do you want to save image before creating something new?",
@@ -66,7 +67,6 @@ int MainWindow::on_actionNew_triggered()
         } else {
             if (question.clickedButton() == question.button(QMessageBox::No)){
                 scene->clear();
-                ui->picDrawingSurface->update();
                 return 1;
             } else {
                 return 0;
@@ -109,11 +109,12 @@ void MainWindow::on_actionColor_triggered()
 
 void MainWindow::on_actionRedo_triggered()
 {
+    scene->redo();
 }
 
 void MainWindow::on_actionUndo_triggered()
 {
-
+    scene->undo();
 }
 
 void MainWindow::on_actionExit_triggered()
@@ -158,4 +159,27 @@ void MainWindow::closeEvent(QCloseEvent *e)  // show prompt when user wants to c
             e->ignore();
         }
     }
+}
+void MainWindow::on_actionSolid_triggered()
+{
+    scene->setPenStyle(Qt::SolidLine);
+    ui->actionSolid->setChecked(true);
+    ui->actionDot->setChecked(false);
+    ui->actionDashDotDot->setChecked(false);
+}
+
+void MainWindow::on_actionDot_triggered()
+{
+    scene->setPenStyle(Qt::DotLine);
+    ui->actionSolid->setChecked(false);
+    ui->actionDot->setChecked(true);
+    ui->actionDashDotDot->setChecked(false);
+}
+
+void MainWindow::on_actionDashDotDot_triggered()
+{
+    scene->setPenStyle(Qt::DashDotDotLine);
+    ui->actionSolid->setChecked(false);
+    ui->actionDot->setChecked(false);
+    ui->actionDashDotDot->setChecked(true);
 }
