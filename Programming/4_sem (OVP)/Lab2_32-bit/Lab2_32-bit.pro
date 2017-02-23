@@ -13,11 +13,11 @@ FORMS += \
 
 HEADERS += \
     ../Lab2/mainwindow.h \
-    ../Lab2/eventhandlingview.h
+    ../Lab2/paintscene.h
 
 SOURCES += \
     ../Lab2/main.cpp \
     ../Lab2/mainwindow.cpp \
-    ../Lab2/eventhandlingview.cpp
+    ../Lab2/paintscene.cpp
 
 RESOURCES += ../resources/resources.qrc

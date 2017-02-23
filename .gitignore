@@ -255,6 +255,7 @@ project-builds/
 save/
 *.save
 *.cfg
+RAMsave.txt
 
 # Other
 *.o

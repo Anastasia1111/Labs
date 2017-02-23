@@ -1,11 +1,10 @@
 #include "sc.h"
 
-#define SET_FLAG_TRUE(reg, x) (reg)|(1<<(x + 24))
-#define SET_FLAG_FALSE(reg, x) (reg)&(~(1<<(x + 24)))
-#define GET_FLAG(val,x) (((val)>>(x + 24))&1)
-#define GET_FLAG_COMMAND(val) (((val)>>14)&1)
-#define DECODE_SEVENBIT_MASK(x) (x)&(~(~(0)<<7))
-#define FLAG_INIT(x) (x)&(~(0)>>8)
+#define REG_OVERFLOW 0x18
+#define REG_ZERO_DIV 0x19
+#define REG_OVERLIMIT_MEM 0x1A
+#define REG_STEP_IGNORE 0x1B
+#define REG_WR_COM 0x1C
 
 int sc_memoryInit ()
 {
@@ -23,7 +22,7 @@ int sc_memorySet (int address, int value)
 	{
 		RAM[address] = value;
 	} else {
-		sc_regSet(3, 1);
+		sc_regSet(REG_OVERLIMIT_MEM, 1);
 		return 1;
 	}
 	return 0;
@@ -35,7 +34,7 @@ int sc_memoryGet (int address, int *value)
 	{
 		*value = RAM[address];
 	} else {
-		sc_regSet(3, 1);
+		sc_regSet(REG_OVERLIMIT_MEM, 1);
 		return 1;
 	}
 	return 0;
@@ -69,19 +68,19 @@ int sc_memoryLoad (char *filename)
 
 int sc_regInit (void)
 {
-	REG = FLAG_INIT(REG);
+	REG &= (~0)>>8;
 	return 0;
 }
 
-int sc_regSet (int registr, int value) // 0 <= registr <= 4 
+int sc_regSet (int registr, int value)
 {
-	if(registr >= 0 && registr < 5 && value >= 0 && value < 2)
+	if(registr >= 0x18 && registr < 0x1D && value >= 0 && value < 2)
 	{
 		if(value == 1)
 		{
-			REG = SET_FLAG_TRUE(REG, registr);
+			REG |= 1<<registr;
 		} else {
-			REG = SET_FLAG_FALSE(REG, registr);
+			REG &= ~(1<<registr);
 		}
 	} else {
 		return 1;
@@ -89,11 +88,11 @@ int sc_regSet (int registr, int value) // 0 <= registr <= 4
 	return 0;
 }
 
-int sc_regGet (int registr, int *value) // 0 <= registr <= 4
+int sc_regGet (int registr, int *value) 
 {
-	if(registr >= 0 && registr < 5 && value != NULL)
+	if(registr >= 0x18 && registr < 0x1D && value != NULL)
 	{
-		*value = GET_FLAG(REG, registr );
+		*value = (REG>>registr)&(0x01);
 	} else {
 		return 1;
 	}
@@ -122,24 +121,24 @@ int sc_commandEncode (int command, int operand, int *value)
 } 
 
 int sc_commandDecode (int value, int *command, int *operand)
-{
-	if(GET_FLAG_COMMAND(value) == 1)
+{	
+	if((((value)>>14)&1) == 1)//command flag
 	{
-		REG = SET_FLAG_TRUE(REG, 5);
+		sc_regSet(REG_WR_COM, 1);
 		return 1; //not command
 	}
-	
-	if((DECODE_SEVENBIT_MASK(value >> (8-1)) ) == 10 || ( DECODE_SEVENBIT_MASK(value >> (8-1)) ) == 11 || 
-	( DECODE_SEVENBIT_MASK(value >> (8-1)) ) == 20 || ( DECODE_SEVENBIT_MASK(value >> (8-1)) ) == 21 || 
-	(( DECODE_SEVENBIT_MASK(value >> (8-1)) ) >= 30 && ( DECODE_SEVENBIT_MASK(value >> (8-1)) ) <= 33) || 
-	(( DECODE_SEVENBIT_MASK(value >> (8-1)) ) >= 40 && ( DECODE_SEVENBIT_MASK(value >> (8-1)) ) <= 76))
+	int dec_sevbit_mask = (value >> (8-1))&(~(~(0)<<7));
+	if((dec_sevbit_mask ) == 10 || ( dec_sevbit_mask ) == 11 || 
+	( dec_sevbit_mask ) == 20 || ( dec_sevbit_mask ) == 21 || 
+	(( dec_sevbit_mask ) >= 30 && ( dec_sevbit_mask ) <= 33) || 
+	(( dec_sevbit_mask ) >= 40 && ( dec_sevbit_mask ) <= 76))
 	{
 		*command = value >> (8-1);
 	} else {
-		REG = SET_FLAG_TRUE(REG, 5);
+		sc_regSet(REG_WR_COM, 1);
 		return 2; // not existing command
 	}
-	*operand = ( DECODE_SEVENBIT_MASK(value >> (1-1)) );
+	*operand = (value >> (1-1))&(~(~(0)<<7));
 	return 0;
 }
 

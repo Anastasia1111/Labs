@@ -65,10 +65,10 @@ int main(int argc, char **argv)
 	printf("sc_regGet(3, &val) = %1d\n", code);
 	printf("int val = %3d\n", val);
 	
-	code = sc_regSet(3, 0);
+	code = sc_regSet(REG_OVERLIMIT_MEM, 0);
 	printf("sc_regSet(3, 0) = %1d\n", code);
 	
-	code = sc_regGet(3, &val);
+	code = sc_regGet(REG_OVERLIMIT_MEM, &val);
 	printf("sc_regGet(3, &val) = %1d\n", code);
 	printf("int val = %3d\n", val);
 	
