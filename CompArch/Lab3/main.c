@@ -21,23 +21,19 @@
  * 
  */
 
-
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
+#include <stdlib.h>
+#include "myTerm.h"
 
 int main(int argc, char **argv)
 {
-	struct winsize ws;
-	if (!ioctl(1, TIOCGWINSZ, &ws)){
-		printf ("Получен размер экрана.\n");
-		printf ("Число строк – %d\nЧисло столбцов – %d\n",
-		ws.ws_row, ws.ws_col);
-	} else {
-		fprintf (stderr, "Ошибка получения размера экрана.\n");
-	}
-	system("pause");
+	int a, b;
+	mt_clrscr();
+	mt_getscreensize (&a, &b);
+	mt_gotoXY(16, 22);
+	mt_setbgcolor(WHITE);
+	mt_setfgcolor(YELLOW);
+	printf("rows - %d", a);
+	mt_setfgcolor(GREEN);
+	printf("cols - %d", b);
 	return 0;
 }
