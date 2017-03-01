@@ -29,10 +29,11 @@ int main(int argc, char **argv)
 	int a, b;
 	mt_clrscr();
 	mt_getscreensize (&a, &b);
-	mt_gotoXY(16, 22);
+	mt_gotoXY(16, 2);
 	mt_setbgcolor(WHITE);
 	mt_setfgcolor(YELLOW);
 	printf("rows - %d", a);
+	mt_setbgcolor(BLUE);
 	mt_setfgcolor(GREEN);
 	printf("cols - %d", b);
 	return 0;

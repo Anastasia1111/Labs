@@ -1,0 +1,16 @@
+#Makefile
+
+main2: clean main2.o libMyTerm.a
+	gcc -o main2 main2.o -L. -lMyTerm
+
+main2.o: main2.c
+	gcc -c main2.c
+
+libMyTerm.a: myTerm.o
+	ar r libMyTerm.a myTerm.o
+
+myTerm.o: myTerm.c
+	gcc -c myTerm.c
+
+clean:
+	rm -f *.o *.a
