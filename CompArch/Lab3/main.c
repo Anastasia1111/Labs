@@ -31,9 +31,9 @@ int main(int argc, char **argv)
 	mt_getscreensize (&a, &b);
 	mt_gotoXY(16, 2);
 	mt_setbgcolor(WHITE);
-	mt_setfgcolor(YELLOW);
+	mt_setfgcolor(LYELLOW);
 	printf("rows - %d", a);
-	mt_setbgcolor(BLUE);
+	mt_setbgcolor(LBLUE);
 	mt_setfgcolor(GREEN);
 	printf("cols - %d", b);
 	return 0;

@@ -2,15 +2,6 @@
 
 int mt_clrscr (void)
 {
-	/*int fd;
-	fd = open ("/dev/tty1", O_WRONLY);
-	if (fd == -1)
-	{
-		fprintf (stderr, "Ошибка открытия терминала.\n");
-		return -1;
-	}
-	write (fd, clear, 9);
-	close (fd);*/
 	printf("\e[H\e[2J");
 	return 0;
 }

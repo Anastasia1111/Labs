@@ -23,10 +23,12 @@
 
 #include <stdlib.h>
 #include "myTerm.h"
+#include "../Lab2/sc.h"
 
 int main(int argc, char **argv)
 {
 	int i, j;
+	int value = 0;
 	mt_clrscr();
 	printf("\e(0");
 	
@@ -40,7 +42,8 @@ int main(int argc, char **argv)
 		printf("x");
 		for(j = 0; j < 10; ++j)
 		{
-			printf("+0000 ");
+			value = sc_memoryGet(i * 10 + j, &value);
+			printf("+%4h ", value);
 		}
 		printf("\bx");
 	}
@@ -119,5 +122,6 @@ int main(int argc, char **argv)
 	printf("mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj");
 	
 	mt_gotoXY(23, 1);
+	printf("\e(B");
 	return 0;
 }

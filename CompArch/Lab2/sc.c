@@ -78,9 +78,9 @@ int sc_regSet (int registr, int value)
 	{
 		if(value == 1)
 		{
-			REG |= 1<<registr;
+			REG |= 0x1<<registr;
 		} else {
-			REG &= ~(1<<registr);
+			REG &= ~(0x1<<registr);
 		}
 	} else {
 		return 1;
@@ -101,19 +101,19 @@ int sc_regGet (int registr, int *value)
 
 int sc_commandEncode (int command, int operand, int *value)
 {		
-	if(operand < 0 || operand >= 256)
+	if(operand < 0 || operand >= 128)
 		return 2; // error with operand
 		
 	if(value == NULL)
 		return 3; // error with value
 	
-	if((command == 10) || (command == 11) || (command == 20) || (command == 21) || 
-	(command >= 30 && command <= 33) || (command >= 40 && command <= 76))
+	if((command == 0xA) || (command == 0xB) || (command == 0x14) || (command == 0x15) || 
+	(command >= 0x1E && command <= 0x21) || (command >= 0x28 && command <= 0x4C))
 	{	
 		// encoding
 		*value = 0;
-		*value = (*value) | (command << (8-1));
-		*value = (*value) | (operand << (1-1));
+		*value = (*value) | (command << 7);
+		*value = (*value) | operand;
 	} else {
 		return 1;
 	}
@@ -127,7 +127,7 @@ int sc_commandDecode (int value, int *command, int *operand)
 		sc_regSet(REG_WR_COM, 1);
 		return 1; //not command
 	}
-	int dec_sevbit_mask = (value >> (8-1))&(~(~(0)<<7));
+	int dec_sevbit_mask = (value >> 7)& 0x7F;
 	if((dec_sevbit_mask ) == 10 || ( dec_sevbit_mask ) == 11 || 
 	( dec_sevbit_mask ) == 20 || ( dec_sevbit_mask ) == 21 || 
 	(( dec_sevbit_mask ) >= 30 && ( dec_sevbit_mask ) <= 33) || 
@@ -138,9 +138,6 @@ int sc_commandDecode (int value, int *command, int *operand)
 		sc_regSet(REG_WR_COM, 1);
 		return 2; // not existing command
 	}
-	*operand = (value >> (1-1))&(~(~(0)<<7));
+	*operand = value & 0x7F;
 	return 0;
 }
-
-
-

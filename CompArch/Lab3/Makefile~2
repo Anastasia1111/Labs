@@ -1,7 +1,7 @@
 #Makefile
 
 main2: clean main2.o libMyTerm.a
-	gcc -o main2 main2.o -L. -lMyTerm
+	gcc -o main2 main2.o -L. -lMyTerm 
 
 main2.o: main2.c
 	gcc -c main2.c
