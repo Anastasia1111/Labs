@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 		for(j = 0; j < 10; ++j)
 		{
 			value = sc_memoryGet(i * 10 + j, &value);
-			printf("+%4h ", value);
+			printf("+%4X ", value);
 		}
 		printf("\bx");
 	}
@@ -82,7 +82,36 @@ int main(int argc, char **argv)
 	mt_gotoXY(10, 62);
 	printf("lqqqqq FLAGS qqqqqqqqk");
 	mt_gotoXY(11, 62);
-	printf("x      O E V M       x\n");
+	printf("x      ");
+	
+	int flag;
+	sc_regGet(REG_OVERFLOW, &flag);
+	if(flag)
+		printf("O ");
+	else
+		printf("  ");
+	sc_regGet(REG_ZERO_DIV, &flag);
+	if(flag)
+		printf("O ");
+	else
+		printf("  ");
+	sc_regGet(REG_OVERLIMIT_MEM, &flag);
+	if(flag)
+		printf("O ");
+	else
+		printf("  ");
+	sc_regGet(REG_STEP_IGNORE, &flag);
+	if(flag)
+		printf("O ");
+	else
+		printf("  ");
+	sc_regGet(REG_WR_COM, &flag);
+	if(flag)
+		printf("O ");
+	else
+		printf("  ");
+	
+	printf("     x\n");
 	mt_gotoXY(12, 62);
 	printf("mqqqqqqqqqqqqqqqqqqqqj");
 	

@@ -1,12 +1,12 @@
+#ifndef MYTERM_H
+#define MYTERM_H
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <termios.h>
 #include <sys/ioctl.h>
-
-
-//extern char clear[];
 
 //enum colors { BLACK = 30, RED, GREEN, YELLOW, BLUE, PURPLE, TURQUO, WHITE };
 enum colors {BLACK = 30, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN = 36, LGRAY = 37, DEF = 39, DGRAY = 90, LRED = 91, LGREEN = 92,
@@ -27,3 +27,5 @@ int mt_setfgcolor (enum colors); /*устанавливает цвет посл�
 int mt_setbgcolor (enum colors); /*устанавливает цвет фона последующих вы-
 водимых символов. В качестве параметра передаѐтся константа из созданного Вами
 перечислимого типа colors , описывающего цвета терминала.*/
+
+#endif
