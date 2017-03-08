@@ -26,12 +26,26 @@ int mt_getscreensize (int * rows, int * cols)
 
 int mt_setfgcolor (enum colors color)
 {
-	printf("\e[%dm", color);
+	enum colors buf;
+	int errflag = 1;
+	for(buf = GRAY; buf <= BLACK; ++buf)
+		if(color == buf)
+			errflag = 0;
+	if(errflag)
+		return -1;
+		printf("\e[38;5;%dm", color);
 	return 0;
 }
 
 int mt_setbgcolor (enum colors color)
 {
-	printf("\e[%dm", (color + 10));
+	enum colors buf;
+	int errflag = 1;
+	for(buf = GRAY; buf <= BLACK; ++buf)
+		if(color == buf)
+			errflag = 0;
+	if(errflag)
+		return -1;
+	printf("\e[48;5;%dm", color);
 	return 0;
 }

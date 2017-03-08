@@ -23,7 +23,7 @@
 
 #include <stdlib.h>
 #include "myTerm.h"
-#include "../Lab2/sc.h"
+#include "sc.h"
 
 int main(int argc, char **argv)
 {
@@ -31,6 +31,9 @@ int main(int argc, char **argv)
 	int value = 0;
 	mt_clrscr();
 	printf("\e(0");
+	
+	mt_setbgcolor(LGREEN);
+	mt_setfgcolor(GREEN);
 	
 	//memory_window
 	
@@ -42,8 +45,8 @@ int main(int argc, char **argv)
 		printf("x");
 		for(j = 0; j < 10; ++j)
 		{
-			value = sc_memoryGet(i * 10 + j, &value);
-			printf("+%4X ", value);
+			sc_memoryGet(i * 10 + j, &value);
+			printf("+%04X ", value);
 		}
 		printf("\bx");
 	}
@@ -82,7 +85,7 @@ int main(int argc, char **argv)
 	mt_gotoXY(10, 62);
 	printf("lqqqqq FLAGS qqqqqqqqk");
 	mt_gotoXY(11, 62);
-	printf("x      ");
+	printf("x     ");
 	
 	int flag;
 	sc_regGet(REG_OVERFLOW, &flag);

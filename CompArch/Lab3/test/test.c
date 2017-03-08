@@ -1,5 +1,5 @@
 /*
- * main.c
+ * test.c
  * 
  * Copyright 2017 Monstruos <monstruos@monstruos-X550MJ>
  * 
@@ -21,30 +21,27 @@
  * 
  */
 
-#include <stdlib.h>
-#include "myTerm.h"
+
+#include <stdio.h>
+
+enum colors {GRAY = 0, RED, GREEN, YELLOW, BLUE, PURPLE, TURQUO, WHITE,
+	LGRAY, LRED, LGREEN, LYELLOW, LBLUE, LPURPLE, LTURQUO, LWHITE, BLACK};
+
 
 int main(int argc, char **argv)
 {
-	int a, b;
-	mt_clrscr();
-	mt_getscreensize (&a, &b);
-	mt_gotoXY(5, 2);
-	mt_setbgcolor(WHITE);
-	mt_setfgcolor(YELLOW);
-	printf("rows - %d", a);
-	mt_setbgcolor(BLUE);
-	mt_setfgcolor(GREEN);
-	printf("cols - %d", b);
-	mt_gotoXY(1, 2);
-	mt_setbgcolor(PURPLE);
-	mt_setfgcolor(LWHITE);
-	
-	int value = mt_gotoXY(999,999);
-	printf("value = mt_gotoXY(999,999) = %d;\n", value);
-	value = mt_setbgcolor(999);
-	printf("value = mt_setbgcolor(999) = %d;\n", value);
-	value = mt_setfgcolor(999);
-	printf("value = mt_setfgcolor(999) = %d;\n", value);
+	int j = 0;
+	for(int color = 0; color < 256; ++color)
+	{
+		printf("\e[48;5;%dm   ", color);
+		//printf("%3d ", color);
+		++j;
+		if(j >= 16)
+		{
+			j = 0;
+			printf("\n");
+		}
+	}
 	return 0;
 }
+

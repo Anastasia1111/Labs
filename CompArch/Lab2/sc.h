@@ -12,7 +12,7 @@
 
 #define ramSize 100
 int RAM[ramSize];
-int REG = 0;/* 0-14 = accumulator
+extern int REG;/* 0-14 = accumulator
 		*16-22 = command pointer
 		*24-28 = flag register
 		* 	24 (code 1):overfilling

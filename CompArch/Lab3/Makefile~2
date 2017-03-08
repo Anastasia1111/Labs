@@ -7,13 +7,13 @@ main2.o: main2.c
 	gcc -c main2.c
 
 libMyTerm.a: myTerm.o
-	ar r libMyTerm.a myTerm.o
+	ar rc libMyTerm.a myTerm.o
 
 myTerm.o: myTerm.c
 	gcc -c myTerm.c
 
 libSimpleComputer.a: sc.o
-	ar r libSimpleComputer.a sc.o
+	ar rc libSimpleComputer.a sc.o
 
 sc.o: sc.c
 	gcc -c sc.c

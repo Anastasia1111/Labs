@@ -1,5 +1,7 @@
 #include "sc.h"
 
+int REG = 0;
+
 int sc_memoryInit ()
 {
 	int i;

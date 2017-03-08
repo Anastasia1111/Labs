@@ -8,9 +8,8 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 
-//enum colors { BLACK = 30, RED, GREEN, YELLOW, BLUE, PURPLE, TURQUO, WHITE };
-enum colors {BLACK = 30, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN = 36, LGRAY = 37, DEF = 39, DGRAY = 90, LRED = 91, LGREEN = 92,
-	LYELLOW = 93, LBLUE = 94, LMAGENTA = 95, LCEAN = 96, WHITE = 97 };
+enum colors {GRAY = 0, RED, GREEN, YELLOW, BLUE, PURPLE, TURQUO, WHITE,
+	LGRAY, LRED, LGREEN, LYELLOW, LBLUE, LPURPLE, LTURQUO, LWHITE, BLACK};
 
 int mt_clrscr (void); //производит очистку и перемещение курсора в левый верхний угол экрана;
 

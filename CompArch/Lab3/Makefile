@@ -7,7 +7,7 @@ main.o: main.c
 	gcc -c main.c
 
 libMyTerm.a: myTerm.o
-	ar r libMyTerm.a myTerm.o
+	ar rc libMyTerm.a myTerm.o
 
 myTerm.o: myTerm.c
 	gcc -c myTerm.c
