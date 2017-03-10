@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "colordialog.h"
 #include <QLabel>
 #include <QMouseEvent>
 #include <QColorDialog>
@@ -101,10 +102,16 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionColor_triggered()
 {
-    QColor color(QColorDialog().getColor(scene->getPenColor(),this,"Select Color"));
-    if (color.isValid()){
-        scene->setPenColor(color);
+    QColor color(scene->getPenColor());
+    ColorDialog *dialogWin = new ColorDialog(color, this);
+    if (dialogWin->exec() == QDialog::Accepted)
+    {
+        color = dialogWin->getColor();
+        if (color.isValid()){
+            scene->setPenColor(color);
+        }
     }
+    delete dialogWin;
 }
 
 void MainWindow::on_actionRedo_triggered()

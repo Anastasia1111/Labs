@@ -30,12 +30,15 @@ DEFINES += \
 
 SOURCES += main.cpp\
     mainwindow.cpp \
-    paintscene.cpp
+    paintscene.cpp \
+    colordialog.cpp
 
 HEADERS  += mainwindow.h \
-    paintscene.h
+    paintscene.h \
+    colordialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    colordialog.ui
 
 RESOURCES += \
     ../resources/resources.qrc
