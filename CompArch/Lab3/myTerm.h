@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
 
 enum colors {GRAY = 0, RED, GREEN, YELLOW, BLUE, PURPLE, TURQUO, WHITE,
 	LGRAY, LRED, LGREEN, LYELLOW, LBLUE, LPURPLE, LTURQUO, LWHITE, BLACK};

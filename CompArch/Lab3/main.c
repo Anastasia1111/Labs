@@ -28,20 +28,20 @@ int main(int argc, char **argv)
 {
 	int a, b;
 	mt_clrscr();
-	mt_getscreensize (&a, &b);
 	mt_gotoXY(5, 2);
+	mt_getscreensize (&a, &b);
+	
 	mt_setbgcolor(WHITE);
 	mt_setfgcolor(YELLOW);
-	printf("rows - %d", a);
+	printf("rows - %d\n", a);
 	mt_setbgcolor(BLUE);
 	mt_setfgcolor(GREEN);
-	printf("cols - %d", b);
+	printf("cols - %d ", b);
 	mt_gotoXY(1, 2);
 	mt_setbgcolor(PURPLE);
 	mt_setfgcolor(LWHITE);
 	
-	int value = mt_gotoXY(999,999);
-	printf("value = mt_gotoXY(999,999) = %d;\n", value);
+	int value = 0;
 	value = mt_setbgcolor(999);
 	printf("value = mt_setbgcolor(999) = %d;\n", value);
 	value = mt_setfgcolor(999);
