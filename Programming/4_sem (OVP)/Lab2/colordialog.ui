@@ -22,8 +22,20 @@
      <height>111</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -55,7 +67,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -139,19 +151,9 @@
     </item>
    </layout>
   </widget>
-  <zorder>buttonBox</zorder>
-  <zorder>pushButton</zorder>
-  <zorder>buttonBox</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
   <zorder>graphicsView</zorder>
-  <zorder>spinBox_Blue</zorder>
-  <zorder>spinBox_Green</zorder>
-  <zorder>spinBox_Red</zorder>
-  <zorder>horizontalSlider_Blue</zorder>
-  <zorder>horizontalSlider_Green</zorder>
-  <zorder>horizontalSlider_Red</zorder>
-  <zorder>label_Red</zorder>
-  <zorder>label_Green</zorder>
-  <zorder>label_Blue</zorder>
  </widget>
  <resources/>
  <connections>

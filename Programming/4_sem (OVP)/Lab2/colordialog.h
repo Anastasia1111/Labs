@@ -8,6 +8,7 @@
 namespace Ui {
 class ColorDialog;
 }
+class QGraphicsScene;
 
 class ColorDialog : public QDialog
 {
@@ -21,6 +22,7 @@ public:
 private:
     Ui::ColorDialog *ui;
     QColor colorResult;
+    QGraphicsScene *scene;
 
 private slots:
     void on_pushButton_clicked();

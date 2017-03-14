@@ -7,6 +7,7 @@
 #include <QDir>
 
 #include "paintscene.h"
+#include "colordialog.h"
 
 namespace Ui {
 class MainWindow;

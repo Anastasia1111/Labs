@@ -14,22 +14,25 @@ ColorDialog::ColorDialog(QColor color, QWidget *parent) :
     ui->horizontalSlider_Green->setValue(color.green());
 
     colorResult = color;
+    scene = new QGraphicsScene;
+
+    startTimer(0);
 }
 
 ColorDialog::~ColorDialog()
 {
+    delete scene;
     delete ui;
 }
 
 void ColorDialog::timerEvent(QTimerEvent* e)
 {
-    QGraphicsScene *scene = new QGraphicsScene;
     colorResult = QColor(ui->horizontalSlider_Red->value(),
                          ui->horizontalSlider_Green->value(),
                          ui->horizontalSlider_Blue->value());
-    scene->setBackgroundBrush(colorResult);
     ui->graphicsView->setScene(scene);
-    delete scene;
+    ui->graphicsView->show();
+    scene->setBackgroundBrush(colorResult);
 }
 
 void ColorDialog::on_pushButton_clicked()
