@@ -256,6 +256,7 @@ save/
 *.save
 *.cfg
 RAMsave.txt
+ara.txt
 
 # Other
 *.o

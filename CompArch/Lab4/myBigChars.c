@@ -108,12 +108,53 @@ int bc_getbigcharpos(int * big, int x, int y, int *value)
 }
 int bc_bigcharwrite (int fd, int * big, int count)
 {
-	write(fd, big, count * 2);
+	char alph[8][8];
+	int buf;
+	int i, j;
+	for(i = 0; i < 8; ++i)
+	{
+		int numbig = 0;
+		int byte = i * 8;
+		if(i >= 4) 
+		{
+			++numbig;
+			byte = (i-4) * 8;
+		}
+		for(j = 0; j < 8; ++j)
+		{
+			buf = (big[numbig] >> (byte + j)) & 0x1;
+			if(!buf)
+				write(fd, " ", 1);
+			else
+				write(fd, "a", 1);
+		}
+	}
 	return 0;
 }
 int bc_bigcharread (int fd, int * big, int need_count, int * count)
 {
-	
+	char buf[32];
+	int countbuf;
+	for(int i = 0; i < (need_count * 2); ++i)
+	{
+		big[i] = 0;
+		countbuf = read(fd, buf, 32);
+		if(countbuf < 0)
+		{
+			*count = 0;
+			return -1;
+		}
+		*count += 1;
+		for(int j = 31; j >= 0; --j)
+		{
+			big[i] <<= 1;
+			if(buf[j] == 'a')
+			{
+				big[i] += 1;
+			}
+		}
+	}
+	return 0;
 }
 
 int main()
@@ -124,5 +165,13 @@ int main()
 	bc_printbigchar(a, 2, 2, YELLOW, WHITE);
 	int value;
 	bc_getbigcharpos(a, 0, 4, &value);
+	int fd = open("ara.txt", O_WRONLY);
+	bc_bigcharwrite(fd, a, 1);
+	int count = 0;
+	close(fd);
+	fd = open("ara.txt", O_RDONLY);
+	bc_bigcharread(fd, a, 1, &count);
+	bc_printbigchar(a, 12, 22, YELLOW, WHITE);
+	close(fd);
 	return 0;
 }
