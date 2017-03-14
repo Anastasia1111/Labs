@@ -1,10 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "colordialog.h"
 #include <QLabel>
 #include <QMouseEvent>
-#include <QColorDialog>
-#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
