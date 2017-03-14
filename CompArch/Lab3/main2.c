@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	int i, j;
 	int value = 0;
 	mt_clrscr();
-	printf("\e(0");
+	write(STDOUT_FILENO, "\e(0", 4);
 	
 	mt_setbgcolor(LGREEN);
 	mt_setfgcolor(GREEN);
@@ -38,122 +38,122 @@ int main(int argc, char **argv)
 	//memory_window
 	
 	mt_gotoXY(1, 1);
-	printf("lqqqqqqqqqqqqqqqqqqqqqqqqqqqq MEMORY qqqqqqqqqqqqqqqqqqqqqqqk");
+	write(STDOUT_FILENO, "lqqqqqqqqqqqqqqqqqqqqqqqqqqqq MEMORY qqqqqqqqqqqqqqqqqqqqqqqk", 61);
 	for(i = 0; i < 10; ++i)
 	{
 		mt_gotoXY(i+2, 1);
-		printf("x");
+		write(STDOUT_FILENO, "x", 1);
 		for(j = 0; j < 10; ++j)
 		{
 			sc_memoryGet(i * 10 + j, &value);
-			printf("+%04X ", value);
+			write(STDOUT_FILENO, "+0000 ", 6);
 		}
-		printf("\bx");
+		write(STDOUT_FILENO, "\bx", 2);
 	}
 	mt_gotoXY(12, 1);
-	printf("mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj");
+	write(STDOUT_FILENO, "mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj", 61);
 	
 	// accumulator_window
 	
 	mt_gotoXY(1, 62);
-	printf("lqqq ACCUMULATOR qqqqk");
+	write(STDOUT_FILENO, "lqqq ACCUMULATOR qqqqk", 22);
 	mt_gotoXY(2, 62);
-	printf("x       +0000        x\n");
+	write(STDOUT_FILENO, "x       +0000        x", 22);
 	mt_gotoXY(3, 62);
-	printf("mqqqqqqqqqqqqqqqqqqqqj");
+	write(STDOUT_FILENO, "mqqqqqqqqqqqqqqqqqqqqj", 22);
 	
 	//instCount_window
 	
 	mt_gotoXY(4, 62);
-	printf("l INSTRUCTIONCOUNTER k");
+	write(STDOUT_FILENO, "l INSTRUCTIONCOUNTER k", 22);
 	mt_gotoXY(5, 62);
-	printf("x       +0000        x\n");
+	write(STDOUT_FILENO, "x       +0000        x", 22);
 	mt_gotoXY(6, 62);
-	printf("mqqqqqqqqqqqqqqqqqqqqj");
+	write(STDOUT_FILENO, "mqqqqqqqqqqqqqqqqqqqqj", 22);
 	
 	//Operation_window
 	
 	mt_gotoXY(7, 62);
-	printf("lqqqqq OPERATION qqqqk");
+	write(STDOUT_FILENO, "lqqqqq OPERATION qqqqk", 22);
 	mt_gotoXY(8, 62);
-	printf("x      +00 : 00      x\n");
+	write(STDOUT_FILENO, "x      +00 : 00      x", 22);
 	mt_gotoXY(9, 62);
-	printf("mqqqqqqqqqqqqqqqqqqqqj");
+	write(STDOUT_FILENO, "mqqqqqqqqqqqqqqqqqqqqj", 22);
 	
 	//Flags_window
 	
 	mt_gotoXY(10, 62);
-	printf("lqqqqq FLAGS qqqqqqqqk");
+	write(STDOUT_FILENO, "lqqqqq FLAGS qqqqqqqqk", 22);
 	mt_gotoXY(11, 62);
-	printf("x     ");
+	write(STDOUT_FILENO, "x     ", 6);
 	
 	int flag;
 	sc_regGet(REG_OVERFLOW, &flag);
 	if(flag)
-		printf("O ");
+		write(STDOUT_FILENO, "O ", 2);
 	else
-		printf("  ");
+		write(STDOUT_FILENO, "  ", 2);
 	sc_regGet(REG_ZERO_DIV, &flag);
 	if(flag)
-		printf("O ");
+		write(STDOUT_FILENO, "O ", 2);
 	else
-		printf("  ");
+		write(STDOUT_FILENO, "  ", 2);
 	sc_regGet(REG_OVERLIMIT_MEM, &flag);
 	if(flag)
-		printf("O ");
+		write(STDOUT_FILENO, "O ", 2);
 	else
-		printf("  ");
+		write(STDOUT_FILENO, "  ", 2);
 	sc_regGet(REG_STEP_IGNORE, &flag);
 	if(flag)
-		printf("O ");
+		write(STDOUT_FILENO, "O ", 2);
 	else
-		printf("  ");
+		write(STDOUT_FILENO, "  ", 2);
 	sc_regGet(REG_WR_COM, &flag);
 	if(flag)
-		printf("O ");
+		write(STDOUT_FILENO, "O ", 2);
 	else
-		printf("  ");
+		write(STDOUT_FILENO, "  ", 2);
 	
-	printf("     x\n");
+	write(STDOUT_FILENO, "     x", 6);
 	mt_gotoXY(12, 62);
-	printf("mqqqqqqqqqqqqqqqqqqqqj");
+	write(STDOUT_FILENO, "mqqqqqqqqqqqqqqqqqqqqj", 22);
 	
 	//KEYS_window
 	
 	mt_gotoXY(13, 47);
-	printf("l KEYS qqqqqqqqqqqqqqqqqqqqqqqqqqqqqk");
+	write(STDOUT_FILENO, "l KEYS qqqqqqqqqqqqqqqqqqqqqqqqqqqqqk", 37);
 	mt_gotoXY(14, 47);
-	printf("xL  - LOAD                          x");
+	write(STDOUT_FILENO, "xL  - LOAD                          x", 37);
 	mt_gotoXY(15, 47);
-	printf("xS  - SAVE                          x");
+	write(STDOUT_FILENO, "xS  - SAVE                          x", 37);
 	mt_gotoXY(16, 47);
-	printf("xR  - RUN                           x");
+	write(STDOUT_FILENO, "xR  - RUN                           x", 37);
 	mt_gotoXY(17, 47);
-	printf("xT  - STEP                          x");
+	write(STDOUT_FILENO, "xT  - STEP                          x", 37);
 	mt_gotoXY(18, 47);
-	printf("xI  - RESET                         x");
+	write(STDOUT_FILENO, "xI  - RESET                         x", 37);
 	mt_gotoXY(19, 47);
-	printf("xF5 - ACCUMULATOR                   x");
+	write(STDOUT_FILENO, "xF5 - ACCUMULATOR                   x", 37);
 	mt_gotoXY(20, 47);
-	printf("xF6 - INSTRUCTIONCOUNTER            x");
+	write(STDOUT_FILENO, "xF6 - INSTRUCTIONCOUNTER            x", 37);
 	mt_gotoXY(21, 47);
-	printf("x                                   x");
+	write(STDOUT_FILENO, "x                                   x", 37);
 	mt_gotoXY(22, 47);
-	printf("mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj");
+	write(STDOUT_FILENO, "mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj", 37);
 	
 	//BIG_window
 	
 	mt_gotoXY(13, 1);
-	printf("lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk");
+	write(STDOUT_FILENO, "lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk", 46);
 	for(i = 14; i < 22; ++i)
 	{
 		mt_gotoXY(i, 1);
-		printf("x                                            x");
+		write(STDOUT_FILENO, "x                                            x", 46);
 	}
 	mt_gotoXY(22, 1);
-	printf("mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj");
+	write(STDOUT_FILENO, "mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj", 46);
 	
 	mt_gotoXY(23, 1);
-	printf("\e(B");
+	write(STDOUT_FILENO, "\e(B", 3);
 	return 0;
 }

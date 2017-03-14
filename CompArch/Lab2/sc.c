@@ -124,12 +124,12 @@ int sc_commandDecode (int value, int *command, int *operand)
 		return 1; //not command
 	}
 	int dec_sevbit_mask = (value >> 7)& 0x7F;
-	if((dec_sevbit_mask ) == 0xA || ( dec_sevbit_mask ) == 0xB || 
-	( dec_sevbit_mask ) == 0x14 || ( dec_sevbit_mask ) == 0x15 || 
-	(( dec_sevbit_mask ) >= 0x1E && ( dec_sevbit_mask ) <= 0x21) || 
-	(( dec_sevbit_mask ) >= 0x28 && ( dec_sevbit_mask ) <= 0x4C))
+	if((dec_sevbit_mask ) == 10 || ( dec_sevbit_mask ) == 11 || 
+	( dec_sevbit_mask ) == 20 || ( dec_sevbit_mask ) == 21 || 
+	(( dec_sevbit_mask ) >= 30 && ( dec_sevbit_mask ) <= 33) || 
+	(( dec_sevbit_mask ) >= 40 && ( dec_sevbit_mask ) <= 76))
 	{
-		*command = value >> 7;
+		*command = value >> (8-1);
 	} else {
 		sc_regSet(REG_WR_COM, 1);
 		return 2; // not existing command

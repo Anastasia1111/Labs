@@ -9,8 +9,8 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-enum colors {GRAY = 0, RED, GREEN, YELLOW, BLUE, PURPLE, TURQUO, WHITE,
-	LGRAY, LRED, LGREEN, LYELLOW, LBLUE, LPURPLE, LTURQUO, LWHITE, BLACK};
+enum colors {GRAY = 0, RED = 1, GREEN = 2, YELLOW = 3, BLUE = 4, PURPLE = 5, TURQUO = 6, WHITE = 7,
+	LGRAY = 8, LRED = 9, LGREEN = 10, LYELLOW = 11, LBLUE = 12, LPURPLE = 13, LTURQUO = 14, LWHITE = 15, BLACK = 16};
 
 int mt_clrscr (void); //производит очистку и перемещение курсора в левый верхний угол экрана;
 

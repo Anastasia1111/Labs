@@ -28,16 +28,16 @@ int main(int argc, char **argv)
 {
 	int a, b;
 	mt_clrscr();
-	mt_gotoXY(5, 2);
+	mt_gotoXY(5, 5);
 	mt_getscreensize (&a, &b);
 	
-	mt_setbgcolor(WHITE);
+	mt_setbgcolor(LWHITE);
 	mt_setfgcolor(YELLOW);
-	printf("rows - %d\n", a);
-	mt_setbgcolor(BLUE);
-	mt_setfgcolor(GREEN);
+	printf("rows - %d \n", a);
+	mt_setbgcolor(RED);
+	mt_setfgcolor(LGREEN);
 	printf("cols - %d ", b);
-	mt_gotoXY(1, 2);
+	/*mt_gotoXY(1, 2);
 	mt_setbgcolor(PURPLE);
 	mt_setfgcolor(LWHITE);
 	
@@ -46,5 +46,6 @@ int main(int argc, char **argv)
 	printf("value = mt_setbgcolor(999) = %d;\n", value);
 	value = mt_setfgcolor(999);
 	printf("value = mt_setfgcolor(999) = %d;\n", value);
+	*/
 	return 0;
 }
