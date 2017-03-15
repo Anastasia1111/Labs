@@ -37,7 +37,8 @@ void ColorDialog::timerEvent(QTimerEvent* e)
 
 void ColorDialog::on_pushButton_clicked()
 {
-    QColor color(QColorDialog().getColor(colorResult,this,"Select Color"));
+    QColorDialog* clrDial = new QColorDialog(colorResult, this);
+    QColor color(clrDial->getColor());
     ui->spinBox_Red->setValue(color.red());
     ui->horizontalSlider_Red->setValue(color.red());
     ui->spinBox_Blue->setValue(color.blue());

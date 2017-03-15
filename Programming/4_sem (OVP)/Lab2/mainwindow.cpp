@@ -99,7 +99,8 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionColor_triggered()
 {
-    QColor color(scene->getPenColor());
+    QColor(QColorDialog().getColor());
+    /*QColor color(scene->getPenColor());
     ColorDialog *dialogWin = new ColorDialog(color, this);
     if (dialogWin->exec() == QDialog::Accepted)
     {
@@ -108,7 +109,7 @@ void MainWindow::on_actionColor_triggered()
             scene->setPenColor(color);
         }
     }
-    delete dialogWin;
+    delete dialogWin;*/
 }
 
 void MainWindow::on_actionRedo_triggered()
