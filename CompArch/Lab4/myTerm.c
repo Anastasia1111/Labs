@@ -54,7 +54,7 @@ int mt_setfgcolor (enum colors color)
 	}
 	if(color == DEF)
 	{
-		write(1, "\e[m", 3);
+		write(1, "\e[38;5;m", 8);
 		return 0;
 	}
 	if(errflag)
@@ -90,7 +90,7 @@ int mt_setbgcolor (enum colors color)
 	}
 	if(color == DEF)
 	{
-		write(1, "\e[m", 3);
+		write(1, "\e[48;5;m", 8);
 		return 0;
 	}
 	if(errflag)
