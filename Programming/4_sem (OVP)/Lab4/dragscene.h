@@ -6,6 +6,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QGraphicsItem>
+#include <QFont>
 
 class DragScene : public QGraphicsScene
 {

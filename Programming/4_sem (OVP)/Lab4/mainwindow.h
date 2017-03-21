@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <dragscene.h>
+#include "dragscene.h"
 
 namespace Ui {
 class MainWindow;
