@@ -24,9 +24,6 @@ private:
     QRectF* zone_View;
     QRectF* zone_Form;
     QRectF* zone_Info;
-    QPointF sStart;
-    QPointF cStart;
-    QPointF rStart;
     QPointF prevPos;
     QGraphicsItem* Square;
     QGraphicsItem* Circle;

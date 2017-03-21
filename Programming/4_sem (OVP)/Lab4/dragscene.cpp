@@ -30,13 +30,13 @@ DragScene::DragScene(QObject *parent) : QGraphicsScene(parent)
     group->addToGroup(txtInfo);
 
     QPainterPath rect;
-    rect.addRect(QRectF(10,10,200,100));
-    Circle = this->addEllipse(QRectF(220,10,150,150),QPen(Qt::red),QBrush(Qt::red));
-    cStart = QPointF(220,10);
-    Square = this->addRect(QRectF(380,10,150,150),QPen(Qt::blue),QBrush(Qt::blue));
-    sStart = QPointF(380,10);
+    rect.addRect(QRectF(0,0,150,50));
+    Circle = this->addEllipse(QRectF(0,0,100,100),QPen(Qt::red),QBrush(Qt::red));
+    Circle->setPos(220,10);
+    Square = this->addRect(QRectF(0,0,100,100),QPen(Qt::blue),QBrush(Qt::blue));
+    Square->setPos(380,10);
     Rectangle = this->addPath(rect,QPen(Qt::yellow),QBrush(Qt::yellow));
-    rStart = QPointF(10,10);
+    Rectangle->setPos(10,10);
 }
 
 DragScene::~DragScene()
@@ -62,19 +62,16 @@ void DragScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
 void DragScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-    if (draggedItem!=NULL){
-        if(zone_Form->contains(e->scenePos())){
-            if(draggedItem==Square){
-                Square->setPos(Circle->scenePos()+cStart-sStart);
-                Circle->setPos(e->scenePos()-cStart-prevPos+sStart);
-            } else {
-                if(draggedItem==Circle){
-                    Circle->setPos(Square->scenePos()+sStart-cStart);
-                    Square->setPos(e->scenePos()-sStart-prevPos+cStart);
-                }
-            }
+    draggedItem = NULL;
+
+    if(zone_Form->contains(Square->scenePos())){
+        Square->setPos(Circle->scenePos());
+        Circle->setPos(e->scenePos()-prevPos);
+    } else {
+        if(zone_Form->contains(Circle->scenePos())){
+            Circle->setPos(Square->scenePos());
+            Square->setPos(e->scenePos()-prevPos);
         }
-        draggedItem = NULL;
     }
 }
 
@@ -85,13 +82,13 @@ void DragScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             draggedItem->setPos(e->scenePos()-prevPos);
         }
     }
-    if(zone_View->contains(Square->scenePos()+sStart)){
+    if(zone_View->contains(Square->scenePos())){
         txtInfo->setPlainText("   Синий квадрат    ");
     } else {
-        if(zone_View->contains(Circle->scenePos()+cStart)){
+        if(zone_View->contains(Circle->scenePos())){
             txtInfo->setPlainText("    Красный круг    ");
         } else {
-            if(zone_View->contains(Rectangle->scenePos()+rStart)){
+            if(zone_View->contains(Rectangle->scenePos())){
                 txtInfo->setPlainText("Желтый прямоугольник");
             } else {
                 txtInfo->setPlainText("     Информация     ");
