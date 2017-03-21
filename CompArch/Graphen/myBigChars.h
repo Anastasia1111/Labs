@@ -10,7 +10,7 @@
 #define _3_0_ 0x78C0633E
 #define _3_1_ 0x3E63C078
 #define _4_0_ 0x24283020
-#define _4_1_ 0x24283020
+#define _4_1_ 0x2020203F
 #define _5_0_ 0x7B03037E
 #define _5_1_ 0x7EC380CF
 #define _6_0_ 0x7F03C67C
@@ -38,7 +38,7 @@
 #define _1 {0x181C1810, 0x3C181818}
 #define _2 {0x3062663C, 0x7E660C18}
 #define _3 {0x78C0633E, 0x3E63C078}
-#define _4 {0x24283020, 0x24283020}
+#define _4 {0x24283020, 0x2020203F}
 #define _5 {0x7B03037E, 0x7EC380CF}
 #define _6 {0x7F03C67C, 0x7EC3C3C3}
 #define _7 {0x183063FF, 0x03060C7E}

@@ -28,12 +28,13 @@
 int main(int argc, char **argv)
 {
 	int i, j;
+	int a = 38;
 	int value = 0, flag;
 	mt_clrscr();
 	char mem[6];
 	int n;
 	sc_memoryInit();
-	
+	sc_memorySet(a,0x50F);
 	//memory_window
 	
 	int com, oper;
@@ -46,7 +47,7 @@ int main(int argc, char **argv)
 			sc_regGet(REG_WR_COM, &flag1);
 			sc_memoryGet(i * 10 + j, &value);
 			flag = sc_commandDecode(value, &com, &oper);
-			if(!flag)
+			if(flag == 0)
 			{
 				n = sprintf(mem, "+%02X%02X ", com, oper);
 				write(STDOUT_FILENO, mem, n);
@@ -73,7 +74,6 @@ int main(int argc, char **argv)
 	
 	//instCount_window
 	
-	int a = 38;
 	bc_box(4, 62, 2, 21);
 	mt_gotoXY(4, 63);
 	write(STDOUT_FILENO, " InstructionCounter ", 20);
@@ -166,12 +166,12 @@ int main(int argc, char **argv)
 	if(mem[0] == '+')
 	{
 		int num[2] = _P_;
-		bc_printbigchar(num, 14, 2, LWHITE, BLACK);
+		bc_printbigchar(num, 14, 2, LRED, GREEN);
 	}
 	else
 	{
 		int num[2] = {0x0, 0x0};
-		bc_printbigchar(num, 14, 2, LWHITE, BLACK);
+		bc_printbigchar(num, 14, 2, LRED, GREEN);
 	}
 	for(i = 1; i < 5; ++i)
 	{
@@ -244,7 +244,7 @@ int main(int argc, char **argv)
 				num[1] = _F_1_;
 				break;
 		}
-		bc_printbigchar(num, 14, 2 + i * 8 + i, LWHITE, BLACK);
+		bc_printbigchar(num, 14, 2 + i * 8 + i, LRED, GREEN);
 	}
 	mt_gotoXY(25, 1);
 	return 0;

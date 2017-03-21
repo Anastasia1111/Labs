@@ -4,7 +4,7 @@ int main()
 {
 	bc_box(1,1,9,9);
 	int a[2] = _5;
-	bc_printbigchar(a, 2, 2, YELLOW, WHITE);
+	bc_printbigchar(a, 2, 2, GREEN, YELLOW);
 	int value;
 	bc_getbigcharpos(a, 0, 4, &value);
 	int fd = open("ara.txt", O_WRONLY);
