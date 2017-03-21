@@ -21,11 +21,20 @@ public slots:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
 
 private:
-    QRectF* Rectangle;
-    QRectF* Circle;
-    QRectF* Square;
+    QRectF* zone_View;
+    QRectF* zone_Form;
+    QRectF* zone_Info;
+    QPointF sStart;
+    QPointF cStart;
+    QPointF rStart;
     QPointF prevPos;
+    QGraphicsItem* Square;
+    QGraphicsItem* Circle;
+    QGraphicsItem* Rectangle;
     QGraphicsItem* draggedItem;
+    QGraphicsTextItem* txtView;
+    QGraphicsTextItem* txtForm;
+    QGraphicsTextItem* txtInfo;
     QGraphicsItemGroup* group;
 };
 
