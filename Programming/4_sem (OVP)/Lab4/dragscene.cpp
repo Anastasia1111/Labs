@@ -68,13 +68,17 @@ void DragScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     draggedItem = NULL;
 
-    if(zone_Form->contains(Square->scenePos())){
-        Square->setPos(Circle->scenePos());
-        Circle->setPos(e->scenePos()-prevPos);
-    } else {
-        if(zone_Form->contains(Circle->scenePos())){
-            Circle->setPos(Square->scenePos());
-            Square->setPos(e->scenePos()-prevPos);
+    if(zone_Form->contains(e->scenePos())){
+        if(zone_Form->contains(Square->scenePos())){
+            QPointF sqP = Square->scenePos();
+            Square->setPos(Circle->scenePos());
+            Circle->setPos(sqP);
+        } else {
+            if(zone_Form->contains(Circle->scenePos())){
+                QPointF ciP = Circle->scenePos();
+                Circle->setPos(Square->scenePos());
+                Square->setPos(ciP);
+            }
         }
     }
 }
