@@ -14,6 +14,7 @@ enum keys {
 	r_key, 
 	t_key,
 	i_key,
+	quit_key,
 	f5_key,
 	f6_key,
 	enter_key,

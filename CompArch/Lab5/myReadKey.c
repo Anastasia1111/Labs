@@ -1,3 +1,4 @@
+#include "myReadKey.h"
 
 int tcgetattr (int fd, struct termios *tsaved);
 int tcsetattr (int fd, int actions, const struct termios *tnew);
@@ -27,7 +28,7 @@ int rk_readkey (enum keys *key)
 	if (strcmp(buf, "i") == 0)
 		*key = i_key;
 	if (strcmp(buf, "q") == 0)
-		*key = q_key;
+		*key = quit_key;
 	if (strcmp(buf, "\n") == 0)
 		*key = enter_key;
 	if (strcmp(buf, "\033[15~") == 0)
@@ -104,9 +105,3 @@ int rk_mytermregime(int regime, int vtime, int vmin, int echo, int sigint)
 	
 	return 0;
 }
-
-int main(int argc, char **argv)
-{
-	return 0;
-}
-
