@@ -1,13 +1,50 @@
-#include <termios.h>
-#include <stdio.h>
-#include <unistd.h>
+
 int tcgetattr (int fd, struct termios *tsaved);
 int tcsetattr (int fd, int actions, const struct termios *tnew);
 
-//enum keys {};
-
-int rk_readkey (/*enum keys *key*/)
+int rk_readkey (enum keys *key)
 {
+	struct termios term;
+	char buf[8];
+	int num_read;
+	
+	if (tcgetattr(STDIN_FILENO, &term) != 0)
+		return -1;
+	if (rk_mytermregime(0, 0, 1, 0, 1) != 0)
+		return -1;
+	num_read = read(STDIN_FILENO, buf, 7);
+	if (num_read < 0)
+		return -1;
+	buf[num_read] = 0;
+	if (strcmp(buf, "l") == 0)
+		*key = l_key;
+	if (strcmp(buf, "s") == 0)
+		*key = s_key;
+	if (strcmp(buf, "r") == 0)
+		*key = r_key;
+	if (strcmp(buf, "t") == 0)
+		*key = t_key;
+	if (strcmp(buf, "i") == 0)
+		*key = i_key;
+	if (strcmp(buf, "q") == 0)
+		*key = q_key;
+	if (strcmp(buf, "\n") == 0)
+		*key = enter_key;
+	if (strcmp(buf, "\033[15~") == 0)
+		*key = f5_key;
+	if (strcmp(buf, "\033[17~") == 0)
+		*key = f6_key;
+	if (strcmp(buf, "\033[A") == 0)
+		*key = up_key;
+	if (strcmp(buf, "\033[B") == 0)
+		*key = down_key;
+	if (strcmp(buf, "\033[C") == 0)
+		*key = right_key;
+	if (strcmp(buf, "\033[D") == 0)
+		*key = left_key;
+	*key = no_key;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0)
+		return -1;
 	return 0;
 }
 
