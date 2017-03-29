@@ -24,43 +24,29 @@
 #include <stdlib.h>
 #include "myBigChars.h"
 #include "sc.h"
+#include "myReadKey.h"
+
+
+void write_ram(int x, int y);
+void big_window(int curr);
+void print_flag();
 
 int main(int argc, char **argv)
 {
 	int i, j;
-	int a = 38;
+	int curr = 0;
 	int value = 0, flag;
 	mt_clrscr();
 	char mem[6];
 	int n;
 	sc_memoryInit();
-	sc_memorySet(a,0x50F);
+	
 	//memory_window
 	
 	int com, oper;
 	for(i = 0; i < 10; ++i)
-	{
-		mt_gotoXY(i+2, 2);
 		for(j = 0; j < 10; ++j)
-		{
-			int flag1;
-			sc_regGet(REG_WR_COM, &flag1);
-			sc_memoryGet((i+1) * 10 + (j+1), &value);
-			flag = sc_commandDecode(value, &com, &oper);
-			if(flag == 0)
-			{
-				n = sprintf(mem, "+%02X%02X ", com, oper);
-				write(STDOUT_FILENO, mem, n);
-			}
-			else
-			{
-				n = sprintf(mem, " %04X ", value);
-				write(STDOUT_FILENO, mem, n);
-				if(!flag1)
-					sc_regSet(REG_WR_COM, 0);
-			}
-		}
-	}
+			write_ram(i, j);
 	bc_box(1, 1, 11, 60);
 	mt_gotoXY(1, 30);
 	write(STDOUT_FILENO, " Memory ", 8);
@@ -77,9 +63,6 @@ int main(int argc, char **argv)
 	bc_box(4, 62, 2, 18);
 	mt_gotoXY(4, 63);
 	write(STDOUT_FILENO, "InstructionCount ", 17);
-	mt_gotoXY(5, 70);
-	n = sprintf(mem, "%04d", a);
-	write(STDOUT_FILENO, mem, n);
 	
 	//Operation_window
 	
@@ -92,41 +75,6 @@ int main(int argc, char **argv)
 	bc_box(10, 62, 2, 18);
 	mt_gotoXY(10, 66);
 	write(STDOUT_FILENO, "Flags", 5);
-	
-	mt_gotoXY(11, 70);
-	sc_regGet(REG_OVERFLOW, &flag);
-	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
-	else
-		write(STDOUT_FILENO, "_ ", 2);
-	
-	mt_gotoXY(11, 72);
-	sc_regGet(REG_ZERO_DIV, &flag);
-	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
-	else
-		write(STDOUT_FILENO, "_ ", 2);
-		
-	mt_gotoXY(11, 74);
-	sc_regGet(REG_OVERLIMIT_MEM, &flag);
-	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
-	else
-		write(STDOUT_FILENO, "_ ", 2);
-		
-	mt_gotoXY(11, 76);
-	sc_regGet(REG_STEP_IGNORE, &flag);
-	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
-	else
-		write(STDOUT_FILENO, "_ ", 2);
-
-	mt_gotoXY(11, 78);
-	sc_regGet(REG_WR_COM, &flag);
-	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
-	else
-		write(STDOUT_FILENO, "_ ", 2);
 	
 	//KEYS_window
 	
@@ -151,17 +99,133 @@ int main(int argc, char **argv)
 	//BIG_window
 	
 	bc_box(13, 1, 9, 45);
-	mt_gotoXY(14, 2);
-	sc_memoryGet(a, &value);
-	flag = sc_commandDecode(value, &com, &oper);
-	if(!flag)
+	
+	//MECHANISM
+	int prev = curr;
+	int prevx, prevy, currx, curry;
+	
+	enum keys button;
+	while(1)
 	{
-		n = sprintf(mem, "+%02X%02X ", com, oper);
+		prevx = prev / 10;
+		prevy = prev % 10;
+		currx = curr / 10;
+		curry = curr % 10;
+		
+		mt_setbgcolor(DEF);
+		mt_setfgcolor(DEF);
+		write_ram(prevx, prevy);
+		
+		mt_setbgcolor(LRED);
+		mt_setfgcolor(LWHITE);
+		write_ram(currx, curry);
+		mt_setbgcolor(DEF);
+		mt_setfgcolor(DEF);
+		mt_gotoXY(5, 70);
+		n = sprintf(mem, "%04d", curr);
+		write(STDOUT_FILENO, mem, n);
+		
+		big_window(curr);
+		print_flag();
+		
+		rk_mytermregime(1, 0, 1, 0, 1);
+		rk_readkey(&button);
+		
+		prev = curr;
+		
+		switch(button)
+		{
+			case l_key:
+				sc_memoryLoad("RAMsave.txt");
+				for(i = 0; i < 10; ++i)
+					for(j = 0; j < 10; ++j)
+						write_ram(i, j);
+				break;
+			case s_key:
+				sc_memorySave("RAMsave.txt");
+				break;
+			case r_key:
+				
+				break;
+			case t_key:
+				break;
+			case i_key:
+				break;
+			case f5_key:
+				break;
+			case f6_key:
+				break;
+			case enter_key:
+				break;
+			case up_key:
+				if((curr - 10) >= 0)
+					curr -= 10;
+				break;
+			case down_key:
+				if((curr + 10) <= 99)
+					curr += 10;
+				break;
+			case left_key:
+				if((curr - 1) >= 0)
+					curr--;
+				break;
+			case right_key:
+				if((curr + 1) <= 99)
+					curr++;
+				break;
+			case quit_key:
+				break;
+			default:
+				rk_mytermregime(0, 0, 1, 1, 1);
+				break;
+		}
+		rk_mytermregime(1, 0, 1, 0, 1);
+	}
+	
+	return 0;
+}
+
+void write_ram(int x, int y)
+{
+	char mem[6];
+	int com, oper, n;
+	int value = 0;
+	int flag, flagprev;
+	
+	mt_gotoXY(x+2, y*6 + 2);
+	sc_regGet(REG_WR_COM, &flagprev);
+	sc_memoryGet(x * 10 + y, &value);
+	flag = sc_commandDecode(value, &com, &oper);
+	if(flag == 0)
+	{
+		n = sprintf(mem, "+%02X%02X", com, oper);
+		write(STDOUT_FILENO, mem, n);
 	}
 	else
 	{
+		n = sprintf(mem, " %04X", value);
+		write(STDOUT_FILENO, mem, n);
+		sc_regSet(REG_WR_COM, flagprev);
+	}
+};
+
+void big_window(int curr)
+{
+	mt_gotoXY(14, 2);
+	char mem[6];
+	int com, oper, n, i, j;
+	int value = 0;
+	int flag, flagprev;
+	
+	sc_memoryGet(curr, &value);
+	sc_regGet(REG_WR_COM, &flagprev);
+	flag = sc_commandDecode(value, &com, &oper);
+	if(!flag)
+		n = sprintf(mem, "+%02X%02X ", com, oper);
+	else
+	{
 		n = sprintf(mem, " %04X ", value);
-		sc_regSet(REG_WR_COM, 0);
+		sc_regSet(REG_WR_COM, flagprev);
 	}
 	if(mem[0] == '+')
 	{
@@ -246,6 +310,43 @@ int main(int argc, char **argv)
 		}
 		bc_printbigchar(num, 14, 2 + i * 8 + i, LRED, GREEN);
 	}
-	mt_gotoXY(25, 1);
-	return 0;
 }
+
+void print_flag()
+{
+	int flag;
+	mt_gotoXY(11, 70);
+	sc_regGet(REG_OVERFLOW, &flag);
+	if(flag)
+		write(STDOUT_FILENO, "O ", 2);
+	else
+		write(STDOUT_FILENO, "_ ", 2);
+	
+	mt_gotoXY(11, 72);
+	sc_regGet(REG_ZERO_DIV, &flag);
+	if(flag)
+		write(STDOUT_FILENO, "O ", 2);
+	else
+		write(STDOUT_FILENO, "_ ", 2);
+		
+	mt_gotoXY(11, 74);
+	sc_regGet(REG_OVERLIMIT_MEM, &flag);
+	if(flag)
+		write(STDOUT_FILENO, "O ", 2);
+	else
+		write(STDOUT_FILENO, "_ ", 2);
+		
+	mt_gotoXY(11, 76);
+	sc_regGet(REG_STEP_IGNORE, &flag);
+	if(flag)
+		write(STDOUT_FILENO, "O ", 2);
+	else
+		write(STDOUT_FILENO, "_ ", 2);
+
+	mt_gotoXY(11, 78);
+	sc_regGet(REG_WR_COM, &flag);
+	if(flag)
+		write(STDOUT_FILENO, "O ", 2);
+	else
+		write(STDOUT_FILENO, "_ ", 2);
+};

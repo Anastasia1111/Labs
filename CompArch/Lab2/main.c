@@ -35,6 +35,9 @@ int main(int argc, char **argv)
 	code = sc_memorySet(23, 10);
 	printf("\nsc_memorySet(23, 10) = %1d\n", code);
 	
+	for(int i = 0; i < 30; ++i)
+		sc_memorySet(rand() % 100, rand() % 10000);
+	
 	code = sc_memorySet(101, 10);
 	printf("sc_memorySet(101, 10) = %1d\n", code);
 	

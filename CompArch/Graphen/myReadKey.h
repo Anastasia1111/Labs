@@ -9,20 +9,20 @@
 #include <termios.h>
 
 enum keys {
-	l_key = 0,
+	l_key,
 	s_key,
 	r_key, 
 	t_key,
 	i_key,
-	quit_key = 5,
+	quit_key,
 	f5_key,
 	f6_key,
 	enter_key,
 	up_key,
-	down_key = 10,
+	down_key,
 	left_key,
 	right_key,
-	no_key = 13
+	no_key
 };
 
 int rk_readkey(enum keys *key);
