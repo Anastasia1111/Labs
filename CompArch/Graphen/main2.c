@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 		{
 			int flag1;
 			sc_regGet(REG_WR_COM, &flag1);
-			sc_memoryGet(i * 10 + j, &value);
+			sc_memoryGet((i+1) * 10 + (j+1), &value);
 			flag = sc_commandDecode(value, &com, &oper);
 			if(flag == 0)
 			{
@@ -68,30 +68,30 @@ int main(int argc, char **argv)
 	
 	// accumulator_window
 	
-	bc_box(1, 62, 2, 21);
+	bc_box(1, 62, 2, 18);
 	mt_gotoXY(1, 66);
-	write(STDOUT_FILENO, " Accumulator ", 13);
+	write(STDOUT_FILENO, "Accumulator", 11);
 	
 	//instCount_window
 	
-	bc_box(4, 62, 2, 21);
+	bc_box(4, 62, 2, 18);
 	mt_gotoXY(4, 63);
-	write(STDOUT_FILENO, " InstructionCounter ", 20);
+	write(STDOUT_FILENO, "InstructionCount ", 17);
 	mt_gotoXY(5, 70);
-	n = sprintf(mem, "%04X", a);
+	n = sprintf(mem, "%04d", a);
 	write(STDOUT_FILENO, mem, n);
 	
 	//Operation_window
 	
-	bc_box(7, 62, 2, 21);
+	bc_box(7, 62, 2, 18);
 	mt_gotoXY(7, 66);
-	write(STDOUT_FILENO, " Operation ", 11);
+	write(STDOUT_FILENO, "Operation", 9);
 	
 	//Flags_window
 	
-	bc_box(10, 62, 2, 21);
+	bc_box(10, 62, 2, 18);
 	mt_gotoXY(10, 66);
-	write(STDOUT_FILENO, " Flags ", 7);
+	write(STDOUT_FILENO, "Flags", 5);
 	
 	mt_gotoXY(11, 70);
 	sc_regGet(REG_OVERFLOW, &flag);
@@ -130,23 +130,23 @@ int main(int argc, char **argv)
 	
 	//KEYS_window
 	
-	bc_box(13, 47, 9, 36);
+	bc_box(13, 47, 9, 33);
 	mt_gotoXY(13, 48);
 	write(STDOUT_FILENO, " Keys ", 6);
 	mt_gotoXY(14, 48);
-	write(STDOUT_FILENO, "L  - Load                          ", 35);
+	write(STDOUT_FILENO, "L  - Load", 9);
 	mt_gotoXY(15, 48);
-	write(STDOUT_FILENO, "S  - Save                          ", 35);
+	write(STDOUT_FILENO, "S  - Save", 9);
 	mt_gotoXY(16, 48);
-	write(STDOUT_FILENO, "R  - Run                           ", 35);
+	write(STDOUT_FILENO, "R  - Run", 8);
 	mt_gotoXY(17, 48);
-	write(STDOUT_FILENO, "T  - Step                          ", 35);
+	write(STDOUT_FILENO, "T  - Step", 9);
 	mt_gotoXY(18, 48);
-	write(STDOUT_FILENO, "I  - Reset                         ", 35);
+	write(STDOUT_FILENO, "I  - Reset", 10);
 	mt_gotoXY(19, 48);
-	write(STDOUT_FILENO, "F5 - Accumulator                   ", 35);
+	write(STDOUT_FILENO, "F5 - Accumulator", 16);
 	mt_gotoXY(20, 48);
-	write(STDOUT_FILENO, "F6 - InstructionCounter            ", 35);
+	write(STDOUT_FILENO, "F6 - InstructionCounter", 23);
 	
 	//BIG_window
 	

@@ -31,7 +31,7 @@ int rk_readkey (enum keys *key)
 		*key = quit_key;
 	if (strcmp(buf, "\n") == 0)
 		*key = enter_key;
-	if (strcmp(buf, "\033[15~") == 0)
+	if (strcmp(buf, "\033[[E") == 0)
 		*key = f5_key;
 	if (strcmp(buf, "\033[17~") == 0)
 		*key = f6_key;

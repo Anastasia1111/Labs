@@ -16,12 +16,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->setModel(baseModel);
     ui->listView->setModel(fileModel);
 
-    ui->treeView->setColumnWidth(0, ui->treeView->width()*4);
+    //ui->treeView->setColumnWidth(0, ui->treeView->width()*4);
     ui->treeView->hideColumn(1);
     ui->treeView->hideColumn(2);
     ui->treeView->hideColumn(3);
 
-    fileModel->setNameFilterDisables(false);
+    //fileModel->setNameFilterDisables(false);
 
     timeTracking = false;
     labelPath = new QLabel("path", this);
