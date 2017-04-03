@@ -152,9 +152,48 @@ int main(int argc, char **argv)
 			case i_key:
 				break;
 			case f5_key:
+			{
+				char buf[5];
+				mt_gotoXY(2, 70);
+				write(STDOUT_FILENO, "     ", 5);
+				mt_gotoXY(2, 70);
+				rk_mytermregime(1, 0, 4, 1, 1);
+				read(STDIN_FILENO, buf, 4);
+				int need[4] = {-1, -1, -1, -1};
+				int alarm = 0;
+				for(i = 0; i < 4; ++i)
+				{
+					if(buf[i] >= '0' && buf[i] <= '9')
+						need[i] = buf[i]-'0';
+					if(buf[i] >= 'a' && buf[i] <= 'f')
+						need[i] = buf[i]-'a' + 10;
+					if(buf[i] >= 'A' && buf[i] <= 'F')
+						need[i] = buf[i]-'A' + 10;
+					if(need[i] < 0)
+						alarm = 1;
+				}
+				if(!alarm)
+				{
+					int com = need[0]*0x10 + need[1];
+					int val = need[2]*0x10 + need[3];
+					//sc_com
+					//sc_memorySet(curr, 
+				}
 				break;
+			}
 			case f6_key:
+			{
+				char buf[3];
+				mt_gotoXY(5, 70);
+				write(STDOUT_FILENO, "    ", 4);
+				mt_gotoXY(5, 70);
+				rk_mytermregime(1, 0, 2, 1, 1);
+				read(STDIN_FILENO, buf, 2);
+				int need = (buf[0]-'0') * 10 + (buf[1]-'0');
+				if(need <= 99 && need >= 0)
+					curr = need;
 				break;
+			}
 			case enter_key:
 				break;
 			case up_key:
