@@ -1,0 +1,23 @@
+CREATE TABLE Группа (
+	Код integer PRIMARY KEY AUTOINCREMENT,
+	Название группы varchar PRIMARY KEY AUTOINCREMENT,
+	Фамилия старосты varchar PRIMARY KEY AUTOINCREMENT,
+	Количество varchar PRIMARY KEY AUTOINCREMENT,
+	Фамилия ID integer PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE Студенты (
+	Код integer PRIMARY KEY AUTOINCREMENT,
+	ФИО varchar PRIMARY KEY AUTOINCREMENT,
+	Адрес varchar PRIMARY KEY AUTOINCREMENT,
+	Телефон varchar PRIMARY KEY AUTOINCREMENT,
+	ID_GR integer PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE Факультет (
+	Код integer PRIMARY KEY AUTOINCREMENT,
+	Факультет varchar PRIMARY KEY AUTOINCREMENT,
+	Курс varchar PRIMARY KEY AUTOINCREMENT,
+	Количество групп varchar PRIMARY KEY AUTOINCREMENT
+);
+
