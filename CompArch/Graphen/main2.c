@@ -57,6 +57,9 @@ int main(int argc, char **argv)
 	bc_box(1, 62, 2, 18);
 	mt_gotoXY(1, 66);
 	write(STDOUT_FILENO, "Accumulator", 11);
+	mt_gotoXY(2, 70);
+	n = sprintf(mem, "%04d", Accum);
+	write(STDOUT_FILENO, mem, n);
 	
 	//instCount_window
 	
@@ -153,7 +156,75 @@ int main(int argc, char **argv)
 				break;
 			case f5_key:
 			{
-				
+				mt_gotoXY(2, 70);
+				rk_mytermregime(1, 0, 1, 1, 1);
+				for(i = 1; i < 5; ++i)
+				{
+					enum keys subbut;
+					rk_readkey(&subbut);
+					
+					int mem;
+					
+					switch(subbut)
+					{
+						case key_0:
+							mem = 0;
+							break;
+						case key_1:
+							mem = 1;
+							break;
+						case key_2:
+							mem = 2;
+							break;
+						case key_3:
+							mem = 3;
+							break;
+						case key_4:
+							mem = 4;
+							break;
+						case key_5:
+							mem = 5;
+							break;
+						case key_6:
+							mem = 6;
+							break;
+						case key_7:
+							mem = 7;
+							break;
+						case key_8:
+							mem = 8;
+							break;
+						case key_9:
+							mem = 9;
+							break;
+						case key_a:
+							mem = 10;
+							break;
+						case key_b:
+							mem = 11;
+							break;
+						case key_c:
+							mem = 12;
+							break;
+						case key_d:
+							mem = 13;
+							break;
+						case key_e:
+							mem = 14;
+							break;
+						case key_f:
+							mem = 15;
+							break;
+						default: 
+							--i;
+							continue;
+							break;
+					}
+					Accum <<= 4;
+					Accum += mem;
+				}
+				n = sprintf(mem, "%04d", Accum);
+				write(STDOUT_FILENO, mem, n);
 			}
 			case f6_key:
 			{
@@ -173,6 +244,7 @@ int main(int argc, char **argv)
 				int wr = 0;
 				for(i = 1; i < 5; ++i)
 				{
+					mt_gotoXY(InstCountx + 2, InstCounty * 6 + 2 + i);
 					enum keys subbut;
 					rk_readkey(&subbut);
 					
@@ -273,6 +345,7 @@ int main(int argc, char **argv)
 				sc_memorySet(InstCount, wr);
 				int subcom, subop;
 				sc_commandDecode(wr, &subcom, &subop);
+				
 				break;
 			}
 				break;
@@ -297,7 +370,6 @@ int main(int argc, char **argv)
 			default:
 				break;
 		}
-		rk_mytermregime(1, 0, 1, 0, 1);
 	}
 	
 	return 0;
