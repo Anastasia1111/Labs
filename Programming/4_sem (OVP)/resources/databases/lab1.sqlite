@@ -1,9 +1,9 @@
-CREATE TABLE Группа (
+﻿CREATE TABLE Группа (
 	Код integer PRIMARY KEY AUTOINCREMENT,
 	Название группы varchar PRIMARY KEY AUTOINCREMENT,
 	Фамилия старосты varchar PRIMARY KEY AUTOINCREMENT,
 	Количество varchar PRIMARY KEY AUTOINCREMENT,
-	Фамилия ID integer PRIMARY KEY AUTOINCREMENT
+	Факультет ID integer PRIMARY KEY AUTOINCREMENT
 );
 
 CREATE TABLE Студенты (
