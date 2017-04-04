@@ -1,6 +1,8 @@
 #include "sc.h"
 
-int REG = 0;
+char REG = 0;
+char InstCount = 0;
+short int Accum = 0;
 
 int sc_memoryInit ()
 {
@@ -64,13 +66,13 @@ int sc_memoryLoad (char *filename)
 
 int sc_regInit (void)
 {
-	REG &= (~0)>>8;
+	REG = 0;
 	return 0;
 }
 
 int sc_regSet (int registr, int value)
 {
-	if(registr >= 0x18 && registr < 0x1D && value >= 0 && value < 2)
+	if(registr >= REG_OVERFLOW && registr <= REG_WR_COM && value >= 0 && value < 2)
 	{
 		if(value == 1)
 		{
@@ -86,7 +88,7 @@ int sc_regSet (int registr, int value)
 
 int sc_regGet (int registr, int *value) 
 {
-	if(registr >= 0x18 && registr < 0x1D && value != NULL)
+	if(registr >= REG_OVERFLOW && registr <= REG_WR_COM && value != NULL)
 	{
 		*value = (REG>>registr)&(0x01);
 	} else {

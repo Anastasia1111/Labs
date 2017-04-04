@@ -42,6 +42,38 @@ int rk_readkey (enum keys *key)
 		*key = right_key;
 	if (strncmp(buf, "\033[D", 3) == 0)
 		*key = left_key;
+	if (strncmp(buf, "0", 1) == 0)
+		*key = key_0;
+	if (strncmp(buf, "1", 1) == 0)
+		*key = key_1;
+	if (strncmp(buf, "2", 1) == 0)
+		*key = key_2;
+	if (strncmp(buf, "3", 1) == 0)
+		*key = key_3;
+	if (strncmp(buf, "4", 1) == 0)
+		*key = key_4;
+	if (strncmp(buf, "5", 1) == 0)
+		*key = key_5;
+	if (strncmp(buf, "6", 1) == 0)
+		*key = key_6;
+	if (strncmp(buf, "7", 1) == 0)
+		*key = key_7;
+	if (strncmp(buf, "8", 1) == 0)
+		*key = key_8;
+	if (strncmp(buf, "9", 1) == 0)
+		*key = key_9;
+	if (strncmp(buf, "a", 1) == 0 || strncmp(buf, "A", 1) == 0)
+		*key = key_a;
+	if (strncmp(buf, "b", 1) == 0 || strncmp(buf, "B", 1) == 0)
+		*key = key_b;
+	if (strncmp(buf, "c", 1) == 0 || strncmp(buf, "C", 1) == 0)
+		*key = key_c;
+	if (strncmp(buf, "d", 1) == 0 || strncmp(buf, "D", 1) == 0)
+		*key = key_d;
+	if (strncmp(buf, "e", 1) == 0 || strncmp(buf, "E", 1) == 0)
+		*key = key_e;
+	if (strncmp(buf, "f", 1) == 0 || strncmp(buf, "F", 1) == 0)
+		*key = key_f;
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0)
 		return -1;
 	

@@ -28,13 +28,13 @@
 
 
 void write_ram(int x, int y);
-void big_window(int curr);
+void big_window(int InstCount);
 void print_flag();
 
 int main(int argc, char **argv)
 {
 	int i, j;
-	int curr = 0;
+	InstCount = 0;
 	int value = 0, flag;
 	mt_clrscr();
 	char mem[6];
@@ -101,16 +101,16 @@ int main(int argc, char **argv)
 	bc_box(13, 1, 9, 45);
 	
 	//MECHANISM
-	int prev = curr;
-	int prevx, prevy, currx, curry;
+	int prev = InstCount;
+	int prevx, prevy, InstCountx, InstCounty;
 	
 	enum keys button;
 	while(1)
 	{
 		prevx = prev / 10;
 		prevy = prev % 10;
-		currx = curr / 10;
-		curry = curr % 10;
+		InstCountx = InstCount / 10;
+		InstCounty = InstCount % 10;
 		
 		mt_setbgcolor(DEF);
 		mt_setfgcolor(DEF);
@@ -118,20 +118,20 @@ int main(int argc, char **argv)
 		
 		mt_setbgcolor(LRED);
 		mt_setfgcolor(LWHITE);
-		write_ram(currx, curry);
+		write_ram(InstCountx, InstCounty);
 		mt_setbgcolor(DEF);
 		mt_setfgcolor(DEF);
 		mt_gotoXY(5, 70);
-		n = sprintf(mem, "%04d", curr);
+		n = sprintf(mem, "%04d", InstCount);
 		write(STDOUT_FILENO, mem, n);
 		
-		big_window(curr);
+		big_window(InstCount);
 		print_flag();
 		
 		rk_mytermregime(1, 0, 1, 0, 1);
 		rk_readkey(&button);
 		
-		prev = curr;
+		prev = InstCount;
 		
 		switch(button)
 		{
@@ -153,33 +153,7 @@ int main(int argc, char **argv)
 				break;
 			case f5_key:
 			{
-				char buf[5];
-				mt_gotoXY(2, 70);
-				write(STDOUT_FILENO, "     ", 5);
-				mt_gotoXY(2, 70);
-				rk_mytermregime(1, 0, 4, 1, 1);
-				read(STDIN_FILENO, buf, 4);
-				int need[4] = {-1, -1, -1, -1};
-				int alarm = 0;
-				for(i = 0; i < 4; ++i)
-				{
-					if(buf[i] >= '0' && buf[i] <= '9')
-						need[i] = buf[i]-'0';
-					if(buf[i] >= 'a' && buf[i] <= 'f')
-						need[i] = buf[i]-'a' + 10;
-					if(buf[i] >= 'A' && buf[i] <= 'F')
-						need[i] = buf[i]-'A' + 10;
-					if(need[i] < 0)
-						alarm = 1;
-				}
-				if(!alarm)
-				{
-					int com = need[0]*0x10 + need[1];
-					int val = need[2]*0x10 + need[3];
-					//sc_com
-					//sc_memorySet(curr, 
-				}
-				break;
+				
 			}
 			case f6_key:
 			{
@@ -191,31 +165,136 @@ int main(int argc, char **argv)
 				read(STDIN_FILENO, buf, 2);
 				int need = (buf[0]-'0') * 10 + (buf[1]-'0');
 				if(need <= 99 && need >= 0)
-					curr = need;
+					InstCount = need;
 				break;
 			}
 			case enter_key:
+			{
+				int wr = 0;
+				for(i = 1; i < 5; ++i)
+				{
+					enum keys subbut;
+					rk_readkey(&subbut);
+					
+					int mem;
+					int num[2];
+					
+					switch(subbut)
+					{
+						case key_0:
+							mem = 0;
+							num[0] = _0_0_;
+							num[1] = _0_1_;
+							break;
+						case key_1:
+							mem = 1;
+							num[0] = _1_0_;
+							num[1] = _1_1_;
+							break;
+						case key_2:
+							mem = 2;
+							num[0] = _2_0_;
+							num[1] = _2_1_;
+							break;
+						case key_3:
+							mem = 3;
+							num[0] = _3_0_;
+							num[1] = _3_1_;
+							break;
+						case key_4:
+							mem = 4;
+							num[0] = _4_0_;
+							num[1] = _4_1_;
+							break;
+						case key_5:
+							mem = 5;
+							num[0] = _5_0_;
+							num[1] = _5_1_;
+							break;
+						case key_6:
+							mem = 6;
+							num[0] = _6_0_;
+							num[1] = _6_1_;
+							break;
+						case key_7:
+							mem = 7;
+							num[0] = _7_0_;
+							num[1] = _7_1_;
+							break;
+						case key_8:
+							mem = 8;
+							num[0] = _8_0_;
+							num[1] = _8_1_;
+							break;
+						case key_9:
+							mem = 9;
+							num[0] = _9_0_;
+							num[1] = _9_1_;
+							break;
+						case key_a:
+							mem = 10;
+							num[0] = _A_0_;
+							num[1] = _A_1_;
+							break;
+						case key_b:
+							mem = 11;
+							num[0] = _B_0_;
+							num[1] = _B_1_;
+							break;
+						case key_c:
+							mem = 12;
+							num[0] = _C_0_;
+							num[1] = _C_1_;
+							break;
+						case key_d:
+							mem = 13;
+							num[0] = _D_0_;
+							num[1] = _D_1_;
+							break;
+						case key_e:
+							mem = 14;
+							num[0] = _E_0_;
+							num[1] = _E_1_;
+							break;
+						case key_f:
+							mem = 15;
+							num[0] = _F_0_;
+							num[1] = _F_1_;
+							break;
+						default: 
+							--i;
+							continue;
+							break;
+					}
+					wr <<= 4;
+					wr += mem;
+					bc_printbigchar(num, 14, 2 + i * 8 + i, LRED, GREEN);
+				}
+				sc_memorySet(InstCount, wr);
+				int subcom, subop;
+				sc_commandDecode(wr, &subcom, &subop);
+				break;
+			}
 				break;
 			case up_key:
-				if((curr - 10) >= 0)
-					curr -= 10;
+				if((InstCount - 10) >= 0)
+					InstCount -= 10;
 				break;
 			case down_key:
-				if((curr + 10) <= 99)
-					curr += 10;
+				if((InstCount + 10) <= 99)
+					InstCount += 10;
 				break;
 			case left_key:
-				if((curr - 1) >= 0)
-					curr--;
+				if((InstCount - 1) >= 0)
+					InstCount--;
 				break;
 			case right_key:
-				if((curr + 1) <= 99)
-					curr++;
+				if((InstCount + 1) <= 99)
+					InstCount++;
 				break;
 			case quit_key:
 				break;
 			default:
-				rk_mytermregime(0, 0, 1, 1, 1);
 				break;
 		}
 		rk_mytermregime(1, 0, 1, 0, 1);
@@ -248,7 +327,7 @@ void write_ram(int x, int y)
 	}
 };
 
-void big_window(int curr)
+void big_window(int InstCount)
 {
 	mt_gotoXY(14, 2);
 	char mem[6];
@@ -256,7 +335,7 @@ void big_window(int curr)
 	int value = 0;
 	int flag, flagprev;
 	
-	sc_memoryGet(curr, &value);
+	sc_memoryGet(InstCount, &value);
 	sc_regGet(REG_WR_COM, &flagprev);
 	flag = sc_commandDecode(value, &com, &oper);
 	if(!flag)
@@ -364,28 +443,28 @@ void print_flag()
 	mt_gotoXY(11, 72);
 	sc_regGet(REG_ZERO_DIV, &flag);
 	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
+		write(STDOUT_FILENO, "Z ", 2);
 	else
 		write(STDOUT_FILENO, "_ ", 2);
 		
 	mt_gotoXY(11, 74);
 	sc_regGet(REG_OVERLIMIT_MEM, &flag);
 	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
+		write(STDOUT_FILENO, "L ", 2);
 	else
 		write(STDOUT_FILENO, "_ ", 2);
 		
 	mt_gotoXY(11, 76);
 	sc_regGet(REG_STEP_IGNORE, &flag);
 	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
+		write(STDOUT_FILENO, "S ", 2);
 	else
 		write(STDOUT_FILENO, "_ ", 2);
 
 	mt_gotoXY(11, 78);
 	sc_regGet(REG_WR_COM, &flag);
 	if(flag)
-		write(STDOUT_FILENO, "O ", 2);
+		write(STDOUT_FILENO, "W ", 2);
 	else
 		write(STDOUT_FILENO, "_ ", 2);
 };

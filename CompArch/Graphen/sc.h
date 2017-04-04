@@ -4,24 +4,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define REG_OVERFLOW 0x18
-#define REG_ZERO_DIV 0x19
-#define REG_OVERLIMIT_MEM 0x1A
-#define REG_STEP_IGNORE 0x1B
-#define REG_WR_COM 0x1C
+#define REG_OVERFLOW 0x1
+#define REG_ZERO_DIV 0x2
+#define REG_OVERLIMIT_MEM 0x3
+#define REG_STEP_IGNORE 0x4
+#define REG_WR_COM 0x5
 
 #define ramSize 100
 int RAM[ramSize];
-extern int REG;/* 0-14 = accumulator
-		*16-22 = command pointer
-		*24-28 = flag register
-		* 	24 (code 1):overfilling
-		*	25 (code 2):division on 0
-		*	26 (code 3):exit over limits of memory
-		* 	27 (code 4):step inpulses ignoring
-		* 	28 (code 5):wrong command
-		* */ 
-
+extern char REG;
+extern char InstCount;
+extern short int Accum;
 
 int sc_memoryInit(); /* инициализирует оперативную память Simple Computer, задавая 
 всем её ячейкам нулевые значения. В качестве «оперативной памяти» используется 
