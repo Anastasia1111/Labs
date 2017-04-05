@@ -25,14 +25,14 @@
 #include "myBigChars.h"
 #include "sc.h"
 #include "myReadKey.h"
-#include <signal.h>
-#include <sys/time.h>
+//#include <signal.h>
+//#include <sys/time.h>
 
 
 void write_ram(int x, int y);
 void big_window(int InstCount);
 void print_flag();
-//void IncInstCount();
+void IncInstCount(int signo);
 
 int main(int argc, char **argv)
 {
@@ -115,6 +115,7 @@ int main(int argc, char **argv)
 	//MECHANISM
 	int prev = InstCount;
 	int prevx, prevy, InstCountx, InstCounty;
+	//setitimer(ITIMER_REAL, &nval, &oval);
 	
 	enum keys button;
 	while(1)
@@ -612,3 +613,8 @@ void print_flag()
 	else
 		write(STDOUT_FILENO, "_ ", 2);
 };
+
+void IncInstCount(int signo)
+{
+	InstCount++;
+}
