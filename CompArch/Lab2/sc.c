@@ -121,7 +121,7 @@ int sc_commandEncode (int command, int operand, int *value)
 
 int sc_commandDecode (int value, int *command, int *operand)
 {	
-	if((((value)>>14)&1) == 1)//command flag
+	if(((value)>>14) != 0)//command flag
 	{
 		sc_regSet(REG_WR_COM, 1);
 		return 1; //not command

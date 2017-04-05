@@ -25,14 +25,23 @@
 #include "myBigChars.h"
 #include "sc.h"
 #include "myReadKey.h"
+#include <signal.h>
+#include <sys/time.h>
 
 
 void write_ram(int x, int y);
 void big_window(int InstCount);
 void print_flag();
+//void IncInstCount();
 
 int main(int argc, char **argv)
 {
+	/*struct itimerval nval, oval;
+	signal (SIGALRM, IncInstCount);
+	nval.it_interval.tv_sec = 3;
+	nval.it_interval.tv_usec = 500;
+	nval.it_value.tv_sec = 1;
+	nval.it_value.tv_usec = 0;*/
 	int i, j;
 	InstCount = 0;
 	int value = 0, flag;
@@ -127,10 +136,14 @@ int main(int argc, char **argv)
 		mt_gotoXY(5, 70);
 		n = sprintf(mem, "%04d", InstCount);
 		write(STDOUT_FILENO, mem, n);
+		mt_gotoXY(2, 70);
+		n = sprintf(mem, "%04X", Accum);
+		write(STDOUT_FILENO, mem, n);
 		
 		big_window(InstCount);
 		print_flag();
 		
+		mt_gotoXY(25, 1);
 		rk_mytermregime(1, 0, 1, 0, 1);
 		rk_readkey(&button);
 		
@@ -157,62 +170,93 @@ int main(int argc, char **argv)
 			case f5_key:
 			{
 				mt_gotoXY(2, 70);
-				rk_mytermregime(1, 0, 1, 1, 1);
 				for(i = 1; i < 5; ++i)
 				{
 					enum keys subbut;
 					rk_readkey(&subbut);
 					
-					int mem;
+					char mem;
 					
 					switch(subbut)
 					{
 						case key_0:
+							mem = '0';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 0;
 							break;
 						case key_1:
+							mem = '1';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 1;
 							break;
 						case key_2:
+							mem = '2';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 2;
 							break;
 						case key_3:
+							mem = '3';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 3;
 							break;
 						case key_4:
+							mem = '4';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 4;
 							break;
 						case key_5:
+							mem = '5';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 5;
 							break;
 						case key_6:
+							mem = '6';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 6;
 							break;
 						case key_7:
+							mem = '7';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 7;
 							break;
 						case key_8:
+							mem = '8';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 8;
 							break;
 						case key_9:
+							mem = '9';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 9;
 							break;
 						case key_a:
+							mem = 'A';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 10;
 							break;
 						case key_b:
+							mem = 'B';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 11;
 							break;
 						case key_c:
+							mem = 'C';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 12;
 							break;
 						case key_d:
+							mem = 'D';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 13;
 							break;
 						case key_e:
+							mem = 'E';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 14;
 							break;
 						case key_f:
+							mem = 'F';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 15;
 							break;
 						default: 
@@ -223,9 +267,8 @@ int main(int argc, char **argv)
 					Accum <<= 4;
 					Accum += mem;
 				}
-				n = sprintf(mem, "%04d", Accum);
-				write(STDOUT_FILENO, mem, n);
 			}
+			break;
 			case f6_key:
 			{
 				char buf[3];
@@ -248,87 +291,119 @@ int main(int argc, char **argv)
 					enum keys subbut;
 					rk_readkey(&subbut);
 					
-					int mem;
+					char mem;
 					int num[2];
 					
 					switch(subbut)
 					{
 						case key_0:
+							mem = '0';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 0;
 							num[0] = _0_0_;
 							num[1] = _0_1_;
 							break;
 						case key_1:
+							mem = '1';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 1;
 							num[0] = _1_0_;
 							num[1] = _1_1_;
 							break;
 						case key_2:
+							mem = '2';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 2;
 							num[0] = _2_0_;
 							num[1] = _2_1_;
 							break;
 						case key_3:
+							mem = '3';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 3;
 							num[0] = _3_0_;
 							num[1] = _3_1_;
 							break;
 						case key_4:
+							mem = '4';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 4;
 							num[0] = _4_0_;
 							num[1] = _4_1_;
 							break;
 						case key_5:
+							mem = '5';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 5;
 							num[0] = _5_0_;
 							num[1] = _5_1_;
 							break;
 						case key_6:
+							mem = '6';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 6;
 							num[0] = _6_0_;
 							num[1] = _6_1_;
 							break;
 						case key_7:
+							mem = '7';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 7;
 							num[0] = _7_0_;
 							num[1] = _7_1_;
 							break;
 						case key_8:
+							mem = '8';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 8;
 							num[0] = _8_0_;
 							num[1] = _8_1_;
 							break;
 						case key_9:
+							mem = '9';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 9;
 							num[0] = _9_0_;
 							num[1] = _9_1_;
 							break;
 						case key_a:
+							mem = 'A';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 10;
 							num[0] = _A_0_;
 							num[1] = _A_1_;
 							break;
 						case key_b:
+							mem = 'B';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 11;
 							num[0] = _B_0_;
 							num[1] = _B_1_;
 							break;
 						case key_c:
+							mem = 'C';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 12;
 							num[0] = _C_0_;
 							num[1] = _C_1_;
 							break;
 						case key_d:
+							mem = 'D';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 13;
 							num[0] = _D_0_;
 							num[1] = _D_1_;
 							break;
 						case key_e:
+							mem = 'E';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 14;
 							num[0] = _E_0_;
 							num[1] = _E_1_;
 							break;
 						case key_f:
+							mem = 'F';
+							write(STDOUT_FILENO, &mem, 1);
 							mem = 15;
 							num[0] = _F_0_;
 							num[1] = _F_1_;
@@ -342,13 +417,10 @@ int main(int argc, char **argv)
 					wr += mem;
 					bc_printbigchar(num, 14, 2 + i * 8 + i, LRED, GREEN);
 				}
-				sc_memorySet(InstCount, wr);
-				int subcom, subop;
-				sc_commandDecode(wr, &subcom, &subop);
 				
+				sc_memorySet(InstCount, wr);
 				break;
 			}
-				break;
 			case up_key:
 				if((InstCount - 10) >= 0)
 					InstCount -= 10;
