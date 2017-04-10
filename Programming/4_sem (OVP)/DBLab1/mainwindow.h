@@ -30,6 +30,12 @@ private slots:
 
     void on_lineEdit_WordSearch_textChanged(const QString &arg1);
 
+    void on_pushButton_AddRecord1_clicked();
+
+    void on_pushButton_AddRecord2_clicked();
+
+    void on_pushButton_AddRecord3_clicked();
+
 private:
     Ui::MainWindow *ui;
     //QSqlDatabase db;
