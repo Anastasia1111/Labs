@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QFileDialog"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -8,73 +7,48 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setDatabaseName(":memory:");
-
-    QFileInfo checkFile(filename);
-
-    if (db.open()) {
-        qDebug() << "[+] Connected to Database File";
-    }
-    else {
-        qDebug() << "[!] Database \"File\" was not opened";
-        qDebug() << db.lastError().text();
-    }
+    db = new DataBase(this);
+    db->connectToDataBase(":memory:");
 
     QSqlQuery query;
-    query.exec("create table Факультет (Код int primary key,"
-                                        "Факультет varchar(20),"
-                                        "Курс varchar(20),"
-                                        "Количество групп varchar(20))");
-    query.exec("insert into Факультет values(1, 'МТС', '1', '4')");
-    query.exec("insert into Факультет values(2, 'ИВТ', '2', '10')");
-    query.exec("insert into Факультет values(3, 'АЭС', '3', '6')");
+    query.exec("insert into Faculty values(1, 'MTS', '1', '4')");
+    query.exec("insert into Faculty values(2, 'IVT', '2', '10')");
+    query.exec("insert into Faculty values(3, 'AES', '3', '6')");
 
-    query.exec("create table Группа (Код int primary key,"
-                                     "Название группы varchar(20),"
-                                     "Фамилия старосты varchar(20),"
-                                     "Количество varchar(20),"
-                                     "Факультет int)");
-    query.exec("insert into Группа values(11, 'Р-31', 'Петров', '17', 1)");
-    query.exec("insert into Группа values(12, 'Р-32', 'Иванов', '20', 1)");
-    query.exec("insert into Группа values(13, 'Р-33', 'Сидоров', '18', 1)");
+    query.exec("insert into Groups values(11, 'R-31', 'Petrov', '17', 1)");
+    query.exec("insert into Groups values(12, 'R-32', 'Ivanov', '20', 1)");
+    query.exec("insert into Groups values(13, 'R-33', 'Sidorov', '18', 1)");
 
+    query.exec("insert into Students values(111, 'Filippov', 'Nekrasova', '321-31-12', 11)");
+    query.exec("insert into Students values(112, 'Mazunin', 'Kirova', '343-32-54', 11)");
+    query.exec("insert into Students values(113, 'Fedorinin', 'Vybornaya', '345-32-23', 11)");
 
-    query.exec("create table Студенты (Код int primary key,"
-                                       "ФИО varchar(40),"
-                                       "Адрес varchar(40),"
-                                       "Телефон varchar(40),"
-                                       "ID_GR int)");
-    query.exec("insert into Студенты values(111, 'Филиппов Е.В.', 'Некрасова, 134', '321-31-12', 11)");
-    query.exec("insert into Студенты values(112, 'Мазунин В.П.', 'Кирова, 117', '343-32-54', 11)");
-    query.exec("insert into Студенты values(113, 'Федоринин А.В.', 'Выборная, 133', '345-32-23', 11)");
-
-    QSqlRelationalTableModel* mod_Fc = new QSqlRelationalTableModel(0,db);
-    mod_Fc->setTable("Факультет");
-    mod_Fc->setHeaderData(0, Qt::Horizontal, QObject::tr("Код"));
-    mod_Fc->setHeaderData(1, Qt::Horizontal, QObject::tr("Факультет"));
-    mod_Fc->setHeaderData(2, Qt::Horizontal, QObject::tr("Курс"));
-    mod_Fc->setHeaderData(3, Qt::Horizontal, QObject::tr("Количество групп"));
+    mod_Fc = new QSqlRelationalTableModel(this);
+    mod_Fc->setTable("Faculty");
+    mod_Fc->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
+    mod_Fc->setHeaderData(1, Qt::Horizontal, QObject::tr("Faculty"));
+    mod_Fc->setHeaderData(2, Qt::Horizontal, QObject::tr("Year"));
+    mod_Fc->setHeaderData(3, Qt::Horizontal, QObject::tr("Number of groups"));
     mod_Fc->select();
     mod_Fc->setEditStrategy(QSqlTableModel::OnFieldChange);
-    QSqlRelationalTableModel* mod_Gr = new QSqlRelationalTableModel(0,db);
-    mod_Gr->setTable("Группа");
-    mod_Gr->setHeaderData(0, Qt::Horizontal, QObject::tr("Код"));
-    mod_Gr->setHeaderData(1, Qt::Horizontal, QObject::tr("Название группы"));
-    mod_Gr->setHeaderData(2, Qt::Horizontal, QObject::tr("Фамилия старосты"));
-    mod_Gr->setHeaderData(3, Qt::Horizontal, QObject::tr("Количество"));
-    mod_Gr->setHeaderData(4, Qt::Horizontal, QObject::tr("Факультет ID"));
-    mod_Gr->setRelation(4, QSqlRelation("Факультет", "Код", "Факультет"));
+    mod_Gr = new QSqlRelationalTableModel(this);
+    mod_Gr->setTable("Groups");
+    mod_Gr->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
+    mod_Gr->setHeaderData(1, Qt::Horizontal, QObject::tr("Group_name"));
+    mod_Gr->setHeaderData(2, Qt::Horizontal, QObject::tr("Name of elder"));
+    mod_Gr->setHeaderData(3, Qt::Horizontal, QObject::tr("Number of students"));
+    mod_Gr->setHeaderData(4, Qt::Horizontal, QObject::tr("Faculty ID"));
+    mod_Gr->setRelation(4, QSqlRelation("Faculty", "id", "Faculty"));
     mod_Gr->select();
     mod_Gr->setEditStrategy(QSqlTableModel::OnFieldChange);
-    QSqlRelationalTableModel* mod_St = new QSqlRelationalTableModel(0,db);
-    mod_St->setTable("Студенты");
-    mod_St->setHeaderData(0, Qt::Horizontal, QObject::tr("Код"));
-    mod_St->setHeaderData(1, Qt::Horizontal, QObject::tr("ФИО"));
-    mod_St->setHeaderData(2, Qt::Horizontal, QObject::tr("Адрес"));
-    mod_St->setHeaderData(3, Qt::Horizontal, QObject::tr("Телефон"));
+    mod_St = new QSqlRelationalTableModel(this);
+    mod_St->setTable("Students");
+    mod_St->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
+    mod_St->setHeaderData(1, Qt::Horizontal, QObject::tr("Full name"));
+    mod_St->setHeaderData(2, Qt::Horizontal, QObject::tr("Address"));
+    mod_St->setHeaderData(3, Qt::Horizontal, QObject::tr("Phone number"));
     mod_St->setHeaderData(4, Qt::Horizontal, QObject::tr("ID_GR"));
-    mod_St->setRelation(4, QSqlRelation("Группа", "Код", "Название группы"));
+    mod_St->setRelation(4, QSqlRelation("Groups", "id", "Group_name"));
     mod_St->select();
     mod_St->setEditStrategy(QSqlTableModel::OnFieldChange);
 
@@ -83,6 +57,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableView_St->setModel(mod_St);
 
     lastOrder = Qt::DescendingOrder;
+
+    connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()),
+            Qt::UniqueConnection);
 }
 
 MainWindow::~MainWindow()
@@ -90,7 +67,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_Sort_clicked()
 {
     if (lastOrder == Qt::AscendingOrder){
         ui->tableView_St->sortByColumn(1, Qt::DescendingOrder);

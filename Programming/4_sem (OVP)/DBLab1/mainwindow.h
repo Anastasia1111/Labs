@@ -2,7 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtSql>
+#include <QSqlRelationalTableModel>
+#include <QSqlRelationalDelegate>
+#include <QSqlRelation>
+#include <QModelIndex>
+#include <QFileDialog>
+
+#include "database.h"
 
 namespace Ui {
 class MainWindow;
@@ -18,7 +24,7 @@ public:
 
 private slots:
 
-    void on_pushButton_clicked();
+    void on_pushButton_Sort_clicked();
 
     void on_lineEdit_CharSearch_textChanged(const QString &arg1);
 
@@ -26,7 +32,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QSqlDatabase db;
+    //QSqlDatabase db;
+    DataBase *db;
+    QSqlRelationalTableModel *mod_Fc;
+    QSqlRelationalTableModel *mod_Gr;
+    QSqlRelationalTableModel *mod_St;
     QString filename;
     Qt::SortOrder lastOrder;
 };

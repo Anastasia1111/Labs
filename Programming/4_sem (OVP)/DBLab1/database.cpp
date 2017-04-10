@@ -1,0 +1,122 @@
+#include "database.h"
+
+DataBase::DataBase(QObject *parent) : QObject(parent)
+{
+
+}
+
+DataBase::~DataBase()
+{
+    this->closeDataBase();
+}
+
+/* Методы для подключения к базе данных
+ * */
+void DataBase::connectToDataBase(const QString &name)
+{
+    /* Перед подключением к базе данных производим проверку на её существование.
+     * В зависимости от результата производим открытие базы данных или её восстановление
+     * */
+    if(!QFile(name).exists()){
+        this->restoreDataBase(name);
+    } else {
+        this->openDataBase(name);
+    }
+}
+
+/* Методы восстановления базы данных
+ * */
+bool DataBase::restoreDataBase(const QString &name)
+{
+    // Если база данных открылась ...
+    if(this->openDataBase(name)){
+        // Производим восстановление базы данных
+        return (this->createTables()) ? true : false;
+    } else {
+        qDebug() << "Can't restore DB";
+        qDebug() << db.lastError().text();
+        return false;
+    }
+    return false;
+}
+
+/* Метод для открытия базы данных
+ * */
+bool DataBase::openDataBase(const QString &name)
+{
+    /* База данных открывается по заданному пути
+     * и имени базы данных, если она существует
+     * */
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setHostName(DATABASE_HOSTNAME);
+    db.setDatabaseName(name);
+    if(db.open()){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/* Методы закрытия базы данных
+ * */
+void DataBase::closeDataBase()
+{
+    db.close();
+}
+
+/* Метод для создания таблиц в базе данных
+ * */
+bool DataBase::createTables()
+{
+    /* В данном случае используется формирование сырого SQL-запроса
+     * с последующим его выполнением.
+     * */
+    QSqlQuery query;
+    if(!query.exec( "CREATE TABLE " TABLE1 " ("
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    TABLE1_FAC     " VARCHAR(255),"
+                    TABLE1_YEAR     " VARCHAR(255),"
+                    TABLE1_GRNUM     " VARCHAR(255)"
+                " )"
+            ) ||
+        !query.exec( "CREATE TABLE " TABLE2 " ("
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    TABLE2_NAME     " VARCHAR(255),"
+                    TABLE2_LNAME     " VARCHAR(255),"
+                    TABLE2_NUM     " VARCHAR(255),"
+                    TABLE2_FAC     " INTEGER"
+                " )"
+            ) ||
+        !query.exec( "CREATE TABLE " TABLE3 " ("
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    TABLE3_FN     " VARCHAR(255),"
+                    TABLE3_ADDS     " VARCHAR(255),"
+                    TABLE3_PNUM     " VARCHAR(255),"
+                    TABLE3_IDGR     " INTEGER"
+                " )"
+            )
+    ){
+        qDebug() << "DataBase: error of create tables";
+        qDebug() << query.lastError().text();
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
+
+/* Метод для вставки SQL кода в базу данных
+ * */
+bool DataBase::injectSQL(const QString &code)
+{
+    QSqlQuery query;
+
+    if(!query.exec(code)){
+        qDebug() << "error injecting SQL code";
+        qDebug() << query.lastError().text();
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}

@@ -24,10 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    database.cpp
 
 QTPLUGIN += qsqlmysql
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    database.h
 
 FORMS    += mainwindow.ui
