@@ -18,8 +18,10 @@ void DataBase::connectToDataBase(const QString &name)
      * В зависимости от результата производим открытие базы данных или её восстановление
      * */
     if(!QFile(name).exists()){
+        qDebug() << "Try to restore DB";
         this->restoreDataBase(name);
     } else {
+        qDebug() << "Try to open DB";
         this->openDataBase(name);
     }
 }
@@ -31,6 +33,7 @@ bool DataBase::restoreDataBase(const QString &name)
     // Если база данных открылась ...
     if(this->openDataBase(name)){
         // Производим восстановление базы данных
+        qDebug() << "Can restore DB";
         return (this->createTables()) ? true : false;
     } else {
         qDebug() << "Can't restore DB";
@@ -51,8 +54,10 @@ bool DataBase::openDataBase(const QString &name)
     db.setHostName(DATABASE_HOSTNAME);
     db.setDatabaseName(name);
     if(db.open()){
+        qDebug() << "Can open DB " << name;
         return true;
     } else {
+        qDebug() << "Can't open DB " << name;
         return false;
     }
 }
@@ -74,25 +79,25 @@ bool DataBase::createTables()
     QSqlQuery query;
     if(!query.exec( "CREATE TABLE " TABLE1 " ("
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    TABLE1_FAC     " VARCHAR(255),"
-                    TABLE1_YEAR     " VARCHAR(255),"
-                    TABLE1_GRNUM     " VARCHAR(255)"
+                    TABLE1_FAC      " VARCHAR(255)  NOT NULL,"
+                    TABLE1_YEAR     " VARCHAR(255)  NOT NULL,"
+                    TABLE1_GRNUM    " VARCHAR(255)  NOT NULL"
                 " )"
             ) ||
         !query.exec( "CREATE TABLE " TABLE2 " ("
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    TABLE2_NAME     " VARCHAR(255),"
-                    TABLE2_LNAME     " VARCHAR(255),"
-                    TABLE2_NUM     " VARCHAR(255),"
-                    TABLE2_FAC     " INTEGER"
+                    TABLE2_NAME     " VARCHAR(255)  NOT NULL,"
+                    TABLE2_LNAME    " VARCHAR(255)  NOT NULL,"
+                    TABLE2_NUM      " VARCHAR(255)  NOT NULL,"
+                    TABLE2_FAC      " INTEGER       NOT NULL"
                 " )"
             ) ||
         !query.exec( "CREATE TABLE " TABLE3 " ("
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    TABLE3_FN     " VARCHAR(255),"
-                    TABLE3_ADDS     " VARCHAR(255),"
-                    TABLE3_PNUM     " VARCHAR(255),"
-                    TABLE3_IDGR     " INTEGER"
+                    TABLE3_FN       " VARCHAR(255)  NOT NULL,"
+                    TABLE3_ADDS     " VARCHAR(255)  NOT NULL,"
+                    TABLE3_PNUM     " VARCHAR(255)  NOT NULL,"
+                    TABLE3_IDGR     " INTEGER       NOT NULL"
                 " )"
             )
     ){

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTableView>
 #include <QSqlRelationalTableModel>
 #include <QSqlRelationalDelegate>
 #include <QSqlRelation>
@@ -24,26 +25,31 @@ public:
 
 private slots:
 
+    void setDefaultValues();
+
+    void setupTables();
+
     void on_pushButton_Sort_clicked();
 
     void on_lineEdit_CharSearch_textChanged(const QString &arg1);
 
     void on_lineEdit_WordSearch_textChanged(const QString &arg1);
 
-    void on_pushButton_AddRecord1_clicked();
+    void on_pushButton_AddRecord_clicked();
 
-    void on_pushButton_AddRecord2_clicked();
+    void on_actionAbout_LW_triggered();
 
-    void on_pushButton_AddRecord3_clicked();
+    void on_actionInsert_SQL_code_triggered();
+
+    void on_actionNew_triggered();
+
+    void on_actionOpen_triggered();
 
 private:
     Ui::MainWindow *ui;
-    //QSqlDatabase db;
     DataBase *db;
-    QSqlRelationalTableModel *mod_Fc;
-    QSqlRelationalTableModel *mod_Gr;
-    QSqlRelationalTableModel *mod_St;
-    QString filename;
+    QVector<QSqlRelationalTableModel*> mod;
+    QVector<QTableView*> view;
     Qt::SortOrder lastOrder;
 };
 
