@@ -172,8 +172,9 @@ void MainWindow::on_actionNew_triggered()
         return; // ... выйти из метода
     }
 
-    QFile file(lFileName);
-    file.open(QFile::WriteOnly|QFile::Truncate);
+    system("rm -f "+lFileName.toUtf8());
+    /*QFile file(lFileName);
+    file.open(QFile::WriteOnly|QFile::Truncate);*/
 
     db->connectToDataBase(lFileName);
     //this->setDefaultValues();
@@ -193,5 +194,13 @@ void MainWindow::on_actionOpen_triggered()
 
     db->connectToDataBase(lFileName);
     //this->setDefaultValues();
+    this->setupTables();
+}
+
+void MainWindow::on_pushButton_DeleteRecord_clicked()
+{
+    QTableView* curView = view[ui->tabWidget->currentIndex()];
+    QSqlRelationalTableModel* curMod = mod[ui->tabWidget->currentIndex()];
+    curMod->removeRow(curView->currentIndex().row());
     this->setupTables();
 }

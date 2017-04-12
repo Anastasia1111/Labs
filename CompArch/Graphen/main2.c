@@ -25,23 +25,25 @@
 #include "myBigChars.h"
 #include "sc.h"
 #include "myReadKey.h"
-//#include <signal.h>
-//#include <sys/time.h>
+#include <signal.h>
+#include <sys/time.h>
 
-
+int pause(void);
 void write_ram(int x, int y);
 void big_window(int InstCount);
 void print_flag();
 void IncInstCount(int signo);
+void StopIt(int signo);
 
 int main(int argc, char **argv)
 {
-	/*struct itimerval nval, oval;
+	struct itimerval nval, oval;
 	signal (SIGALRM, IncInstCount);
-	nval.it_interval.tv_sec = 3;
-	nval.it_interval.tv_usec = 500;
+	signal (SIGUSR1, StopIt);
+	nval.it_interval.tv_sec = 1;
+	nval.it_interval.tv_usec = 0;
 	nval.it_value.tv_sec = 1;
-	nval.it_value.tv_usec = 0;*/
+	nval.it_value.tv_usec = 0;
 	int i, j;
 	InstCount = 0;
 	int value = 0, flag;
@@ -49,6 +51,8 @@ int main(int argc, char **argv)
 	char mem[6];
 	int n;
 	sc_memoryInit();
+	sc_regInit();
+	sc_regSet(REG_STEP_IGNORE, 1);
 	
 	//memory_window
 	
@@ -115,7 +119,7 @@ int main(int argc, char **argv)
 	//MECHANISM
 	int prev = InstCount;
 	int prevx, prevy, InstCountx, InstCounty;
-	//setitimer(ITIMER_REAL, &nval, &oval);
+	int flagstep;
 	
 	enum keys button;
 	while(1)
@@ -150,6 +154,20 @@ int main(int argc, char **argv)
 		
 		prev = InstCount;
 		
+		sc_regGet(REG_STEP_IGNORE, &flagstep);
+		if(!flagstep)
+		{
+			switch(button)
+			{
+				case r_key:
+					raise(SIGUSR1);
+					break;
+				default:
+					break;
+			}
+			continue;
+		}
+		
 		switch(button)
 		{
 			case l_key:
@@ -162,7 +180,8 @@ int main(int argc, char **argv)
 				sc_memorySave("RAMsave.txt");
 				break;
 			case r_key:
-				
+				setitimer(ITIMER_REAL, &nval, &oval);
+				sc_regSet(REG_STEP_IGNORE, 0);
 				break;
 			case t_key:
 				break;
@@ -616,5 +635,43 @@ void print_flag()
 
 void IncInstCount(int signo)
 {
+	char mem[8];
 	InstCount++;
+	int prev = InstCount-1;
+	int prevx = prev / 10;
+	int prevy = prev % 10;
+	int InstCountx = InstCount / 10;
+	int InstCounty = InstCount % 10;
+	int n;
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
+	write_ram(prevx, prevy);
+	
+	mt_setbgcolor(LRED);
+	mt_setfgcolor(LWHITE);
+	write_ram(InstCountx, InstCounty);
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
+	mt_gotoXY(5, 70);
+	n = sprintf(mem, "%04d", InstCount);
+	write(STDOUT_FILENO, mem, n);
+	mt_gotoXY(2, 70);
+	n = sprintf(mem, "%04X", Accum);
+	write(STDOUT_FILENO, mem, n);
+	
+	big_window(InstCount);
+	print_flag();
+	
+	mt_gotoXY(25, 1);	
+}
+
+void StopIt(int signo)
+{
+	struct itimerval nval, oval;
+	nval.it_interval.tv_sec = 0;
+	nval.it_interval.tv_usec = 0;
+	nval.it_value.tv_sec = 0;
+	nval.it_value.tv_usec = 0;
+	setitimer(ITIMER_REAL, &nval, &oval);
+	sc_regSet(REG_STEP_IGNORE, 1);
 }

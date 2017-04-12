@@ -14,29 +14,51 @@
    <string>СУБД</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QTabWidget" name="tabWidget"/>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_AddRecord">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <family>Times New Roman</family>
-         </font>
-        </property>
-        <property name="text">
-         <string>Add record</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QPushButton" name="pushButton_AddRecord">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Add record</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_DeleteRecord">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Delete record</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -110,7 +132,7 @@
      <x>0</x>
      <y>0</y>
      <width>881</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -142,7 +164,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAbout_Qt">
    <property name="icon">
-    <iconset resource="../resources/resources.qrc">
+    <iconset>
      <normaloff>:/actions/about</normaloff>:/actions/about</iconset>
    </property>
    <property name="text">
@@ -154,7 +176,7 @@
   </action>
   <action name="actionAbout_LW">
    <property name="icon">
-    <iconset resource="../resources/resources.qrc">
+    <iconset>
      <normaloff>:/actions/about</normaloff>:/actions/about</iconset>
    </property>
    <property name="text">
@@ -166,7 +188,7 @@
   </action>
   <action name="actionInsert_SQL_code">
    <property name="icon">
-    <iconset resource="../resources/resources.qrc">
+    <iconset>
      <normaloff>:/actions/warning</normaloff>:/actions/warning</iconset>
    </property>
    <property name="text">
@@ -175,7 +197,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="../resources/resources.qrc">
+    <iconset>
      <normaloff>:/actions/new</normaloff>:/actions/new</iconset>
    </property>
    <property name="text">
@@ -184,7 +206,7 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="../resources/resources.qrc">
+    <iconset>
      <normaloff>:/actions/open</normaloff>:/actions/open</iconset>
    </property>
    <property name="text">
@@ -193,7 +215,7 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="../resources/resources.qrc">
+    <iconset>
      <normaloff>:/actions/exit</normaloff>:/actions/exit</iconset>
    </property>
    <property name="text">
@@ -205,10 +227,7 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="../resources/resources.qrc"/>
-  <include location="../resources/resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionExit</sender>

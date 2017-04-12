@@ -45,6 +45,8 @@ private slots:
 
     void on_actionOpen_triggered();
 
+    void on_pushButton_DeleteRecord_clicked();
+
 private:
     Ui::MainWindow *ui;
     DataBase *db;
