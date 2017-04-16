@@ -128,6 +128,9 @@ int main(int argc, char **argv)
 		prevy = prev % 10;
 		InstCountx = InstCount / 10;
 		InstCounty = InstCount % 10;
+		for(i = 0; i < 10; ++i)
+			for(j = 0; j < 10; ++j)
+				write_ram(i, j);
 		
 		mt_setbgcolor(DEF);
 		mt_setfgcolor(DEF);
@@ -162,6 +165,13 @@ int main(int argc, char **argv)
 				case r_key:
 					raise(SIGUSR1);
 					break;
+				case i_key:
+					raise(SIGUSR1);
+					sc_memoryInit();
+					sc_regInit();
+					Accum = 0;
+					sc_regSet(REG_STEP_IGNORE, 1);
+					break;
 				default:
 					break;
 			}
@@ -184,8 +194,18 @@ int main(int argc, char **argv)
 				sc_regSet(REG_STEP_IGNORE, 0);
 				break;
 			case t_key:
+				if(InstCount > 99)
+				{
+					break;
+				}
+				InstCount++;
 				break;
 			case i_key:
+				raise(SIGUSR1);
+				sc_memoryInit();
+				sc_regInit();
+				Accum = 0;
+				sc_regSet(REG_STEP_IGNORE, 1);
 				break;
 			case f5_key:
 			{
@@ -240,41 +260,81 @@ int main(int argc, char **argv)
 							mem = 7;
 							break;
 						case key_8:
+							if(i == 1)
+							{
+								i--;
+								break;
+							}
 							mem = '8';
 							write(STDOUT_FILENO, &mem, 1);
 							mem = 8;
 							break;
 						case key_9:
+							if(i == 1)
+							{
+								i--;
+								break;
+							}
 							mem = '9';
 							write(STDOUT_FILENO, &mem, 1);
 							mem = 9;
 							break;
 						case key_a:
+							if(i == 1)
+							{
+								i--;
+								break;
+							}
 							mem = 'A';
 							write(STDOUT_FILENO, &mem, 1);
 							mem = 10;
 							break;
 						case key_b:
+							if(i == 1)
+							{
+								i--;
+								break;
+							}
 							mem = 'B';
 							write(STDOUT_FILENO, &mem, 1);
 							mem = 11;
 							break;
 						case key_c:
+							if(i == 1)
+							{
+								i--;
+								break;
+							}
 							mem = 'C';
 							write(STDOUT_FILENO, &mem, 1);
 							mem = 12;
 							break;
 						case key_d:
+							if(i == 1)
+							{
+								i--;
+								break;
+							}
 							mem = 'D';
 							write(STDOUT_FILENO, &mem, 1);
 							mem = 13;
 							break;
 						case key_e:
+							if(i == 1)
+							{
+								i--;
+								break;
+							}
 							mem = 'E';
 							write(STDOUT_FILENO, &mem, 1);
 							mem = 14;
 							break;
 						case key_f:
+							if(i == 1)
+							{
+								i--;
+								break;
+							}
 							mem = 'F';
 							write(STDOUT_FILENO, &mem, 1);
 							mem = 15;
@@ -636,10 +696,17 @@ void print_flag()
 void IncInstCount(int signo)
 {
 	char mem[8];
-	InstCount++;
-	int prev = InstCount-1;
+	int i, j;
+	int prev = InstCount;
 	int prevx = prev / 10;
 	int prevy = prev % 10;
+	if(InstCount == 99)
+	{
+		
+		raise(SIGUSR1);
+		return;
+	}
+	InstCount++;
 	int InstCountx = InstCount / 10;
 	int InstCounty = InstCount % 10;
 	int n;
@@ -663,10 +730,13 @@ void IncInstCount(int signo)
 	print_flag();
 	
 	mt_gotoXY(25, 1);	
+	return;
 }
 
 void StopIt(int signo)
 {
+	char mem[8];
+	int prev = InstCount - 1;
 	struct itimerval nval, oval;
 	nval.it_interval.tv_sec = 0;
 	nval.it_interval.tv_usec = 0;
@@ -674,4 +744,32 @@ void StopIt(int signo)
 	nval.it_value.tv_usec = 0;
 	setitimer(ITIMER_REAL, &nval, &oval);
 	sc_regSet(REG_STEP_IGNORE, 1);
+	int i, j, n;
+	for(i = 0; i < 10; ++i)
+		for(j = 0; j < 10; ++j)
+			write_ram(i, j);
+	int prevx = prev / 10;
+	int prevy = prev % 10;
+	int InstCountx = InstCount / 10;
+	int InstCounty = InstCount % 10;
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
+	write_ram(prevx, prevy);
+	mt_setbgcolor(LRED);
+	mt_setfgcolor(LWHITE);
+	write_ram(InstCountx, InstCounty);
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
+	mt_gotoXY(5, 70);
+	n = sprintf(mem, "%04d", InstCount);
+	write(STDOUT_FILENO, mem, n);
+	mt_gotoXY(2, 70);
+	n = sprintf(mem, "%04X", Accum);
+	write(STDOUT_FILENO, mem, n);
+	
+	big_window(InstCount);
+	print_flag();
+	
+	mt_gotoXY(25, 1);
+	return;
 }
