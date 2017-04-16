@@ -22,9 +22,9 @@
  */
 
 #include <stdlib.h>
-#include "myBigChars.h"
-#include "sc.h"
-#include "myReadKey.h"
+#include "headers/myBigChars.h"
+#include "headers/sc.h"
+#include "headers/myReadKey.h"
 #include <signal.h>
 #include <sys/time.h>
 
@@ -34,6 +34,8 @@ void big_window(int InstCount);
 void print_flag();
 void IncInstCount(int signo);
 void StopIt(int signo);
+int memory_movement(int prev);
+
 
 int main(int argc, char **argv)
 {
@@ -772,4 +774,33 @@ void StopIt(int signo)
 	
 	mt_gotoXY(25, 1);
 	return;
+}
+
+int memory_movement(int prev)
+{
+	int i, j, n;
+	char mem[8];
+	int prevx = prev / 10;
+	int prevy = prev % 10;
+	int InstCountx = InstCount / 10;
+	int InstCounty = InstCount % 10;
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
+	write_ram(prevx, prevy);
+	mt_setbgcolor(LRED);
+	mt_setfgcolor(LWHITE);
+	write_ram(InstCountx, InstCounty);
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
+	mt_gotoXY(5, 70);
+	n = sprintf(mem, "%04d", InstCount);
+	write(STDOUT_FILENO, mem, n);
+	mt_gotoXY(2, 70);
+	n = sprintf(mem, "%04X", Accum);
+	write(STDOUT_FILENO, mem, n);
+	
+	big_window(InstCount);
+	print_flag();
+	mt_gotoXY(25, 1);
+	return 0;
 }
