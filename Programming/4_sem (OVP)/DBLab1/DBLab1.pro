@@ -30,11 +30,14 @@ DEFINES += \
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    database.cpp
+    database.cpp \
+    addrec.cpp
 
 QTPLUGIN += qsqlmysql
 
 HEADERS  += mainwindow.h \
-    database.h
+    database.h \
+    addrec.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    addrec.ui

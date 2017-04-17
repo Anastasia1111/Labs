@@ -81,7 +81,8 @@ bool DataBase::createTables()
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     TABLE1_FAC      " VARCHAR(255)  NOT NULL,"
                     TABLE1_YEAR     " VARCHAR(255)  NOT NULL,"
-                    TABLE1_GRNUM    " VARCHAR(255)  NOT NULL"
+                    TABLE1_GRNUM    " VARCHAR(255)  NOT NULL,"
+                    TABLE1_FAKE     " INTEGER"
                 " )"
             ) ||
         !query.exec( "CREATE TABLE " TABLE2 " ("
