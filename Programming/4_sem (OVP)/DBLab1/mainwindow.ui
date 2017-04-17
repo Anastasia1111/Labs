@@ -10,6 +10,11 @@
     <height>481</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Times New Roman</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>СУБД</string>
   </property>
@@ -132,7 +137,7 @@
      <x>0</x>
      <y>0</y>
      <width>881</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -141,6 +146,7 @@
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
+    <addaction name="actionExport"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -148,7 +154,14 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <widget class="QMenu" name="menuSettings">
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <addaction name="actionManualInput"/>
+    </widget>
     <addaction name="actionInsert_SQL_code"/>
+    <addaction name="menuSettings"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -164,7 +177,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAbout_Qt">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/actions/about</normaloff>:/actions/about</iconset>
    </property>
    <property name="text">
@@ -176,7 +189,7 @@
   </action>
   <action name="actionAbout_LW">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/actions/about</normaloff>:/actions/about</iconset>
    </property>
    <property name="text">
@@ -188,7 +201,7 @@
   </action>
   <action name="actionInsert_SQL_code">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/actions/warning</normaloff>:/actions/warning</iconset>
    </property>
    <property name="text">
@@ -197,7 +210,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/actions/new</normaloff>:/actions/new</iconset>
    </property>
    <property name="text">
@@ -206,7 +219,7 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/actions/open</normaloff>:/actions/open</iconset>
    </property>
    <property name="text">
@@ -215,7 +228,7 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset>
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/actions/exit</normaloff>:/actions/exit</iconset>
    </property>
    <property name="text">
@@ -225,9 +238,33 @@
     <enum>QAction::QuitRole</enum>
    </property>
   </action>
+  <action name="actionManualInput">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/actions/pen</normaloff>:/actions/pen</iconset>
+   </property>
+   <property name="text">
+    <string>Manual data input</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/actions/copy</normaloff>:/actions/copy</iconset>
+   </property>
+   <property name="text">
+    <string>Export (.csv)</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+  <include location="../resources/resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionExit</sender>

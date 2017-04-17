@@ -10,6 +10,7 @@
 #include <QFileDialog>
 
 #include "database.h"
+#include "addrec.h"
 
 namespace Ui {
 class MainWindow;
@@ -47,12 +48,15 @@ private slots:
 
     void on_pushButton_DeleteRecord_clicked();
 
+    void on_actionExport_triggered();
+
 private:
     Ui::MainWindow *ui;
     DataBase *db;
     QVector<QSqlRelationalTableModel*> mod;
     QVector<QTableView*> view;
     Qt::SortOrder lastOrder;
+    AddRec* dialogWin;
 };
 
 #endif // MAINWINDOW_H

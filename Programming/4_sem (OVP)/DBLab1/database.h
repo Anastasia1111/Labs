@@ -17,7 +17,8 @@
 #define TABLE1_FAC              "Faculty"               // Вторая колонка таблицы 1
 #define TABLE1_YEAR             "Year"                  // Третья колонка таблицы 1
 #define TABLE1_GRNUM            "Number of groups"      // Четвертая колонка таблицы 1
-#define TABLE2                  "Groups"                 // Название таблицы 2
+#define TABLE1_FAKE             "YSNSI"                 // Пятая колонка таблицы 1
+#define TABLE2                  "Groups"                // Название таблицы 2
 #define TABLE2_NAME             "Group_name"            // Вторая колонка таблицы 2
 #define TABLE2_LNAME            "Name of elder"         // Третья колонка таблицы 2
 #define TABLE2_NUM              "Number of students"    // Четвертая колонка таблицы 2

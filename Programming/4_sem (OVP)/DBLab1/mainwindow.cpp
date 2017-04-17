@@ -11,9 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     db = new DataBase(this);
 
-    /*db->connectToDataBase(":memory:");
+    db->connectToDataBase(":memory:");
     this->setDefaultValues();
-    this->setupTables();*/
+    this->setupTables();
 
     lastOrder = Qt::DescendingOrder;
 
@@ -63,7 +63,21 @@ void MainWindow::on_lineEdit_WordSearch_textChanged(const QString &arg1)
 void MainWindow::on_pushButton_AddRecord_clicked()
 {
     QSqlRelationalTableModel* curMod = mod[ui->tabWidget->currentIndex()];
-    curMod->insertRow(curMod->rowCount());
+    if (ui->actionManualInput->isChecked()){
+        curMod->insertRow(curMod->rowCount());
+    } else {
+        dialogWin = new AddRec(this);
+        if (dialogWin->exec() == QDialog::Accepted)
+        {
+            int curIndex = ui->tabWidget->currentIndex();
+            QSqlRelationalTableModel* curMod = mod[curIndex];
+            QString rec = "insert into " + curMod->tableName() + " values(" + dialogWin->data() + ")";
+            QSqlQuery query;
+            query.exec(rec);
+            this->setupTables();
+            ui->tabWidget->setCurrentIndex(curIndex);
+        }
+    }
 }
 
 void MainWindow::on_actionAbout_LW_triggered()
@@ -77,9 +91,9 @@ void MainWindow::on_actionAbout_LW_triggered()
 void MainWindow::setDefaultValues()
 {
     QSqlQuery query;
-    query.exec("insert into Faculty values(1, 'MTS', '1', '4')");
-    query.exec("insert into Faculty values(2, 'IVT', '2', '10')");
-    query.exec("insert into Faculty values(3, 'AES', '3', '6')");
+    query.exec("insert into Faculty values(null, 'MTS', '1', '4', null)");
+    query.exec("insert into Faculty values(null, 'IVT', '2', '10', null)");
+    query.exec("insert into Faculty values(null, 'AES', '3', '6', null)");
 
     query.exec("insert into Groups values(1, 'R-31', 'Petrov', '17', 1)");
     query.exec("insert into Groups values(2, 'R-32', 'Ivanov', '20', 1)");
@@ -97,11 +111,28 @@ void MainWindow::setupTables()
 
     QTableView* newView = new QTableView();
     QSqlRelationalTableModel* newMod = new QSqlRelationalTableModel();
-    newMod->setTable("Faculty");
+    newMod->setTable(TABLE1);
     newMod->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
-    newMod->setHeaderData(1, Qt::Horizontal, QObject::tr("Faculty"));
-    newMod->setHeaderData(2, Qt::Horizontal, QObject::tr("Year"));
-    newMod->setHeaderData(3, Qt::Horizontal, QObject::tr("Number of groups"));
+    newMod->setHeaderData(1, Qt::Horizontal, QObject::tr(TABLE1_FAC));
+    newMod->setHeaderData(2, Qt::Horizontal, QObject::tr(TABLE1_YEAR));
+    newMod->setHeaderData(3, Qt::Horizontal, QObject::tr(TABLE1_GRNUM));
+    newMod->select();
+    newMod->setEditStrategy(QSqlTableModel::OnFieldChange);
+    newView->setModel(newMod);
+    newView->hideColumn(4);
+    newView->setItemDelegate(new QSqlRelationalDelegate(newView));
+    mod.push_back(newMod);
+    view.push_back(newView);
+
+    newView = new QTableView();
+    newMod = new QSqlRelationalTableModel();
+    newMod->setTable(TABLE2);
+    newMod->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
+    newMod->setHeaderData(1, Qt::Horizontal, QObject::tr(TABLE2_NAME));
+    newMod->setHeaderData(2, Qt::Horizontal, QObject::tr(TABLE2_LNAME));
+    newMod->setHeaderData(3, Qt::Horizontal, QObject::tr(TABLE2_NUM));
+    newMod->setHeaderData(4, Qt::Horizontal, QObject::tr(TABLE2_FAC));
+    newMod->setRelation(4, QSqlRelation(TABLE1, "id", TABLE1_FAC));
     newMod->select();
     newMod->setEditStrategy(QSqlTableModel::OnFieldChange);
     newView->setModel(newMod);
@@ -111,29 +142,13 @@ void MainWindow::setupTables()
 
     newView = new QTableView();
     newMod = new QSqlRelationalTableModel();
-    newMod->setTable("Groups");
+    newMod->setTable(TABLE3);
     newMod->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
-    newMod->setHeaderData(1, Qt::Horizontal, QObject::tr("Group_name"));
-    newMod->setHeaderData(2, Qt::Horizontal, QObject::tr("Name of elder"));
-    newMod->setHeaderData(3, Qt::Horizontal, QObject::tr("Number of students"));
-    newMod->setHeaderData(4, Qt::Horizontal, QObject::tr("Faculty ID"));
-    newMod->setRelation(4, QSqlRelation("Faculty", "id", "Faculty"));
-    newMod->select();
-    newMod->setEditStrategy(QSqlTableModel::OnFieldChange);
-    newView->setModel(newMod);
-    newView->setItemDelegate(new QSqlRelationalDelegate(newView));
-    mod.push_back(newMod);
-    view.push_back(newView);
-
-    newView = new QTableView();
-    newMod = new QSqlRelationalTableModel();
-    newMod->setTable("Students");
-    newMod->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
-    newMod->setHeaderData(1, Qt::Horizontal, QObject::tr("Full name"));
-    newMod->setHeaderData(2, Qt::Horizontal, QObject::tr("Address"));
-    newMod->setHeaderData(3, Qt::Horizontal, QObject::tr("Phone number"));
-    newMod->setHeaderData(4, Qt::Horizontal, QObject::tr("ID_GR"));
-    newMod->setRelation(4, QSqlRelation("Groups", "id", "Group_name"));
+    newMod->setHeaderData(1, Qt::Horizontal, QObject::tr(TABLE3_FN));
+    newMod->setHeaderData(2, Qt::Horizontal, QObject::tr(TABLE3_ADDS));
+    newMod->setHeaderData(3, Qt::Horizontal, QObject::tr(TABLE3_PNUM));
+    newMod->setHeaderData(4, Qt::Horizontal, QObject::tr(TABLE3_IDGR));
+    newMod->setRelation(4, QSqlRelation(TABLE2, "id", TABLE2_NAME));
     newMod->select();
     newMod->setEditStrategy(QSqlTableModel::OnFieldChange);
     newView->setModel(newMod);
@@ -173,8 +188,6 @@ void MainWindow::on_actionNew_triggered()
     }
 
     system("rm -f "+lFileName.toUtf8());
-    /*QFile file(lFileName);
-    file.open(QFile::WriteOnly|QFile::Truncate);*/
 
     db->connectToDataBase(lFileName);
     //this->setDefaultValues();
@@ -193,14 +206,47 @@ void MainWindow::on_actionOpen_triggered()
     }
 
     db->connectToDataBase(lFileName);
-    //this->setDefaultValues();
     this->setupTables();
 }
 
 void MainWindow::on_pushButton_DeleteRecord_clicked()
 {
-    QTableView* curView = view[ui->tabWidget->currentIndex()];
-    QSqlRelationalTableModel* curMod = mod[ui->tabWidget->currentIndex()];
+    int curIndex = ui->tabWidget->currentIndex();
+    QTableView* curView = view[curIndex];
+    QSqlRelationalTableModel* curMod = mod[curIndex];
     curMod->removeRow(curView->currentIndex().row());
     this->setupTables();
+    ui->tabWidget->setCurrentIndex(curIndex);
+}
+
+void MainWindow::on_actionExport_triggered()
+{
+    QSqlRelationalTableModel* curMod = mod[ui->tabWidget->currentIndex()];
+
+    // [Collect model data to QString]
+    QString textData;
+    int rows = curMod->rowCount();
+    int columns = curMod->columnCount();
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+                textData += curMod->data(curMod->index(i,j)).toString();
+                textData += ", ";      // for .csv file format
+        }
+        textData += "\n";             // for new line segmentation
+    }
+
+    // [Save to file]
+    QFileDialog* dial =  new QFileDialog(this, "Create file...",
+                                        QDir::homePath(), "CSV files (*.csv)");
+    dial->exec();
+    QString lFileName = dial->selectedFiles().first();
+    QFile csvFile(lFileName);
+    if(csvFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+
+        QTextStream out(&csvFile);
+        out << textData;
+
+        csvFile.close();
+    }
 }
