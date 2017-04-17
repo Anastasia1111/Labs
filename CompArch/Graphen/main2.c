@@ -34,7 +34,7 @@ void big_window(int InstCount);
 void print_flag();
 void IncInstCount(int signo);
 void StopIt(int signo);
-int memory_movement(int prev);
+void memory_movement(int prev);
 
 
 int main(int argc, char **argv)
@@ -126,14 +126,13 @@ int main(int argc, char **argv)
 	enum keys button;
 	while(1)
 	{
+		for(i = 0; i < 10; ++i)
+			for(j = 0; j < 10; ++j)
+				write_ram(i, j);
 		prevx = prev / 10;
 		prevy = prev % 10;
 		InstCountx = InstCount / 10;
 		InstCounty = InstCount % 10;
-		for(i = 0; i < 10; ++i)
-			for(j = 0; j < 10; ++j)
-				write_ram(i, j);
-		
 		mt_setbgcolor(DEF);
 		mt_setfgcolor(DEF);
 		write_ram(prevx, prevy);
@@ -529,6 +528,8 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+//****************************************
+
 void write_ram(int x, int y)
 {
 	char mem[6];
@@ -776,7 +777,7 @@ void StopIt(int signo)
 	return;
 }
 
-int memory_movement(int prev)
+void memory_movement(int prev)
 {
 	int i, j, n;
 	char mem[8];
@@ -802,5 +803,4 @@ int memory_movement(int prev)
 	big_window(InstCount);
 	print_flag();
 	mt_gotoXY(25, 1);
-	return 0;
 }
