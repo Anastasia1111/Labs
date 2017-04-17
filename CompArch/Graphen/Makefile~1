@@ -1,31 +1,38 @@
 #Makefile~1
 
-main: clear main2.o sc.a mt.a mrk.a mbc.a
+MK_DIR = ./makes
+
+MAKES = $(wildcard $(MK_DIR)/*)
+
+main: clear makes main2.o
 	gcc -o main main2.o -Llib -lMyBigChars -lSimpleComputer -lMyTerm -lMyReadKey 
 
-sc.o:
-	gcc -c ./src/sc.c
+makes:
+	make -f $(MAKES)
 
-mt.o:
-	gcc -c ./src/myTerm.c
-
-mrk.o:
-	gcc -c ./src/myReadKey.c
-
-mbc.o:
-	gcc -c ./src/myBigChars.c
-	
-sc.a: sc.o
-	ar r ./lib/libSimpleComputer.a sc.o
-	
-mt.a: mt.o
-	ar r ./lib/libMyTerm.a myTerm.o
-	
-mrk.a: mrk.o
-	ar r ./lib/libMyReadKey.a myReadKey.o
-	
-mbc.a: mbc.o
-	ar r ./lib/libMyBigChars.a myBigChars.o myTerm.o
+#sc.o:
+#	gcc -c ./src/sc.c
+#
+#mt.o:
+#	gcc -c ./src/myTerm.c
+#
+#mrk.o:
+#	gcc -c ./src/myReadKey.c
+#
+#mbc.o:
+#	gcc -c ./src/myBigChars.c
+#	
+# sc.a: sc.o
+#	ar r ./lib/libSimpleComputer.a sc.o
+#	
+#mt.a: mt.o
+#	ar r ./lib/libMyTerm.a myTerm.o
+#	
+#mrk.a: mrk.o
+#	ar r ./lib/libMyReadKey.a myReadKey.o
+#	
+#mbc.a: mbc.o
+#	ar r ./lib/libMyBigChars.a myBigChars.o myTerm.o
 
 clear:
 	rm -rf *.a *.o
