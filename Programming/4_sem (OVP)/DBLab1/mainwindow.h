@@ -30,6 +30,10 @@ private slots:
 
     void setupTables();
 
+    void select2(QModelIndex index);
+
+    void select3(QModelIndex index);
+
     void on_pushButton_Sort_clicked();
 
     void on_lineEdit_CharSearch_textChanged(const QString &arg1);
@@ -49,6 +53,8 @@ private slots:
     void on_pushButton_DeleteRecord_clicked();
 
     void on_actionExport_triggered();
+
+    void on_actionUpdate_DB_triggered();
 
 private:
     Ui::MainWindow *ui;

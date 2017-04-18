@@ -16,18 +16,18 @@
 #define TABLE1                  "Faculty"               // Название таблицы 1
 #define TABLE1_FAC              "Faculty"               // Вторая колонка таблицы 1
 #define TABLE1_YEAR             "Year"                  // Третья колонка таблицы 1
-#define TABLE1_GRNUM            "Number of groups"      // Четвертая колонка таблицы 1
+#define TABLE1_GRNUM            "Group_number"          // Четвертая колонка таблицы 1
 #define TABLE1_FAKE             "YSNSI"                 // Пятая колонка таблицы 1
 #define TABLE2                  "Groups"                // Название таблицы 2
 #define TABLE2_NAME             "Group_name"            // Вторая колонка таблицы 2
-#define TABLE2_LNAME            "Name of elder"         // Третья колонка таблицы 2
-#define TABLE2_NUM              "Number of students"    // Четвертая колонка таблицы 2
-#define TABLE2_FAC              "Faculty ID"            // Пятая колонка таблицы 2
+#define TABLE2_LNAME            "Name_of_elder"         // Третья колонка таблицы 2
+#define TABLE2_NUM              "Student_number"        // Четвертая колонка таблицы 2
+#define TABLE2_FAC              "Faculty_ID"            // Пятая колонка таблицы 2
 #define TABLE3                  "Students"              // Название таблицы 3
-#define TABLE3_FN               "Full name"             // Вторая колонка таблицы 3
+#define TABLE3_FN               "Fullname"              // Вторая колонка таблицы 3
 #define TABLE3_ADDS             "Address"               // Третья колонка таблицы 3
-#define TABLE3_PNUM             "Phone number"          // Четвертая колонка таблицы 3
-#define TABLE3_IDGR             "ID_GR"                 // Пятая колонка таблицы 3
+#define TABLE3_PNUM             "Phone_number"          // Четвертая колонка таблицы 3
+#define TABLE3_IDGR             "Group_ID"              // Пятая колонка таблицы 3
 
 // Первая колонка содержит Autoincrement ID
 

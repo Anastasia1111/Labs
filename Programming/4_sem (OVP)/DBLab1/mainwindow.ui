@@ -159,6 +159,7 @@
       <string>Settings</string>
      </property>
      <addaction name="actionManualInput"/>
+     <addaction name="actionUpdate_DB"/>
     </widget>
     <addaction name="actionInsert_SQL_code"/>
     <addaction name="menuSettings"/>
@@ -256,7 +257,16 @@
      <normaloff>:/actions/copy</normaloff>:/actions/copy</iconset>
    </property>
    <property name="text">
-    <string>Export (.csv)</string>
+    <string>Export (.tsv)</string>
+   </property>
+  </action>
+  <action name="actionUpdate_DB">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/actions/clock</normaloff>:/actions/clock</iconset>
+   </property>
+   <property name="text">
+    <string>Update DB</string>
    </property>
   </action>
  </widget>
