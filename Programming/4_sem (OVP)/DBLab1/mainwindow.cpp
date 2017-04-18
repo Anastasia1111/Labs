@@ -74,10 +74,14 @@ void MainWindow::on_pushButton_AddRecord_clicked()
     if (ui->actionManualInput->isChecked()){
         curMod->insertRow(curMod->rowCount());
     } else {
-        dialogWin = new AddRec(curMod->headerData(1,Qt::Horizontal).toString(),
-                               curMod->headerData(2,Qt::Horizontal).toString(),
-                               curMod->headerData(3,Qt::Horizontal).toString(),
-                               curMod->headerData(4,Qt::Horizontal).toString(),
+        QString str1 = curMod->headerData(1,Qt::Horizontal).toString(),
+                str2 = curMod->headerData(2,Qt::Horizontal).toString(),
+                str3 = curMod->headerData(3,Qt::Horizontal).toString(),
+                str4 = curMod->headerData(4,Qt::Horizontal).toString();
+        dialogWin = new AddRec(str1,
+                               str2,
+                               str3,
+                               str4,
                                qmod,
                                this);
         if (dialogWin->exec() == QDialog::Accepted)
@@ -274,6 +278,13 @@ void MainWindow::select2(QModelIndex index)
 {
     QString filter = TABLE2_FAC + tr(" = %1").arg(mod[0]->index(index.row(),0).data().toString());
     mod[1]->setFilter(filter);
+    mod[1]->selectRow(0);
+    if (mod[1]->index(0,0).data().toString().isEmpty()){
+        filter = TABLE3_IDGR + tr(" = %1").arg("0");
+    } else {
+        filter = TABLE3_IDGR + tr(" = %1").arg(mod[1]->index(0,0).data().toString());
+    }
+    mod[2]->setFilter(filter);
     qDebug() << filter;
 }
 
