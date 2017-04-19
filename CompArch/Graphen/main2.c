@@ -34,7 +34,9 @@ void big_window(int InstCount);
 void print_flag();
 void IncInstCount(int signo);
 void StopIt(int signo);
-void memory_movement(int prev);
+//void memory_movement(int prev);
+int commandwindow(); // return 1, if you press 'yes'
+int write_dex_num(enum keys button, int num[2]);
 
 
 int main(int argc, char **argv)
@@ -365,140 +367,59 @@ int main(int argc, char **argv)
 			}
 			case enter_key:
 			{
+				int flag = commandwindow();
 				int wr = 0;
+				int com = 0, oper = 0;
+				int mem;
+				int num[2];
+				
 				for(i = 1; i < 5; ++i)
 				{
 					mt_gotoXY(InstCountx + 2, InstCounty * 6 + 2 + i);
 					enum keys subbut;
 					rk_readkey(&subbut);
-					
-					char mem;
-					int num[2];
-					
-					switch(subbut)
+					mem = write_dex_num(subbut, num);
+					if(mem == -1)
 					{
-						case key_0:
-							mem = '0';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 0;
-							num[0] = _0_0_;
-							num[1] = _0_1_;
-							break;
-						case key_1:
-							mem = '1';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 1;
-							num[0] = _1_0_;
-							num[1] = _1_1_;
-							break;
-						case key_2:
-							mem = '2';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 2;
-							num[0] = _2_0_;
-							num[1] = _2_1_;
-							break;
-						case key_3:
-							mem = '3';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 3;
-							num[0] = _3_0_;
-							num[1] = _3_1_;
-							break;
-						case key_4:
-							mem = '4';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 4;
-							num[0] = _4_0_;
-							num[1] = _4_1_;
-							break;
-						case key_5:
-							mem = '5';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 5;
-							num[0] = _5_0_;
-							num[1] = _5_1_;
-							break;
-						case key_6:
-							mem = '6';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 6;
-							num[0] = _6_0_;
-							num[1] = _6_1_;
-							break;
-						case key_7:
-							mem = '7';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 7;
-							num[0] = _7_0_;
-							num[1] = _7_1_;
-							break;
-						case key_8:
-							mem = '8';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 8;
-							num[0] = _8_0_;
-							num[1] = _8_1_;
-							break;
-						case key_9:
-							mem = '9';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 9;
-							num[0] = _9_0_;
-							num[1] = _9_1_;
-							break;
-						case key_a:
-							mem = 'A';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 10;
-							num[0] = _A_0_;
-							num[1] = _A_1_;
-							break;
-						case key_b:
-							mem = 'B';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 11;
-							num[0] = _B_0_;
-							num[1] = _B_1_;
-							break;
-						case key_c:
-							mem = 'C';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 12;
-							num[0] = _C_0_;
-							num[1] = _C_1_;
-							break;
-						case key_d:
-							mem = 'D';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 13;
-							num[0] = _D_0_;
-							num[1] = _D_1_;
-							break;
-						case key_e:
-							mem = 'E';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 14;
-							num[0] = _E_0_;
-							num[1] = _E_1_;
-							break;
-						case key_f:
-							mem = 'F';
-							write(STDOUT_FILENO, &mem, 1);
-							mem = 15;
-							num[0] = _F_0_;
-							num[1] = _F_1_;
-							break;
-						default: 
-							--i;
-							continue;
-							break;
+						i--;
+						continue;
 					}
-					wr <<= 4;
-					wr += mem;
+					if(!flag)
+					{
+						wr <<= 4;
+						wr += mem;
+					}
+					else
+					{
+						if(i <= 2)
+						{
+							com <<= 4;
+							com += mem;
+						} else {
+							oper <<= 4;
+							oper += mem;
+						}
+					}
 					bc_printbigchar(num, 14, 2 + i * 8 + i, LRED, GREEN);
 				}
-				
+				if(flag)
+				{
+					int enc = sc_commandEncode(com, oper, &wr);
+					if(enc != 0)
+					{
+						wr = 0;
+						wr += com;
+						wr <<= 4;
+						wr += oper;
+						wr |= 0x1 << 14;
+					}
+				}
+				else 
+				{
+					if(wr > 0x3FFF)
+						wr = 0x3FFF;
+					wr |= 0x1 << 14;
+				}
 				sc_memorySet(InstCount, wr);
 				break;
 			}
@@ -548,6 +469,7 @@ void write_ram(int x, int y)
 	}
 	else
 	{
+		value &= ~(1 << 14);
 		n = sprintf(mem, " %04X", value);
 		write(STDOUT_FILENO, mem, n);
 		sc_regSet(REG_WR_COM, flagprev);
@@ -569,6 +491,7 @@ void big_window(int InstCount)
 		n = sprintf(mem, "+%02X%02X ", com, oper);
 	else
 	{
+		value &= ~(1 << 14);
 		n = sprintf(mem, " %04X ", value);
 		sc_regSet(REG_WR_COM, flagprev);
 	}
@@ -777,7 +700,7 @@ void StopIt(int signo)
 	return;
 }
 
-void memory_movement(int prev)
+/*void memory_movement(int prev)
 {
 	int i, j, n;
 	char mem[8];
@@ -803,4 +726,164 @@ void memory_movement(int prev)
 	big_window(InstCount);
 	print_flag();
 	mt_gotoXY(25, 1);
+}*/
+
+int commandwindow()
+{
+	enum keys button;
+	char buf[] = "                         ";
+	char buf1[] = "                           ";
+	int yes = 1, retflag = 0;
+	mt_setbgcolor(LRED);
+	mt_setfgcolor(LWHITE);
+	bc_box(3, 15, 6, 26);
+	mt_gotoXY(3, 25);
+	write(STDOUT_FILENO, "Warning", 7);
+	for(int i = 4; i < 9; ++i)
+	{
+		mt_gotoXY(i, 16);
+		write(STDOUT_FILENO, buf, 25);
+	}
+	mt_gotoXY(4, 17);
+	write(STDOUT_FILENO, "Is this an command?", 19);
+	while (!(retflag))
+	{
+		mt_gotoXY(8, 20);
+		if(yes)
+		{
+			mt_setbgcolor(LGREEN);
+			write(STDOUT_FILENO, "YES", 3);
+			mt_setbgcolor(LRED);
+			write(STDOUT_FILENO, "   NO", 5);
+		} else {
+			mt_setbgcolor(LRED);
+			write(STDOUT_FILENO, "YES   ", 6);
+			mt_setbgcolor(LGREEN);
+			write(STDOUT_FILENO, "NO", 2);
+		}
+		mt_setbgcolor(LRED);
+		mt_gotoXY(25, 1);
+		rk_mytermregime(1, 0, 1, 0, 1);
+		rk_readkey(&button);
+		switch(button)
+		{
+			case left_key:
+			case right_key:
+				yes = (yes + 1) % 2;
+				break;
+			case enter_key:
+				retflag = 1;
+				break;
+			default: break;
+		}
+	}
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
+	for(int i = 3; i < 10; ++i)
+	{
+		mt_gotoXY(i, 15);
+		write(STDOUT_FILENO, buf1, 27);
+	}
+	for(int i = 0; i < 10; ++i)
+		for(int j = 0; j < 10; ++j)
+			write_ram(i, j);
+	
+	return yes;
+}
+int write_dex_num(enum keys button, int num[2])
+{
+	char mem;
+	
+	switch(button)
+	{
+		case key_0:
+			mem = '0';
+			num[0] = _0_0_;
+			num[1] = _0_1_;
+			break;
+		case key_1:
+			mem = '1';
+			num[0] = _1_0_;
+			num[1] = _1_1_;
+			break;
+		case key_2:
+			mem = '2';
+			num[0] = _2_0_;
+			num[1] = _2_1_;
+			break;
+		case key_3:
+			mem = '3';
+			num[0] = _3_0_;
+			num[1] = _3_1_;
+			break;
+		case key_4:
+			mem = '4';
+			num[0] = _4_0_;
+			num[1] = _4_1_;
+			break;
+		case key_5:
+			mem = '5';
+			num[0] = _5_0_;
+			num[1] = _5_1_;
+			break;
+		case key_6:
+			mem = '6';
+			num[0] = _6_0_;
+			num[1] = _6_1_;
+			break;
+		case key_7:
+			mem = '7';
+			num[0] = _7_0_;
+			num[1] = _7_1_;
+			break;
+		case key_8:
+			mem = '8';
+			num[0] = _8_0_;
+			num[1] = _8_1_;
+			break;
+		case key_9:
+			mem = '9';
+			num[0] = _9_0_;
+			num[1] = _9_1_;
+			break;
+		case key_a:
+			mem = 'A';
+			num[0] = _A_0_;
+			num[1] = _A_1_;
+			break;
+		case key_b:
+			mem = 'B';
+			num[0] = _B_0_;
+			num[1] = _B_1_;
+			break;
+		case key_c:
+			mem = 'C';
+			num[0] = _C_0_;
+			num[1] = _C_1_;
+			break;
+		case key_d:
+			mem = 'D';
+			num[0] = _D_0_;
+			num[1] = _D_1_;
+			break;
+		case key_e:
+			mem = 'E';
+			num[0] = _E_0_;
+			num[1] = _E_1_;
+			break;
+		case key_f:
+			mem = 'F';
+			num[0] = _F_0_;
+			num[1] = _F_1_;
+			break;
+		default:
+			return -1;
+			break;
+	}
+	write(STDOUT_FILENO, &mem, 1);
+	if(mem >= 'A' && mem <= 'F')
+		mem = mem - 'A' + 10;
+	if(mem >= '0' && mem <= '9')
+		mem -= '0';
+	return (int)mem;
 }
