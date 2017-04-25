@@ -28,6 +28,9 @@
 #include <signal.h>
 #include <sys/time.h>
 
+enum commands { READ = 0x10, WRITE = 0x11, LOAD = 0x20, STORE = 0x21, ADD = 0x30, SUB = 0x31, DIVIDE = 0x32, MUL = 0x33, JUMP = 0x40,
+JNEG = 0x41, JZ = 0x42, HALT = 0x43,  RCR = 0x63, RCCL = 0x69};
+
 int pause(void);
 void write_ram(int x, int y);
 void big_window(int InstCount);
@@ -37,6 +40,8 @@ void StopIt(int signo);
 //void memory_movement(int prev);
 int commandwindow(); // return 1, if you press 'yes'
 int write_dex_num(enum keys button, int num[2]);
+int ALU(int command, int operand);
+int CU();
 
 
 int main(int argc, char **argv)
@@ -886,4 +891,9 @@ int write_dex_num(enum keys button, int num[2])
 	if(mem >= '0' && mem <= '9')
 		mem -= '0';
 	return (int)mem;
+}
+
+int ALU(int command, int operand)
+{
+	
 }
