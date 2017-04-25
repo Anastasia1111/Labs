@@ -1,28 +1,22 @@
 #ifndef HDCHS_H
 #define HDCHS_H
 
+#define CHScyl 0x03FF
+#define CHSsec 0x003F
+#define CHShead 0x00FF
+
+#define LARGEcyl 0x01FF
+#define LARGEsec 0x003F
+#define LARGEhead 0x01FF
+
+
 typedef int tCHS;
 
-typedef struct tLARGE
-{
-	char cyl[2];
-	char head;
-	char sector;
-};
+typedef int tLARGE;
 
-typedef struct tIDECHS
-{
-	char cyl[2];
-	char head;
-	char sector;
-};
+typedef int tIDECHS;//???
 
-typedef struct tLBA
-{
-	char cyl[2];
-	char head;
-	char sector;
-};
+typedef int tLBA;
 
 int g_lba2chs (tLBA, tCHS *);
 int g_lba2large (tLBA, tLARGE *);

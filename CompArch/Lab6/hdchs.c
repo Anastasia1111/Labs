@@ -2,7 +2,26 @@
 
 int g_lba2chs (tLBA input, tCHS *output)
 {
-	
+	int mod[8] = {2, 4, 8, 16, 32, 64, 128, 255};
+	int buf = input / 63;
+	int ghead = buf / 1023;
+	int i;
+	for(i = 0; i < 8; ++i)
+	{
+		if(ghead <= mod[i])
+			break;
+	}
+	int ghead = mod[i];
+	int gcyl = buf / ghead;
+	int outcyl = (input / 63) / ghead;
+	int outhead = (input / 63) % ghead;
+	int outsec = input % 63 + 1;
+	*output = 0;
+	output += outcyl;
+	output <<= 6;
+	output += outsec;
+	output <<= 8;
+	output += head;
 };
 int g_lba2large (tLBA, tLARGE *);
 int g_lba2idechs (tLBA, tIDECHS *);
