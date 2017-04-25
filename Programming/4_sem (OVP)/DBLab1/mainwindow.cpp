@@ -11,10 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     db = new DataBase(this);
 
-    db->connectToDataBase(":memory:");
-    this->setDefaultValues();
-    this->setupTables();
-
     lastOrder = Qt::DescendingOrder;
 
     connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()),
@@ -213,7 +209,6 @@ void MainWindow::on_actionNew_triggered()
     system("rm -f "+lFileName.toUtf8());
 
     db->connectToDataBase(lFileName);
-    //this->setDefaultValues();
     this->setupTables();
 }
 
@@ -250,6 +245,14 @@ void MainWindow::on_actionExport_triggered()
     QString textData;
     int rows = curMod->rowCount();
     int columns = curMod->columnCount();
+
+    if (curMod->tableName() == TABLE1) columns--;
+
+    for (int i = 0; i < columns; i++) {
+        textData += curMod->headerData(i,Qt::Horizontal).toString();
+        textData += "\t";      // for .tsv file format
+    }
+    textData += "\n";             // for new line segmentation
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
