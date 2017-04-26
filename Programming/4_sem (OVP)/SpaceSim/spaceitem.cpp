@@ -1,38 +1,23 @@
 #include "spaceitem.h"
 
-SpaceItem::SpaceItem()
+SpaceItem::SpaceItem(qreal x, qreal y)
 {
     // random radius
     radius = qrand() % 30;
 
-    // random start rotation
-    v.angle = (qrand() % 360);
-    setRotation(v.angle);
-
     // set the speed
-    v.speed = qrand() % 10;
+    v.angle = (qrand() % 360);
 
-    // random start position
-    int startX = 0;
-    int startY = 0;
+    int startX = x-radius;
+    int startY = y-radius;
+    v.center = QPointF(x,y);
 
-    if(qrand() % 1)
-    {
-        startX = qrand() % 200;
-        startY = qrand() % 200;
-    }
-    else
-    {
-        startX = qrand() % -100;
-        startY = qrand() % -100;
-    }
-
-    setPos(mapToParent(startX, startY));
+    setPos(QPointF(startX, startY));
 }
 
 QRectF SpaceItem::boundingRect() const
 {
-    return QRect(0,0,radius*2,radius*2);
+    return QRect(-radius,-radius,radius*2,radius*2);
 }
 
 void SpaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -60,15 +45,6 @@ void SpaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->drawEllipse(rect);
 }
 
-void SpaceItem::advance(int phase)
-{
-    if(!phase) return;
-
-    QPointF location = this->pos();
-
-    setPos(mapToParent(0, -v.speed));
-}
-
 void SpaceItem::doCollision()
 {
     // get a new position
@@ -76,11 +52,11 @@ void SpaceItem::doCollision()
     // change the angle with randomness
     if(qrand() % 1)
     {
-        setRotation(rotation() + (180 + (qrand() % 10)));
+        v.angle = rotation() + (180 + (qrand() % 10));
     }
     else
     {
-        setRotation(rotation() + (180 + (qrand() % -10)));
+        v.angle = rotation() + (180 + (qrand() % -10));
     }
 
     // check if the new position is in bounds

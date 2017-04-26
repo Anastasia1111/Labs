@@ -6,7 +6,10 @@
 class Planet : public SpaceItem
 {
 public:
-    Planet();
+    Planet(qreal x, qreal y, SpaceItem* parent);
+
+protected:
+    void advance(int phase);
 
 private:
     SpaceItem* satelliteOf;

@@ -39,16 +39,13 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addLine(bottomLine, myPen);
 
     // adding items to the scene
-    int itemCount = 10;
-    for(int i = 0; i < itemCount; i++)
-    {
-        //Star *item = new Star();
-        Planet *item = new Planet();
-        scene->addItem(item);
-    }
+    Star *item1 = new Star(scene->sceneRect().center().x(),scene->sceneRect().center().y());
+    scene->addItem(item1);
+    Planet *item2 = new Planet(scene->sceneRect().center().x()+20,scene->sceneRect().center().y()+20,item1);
+    scene->addItem(item2);
 
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),scene, SLOT(advance()));
+    connect(timer, SIGNAL(timeout()), scene, SLOT(advance()));
     timer->start(100);
 }
 

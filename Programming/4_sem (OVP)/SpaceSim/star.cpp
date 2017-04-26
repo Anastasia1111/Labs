@@ -1,7 +1,6 @@
 #include "star.h"
 
-Star::Star() : SpaceItem()
+Star::Star(qreal x, qreal y) : SpaceItem(x,y)
 {
-    v.speed = 0;
-    radius = 20;
+    radius = 15;
 }

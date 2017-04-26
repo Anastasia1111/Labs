@@ -4,12 +4,13 @@
 #include <QPainter>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QDebug>
 
 class SpaceItem :public QGraphicsItem
 {
 
 public:
-    SpaceItem();
+    SpaceItem(qreal x, qreal y);
     QRectF boundingRect() const;
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
@@ -18,13 +19,12 @@ public:
 protected:
     struct vec {
         qreal angle;
-        qreal speed;
+        QPointF center;
     }; //spining vector
 
     vec v;
     qreal mass, radius;
 
-    void advance(int phase);
     void doCollision();
 };
 

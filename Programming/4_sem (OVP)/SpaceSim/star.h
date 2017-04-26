@@ -6,7 +6,7 @@
 class Star : public SpaceItem
 {
 public:
-    Star();
+    Star(qreal x, qreal y);
 };
 
 #endif // STAR_H
