@@ -2,44 +2,95 @@
 
 MyItem::MyItem()
 {
-    Pressed = false;
-    setFlag(ItemIsMovable);
+    // random start rotation
+    angle = (qrand() % 360);
+    setRotation(angle);
+
+    // set the speed
+    speed = 5;  // 5 pixels
+
+    // random start position
+    int startX = 0;
+    int startY = 0;
+
+    if(qrand() % 1)
+    {
+        startX = qrand() % 200;
+        startY = qrand() % 200;
+    }
+    else
+    {
+        startX = qrand() % -100;
+        startY = qrand() % -100;
+    }
+
+    setPos(mapToParent(startX, startY));
 }
 
 QRectF MyItem::boundingRect() const
 {
-    // outer most edges
-    return QRectF(0,0,100,100);
+    return QRect(0,0,20,20);
 }
 
 void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QRectF rect = boundingRect();
 
-    if(Pressed)
+    // basic collision detection
+
+    if(scene()->collidingItems(this).isEmpty())
     {
-        QPen pen(Qt::red, 3);
+        // no collision
+        QPen pen(Qt::green, 5);
         painter->setPen(pen);
-        painter->drawEllipse(rect);
     }
     else
     {
-        QPen pen(Qt::black, 3);
+        // collision !!!
+        QPen pen(Qt::red, 5);
         painter->setPen(pen);
-        painter->drawRect(rect);
+
+        // set the position
+        doCollision();
     }
+
+    painter->drawEllipse(rect);
 }
 
-void MyItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void MyItem::advance(int phase)
 {
-    Pressed = true;
-    update();
-    QGraphicsItem::mousePressEvent(event);
+    if(!phase) return;
+
+    QPointF location = this->pos();
+
+    setPos(mapToParent(0, -speed));
 }
 
-void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void MyItem::doCollision()
 {
-    Pressed = false;
-    update();
-    QGraphicsItem::mouseReleaseEvent(event);
+    // get a new position
+
+    // change the angle with randomness
+    if(qrand() % 1)
+    {
+        setRotation(rotation() + (180 + (qrand() % 10)));
+    }
+    else
+    {
+        setRotation(rotation() + (180 + (qrand() % -10)));
+    }
+
+    // check if the new position is in bounds
+    QPointF newPoint = mapToParent(-(boundingRect().width()), -(boundingRect().width() + 2));
+
+    if(!scene()->sceneRect().contains((newPoint)))
+    {
+        // move back in bounds
+        newPoint = mapToParent(0,0);
+    }
+    else
+    {
+        // set the new position
+        setPos(newPoint);
+    }
 }

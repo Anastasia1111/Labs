@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <QTimer>
 #include "myitem.h"
 
 namespace Ui {
@@ -20,7 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
-    MyItem *item;
+    QTimer *timer;
 };
 
 #endif // MAINWINDOW_H

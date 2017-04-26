@@ -2,27 +2,25 @@
 #define MYITEM_H
 
 #include <QPainter>
+#include <QGraphicsScene>
 #include <QGraphicsItem>
 
-// class for customization
 class MyItem :public QGraphicsItem
 {
 public:
     MyItem();
-
     QRectF boundingRect() const;
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
 
-    // overriding paint()
-    void paint(QPainter * painter,
-               const QStyleOptionGraphicsItem * option,
-               QWidget * widget);
-
-    // item state
-    bool Pressed;
 protected:
-    // overriding mouse events
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void advance(int phase);
+
+private:
+    qreal angle, speed;
+    void doCollision();
+
 };
 
 #endif // MYITEM_H
