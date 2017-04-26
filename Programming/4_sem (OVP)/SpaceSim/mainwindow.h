@@ -4,7 +4,8 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QTimer>
-#include "myitem.h"
+#include "star.h"
+#include "planet.h"
 
 namespace Ui {
 class MainWindow;

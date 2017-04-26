@@ -23,12 +23,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += main.cpp\
-    myitem.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    spaceitem.cpp \
+    star.cpp \
+    planet.cpp
 
 HEADERS  += \
-    myitem.h \
-    mainwindow.h
+    mainwindow.h \
+    spaceitem.h \
+    star.h \
+    planet.h
 
 FORMS    += \
     mainwindow.ui

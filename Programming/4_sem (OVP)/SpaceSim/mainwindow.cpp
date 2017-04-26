@@ -39,10 +39,11 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addLine(bottomLine, myPen);
 
     // adding items to the scene
-    int itemCount = 20;
+    int itemCount = 10;
     for(int i = 0; i < itemCount; i++)
     {
-        MyItem *item = new MyItem();
+        //Star *item = new Star();
+        Planet *item = new Planet();
         scene->addItem(item);
     }
 

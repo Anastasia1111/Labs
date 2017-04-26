@@ -1,13 +1,16 @@
-#include "myitem.h"
+#include "spaceitem.h"
 
-MyItem::MyItem()
+SpaceItem::SpaceItem()
 {
+    // random radius
+    radius = qrand() % 30;
+
     // random start rotation
-    angle = (qrand() % 360);
-    setRotation(angle);
+    v.angle = (qrand() % 360);
+    setRotation(v.angle);
 
     // set the speed
-    speed = 5;  // 5 pixels
+    v.speed = qrand() % 10;
 
     // random start position
     int startX = 0;
@@ -27,12 +30,12 @@ MyItem::MyItem()
     setPos(mapToParent(startX, startY));
 }
 
-QRectF MyItem::boundingRect() const
+QRectF SpaceItem::boundingRect() const
 {
-    return QRect(0,0,20,20);
+    return QRect(0,0,radius*2,radius*2);
 }
 
-void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void SpaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QRectF rect = boundingRect();
 
@@ -57,16 +60,16 @@ void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     painter->drawEllipse(rect);
 }
 
-void MyItem::advance(int phase)
+void SpaceItem::advance(int phase)
 {
     if(!phase) return;
 
     QPointF location = this->pos();
 
-    setPos(mapToParent(0, -speed));
+    setPos(mapToParent(0, -v.speed));
 }
 
-void MyItem::doCollision()
+void SpaceItem::doCollision()
 {
     // get a new position
 
