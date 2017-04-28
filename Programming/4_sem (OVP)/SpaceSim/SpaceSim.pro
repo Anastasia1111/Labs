@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator a long time ago (who cares?)
+# Project created by QtCreator 2017-04-28T18:09:56
 #
 #-------------------------------------------------
 
@@ -22,19 +22,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += main.cpp\
-    mainwindow.cpp \
-    spaceitem.cpp \
-    star.cpp \
-    planet.cpp \
-    spacescene.cpp
+
+SOURCES += main.cpp \
+    space.cpp
 
 HEADERS  += \
-    mainwindow.h \
-    spaceitem.h \
-    star.h \
-    planet.h \
-    spacescene.h
+    space.h
 
 FORMS    += \
-    mainwindow.ui
+    space.ui
+
+RESOURCES += \
+    ../resources/resources.qrc
