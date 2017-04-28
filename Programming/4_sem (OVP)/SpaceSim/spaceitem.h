@@ -6,7 +6,7 @@
 #include <QGraphicsItem>
 #include <QDebug>
 
-class SpaceItem :public QGraphicsItem
+class SpaceItem : public QGraphicsItem
 {
 
 public:
@@ -25,7 +25,7 @@ protected:
     vec v;
     qreal mass, radius;
 
-    void doCollision();
+    bool doCollisionn();
 };
 
 #endif // SPACEITEM_H

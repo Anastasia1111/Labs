@@ -17,7 +17,7 @@ SpaceItem::SpaceItem(qreal x, qreal y)
 
 QRectF SpaceItem::boundingRect() const
 {
-    return QRect(-radius,-radius,radius*2,radius*2);
+    return QRect(0,0,radius*2,radius*2);
 }
 
 void SpaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -39,37 +39,20 @@ void SpaceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         painter->setPen(pen);
 
         // set the position
-        doCollision();
+        if(doCollision()){
+            painter->drawEllipse(rect);
+        } else {
+            delete this;
+        }
     }
-
-    painter->drawEllipse(rect);
 }
 
-void SpaceItem::doCollision()
+bool SpaceItem::doCollision()
 {
-    // get a new position
-
-    // change the angle with randomness
-    if(qrand() % 1)
-    {
-        v.angle = rotation() + (180 + (qrand() % 10));
-    }
-    else
-    {
-        v.angle = rotation() + (180 + (qrand() % -10));
-    }
-
-    // check if the new position is in bounds
-    QPointF newPoint = mapToParent(-(boundingRect().width()), -(boundingRect().width() + 2));
-
-    if(!scene()->sceneRect().contains((newPoint)))
-    {
-        // move back in bounds
-        newPoint = mapToParent(0,0);
-    }
-    else
-    {
-        // set the new position
-        setPos(newPoint);
+    QList<QGraphicsItem *> colList = this->collidingItems();
+    for (int i = 0; i < colList.size(); ++i) {
+        SpaceItem* item = colList.at(i);
+        if (item->mass/this->mass <=2 || item->mass/this->mass >=2)
+            set
     }
 }

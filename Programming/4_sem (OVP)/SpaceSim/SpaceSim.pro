@@ -26,13 +26,15 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     spaceitem.cpp \
     star.cpp \
-    planet.cpp
+    planet.cpp \
+    spacescene.cpp
 
 HEADERS  += \
     mainwindow.h \
     spaceitem.h \
     star.h \
-    planet.h
+    planet.h \
+    spacescene.h
 
 FORMS    += \
     mainwindow.ui

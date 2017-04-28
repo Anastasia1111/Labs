@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // void	setSceneRect(qreal x, qreal y, qreal w, qreal h)
     scene->setSceneRect(-200, -200, 300, 300);
 
-    QLineF topLine(scene->sceneRect().topLeft(),
+    /*QLineF topLine(scene->sceneRect().topLeft(),
                    scene->sceneRect().topRight());
     QLineF leftLine(scene->sceneRect().topLeft(),
                    scene->sceneRect().bottomLeft());
@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addLine(topLine, myPen);
     scene->addLine(leftLine, myPen);
     scene->addLine(rightLine, myPen);
-    scene->addLine(bottomLine, myPen);
+    scene->addLine(bottomLine, myPen);*/
 
     // adding items to the scene
     Star *item1 = new Star(scene->sceneRect().center().x(),scene->sceneRect().center().y());
