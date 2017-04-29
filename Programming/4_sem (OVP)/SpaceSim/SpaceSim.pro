@@ -24,10 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp \
-    space.cpp
+    space.cpp \
+    flyobject.cpp
 
 HEADERS  += \
-    space.h
+    space.h \
+    flyobject.h
 
 FORMS    += \
     space.ui
