@@ -25,11 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     space.cpp \
-    flyobject.cpp
+    flyobject.cpp \
+    asteroidbelt.cpp
 
 HEADERS  += \
     space.h \
-    flyobject.h
+    flyobject.h \
+    asteroidbelt.h
 
 FORMS    += \
     space.ui

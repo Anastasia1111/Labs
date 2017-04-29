@@ -43,21 +43,6 @@ void FlyObject::initSurface(qreal R, QColor surfaceColor)
     this->surfaceColor = surfaceColor;
 }
 
-qreal FlyObject::getX()
-{
-    return x;
-}
-
-qreal FlyObject::getY()
-{
-    return y;
-}
-
-qreal FlyObject::getMass()
-{
-    return mass;
-}
-
 void FlyObject::calcAccelTo(FlyObject *other)
 {
     others.append(other);
@@ -67,9 +52,9 @@ qreal FlyObject::fx(qreal local_x)
 {
     qreal a = 0;
     for (int i = 0; i < others.size(); ++i) {
-        qreal x = others.at(i)->getX();
-        qreal y = others.at(i)->getY();
-        qreal mass = others.at(i)->getMass();
+        qreal x = others.at(i)->x;
+        qreal y = others.at(i)->y;
+        qreal mass = others.at(i)->mass;
         qreal r = hypot(x - local_x, y - this->y);
         a += mass * (x - local_x) / (r*r*r);
     }
@@ -80,9 +65,9 @@ qreal FlyObject::fy(qreal local_y)
 {
     qreal a = 0;
     for (int i = 0; i < others.size(); ++i) {
-        qreal x = others.at(i)->getX();
-        qreal y = others.at(i)->getY();
-        qreal mass = others.at(i)->getMass();
+        qreal x = others.at(i)->x;
+        qreal y = others.at(i)->y;
+        qreal mass = others.at(i)->mass;
         qreal r = hypot(x - this->x, y - local_y);
         a += mass * (y - local_y) / (r*r*r);
     }
@@ -134,5 +119,5 @@ void FlyObject::updateXY()
 
 qreal FlyObject::dist(FlyObject *other)
 {
-    return hypot((x - other->getX()),(y - other->getY()));
+    return hypot((x - other->x),(y - other->y));
 }

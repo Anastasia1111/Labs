@@ -23,10 +23,6 @@ public:
 
     void initSurface(qreal R, QColor surfaceColor);
 
-    qreal getX();
-    qreal getY();
-    qreal getMass();
-
     qreal dist(FlyObject *other);
 
     void calcAccelTo(FlyObject *other);
@@ -39,7 +35,7 @@ public:
 
     void updateXY();
 
-private:
+public:
     qreal mass;
     qreal x, y, vx, vy, ax, ay;
     qreal radius;

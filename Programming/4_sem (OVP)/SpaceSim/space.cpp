@@ -42,6 +42,28 @@ void Space::spaceInit()
     ui->graphicsView->setScene(scene);
 }
 
+FlyObject* Space::join(FlyObject *obj1, FlyObject *obj2)
+{
+    QString name = obj1->name + " " + obj2->name;
+    qreal mass = obj1->mass + obj2->mass;
+
+    qreal x = (obj1->x * obj1->mass + obj2->x * obj2->mass) / mass;
+    qreal y = (obj1->y * obj1->mass + obj2->y * obj2->mass) / mass;
+
+    qreal vx = (obj1->vx * obj1->mass + obj2->vx * obj2->mass) / mass;
+    qreal vy = (obj1->vy * obj1->mass + obj2->vy * obj2->mass) / mass;
+
+    QColor new_color = obj1->surfaceColor;
+    if (obj2->mass >= obj1->mass)
+        new_color = obj2->surfaceColor;
+
+    FlyObject *obj3 = new FlyObject(name, mass, x, y, vx, vy);
+    qreal radius = pow(mass, 1/3) / 2;
+    obj3->initSurface(radius, new_color);
+
+    return obj3;
+}
+
 void Space::timerEvent(QTimerEvent* e)
 {
     //drawing

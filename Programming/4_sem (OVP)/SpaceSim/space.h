@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 
+#include "flyobject.h"
+#include "asteroidbelt.h"
+
 namespace Ui {
 class Space;
 }
@@ -23,6 +26,7 @@ public:
     ~Space();
 
     void spaceInit();
+    FlyObject *join(FlyObject *obj1, FlyObject *obj2);
 
 private slots:
     void on_actionFile_triggered();
