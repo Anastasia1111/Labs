@@ -8,6 +8,8 @@ FlyObject::FlyObject()
     surfaceColor = QColor("black");
     others = QList<FlyObject *>();
     name = "";
+
+    qDebug() << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
 FlyObject::FlyObject(QString name, qreal mass, qreal x, qreal y, qreal vx, qreal vy)
@@ -30,9 +32,11 @@ QRectF FlyObject::boundingRect() const
 
 void FlyObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    this->setPos(x-radius,y-radius);
+
     QRectF rect = boundingRect();
 
-    QPen pen(surfaceColor, 5);
+    QPen pen(surfaceColor, 1);
     painter->setPen(pen);
     painter->drawEllipse(rect);
 }

@@ -40,6 +40,9 @@ void Space::spaceInit()
     }
     scene->setBackgroundBrush(result);
     ui->graphicsView->setScene(scene);
+
+    /*AsteroidBelt* belt = new AsteroidBelt(0,0,50,75,150,QColor("red"),5);
+    belt->generate(scene);*/
 }
 
 FlyObject* Space::join(FlyObject *obj1, FlyObject *obj2)
@@ -94,7 +97,7 @@ bool Space::on_actionNew_triggered()
         spaceColor = QColor("black");
         starColor = QColor("white");
         qsrand(QTime::currentTime().msec());
-        stars = qrand()%600+150;
+        stars = qrand() % 600 + 150;
         csType = STOP;
         spaceInit();
         return true;
