@@ -122,6 +122,8 @@ void FlyObject::updateXY()
     calcX();
     calcY();
     others.clear();
+
+    qDebug() << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
 qreal FlyObject::dist(FlyObject *other)

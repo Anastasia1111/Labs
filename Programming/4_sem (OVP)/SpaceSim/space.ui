@@ -32,6 +32,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QGraphicsView" name="graphicsView">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
@@ -58,11 +61,25 @@
     <addaction name="actionNew"/>
     <addaction name="actionFile"/>
     <addaction name="actionSave"/>
+    <addaction name="actionSize"/>
     <addaction name="actionSP"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuKeys">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string> </string>
+    </property>
+    <addaction name="actionKey_Up"/>
+    <addaction name="actionKey_Down"/>
+    <addaction name="actionKey_Left"/>
+    <addaction name="actionKey_Right"/>
+   </widget>
    <addaction name="menuMenu"/>
+   <addaction name="menuKeys"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionFile">
@@ -126,6 +143,53 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSize">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/actions/select_all</normaloff>:/actions/select_all</iconset>
+   </property>
+   <property name="text">
+    <string>Set screen size</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionKey_Up">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Key Up</string>
+   </property>
+   <property name="shortcut">
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="actionKey_Down">
+   <property name="text">
+    <string>Key Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Down</string>
+   </property>
+  </action>
+  <action name="actionKey_Left">
+   <property name="text">
+    <string>Key Left</string>
+   </property>
+   <property name="shortcut">
+    <string>Left</string>
+   </property>
+  </action>
+  <action name="actionKey_Right">
+   <property name="text">
+    <string>Key Right</string>
+   </property>
+   <property name="shortcut">
+    <string>Right</string>
    </property>
   </action>
  </widget>

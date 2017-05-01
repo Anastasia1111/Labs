@@ -6,10 +6,8 @@
 
 #include "flyobject.h"
 #include "asteroidbelt.h"
+#include "winchange.h"
 
-#define CRASH_DIST 0.5
-#define OUT_DIST 10000
-#define STEPS 5
 #define KEY_MOVE_PX 20
 
 namespace Ui {
@@ -42,6 +40,16 @@ private slots:
 
     void on_actionSP_triggered();
 
+    void on_actionSize_triggered();
+
+    void on_actionKey_Up_triggered();
+
+    void on_actionKey_Down_triggered();
+
+    void on_actionKey_Left_triggered();
+
+    void on_actionKey_Right_triggered();
+
 protected:
     virtual void timerEvent(QTimerEvent *e);
     virtual void closeEvent(QCloseEvent *e);
@@ -55,12 +63,14 @@ private:
 
     qint32 width;
     qint32 height;
+    qint32 topLeftX, topLeftY;
 
     QList<AsteroidBelt *> belts;
     QList<FlyObject *> objects;
 
     QString fileName;
     bool saved;
+    bool paused;
 };
 
 #endif // MAINWINDOW_H

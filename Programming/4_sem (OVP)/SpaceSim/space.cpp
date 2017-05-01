@@ -14,6 +14,7 @@ Space::Space(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    topLeftX = topLeftY = 0;
     width = 0;
     height = 0;
     stars = 0;
@@ -23,9 +24,17 @@ Space::Space(QWidget *parent) :
     fileName = QDir::currentPath();
     saved = true;
 
+    paused = false;
+    this->setFixedSize(width,height);
+
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
 
-    statusBar()->addWidget(new QLabel("New system: Ctrl+N | Open file: Ctrl+O | Save file: Ctrl+S | Start/Pause: Space | Exit: Ctrl+Q"));
+    statusBar()->addWidget(new QLabel("New system: Ctrl+N "
+                                      "| Open file: Ctrl+O "
+                                      "| Save file: Ctrl+S "
+                                      "| Start/Pause: Space "
+                                      "| Set screen size: Ctrl+F "
+                                      "| Exit: Ctrl+Q"));
 
     startTimer(0);
 }
@@ -88,7 +97,42 @@ FlyObject* Space::join(FlyObject *obj1, FlyObject *obj2)
 
 void Space::timerEvent(QTimerEvent* e)
 {
-    //drawing
+    if (!paused){
+        QList<FlyObject *> system = objects;
+        for (qint32 i = 0; i < belts.size(); ++i){
+            system += belts.at(i)->asteroids;
+        }
+        for (qint32 i = 0; i < system.size(); ++i){
+            FlyObject *obj = system.at(i);
+            for (qint32 j = i+1; j < system.size(); ++j){
+                obj->calcAccelTo(system.at(j));
+            }
+            obj->updateXY();
+            QList<QGraphicsItem *> colList = ui->graphicsView->scene()->collidingItems(obj);
+            if(!colList.isEmpty()){
+                FlyObject *cobj = dynamic_cast<FlyObject *>(colList.at(0));
+                if (cobj){
+                    switch(csType){
+                    case 1:
+                        system.append(join(obj,cobj));
+                        system.removeAll(obj);
+                        system.removeAll(cobj);
+                        break;
+                    case 2:
+                        system.removeAll(obj);
+                        system.removeAll(cobj);
+                        break;
+                    case 3:
+                        paused = true;
+                        break;
+                    }
+                }
+            }
+            ui->graphicsView->update();
+        }
+    }
+    if (ui->graphicsView->scene())
+        ui->graphicsView->setSceneRect(topLeftX,topLeftY,width,height);
     saved = false;
 }
 
@@ -122,6 +166,8 @@ void Space::on_actionNew_triggered()
         qsrand(QTime::currentTime().msec());
         stars = qrand() % 50 + 150;
         csType = STOP;
+        topLeftX = 0;
+        topLeftY = 0;
         width = 800;
         height = 600;
 
@@ -269,6 +315,8 @@ void Space::on_actionFile_triggered()
             return;
         }
 
+        topLeftX = 0;
+        topLeftY = 0;
         spaceColor = QColor("black");
         starColor = QColor("white");
         qsrand(QTime::currentTime().msec());
@@ -362,5 +410,34 @@ void Space::on_actionFile_triggered()
 
 void Space::on_actionSP_triggered()
 {
-    //start or stop
+    paused = !paused;
+}
+
+void Space::on_actionSize_triggered()
+{
+    WinChange* dlg = new WinChange(this);
+    if (dlg->exec() == QDialog::Accepted)
+    {
+        this->setFixedSize(dlg->width(),dlg->height());
+    }
+}
+
+void Space::on_actionKey_Up_triggered()
+{
+    topLeftY -= KEY_MOVE_PX;
+}
+
+void Space::on_actionKey_Down_triggered()
+{
+    topLeftY += KEY_MOVE_PX;
+}
+
+void Space::on_actionKey_Left_triggered()
+{
+    topLeftX -= KEY_MOVE_PX;
+}
+
+void Space::on_actionKey_Right_triggered()
+{
+    topLeftX += KEY_MOVE_PX;
 }

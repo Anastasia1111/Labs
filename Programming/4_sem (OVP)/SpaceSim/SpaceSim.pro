@@ -26,15 +26,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp \
     space.cpp \
     flyobject.cpp \
-    asteroidbelt.cpp
+    asteroidbelt.cpp \
+    winchange.cpp
 
 HEADERS  += \
     space.h \
     flyobject.h \
-    asteroidbelt.h
+    asteroidbelt.h \
+    winchange.h
 
 FORMS    += \
-    space.ui
+    space.ui \
+    winchange.ui
 
 RESOURCES += \
     ../resources/resources.qrc
