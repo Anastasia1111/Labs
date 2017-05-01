@@ -13,7 +13,7 @@ class FlyObject : public QGraphicsItem
 public:
     FlyObject();
 
-    FlyObject(QString name, qreal mass, qreal x, qreal y, qreal vx, qreal vy);
+    FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, bool isStar);
 
     QRectF boundingRect() const;
 
@@ -42,6 +42,8 @@ public:
     QColor surfaceColor;
     QString name;
     QList<FlyObject *> others;
+
+    bool isStar;
 };
 
 #endif // FLYOBJECT_H

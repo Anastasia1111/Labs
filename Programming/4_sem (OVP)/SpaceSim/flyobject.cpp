@@ -12,7 +12,7 @@ FlyObject::FlyObject()
     qDebug() << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
-FlyObject::FlyObject(QString name, qreal mass, qreal x, qreal y, qreal vx, qreal vy)
+FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, bool isStar)
 {
     this->mass = mass;
     this->x = x;
@@ -20,6 +20,7 @@ FlyObject::FlyObject(QString name, qreal mass, qreal x, qreal y, qreal vx, qreal
     this->vx = vx;
     this->vy = vy;
     this->name = name;
+    this->isStar = isStar;
     others = QList<FlyObject *>();
 
     qDebug() << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
@@ -37,7 +38,9 @@ void FlyObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QRectF rect = boundingRect();
 
     QPen pen(surfaceColor, 1);
+    QBrush brush(surfaceColor);
     painter->setPen(pen);
+    painter->setBrush(brush);
     painter->drawEllipse(rect);
 }
 

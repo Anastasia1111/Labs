@@ -7,6 +7,11 @@
 #include "flyobject.h"
 #include "asteroidbelt.h"
 
+#define CRASH_DIST 0.5
+#define OUT_DIST 10000
+#define STEPS 5
+#define KEY_MOVE_PX 20
+
 namespace Ui {
 class Space;
 }
@@ -31,9 +36,9 @@ public:
 private slots:
     void on_actionFile_triggered();
 
-    bool on_actionNew_triggered();
+    void on_actionNew_triggered();
 
-    void on_actionSave_triggered();
+    bool on_actionSave_triggered();
 
     void on_actionSP_triggered();
 
@@ -47,6 +52,15 @@ private:
     QColor spaceColor;
     qint32 stars;
     qint32 csType;
+
+    qint32 width;
+    qint32 height;
+
+    QList<AsteroidBelt *> belts;
+    QList<FlyObject *> objects;
+
+    QString fileName;
+    bool saved;
 };
 
 #endif // MAINWINDOW_H

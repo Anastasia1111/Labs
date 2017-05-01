@@ -15,11 +15,11 @@ AsteroidBelt::AsteroidBelt()
     rotation = 0.0;
 }
 
-AsteroidBelt::AsteroidBelt(qreal centerX,
+AsteroidBelt::AsteroidBelt(qint32 number,
+                           qreal centerX,
                            qreal centerY,
                            qint32 radiusMin,
                            qint32 radiusMax,
-                           qint32 number,
                            QColor surfaceColor,
                            qreal rotation = 0.0) : AsteroidBelt()
 {
@@ -43,10 +43,17 @@ AsteroidBelt::AsteroidBelt(qreal centerX,
                 .arg(rotation);
 }
 
+AsteroidBelt::~AsteroidBelt()
+{
+    degenerate();
+}
+
 void AsteroidBelt::generate(QGraphicsScene *scene)
 {
+    degenerate();
+
     for (int i = 0; i < asteroidNumber; ++i){
-        qreal angle = qrand() % 360;
+        qint32 angle = qrand() % 360;
         qint32 radius = qrand() % (radiusMax-radiusMin) + radiusMin;
         qreal x = centerX + radius * sin(angle);
         qreal y = centerY + radius * cos(angle);
@@ -57,12 +64,21 @@ void AsteroidBelt::generate(QGraphicsScene *scene)
         qreal rotation_x = -dy / hypot(dx,dy) * rotation;
         qreal rotation_y = dx / hypot(dx,dy) * rotation;
 
-        FlyObject* obj = new FlyObject(QString("Asteroid %1").arg(i), 100, x, y,
+        FlyObject* obj = new FlyObject(QString("Asteroid %1").arg(i), x, y,
                                        qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_x,
-                                       qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_y);
+                                       qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_y,
+                                       100,
+                                       false);
 
-        obj->initSurface(1, surfaceColor);
+        obj->initSurface(2, surfaceColor);
 
         scene->addItem(obj);
+        asteroids.append(obj);
     }
+}
+
+void AsteroidBelt::degenerate()
+{
+    qDeleteAll(asteroids);
+    asteroids.clear();
 }
