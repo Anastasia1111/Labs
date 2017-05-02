@@ -43,15 +43,8 @@ AsteroidBelt::AsteroidBelt(qint32 number,
                 .arg(rotation);
 }
 
-AsteroidBelt::~AsteroidBelt()
+void AsteroidBelt::generate(QList<FlyObject *> &objects)
 {
-    degenerate();
-}
-
-void AsteroidBelt::generate(QGraphicsScene *scene)
-{
-    degenerate();
-
     for (int i = 0; i < asteroidNumber; ++i){
         qint32 angle = qrand() % 360;
         qint32 radius = qrand() % (radiusMax-radiusMin) + radiusMin;
@@ -68,17 +61,10 @@ void AsteroidBelt::generate(QGraphicsScene *scene)
                                        qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_x,
                                        qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_y,
                                        100,
-                                       false);
+                                       ASTEROID);
 
         obj->initSurface(2, surfaceColor);
 
-        scene->addItem(obj);
-        asteroids.append(obj);
+        objects.append(obj);
     }
-}
-
-void AsteroidBelt::degenerate()
-{
-    qDeleteAll(asteroids);
-    asteroids.clear();
 }

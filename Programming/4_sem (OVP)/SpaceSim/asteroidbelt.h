@@ -16,10 +16,8 @@ public:
                  qint32 radiusMax,
                  QColor surfaceColor,
                  qreal rotation);
-    ~AsteroidBelt();
 
-    void generate(QGraphicsScene *scene);
-    void degenerate();
+    void generate(QList<FlyObject *> &objects);
 
 public:
     qreal centerX, centerY;
@@ -28,8 +26,6 @@ public:
     QColor surfaceColor;
     qint32 speed_range_from, speed_range_to;
     qreal rotation;
-
-    QList<FlyObject *> asteroids;
 };
 
 #endif // ASTEROIDBELT_H

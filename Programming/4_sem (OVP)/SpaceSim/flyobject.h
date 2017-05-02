@@ -6,14 +6,23 @@
 #include <QGraphicsItem>
 #include <QDebug>
 
-#define SIM_PRECISION 0.1
+#define SIM_PRECISION 0.33
+
+enum ObjType{
+    PLANET = 1,
+    STAR = 2,
+    ASTEROID = 3
+};
 
 class FlyObject : public QGraphicsItem
 {
 public:
+
     FlyObject();
 
-    FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, bool isStar);
+    FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, qint32 type);
+
+    ~FlyObject();
 
     QRectF boundingRect() const;
 
@@ -43,7 +52,7 @@ public:
     QString name;
     QList<FlyObject *> others;
 
-    bool isStar;
+    qint32 type;
 };
 
 #endif // FLYOBJECT_H

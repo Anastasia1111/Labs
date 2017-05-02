@@ -1,7 +1,6 @@
 #include "space.h"
 #include "ui_space.h"
 
-#include <QLabel>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextStream>
@@ -15,33 +14,41 @@ Space::Space(QWidget *parent) :
     ui->setupUi(this);
 
     topLeftX = topLeftY = 0;
-    width = 0;
-    height = 0;
+    width = 250;
+    height = 250;
     stars = 0;
-    objects = QList<FlyObject *>();
-    belts = QList<AsteroidBelt *>();
+    system = QList<FlyObject *>();
 
     fileName = QDir::currentPath();
     saved = true;
 
     paused = false;
-    this->setFixedSize(width,height);
 
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
 
-    statusBar()->addWidget(new QLabel("New system: Ctrl+N "
-                                      "| Open file: Ctrl+O "
-                                      "| Save file: Ctrl+S "
-                                      "| Start/Pause: Space "
-                                      "| Set screen size: Ctrl+F "
-                                      "| Exit: Ctrl+Q"));
+    runningStr = new QLabel("                   "
+                            "New system: Ctrl+N "
+                            "| Open file: Ctrl+O "
+                            "| Save file: Ctrl+S "
+                            "| Start/Pause: Space "
+                            "| Set screen size and star number: Ctrl+F "
+                            "| Set collision (Merge, Destruction, Stop): F1, F2, F3 "
+                            "| Set color (Space, Stars): F5, F6 "
+                            "| Movement: Arrows "
+                            "| Exit: Ctrl+Q "
+                            "               ");
 
-    startTimer(0);
+    statusBar()->addWidget(runningStr);
+
+    this->setFixedSize(width,height);
+
+    startTimer(33);
 }
 
 Space::~Space()
 {
     delete ui;
+    delete runningStr;
 }
 
 void Space::spaceInit()
@@ -62,15 +69,12 @@ void Space::spaceInit()
     scene->setBackgroundBrush(bg);
     ui->graphicsView->setScene(scene);
 
-    for (qint32 i = 0; i < objects.size(); ++i){
-        scene->addItem(objects.at(i));
-    }
-    for (qint32 i = 0; i < belts.size(); ++i){
-        belts.at(i)->generate(scene);
+    for (qint32 i = 0; i < system.size(); ++i){
+        scene->addItem(system.at(i));
     }
 }
 
-FlyObject* Space::join(FlyObject *obj1, FlyObject *obj2)
+FlyObject* Space::merge(FlyObject *obj1, FlyObject *obj2)
 {
     QString name = obj1->name + " " + obj2->name;
     qreal mass = obj1->mass + obj2->mass;
@@ -84,11 +88,15 @@ FlyObject* Space::join(FlyObject *obj1, FlyObject *obj2)
     QColor new_color = obj1->surfaceColor;
     if (obj2->mass >= obj1->mass)
         new_color = obj2->surfaceColor;
-    bool isStar = false;
-    if (obj1->isStar || obj2->isStar)
-        isStar = true;
+    qint32 type = ASTEROID;
+    if (obj1->type == STAR || obj2->type == STAR) {
+        type = STAR;
+    } else {
+        if (obj1->type == PLANET || obj2->type == PLANET)
+            type = PLANET;
+    }
 
-    FlyObject *obj3 = new FlyObject(name, mass, x, y, vx, vy, isStar);
+    FlyObject *obj3 = new FlyObject(name, x, y, vx, vy, mass, type);
     qreal radius = pow(mass, 1/3) / 2;
     obj3->initSurface(radius, new_color);
 
@@ -98,14 +106,12 @@ FlyObject* Space::join(FlyObject *obj1, FlyObject *obj2)
 void Space::timerEvent(QTimerEvent* e)
 {
     if (!paused){
-        QList<FlyObject *> system = objects;
-        for (qint32 i = 0; i < belts.size(); ++i){
-            system += belts.at(i)->asteroids;
-        }
         for (qint32 i = 0; i < system.size(); ++i){
             FlyObject *obj = system.at(i);
-            for (qint32 j = i+1; j < system.size(); ++j){
-                obj->calcAccelTo(system.at(j));
+            for (qint32 j = 0; j < system.size(); ++j){
+                if (obj != system.at(j)){
+                    obj->calcAccelTo(system.at(j));
+                }
             }
             obj->updateXY();
             QList<QGraphicsItem *> colList = ui->graphicsView->scene()->collidingItems(obj);
@@ -114,13 +120,21 @@ void Space::timerEvent(QTimerEvent* e)
                 if (cobj){
                     switch(csType){
                     case 1:
-                        system.append(join(obj,cobj));
+                        system.append(merge(obj,cobj));
                         system.removeAll(obj);
+                        delete obj;
                         system.removeAll(cobj);
+                        delete cobj;
+                        --i;
+                        //paused = true;
                         break;
                     case 2:
                         system.removeAll(obj);
+                        delete obj;
                         system.removeAll(cobj);
+                        delete cobj;
+                        --i;
+                        //paused = true;
                         break;
                     case 3:
                         paused = true;
@@ -128,12 +142,15 @@ void Space::timerEvent(QTimerEvent* e)
                     }
                 }
             }
-            ui->graphicsView->update();
+            ui->graphicsView->scene()->update();
         }
     }
     if (ui->graphicsView->scene())
         ui->graphicsView->setSceneRect(topLeftX,topLeftY,width,height);
     saved = false;
+
+    QString rsBefore = runningStr->text().remove(runningStr->text().length()-1,1);
+    runningStr->setText(runningStr->text().remove(0,runningStr->text().length()-1)+rsBefore);
 }
 
 void Space::closeEvent(QCloseEvent *e)
@@ -166,6 +183,7 @@ void Space::on_actionNew_triggered()
         qsrand(QTime::currentTime().msec());
         stars = qrand() % 50 + 150;
         csType = STOP;
+        on_actionStop_triggered();
         topLeftX = 0;
         topLeftY = 0;
         width = 800;
@@ -191,12 +209,12 @@ void Space::on_actionNew_triggered()
                 qsrand(QTime::currentTime().msec());
                 stars = qrand() % 50 + 150;
                 csType = STOP;
+                on_actionStop_triggered();
                 width = 800;
                 height = 600;
 
                 ui->graphicsView->scene()->clear();
-                objects.clear();
-                belts.clear();
+                system.clear();
 
                 //random system generation
 
@@ -233,20 +251,10 @@ bool Space::on_actionSave_triggered()
         data += QString("STAR_COLOR:%1\n").arg(starColor.name());
         data += QString("SPACE_COLOR:%1\n").arg(spaceColor.name());
         data += QString("ON_COLLISION:%1\n\n").arg(csType);
-        for (qint32 i = 0; i < belts.size(); ++i){
-            AsteroidBelt *belt = belts.at(i);
-            data += QString("ASTEROID_BELT:%1,%2,%3,%4,%5,%6,%7\n\n")
-                    .arg(belt->asteroidNumber)
-                    .arg(belt->centerX)
-                    .arg(belt->centerY)
-                    .arg(belt->radiusMin)
-                    .arg(belt->radiusMax)
-                    .arg(belt->surfaceColor.name())
-                    .arg(belt->rotation);
-        }
-        for (qint32 i = 0; i < objects.size(); ++i){
-            FlyObject *obj = objects.at(i);
-            if (obj->isStar){
+        for (qint32 i = 0; i < system.size(); ++i){
+            FlyObject *obj = system.at(i);
+            switch(obj->type){
+            case STAR:
                 data += QString("STAR:%1,%2,%3,%4,%5,%6,%7,%8\n\n")
                         .arg(obj->name)
                         .arg(obj->x)
@@ -256,7 +264,8 @@ bool Space::on_actionSave_triggered()
                         .arg(obj->mass)
                         .arg(obj->radius)
                         .arg(obj->surfaceColor.name());
-            } else {
+                break;
+            case PLANET:
                 data += QString("PLANET:%1,%2,%3,%4,%5,%6,%7,%8\n\n")
                         .arg(obj->name)
                         .arg(obj->x)
@@ -266,6 +275,18 @@ bool Space::on_actionSave_triggered()
                         .arg(obj->mass)
                         .arg(obj->radius)
                         .arg(obj->surfaceColor.name());
+                break;
+            case ASTEROID:
+                data += QString("ASTEROID:%1,%2,%3,%4,%5,%6,%7,%8\n\n")
+                        .arg(obj->name)
+                        .arg(obj->x)
+                        .arg(obj->y)
+                        .arg(obj->vx)
+                        .arg(obj->vy)
+                        .arg(obj->mass)
+                        .arg(obj->radius)
+                        .arg(obj->surfaceColor.name());
+                break;
             }
         }
 
@@ -327,8 +348,7 @@ void Space::on_actionFile_triggered()
 
         if(ui->graphicsView->scene()){
             ui->graphicsView->scene()->clear();
-            objects.clear();
-            belts.clear();
+            system.clear();
         }
 
         QFile file(fileName);
@@ -364,7 +384,8 @@ void Space::on_actionFile_triggered()
                                                           beltInfo.section(',',4,4).toInt(),
                                                           QColor(beltInfo.section(',',5,5)),
                                                           beltInfo.section(',',6,6).toDouble());
-                    belts.append(belt);
+                    belt->generate(system);
+                    qDebug() << system.size();
                 }
                 if (line.startsWith("PLANET:")){
                     QString objInfo = line.section(':',1,1);
@@ -374,10 +395,10 @@ void Space::on_actionFile_triggered()
                                                    objInfo.section(',',3,3).toDouble(),
                                                    objInfo.section(',',4,4).toDouble(),
                                                    objInfo.section(',',5,5).toDouble(),
-                                                   false);
+                                                   PLANET);
                     obj->initSurface(objInfo.section(',',6,6).toDouble(),
                                      QColor(objInfo.section(',',7,7)));
-                    objects.append(obj);
+                    system.append(obj);
                 }
                 if (line.startsWith("STAR:")){
                     QString objInfo = line.section(':',1,1);
@@ -387,11 +408,35 @@ void Space::on_actionFile_triggered()
                                                    objInfo.section(',',3,3).toDouble(),
                                                    objInfo.section(',',4,4).toDouble(),
                                                    objInfo.section(',',5,5).toDouble(),
-                                                   true);
+                                                   STAR);
                     obj->initSurface(objInfo.section(',',6,6).toDouble(),
                                      QColor(objInfo.section(',',7,7)));
-                    objects.append(obj);
+                    system.append(obj);
                 }
+                if (line.startsWith("ASTEROID:")){
+                    QString objInfo = line.section(':',1,1);
+                    FlyObject *obj = new FlyObject(objInfo.section(',',0,0),
+                                                   objInfo.section(',',1,1).toDouble(),
+                                                   objInfo.section(',',2,2).toDouble(),
+                                                   objInfo.section(',',3,3).toDouble(),
+                                                   objInfo.section(',',4,4).toDouble(),
+                                                   objInfo.section(',',5,5).toDouble(),
+                                                   ASTEROID);
+                    obj->initSurface(objInfo.section(',',6,6).toDouble(),
+                                     QColor(objInfo.section(',',7,7)));
+                    system.append(obj);
+                }
+            }
+            switch(csType){
+            case DESTR:
+                on_actionDestr_triggered();
+                break;
+            case STOP:
+                on_actionStop_triggered();
+                break;
+            case MERGE:
+                on_actionMerge_triggered();
+                break;
             }
             qDebug() << "File opened successfully";
             spaceInit();
@@ -419,6 +464,7 @@ void Space::on_actionSize_triggered()
     if (dlg->exec() == QDialog::Accepted)
     {
         this->setFixedSize(dlg->width(),dlg->height());
+        stars = dlg->stars();
     }
 }
 
@@ -440,4 +486,31 @@ void Space::on_actionKey_Left_triggered()
 void Space::on_actionKey_Right_triggered()
 {
     topLeftX += KEY_MOVE_PX;
+}
+
+void Space::on_actionDestr_triggered()
+{
+    csType = DESTR;
+    ui->actionDestr->setChecked(true);
+    ui->actionMerge->setChecked(false);
+    ui->actionStop->setChecked(false);
+    qDebug() << "destr";
+}
+
+void Space::on_actionStop_triggered()
+{
+    csType = STOP;
+    ui->actionDestr->setChecked(false);
+    ui->actionMerge->setChecked(false);
+    ui->actionStop->setChecked(true);
+    qDebug() << "stop";
+}
+
+void Space::on_actionMerge_triggered()
+{
+    csType = MERGE;
+    ui->actionDestr->setChecked(false);
+    ui->actionMerge->setChecked(true);
+    ui->actionStop->setChecked(false);
+    qDebug() << "merge";
 }

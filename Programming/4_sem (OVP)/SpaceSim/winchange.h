@@ -16,6 +16,7 @@ public:
     ~WinChange();
     qint32 width();
     qint32 height();
+    qint32 stars();
 
 private:
     Ui::WinChange *ui;

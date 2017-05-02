@@ -3,11 +3,13 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QLabel>
 
 #include "flyobject.h"
 #include "asteroidbelt.h"
 #include "winchange.h"
 
+#define CRASH_DIST 0.5
 #define KEY_MOVE_PX 20
 
 namespace Ui {
@@ -19,7 +21,7 @@ class Space : public QMainWindow
     Q_OBJECT
 
     enum CollisionSolveType{
-        JOIN = 1,
+        MERGE = 1,
         DESTR = 2,
         STOP = 3
     };
@@ -29,7 +31,7 @@ public:
     ~Space();
 
     void spaceInit();
-    FlyObject *join(FlyObject *obj1, FlyObject *obj2);
+    FlyObject *merge(FlyObject *obj1, FlyObject *obj2);
 
 private slots:
     void on_actionFile_triggered();
@@ -50,6 +52,12 @@ private slots:
 
     void on_actionKey_Right_triggered();
 
+    void on_actionDestr_triggered();
+
+    void on_actionStop_triggered();
+
+    void on_actionMerge_triggered();
+
 protected:
     virtual void timerEvent(QTimerEvent *e);
     virtual void closeEvent(QCloseEvent *e);
@@ -65,12 +73,13 @@ private:
     qint32 height;
     qint32 topLeftX, topLeftY;
 
-    QList<AsteroidBelt *> belts;
-    QList<FlyObject *> objects;
+    QList<FlyObject *> system;
 
     QString fileName;
     bool saved;
     bool paused;
+
+    QLabel *runningStr;
 };
 
 #endif // MAINWINDOW_H

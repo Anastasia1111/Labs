@@ -27,3 +27,8 @@ qint32 WinChange::height()
 {
     return ui->lineEdit_Height->text().toInt();
 }
+
+qint32 WinChange::stars()
+{
+    return ui->lineEdit_Stars->text().toInt();
+}

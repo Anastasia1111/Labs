@@ -12,7 +12,7 @@ FlyObject::FlyObject()
     qDebug() << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
-FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, bool isStar)
+FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, qint32 type)
 {
     this->mass = mass;
     this->x = x;
@@ -20,10 +20,16 @@ FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal m
     this->vx = vx;
     this->vy = vy;
     this->name = name;
-    this->isStar = isStar;
+    this->type = type;
     others = QList<FlyObject *>();
 
-    qDebug() << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "from constr:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+}
+
+FlyObject::~FlyObject()
+{
+    others.clear();
+    qDebug() << "from destr:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
 QRectF FlyObject::boundingRect() const
@@ -123,7 +129,7 @@ void FlyObject::updateXY()
     calcY();
     others.clear();
 
-    qDebug() << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "from update:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
 qreal FlyObject::dist(FlyObject *other)
