@@ -1,8 +1,8 @@
 #Makefile
 
 libSimpleComputer.a: sc.o
-	ar r libSimpleComputer.a sc.o
+	ar r ./lib/libSimpleComputer.a sc.o
 
-sc.o: sc.c
-	gcc -c sc.c
+sc.o:
+	gcc -c ./src/sc.c
 

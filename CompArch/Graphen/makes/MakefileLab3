@@ -1,7 +1,7 @@
 #Makefile
 
 libMyTerm.a: myTerm.o
-	ar rc libMyTerm.a myTerm.o
+	ar rc ./lib/libMyTerm.a myTerm.o
 
-myTerm.o: myTerm.c
-	gcc -c myTerm.c
+myTerm.o:
+	gcc -c ./src/myTerm.c

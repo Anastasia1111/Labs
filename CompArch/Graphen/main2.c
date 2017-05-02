@@ -31,14 +31,23 @@
 enum commands { READ = 0x10, WRITE = 0x11, LOAD = 0x20, STORE = 0x21, ADD = 0x30, SUB = 0x31, DIVIDE = 0x32, MUL = 0x33, JUMP = 0x40,
 JNEG = 0x41, JZ = 0x42, HALT = 0x43,  RCR = 0x63, RCCL = 0x69};
 
+
+void initialize();
+void memory_window();
+void accumulator_window();
+void instCount_window();
+void operation_window();
+void flags_window();
+void keys_window();
+void print_value(int prev);
+
 int pause(void);
 void write_ram(int x, int y);
 void big_window(int InstCount);
 void print_flag();
 void IncInstCount(int signo);
 void StopIt(int signo);
-//void memory_movement(int prev);
-int commandwindow(); // return 1, if you press 'yes'
+int commandwindow();
 int write_dex_num(enum keys button, int num[2]);
 int ALU(int command, int operand);
 int CU();
@@ -56,70 +65,10 @@ int main(int argc, char **argv)
 	int i, j;
 	InstCount = 0;
 	int value = 0, flag;
-	mt_clrscr();
+	int com, oper;
 	char mem[6];
 	int n;
-	sc_memoryInit();
-	sc_regInit();
-	sc_regSet(REG_STEP_IGNORE, 1);
-	
-	//memory_window
-	
-	int com, oper;
-	for(i = 0; i < 10; ++i)
-		for(j = 0; j < 10; ++j)
-			write_ram(i, j);
-	bc_box(1, 1, 11, 60);
-	mt_gotoXY(1, 30);
-	write(STDOUT_FILENO, " Memory ", 8);
-	
-	
-	// accumulator_window
-	
-	bc_box(1, 62, 2, 18);
-	mt_gotoXY(1, 66);
-	write(STDOUT_FILENO, "Accumulator", 11);
-	mt_gotoXY(2, 70);
-	n = sprintf(mem, "%04d", Accum);
-	write(STDOUT_FILENO, mem, n);
-	
-	//instCount_window
-	
-	bc_box(4, 62, 2, 18);
-	mt_gotoXY(4, 63);
-	write(STDOUT_FILENO, "InstructionCount ", 17);
-	
-	//Operation_window
-	
-	bc_box(7, 62, 2, 18);
-	mt_gotoXY(7, 66);
-	write(STDOUT_FILENO, "Operation", 9);
-	
-	//Flags_window
-	
-	bc_box(10, 62, 2, 18);
-	mt_gotoXY(10, 66);
-	write(STDOUT_FILENO, "Flags", 5);
-	
-	//KEYS_window
-	
-	bc_box(13, 47, 9, 33);
-	mt_gotoXY(13, 48);
-	write(STDOUT_FILENO, " Keys ", 6);
-	mt_gotoXY(14, 48);
-	write(STDOUT_FILENO, "L  - Load", 9);
-	mt_gotoXY(15, 48);
-	write(STDOUT_FILENO, "S  - Save", 9);
-	mt_gotoXY(16, 48);
-	write(STDOUT_FILENO, "R  - Run", 8);
-	mt_gotoXY(17, 48);
-	write(STDOUT_FILENO, "T  - Step", 9);
-	mt_gotoXY(18, 48);
-	write(STDOUT_FILENO, "I  - Reset", 10);
-	mt_gotoXY(19, 48);
-	write(STDOUT_FILENO, "F5 - Accumulator", 16);
-	mt_gotoXY(20, 48);
-	write(STDOUT_FILENO, "F6 - InstructionCounter", 23);
+	initialize();
 	
 	//BIG_window
 	
@@ -128,27 +77,13 @@ int main(int argc, char **argv)
 	//MECHANISM
 	int prev = InstCount;
 	int prevx, prevy, InstCountx, InstCounty;
-	int flagstep;
+	int flagstep = 1;
+	int exit = 0;
 	
 	enum keys button;
-	while(1)
+	while(!exit)
 	{
-		for(i = 0; i < 10; ++i)
-			for(j = 0; j < 10; ++j)
-				write_ram(i, j);
-		prevx = prev / 10;
-		prevy = prev % 10;
-		InstCountx = InstCount / 10;
-		InstCounty = InstCount % 10;
-		mt_setbgcolor(DEF);
-		mt_setfgcolor(DEF);
-		write_ram(prevx, prevy);
-		
-		mt_setbgcolor(LRED);
-		mt_setfgcolor(LWHITE);
-		write_ram(InstCountx, InstCounty);
-		mt_setbgcolor(DEF);
-		mt_setfgcolor(DEF);
+		print_value(prev);
 		mt_gotoXY(5, 70);
 		n = sprintf(mem, "%04d", InstCount);
 		write(STDOUT_FILENO, mem, n);
@@ -202,11 +137,9 @@ int main(int argc, char **argv)
 				sc_regSet(REG_STEP_IGNORE, 0);
 				break;
 			case t_key:
-				if(InstCount > 99)
-				{
-					break;
-				}
 				InstCount++;
+				if(InstCount > 99)
+					InstCount--;
 				break;
 			case i_key:
 				raise(SIGUSR1);
@@ -445,6 +378,7 @@ int main(int argc, char **argv)
 					InstCount++;
 				break;
 			case quit_key:
+				exit = 1;
 				break;
 			default:
 				break;
@@ -705,34 +639,6 @@ void StopIt(int signo)
 	return;
 }
 
-/*void memory_movement(int prev)
-{
-	int i, j, n;
-	char mem[8];
-	int prevx = prev / 10;
-	int prevy = prev % 10;
-	int InstCountx = InstCount / 10;
-	int InstCounty = InstCount % 10;
-	mt_setbgcolor(DEF);
-	mt_setfgcolor(DEF);
-	write_ram(prevx, prevy);
-	mt_setbgcolor(LRED);
-	mt_setfgcolor(LWHITE);
-	write_ram(InstCountx, InstCounty);
-	mt_setbgcolor(DEF);
-	mt_setfgcolor(DEF);
-	mt_gotoXY(5, 70);
-	n = sprintf(mem, "%04d", InstCount);
-	write(STDOUT_FILENO, mem, n);
-	mt_gotoXY(2, 70);
-	n = sprintf(mem, "%04X", Accum);
-	write(STDOUT_FILENO, mem, n);
-	
-	big_window(InstCount);
-	print_flag();
-	mt_gotoXY(25, 1);
-}*/
-
 int commandwindow()
 {
 	enum keys button;
@@ -896,4 +802,102 @@ int write_dex_num(enum keys button, int num[2])
 int ALU(int command, int operand)
 {
 	
+}
+
+
+void initialize()
+{
+	mt_clrscr();
+	sc_memoryInit();
+	sc_regInit();
+	sc_regSet(REG_STEP_IGNORE, 1);		
+	memory_window();
+	accumulator_window();
+	instCount_window();
+	operation_window();
+	flags_window();
+	keys_window();
+}
+
+void memory_window()
+{
+	for(int i = 0; i < 10; ++i)
+		for(int j = 0; j < 10; ++j)
+			write_ram(i, j);
+	bc_box(1, 1, 11, 60);
+	mt_gotoXY(1, 30);
+	write(STDOUT_FILENO, " Memory ", 8);
+}
+
+void accumulator_window()
+{
+	char mem[8];
+	bc_box(1, 62, 2, 18);
+	mt_gotoXY(1, 66);
+	write(STDOUT_FILENO, "Accumulator", 11);
+	mt_gotoXY(2, 70);
+	int n = sprintf(mem, "%04d", Accum);
+	write(STDOUT_FILENO, mem, n);
+}
+
+void instCount_window()
+{
+	bc_box(4, 62, 2, 18);
+	mt_gotoXY(4, 63);
+	write(STDOUT_FILENO, "InstructionCount ", 17);
+}
+	
+void operation_window()
+{
+	bc_box(7, 62, 2, 18);
+	mt_gotoXY(7, 66);
+	write(STDOUT_FILENO, "Operation", 9);
+}	
+
+void flags_window()
+{
+	bc_box(10, 62, 2, 18);
+	mt_gotoXY(10, 66);
+	write(STDOUT_FILENO, "Flags", 5);
+}
+
+void keys_window()
+{
+	bc_box(13, 47, 9, 33);
+	mt_gotoXY(13, 48);
+	write(STDOUT_FILENO, " Keys ", 6);
+	mt_gotoXY(14, 48);
+	write(STDOUT_FILENO, "L  - Load", 9);
+	mt_gotoXY(15, 48);
+	write(STDOUT_FILENO, "S  - Save", 9);
+	mt_gotoXY(16, 48);
+	write(STDOUT_FILENO, "R  - Run", 8);
+	mt_gotoXY(17, 48);
+	write(STDOUT_FILENO, "T  - Step", 9);
+	mt_gotoXY(18, 48);
+	write(STDOUT_FILENO, "I  - Reset", 10);
+	mt_gotoXY(19, 48);
+	write(STDOUT_FILENO, "F5 - Accumulator", 16);
+	mt_gotoXY(20, 48);
+	write(STDOUT_FILENO, "F6 - InstructionCounter", 23);
+}
+
+void print_value(int prev)
+{
+	for(int i = 0; i < 10; ++i)
+		for(int j = 0; j < 10; ++j)
+			write_ram(i, j);
+	int prevx = prev / 10;
+	int prevy = prev % 10;
+	int InstCountx = InstCount / 10;
+	int InstCounty = InstCount % 10;
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
+	write_ram(prevx, prevy);
+	
+	mt_setbgcolor(LRED);
+	mt_setfgcolor(LWHITE);
+	write_ram(InstCountx, InstCounty);
+	mt_setbgcolor(DEF);
+	mt_setfgcolor(DEF);
 }

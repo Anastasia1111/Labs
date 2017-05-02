@@ -1,5 +1,5 @@
 libMyReadKey.a: myReadKey.o
-	ar rc libMyReadKey.a myReadKey.o
+	ar rc ./lib/libMyReadKey.a myReadKey.o
 
-myReadKey.o: myReadKey.c
-	gcc -c myReadKey.c
+myReadKey.o:
+	gcc -c ./src/myReadKey.c

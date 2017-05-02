@@ -1,12 +1,19 @@
-#ifndef MY_READ_KEY
-#define MY_READ_KEY
+#ifndef SC_LIBS
+#define SC_LIBS
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
 #include <termios.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <string.h>
+
+#endif //SC_LIBS
+
+#ifndef MY_READ_KEY
+#define MY_READ_KEY
 
 enum keys {
 	l_key = 0,

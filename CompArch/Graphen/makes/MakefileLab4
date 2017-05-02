@@ -1,8 +1,8 @@
 libMyBigChars.a: myBigChars.o myTerm.o
-	ar rc libMyBigChars.a myBigChars.o myTerm.o
+	ar rc ./lib/libMyBigChars.a myBigChars.o myTerm.o
 
-myBigChars.o: myBigChars.c
-	gcc -c myBigChars.c
+myBigChars.o:
+	gcc -c ./src/myBigChars.c
 
-myTerm.o: myTerm.c
-	gcc -c myTerm.c
+myTerm.o:
+	gcc -c ./src/myTerm.c

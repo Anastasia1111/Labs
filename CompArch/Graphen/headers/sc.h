@@ -1,8 +1,21 @@
+#ifndef SC_LIBS
+#define SC_LIBS
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <string.h>
+
+#endif //SC_LIBS
+
 #ifndef SC_H
 #define SC_H
 
 #include <stdlib.h>
-#include <stdio.h>
 
 #define REG_OVERFLOW 0x1
 #define REG_ZERO_DIV 0x2

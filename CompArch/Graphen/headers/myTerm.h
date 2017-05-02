@@ -1,5 +1,5 @@
-#ifndef MYTERM_H
-#define MYTERM_H
+#ifndef SC_LIBS
+#define SC_LIBS
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -8,6 +8,13 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <string.h>
+
+#endif //SC_LIBS
+
+#ifndef MYTERM_H
+#define MYTERM_H
+
 
 enum colors {GRAY = 0, RED = 1, GREEN = 2, YELLOW = 3, BLUE = 4, PURPLE = 5, TURQUO = 6, WHITE = 7,
 	LGRAY = 8, LRED = 9, LGREEN = 10, LYELLOW = 11, LBLUE = 12, LPURPLE = 13, LTURQUO = 14, LWHITE = 15, BLACK = 16, DEF = 300};

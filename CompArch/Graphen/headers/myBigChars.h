@@ -1,3 +1,17 @@
+#ifndef SC_LIBS
+#define SC_LIBS
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <string.h>
+
+#endif //SC_LIBS
+
 #ifndef MYBIGCHARS_H
 #define MYBIGCHARS_H
 
@@ -53,7 +67,6 @@
 
 #define _P_ {0x7E181800, 0x0018187E}
 
-#include <string.h>
 #include "myTerm.h"
 
 int bc_printA (char * str);
