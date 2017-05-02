@@ -76,7 +76,7 @@ void Space::spaceInit()
 
 FlyObject* Space::merge(FlyObject *obj1, FlyObject *obj2)
 {
-    QString name = obj1->name + " " + obj2->name;
+    QString name = obj1->name + "+" + obj2->name;
     qreal mass = obj1->mass + obj2->mass;
 
     qreal x = (obj1->x * obj1->mass + obj2->x * obj2->mass) / mass;
@@ -97,7 +97,9 @@ FlyObject* Space::merge(FlyObject *obj1, FlyObject *obj2)
     }
 
     FlyObject *obj3 = new FlyObject(name, x, y, vx, vy, mass, type);
-    qreal radius = pow(mass, 1/3) / 2;
+    qreal radius = obj1->radius * mass / obj1->mass;
+    if (obj1->radius < obj2->radius)
+        radius = obj2->radius * mass / obj2->mass;
     obj3->initSurface(radius, new_color);
 
     return obj3;
@@ -118,9 +120,11 @@ void Space::timerEvent(QTimerEvent* e)
             if(!colList.isEmpty()){
                 FlyObject *cobj = dynamic_cast<FlyObject *>(colList.at(0));
                 if (cobj){
+                    FlyObject *mobj = merge(obj,cobj);
                     switch(csType){
                     case 1:
-                        system.append(merge(obj,cobj));
+                        system.append(mobj);
+                        ui->graphicsView->scene()->addItem(mobj);
                         system.removeAll(obj);
                         delete obj;
                         system.removeAll(cobj);
