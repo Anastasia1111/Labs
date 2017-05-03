@@ -9,7 +9,7 @@ FlyObject::FlyObject()
     others = QList<FlyObject *>();
     name = "";
 
-    qDebug() << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "constructed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
 FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, qint32 type)
@@ -23,13 +23,13 @@ FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal m
     this->type = type;
     others = QList<FlyObject *>();
 
-    qDebug() << "from constr:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "constructed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
 FlyObject::~FlyObject()
 {
     others.clear();
-    qDebug() << "from destr:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "destroyed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
 QRectF FlyObject::boundingRect() const
@@ -39,6 +39,8 @@ QRectF FlyObject::boundingRect() const
 
 void FlyObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(widget);
+    Q_UNUSED(option);
     this->setPos(x-radius,y-radius);
 
     QRectF rect = boundingRect();
@@ -68,7 +70,7 @@ qreal FlyObject::fx(qreal local_x)
         qreal x = others.at(i)->x;
         qreal y = others.at(i)->y;
         qreal mass = others.at(i)->mass;
-        qreal r = hypot(x - local_x, y - this->y);
+        qreal r = std::hypot(x - local_x, y - this->y);
         a += mass * (x - local_x) / (r*r*r);
     }
     return a;
@@ -81,7 +83,7 @@ qreal FlyObject::fy(qreal local_y)
         qreal x = others.at(i)->x;
         qreal y = others.at(i)->y;
         qreal mass = others.at(i)->mass;
-        qreal r = hypot(x - this->x, y - local_y);
+        qreal r = std::hypot(x - this->x, y - local_y);
         a += mass * (y - local_y) / (r*r*r);
     }
     return a;
@@ -129,10 +131,10 @@ void FlyObject::updateXY()
     calcY();
     others.clear();
 
-    qDebug() << "from update:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "update:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
 }
 
 qreal FlyObject::dist(FlyObject *other)
 {
-    return hypot((x - other->x),(y - other->y));
+    return std::hypot((x - other->x),(y - other->y));
 }

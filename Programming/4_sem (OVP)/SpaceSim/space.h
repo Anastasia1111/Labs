@@ -4,12 +4,16 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QLabel>
+#include <QMessageBox>
+#include <QTextStream>
+#include <QFileDialog>
+#include <QColorDialog>
 
 #include "flyobject.h"
 #include "asteroidbelt.h"
 #include "winchange.h"
 
-#define CRASH_DIST 0.5
+#define CRASH_DIST 0.25
 #define KEY_MOVE_PX 20
 
 namespace Ui {
@@ -57,6 +61,10 @@ private slots:
     void on_actionStop_triggered();
 
     void on_actionMerge_triggered();
+
+    void on_actionSpace_color_triggered();
+
+    void on_actionStars_color_triggered();
 
 protected:
     virtual void timerEvent(QTimerEvent *e);

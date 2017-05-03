@@ -1,12 +1,6 @@
 #include "space.h"
 #include "ui_space.h"
 
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QTextStream>
-#include <QTime>
-#include <QDebug>
-
 Space::Space(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Space)
@@ -107,47 +101,62 @@ FlyObject* Space::merge(FlyObject *obj1, FlyObject *obj2)
 
 void Space::timerEvent(QTimerEvent* e)
 {
-    if (!paused){
+    if (!paused && ui->graphicsView->scene()){
+        qreal r_min_max = std::hypot(width,height);
+        qreal r_min = r_min_max;
+        FlyObject *cobj1, *cobj2;
+
         for (qint32 i = 0; i < system.size(); ++i){
-            FlyObject *obj = system.at(i);
+            FlyObject *obj1 = system.at(i);
             for (qint32 j = 0; j < system.size(); ++j){
-                if (obj != system.at(j)){
-                    obj->calcAccelTo(system.at(j));
-                }
-            }
-            obj->updateXY();
-            QList<QGraphicsItem *> colList = ui->graphicsView->scene()->collidingItems(obj);
-            if(!colList.isEmpty()){
-                FlyObject *cobj = dynamic_cast<FlyObject *>(colList.at(0));
-                if (cobj){
-                    FlyObject *mobj = merge(obj,cobj);
-                    switch(csType){
-                    case 1:
-                        system.append(mobj);
-                        ui->graphicsView->scene()->addItem(mobj);
-                        system.removeAll(obj);
-                        delete obj;
-                        system.removeAll(cobj);
-                        delete cobj;
-                        --i;
-                        //paused = true;
-                        break;
-                    case 2:
-                        system.removeAll(obj);
-                        delete obj;
-                        system.removeAll(cobj);
-                        delete cobj;
-                        --i;
-                        //paused = true;
-                        break;
-                    case 3:
-                        paused = true;
-                        break;
+                if (obj1 != system.at(j)){
+                    FlyObject *obj2 = system.at(j);
+                    qreal dist = obj1->dist(obj2);
+                    dist -= (obj1->radius + obj2->radius);
+                    obj1->calcAccelTo(obj2);
+
+                    if (dist < r_min) {
+                        r_min = dist;
+                        cobj1 = obj1;
+                        cobj2 = obj2;
                     }
                 }
             }
-            ui->graphicsView->scene()->update();
         }
+
+        for (qint32 i = 0; i < system.size(); ++i)
+            system.at(i)->updateXY();
+
+        if (r_min < CRASH_DIST){
+            FlyObject *mobj = merge(cobj1,cobj2);
+            switch(csType){
+            case 1:
+                qDebug() << "Collision detected (merge)";
+                system.append(mobj);
+                ui->graphicsView->scene()->addItem(mobj);
+                system.removeAll(cobj1);
+                delete cobj1;
+                system.removeAll(cobj2);
+                delete cobj2;
+                r_min = r_min_max;
+                break;
+            case 2:
+                qDebug() << "Collision detected (destroy)";
+                system.removeAll(cobj1);
+                delete cobj1;
+                system.removeAll(cobj2);
+                delete cobj2;
+                r_min = r_min_max;
+                break;
+            case 3:
+                qDebug() << "Collision detected (stop)";
+                paused = true;
+                r_min = r_min_max;
+                break;
+            }
+        }
+
+        ui->graphicsView->scene()->update();
     }
     if (ui->graphicsView->scene())
         ui->graphicsView->setSceneRect(topLeftX,topLeftY,width,height);
@@ -517,4 +526,14 @@ void Space::on_actionMerge_triggered()
     ui->actionMerge->setChecked(true);
     ui->actionStop->setChecked(false);
     qDebug() << "merge";
+}
+
+void Space::on_actionSpace_color_triggered()
+{
+
+}
+
+void Space::on_actionStars_color_triggered()
+{
+
 }

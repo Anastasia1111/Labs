@@ -1,7 +1,5 @@
 #include "asteroidbelt.h"
 
-#include <QTime>
-
 AsteroidBelt::AsteroidBelt()
 {
     centerX = centerY = 0.0;
@@ -43,7 +41,7 @@ AsteroidBelt::AsteroidBelt(qint32 number,
                 .arg(rotation);
 }
 
-void AsteroidBelt::generate(QList<FlyObject *> &objects)
+void AsteroidBelt::generate(QList<FlyObject *> &system)
 {
     for (int i = 0; i < asteroidNumber; ++i){
         qint32 angle = qrand() % 360;
@@ -54,17 +52,17 @@ void AsteroidBelt::generate(QList<FlyObject *> &objects)
         qreal dx = centerX - x;
         qreal dy = centerY - y;
 
-        qreal rotation_x = -dy / hypot(dx,dy) * rotation;
-        qreal rotation_y = dx / hypot(dx,dy) * rotation;
+        qreal rotation_x = -dy / std::hypot(dx,dy) * rotation;
+        qreal rotation_y = dx / std::hypot(dx,dy) * rotation;
 
         FlyObject* obj = new FlyObject(QString("Asteroid %1").arg(i), x, y,
                                        qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_x,
                                        qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_y,
-                                       100,
+                                       qrand() % 100 + 50,
                                        ASTEROID);
 
         obj->initSurface(2, surfaceColor);
 
-        objects.append(obj);
+        system.append(obj);
     }
 }

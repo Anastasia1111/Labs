@@ -1,8 +1,6 @@
 #include "winchange.h"
 #include "ui_winchange.h"
 
-#include <QDebug>
-
 WinChange::WinChange(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::WinChange)

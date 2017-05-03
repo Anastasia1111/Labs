@@ -58,19 +58,35 @@
     <property name="title">
      <string>Menu</string>
     </property>
-    <widget class="QMenu" name="menuSet_collision">
+    <widget class="QMenu" name="menuCollision">
      <property name="title">
       <string>Set collision</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resources/resources.qrc">
+       <normaloff>:/actions/warning</normaloff>:/actions/warning</iconset>
      </property>
      <addaction name="actionMerge"/>
      <addaction name="actionDestr"/>
      <addaction name="actionStop"/>
     </widget>
+    <widget class="QMenu" name="menuColor">
+     <property name="title">
+      <string>Set color</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resources/resources.qrc">
+       <normaloff>:/actions/paint</normaloff>:/actions/paint</iconset>
+     </property>
+     <addaction name="actionSpace_color"/>
+     <addaction name="actionStars_color"/>
+    </widget>
     <addaction name="actionNew"/>
     <addaction name="actionFile"/>
     <addaction name="actionSave"/>
     <addaction name="actionSize"/>
-    <addaction name="menuSet_collision"/>
+    <addaction name="menuCollision"/>
+    <addaction name="menuColor"/>
     <addaction name="actionSP"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -235,6 +251,28 @@
    </property>
    <property name="shortcut">
     <string>F1</string>
+   </property>
+  </action>
+  <action name="actionSpace_color">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Set space color</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionStars_color">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Set stars color</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
    </property>
   </action>
  </widget>

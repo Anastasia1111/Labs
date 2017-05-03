@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QDebug>
+#include <cmath>
 
 #define SIM_PRECISION 0.33
 
@@ -20,7 +21,13 @@ public:
 
     FlyObject();
 
-    FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, qint32 type);
+    FlyObject(QString name,
+              qreal x,
+              qreal y,
+              qreal vx,
+              qreal vy,
+              qreal mass,
+              qint32 type);
 
     ~FlyObject();
 

@@ -1,7 +1,7 @@
 #ifndef ASTEROIDBELT_H
 #define ASTEROIDBELT_H
 
-#include <QtAlgorithms>
+#include <QTime>
 
 #include "flyobject.h"
 
@@ -17,7 +17,7 @@ public:
                  QColor surfaceColor,
                  qreal rotation);
 
-    void generate(QList<FlyObject *> &objects);
+    void generate(QList<FlyObject *> &system);
 
 public:
     qreal centerX, centerY;
