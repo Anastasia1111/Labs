@@ -63,7 +63,7 @@ int g_chs2large (tCHS input, tLARGE *output)
 	do {
 	  C /= 2;
 	  H *= 2;
-	} while ((c/2 > 0) && (h*2 < 256));
+	} while ((C/2 > 0) && (H*2 < 256));
 	output->c=C;
 	output->h=H;
 	output->s=input.s;
@@ -81,23 +81,23 @@ int g_chs2idechs (tCHS input, tIDECHS *output)
 	H=input.h;
 	do {
 	  C *= 2;
-	  H \= 2;
-	} while ((c*2 < 65536) && (h\2 > 0));
+	  H /= 2;
+	} while ((C*2 < 65536) && (H/2 > 0));
 	output->c=C;
 	output->h=H;
 	output->s=input.s;
 	return 0;
 };
 
-int g_large2chs (tCHS input, tIDECHS *output)
+int g_large2chs (tLARGE input, tCHS *output)
 {
 	int C,H;
 	C=input.c;
 	H=input.h;
 	do {
 	  C *= 2;
-	  H \= 2;
-	} while ((c*2 < 1024) && (h\2 > 0));
+	  H /= 2;
+	} while ((C*2 < 1024) && (H/2 > 0));
 	if (C > 1023 || H > 15) return 1;
 	output->c=C;
 	output->h=H;
@@ -111,8 +111,8 @@ int g_large2idechs (tLARGE input, tIDECHS *output)
 	H=input.h;
 	do {
 	  C *= 2;
-	  H \= 2;
-	} while ((c*2 < 1024) && (h\2 > 0));
+	  H /= 2;
+	} while ((C*2 < 1024) && (H/2 > 0));
 	if (C > 65535 || H > 15) return 1;
 	output->c=C;
 	output->h=H;
@@ -149,25 +149,25 @@ int g_idechs2lba (tIDECHS input, tLBA *output)
 int a_lba2chs (tCHS geometry, tLBA input, tCHS *output)
 {
 	if ((geometry.c * geometry.h * geometry.s) < input.size) return 1;
-	output->C = input.size / (geometry.h * geometry.s);
-	output->H = (input.size / geometry.s) % geometry.h;
-	output->S = input.size % geometry.s;
+	output->c = input.size / (geometry.h * geometry.s);
+	output->h = (input.size / geometry.s) % geometry.h;
+	output->s = input.size % geometry.s;
 	return 0;
 };
 int a_lba2large (tLARGE geometry, tLBA input, tLARGE *output)
 {
 	if ((geometry.c * geometry.h * geometry.s) < input.size) return 1;
-	output->C = input.size / (geometry.h * geometry.s);
-	output->H = (input.size / geometry.s) % geometry.h;
-	output->S = input.size % geometry.s;
+	output->c = input.size / (geometry.h * geometry.s);
+	output->h = (input.size / geometry.s) % geometry.h;
+	output->s = input.size % geometry.s;
 	return 0;
 };
 int a_lba2idechs (tIDECHS geometry, tLBA input, tIDECHS *output)
 {
 	if ((geometry.c * geometry.h * geometry.s) < input.size) return 1;
-	output->C = input.size / (geometry.h * geometry.s);
-	output->H = (input.size / geometry.s) % geometry.h;
-	output->S = input.size % geometry.s;
+	output->c = input.size / (geometry.h * geometry.s);
+	output->h = (input.size / geometry.s) % geometry.h;
+	output->s = input.size % geometry.s;
 	return 0;
 };
 int a_chs2lba (tCHS geometry, tCHS input, tLBA *output)
