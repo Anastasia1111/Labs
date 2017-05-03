@@ -25,7 +25,9 @@ typedef struct // 28 bites
 	unsigned char sector; // 8 bits
 	unsigned char head; //  4 bits
 	unsigned short int cylinder; // 16 bits
-} tIDECHS ;
+} tIDECHS;
+
+int K[8] = {2, 4, 8, 16, 32, 64, 128, 255};
 
 int g_lba2chs 	   (tLBA, tCHS *);
 int g_lba2large    (tLBA, tLARGE *);
