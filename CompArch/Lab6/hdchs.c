@@ -2,151 +2,271 @@
 
 int g_lba2chs (tLBA input, tCHS *output)
 {
-	int cyl = (input.size / 63) / 16;
-	output->cylinder = cyl;
-	output->head = (input.size / 63) % 16;
-	output->sector = (input.size % 63) + 1;
+	int CH = input.size / 63;
+	int H = CH / 1023;
+	int k;
+	while (H > k){ 
+ 		if (k == 16) break;
+		k *= 2;
+	} 
+	if (k == 16) 
+		k = 15;
+	if (H / k < 1024) {
+		output->c = CH / k;
+		output->h = k;
+		output->s = 63;
+	} else
+		return 1;
 	return 0;
 };
 int g_lba2large (tLBA input, tLARGE *output)
 {
-	int h = (input.size / 63) / 1023;
-	for(int i = 0; i < 8; ++i)
-		if(K[i] > h)
-		{
-			h = K[i];
-			break;
-		}
-	output->head = h;
-	output->sector = 63;
-	output->cylinder = input.size / h;
+	int CH,H,k = 2;
+	CH = input.size/63;
+	H = CH/1024;
+	while ((H/k) > 0){
+		if (k == 256) break;
+		k *= 2;
+	}
+	if (k == 256) 
+		k = 255;
+	if (H/k < 1024){
+		output->c = CH / k;
+		output->h = k;
+		output->s = 63;
+	} else return 1;
 	return 0;
 };
 int g_lba2idechs (tLBA input, tIDECHS *output)
 {
-	int cyl = (input.size / 256) / 16;
-	output->cylinder = cyl % 65536;
-	output->head = (input.size / 256) % 16;
-	output->sector = (input.size % 256) + 1;
+	int CH,H,k = 2;
+	CH = input.size/255;
+	H = CH/65535;
+	while ((H/k) > 0){
+		if (k == 256) break;
+		k *= 2;
+	}
+	if (k == 256) 
+		k = 255;
+	if (H/k < 65536){
+		output->c = CH / k;
+		output->h = k;
+		output->s = 255;
+	} else return 1;
 	return 0;
 };
 int g_chs2large (tCHS input, tLARGE *output)
 {
+	int C,H;
+	C=input.c;
+	H=input.h;
+	do {
+	  C /= 2;
+	  H *= 2;
+	} while ((c/2 > 0) && (h*2 < 256));
+	output->c=C;
+	output->h=H;
+	output->s=input.s;
 	return 0;
 };
 int g_chs2lba (tCHS input, tLBA *output)
 {
-	output->size = input.cylinder * input.head * input.sector - 1;
+	output->size = input.c * input.h * input.s;
 	return 0;
 };
 int g_chs2idechs (tCHS input, tIDECHS *output)
 {
-	
+	int C,H;
+	C=input.c;
+	H=input.h;
+	do {
+	  C *= 2;
+	  H \= 2;
+	} while ((c*2 < 65536) && (h\2 > 0));
+	output->c=C;
+	output->h=H;
+	output->s=input.s;
 	return 0;
 };
 
 int g_large2chs (tCHS input, tIDECHS *output)
 {
+	int C,H;
+	C=input.c;
+	H=input.h;
+	do {
+	  C *= 2;
+	  H \= 2;
+	} while ((c*2 < 1024) && (h\2 > 0));
+	if (C > 1023 || H > 15) return 1;
+	output->c=C;
+	output->h=H;
+	output->s=input.s;
 	return 0;
 };
 int g_large2idechs (tLARGE input, tIDECHS *output)
 {
+	int C,H;
+	C=input.c;
+	H=input.h;
+	do {
+	  C *= 2;
+	  H \= 2;
+	} while ((c*2 < 1024) && (h\2 > 0));
+	if (C > 65535 || H > 15) return 1;
+	output->c=C;
+	output->h=H;
+	output->s=input.s;
 	return 0;
 };
 int g_large2lba (tLARGE input, tLBA *output)
 {
-	output->size = input.cylinder  * input.head * input.sector - 1;
+	output->size = input.c  * input.h * input.s;
 	return 0;
 };
-int g_idechs2chs (tIDECHS, tCHS *);
-int g_idechs2large (tIDECHS, tLARGE *);
+int g_idechs2chs (tIDECHS input, tCHS *output)
+{
+	tLBA buf;
+	g_idechs2lba(input,&buf);
+	if (g_lba2chs(buf, output) == 1) return 1;
+	return 0;
+};
+int g_idechs2large (tIDECHS input, tLARGE *output)
+{
+	tLBA buf;
+	g_idechs2lba(input,&buf);
+	if (g_lba2large(buf, output) == 1) return 1;
+	return 0;
+	};
 int g_idechs2lba (tIDECHS input, tLBA *output)
 {
-	output->size = input.cylinder * input.head * input.sector;
+	output->size = input.c * input.h * input.s;
 	return 0;
 };
 
+//Address
+
 int a_lba2chs (tCHS geometry, tLBA input, tCHS *output)
 {
-	output->sector = input.size % geometry.head + 1;
-	output->cylinder = (input.size / geometry.sector / geometry.head) % 1024;
-	output->head = (input.size / geometry.sector) % geometry.head;
+	if ((geometry.c * geometry.h * geometry.s) < input.size) return 1;
+	output->C = input.size / (geometry.h * geometry.s);
+	output->H = (input.size / geometry.s) % geometry.h;
+	output->S = input.size % geometry.s;
 	return 0;
 };
 int a_lba2large (tLARGE geometry, tLBA input, tLARGE *output)
 {
-	output->sector = (input.size % geometry.sector) + 1;
-	output->head = (input.size / geometry.sector) % geometry.head;
-	output->cylinder = (input.size / geometry.sector / geometry.head) % 1024;
+	if ((geometry.c * geometry.h * geometry.s) < input.size) return 1;
+	output->C = input.size / (geometry.h * geometry.s);
+	output->H = (input.size / geometry.s) % geometry.h;
+	output->S = input.size % geometry.s;
 	return 0;
 };
 int a_lba2idechs (tIDECHS geometry, tLBA input, tIDECHS *output)
 {
-	output->sector = (input.size % geometry.sector) + 1;
-	output->head = (input.size / geometry.sector) % geometry.head;
-	output->cylinder = (input.size / geometry.sector / geometry.head) % 65536;
+	if ((geometry.c * geometry.h * geometry.s) < input.size) return 1;
+	output->C = input.size / (geometry.h * geometry.s);
+	output->H = (input.size / geometry.s) % geometry.h;
+	output->S = input.size % geometry.s;
 	return 0;
 };
 int a_chs2lba (tCHS geometry, tCHS input, tLBA *output)
 {
-	output->size = (input.cylinder * geometry.head + input.head) * geometry.sector + input.sector - 1;
+	if ((geometry.c < input.c) || (geometry.h < input.h) || (geometry.s < input.s)) return 1;
+		output->size = input.c * (geometry.h * geometry.s) + input.s * geometry.s + input.s;
 	return 0;
 };
+
 int a_large2lba (tLARGE geometry, tLARGE input, tLBA *output)
 {
-	output->size = (input.cylinder * geometry.head + input.head)*geometry.sector + input.sector - 1;
+	if ((geometry.c < input.c) || (geometry.h < input.h) || (geometry.s < input.s)) return 1;
+		output->size = input.c * (geometry.h * geometry.s) + input.s * geometry.s + input.s;
 	return 0;
 };
+
 int a_idechs2lba (tIDECHS geometry, tIDECHS input, tLBA *output)
 {
-	output->size = (input.cylinder * geometry.head + input.head)*geometry.sector + input.sector - 1;
+	if ((geometry.c < input.c) || (geometry.h < input.h) || (geometry.s < input.s)) return 1;
+		output->size = input.c * (geometry.h * geometry.s) + input.s * geometry.s + input.s;
 	return 0;
 };
+
 int a_large2chs (tLARGE geometry1, tCHS geometry2, tLARGE input, tCHS *output)
 {
-	int lba = input.cylinder * geometry1.head + input.head * geometry1.sector + input.sector - 1;
-	output->sector = lba % geometry2.sector + 1;
-	output->head = (lba / geometry2.sector) % geometry2.head;
-	output->cylinder = (lba / geometry2.sector) / geometry2.head;
+	int C, H, k = 1;
+	if (geometry1.c >= geometry2.c || geometry1.h <= geometry2.h) return 1;
+	C=geometry1.c;
+	H=geometry1.h;
+	do{
+		C *= 2;
+		H /= 2;
+		k *= 2;
+	} while ((C < geometry2.c)  && (H > geometry2.h));
+	output->c=geometry1.c * (input.h % k) + input.c;
+	output->h=input.h % k;
+	output->s=input.s;
 	return 0;
-	};
+};
+
 int a_large2idechs (tLARGE geometry1, tIDECHS geometry2, tLARGE input, tIDECHS *output)
 {
-	int lba = input.cylinder * geometry1.head + input.head * geometry1.sector + input.sector - 1;
-	output->sector = lba % geometry2.sector + 1;
-	output->head = (lba / geometry2.sector) % geometry2.head;
-	output->cylinder = (lba / geometry2.sector) / geometry2.head;
+	int C, H, k = 1;
+	if (geometry1.c >= geometry2.c || geometry1.h <= geometry2.h) return 1;
+	C=geometry1.c;
+	H=geometry1.h;
+	do{
+		C *= 2;
+		H /= 2;
+		k *= 2;
+	} while ((C < geometry2.c)  && (H > geometry2.h));
+	output->c=geometry1.c * (input.h % k) + input.c;
+	output->h=input.h % k;
+	output->s=input.s;
 	return 0;
 };
 int a_chs2large (tCHS geometry1, tLARGE geometry2, tCHS input, tLARGE *output)
 {
-	int lba = input.cylinder * geometry1.head + input.head * geometry1.sector + input.sector - 1;
-	output->sector = lba % geometry2.sector + 1;
-	output->head = (lba / geometry2.sector) % geometry2.head;
-	output->cylinder = (lba / geometry2.sector) / geometry2.head;
+	int C, H, k=1;
+	if (geometry1.c <= geometry2.c || geometry1.h >= geometry2.h) return 1;
+	C = geometry1.c;
+	H = geometry1.h;
+	do{
+		C /= 2;
+		H *= 2;
+		k *= 2;
+	} while ((C > geometry2.c) && (H < geometry2.h));
+	output->c = input.c % geometry2.c;
+	output->h = (geometry2.h / k) * (input.c % k) + input.h;
+	output->s = input.s;
 	return 0;
 };
 int a_idechs2large (tIDECHS geometry1, tLARGE geometry2, tIDECHS input, tLARGE *output)
 {
-	int lba = input.cylinder * geometry1.head + input.head * geometry1.sector + input.sector - 1;
-	output->sector = lba % geometry2.sector + 1;
-	output->head = (lba / geometry2.sector) % geometry2.head;
-	output->cylinder = (lba / geometry2.sector) / geometry2.head;
+	tLBA buf;
+	a_idechs2lba(geometry1,input,&buf);
+	if (a_lba2large(geometry2,buf,output) == 1) return 1;
 	return 0;
 };
 int a_chs2idechs (tCHS geometry1, tIDECHS geometry2, tCHS input, tIDECHS *output)
 {
-	int lba = input.cylinder * geometry1.head + input.head * geometry1.sector + input.sector - 1;
-	output->sector = lba % geometry2.sector + 1;
-	output->head = (lba / geometry2.sector) % geometry2.head;
-	output->cylinder = (lba / geometry2.sector) / geometry2.head;
+	int C, H, k = 1;
+	if (geometry1.c >= geometry2.c || geometry1.h <= geometry2.h) return 1;
+	C=geometry1.c;
+	H=geometry1.h;
+	do{
+		C *= 2;
+		H /= 2;
+		k *= 2;
+	} while ((C < geometry2.c)  && (H > geometry2.h));
+	output->c=geometry1.c * (input.h % k) + input.c;
+	output->h=input.h % k;
+	output->s=input.s;
 	return 0;
 };
 int a_idechs2chs (tIDECHS geometry1, tCHS geometry2, tIDECHS input, tCHS *output)
 {
-	int lba = input.cylinder * geometry1.head + input.head * geometry1.sector + input.sector - 1;
-	output->sector = lba % geometry2.sector + 1;
-	output->head = (lba / geometry2.sector) % geometry2.head;
-	output->cylinder = (lba / geometry2.sector) / geometry2.head;
+	tLBA buf;
+	a_idechs2lba(geometry1,input,&buf);
+	if (a_lba2chs(geometry2,buf,output) == 1) return 1;
 	return 0;
 };
