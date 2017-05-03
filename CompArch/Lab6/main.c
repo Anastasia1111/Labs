@@ -6,7 +6,7 @@ typedef struct
 {
 	unsigned char active;   
 	tLARGE CHSbegin;        
-	unsigned char type;     
+	unsigned char oc;     
 	tLARGE CHSend;           
 	tLBA LBAbegin;         
 	unsigned int size; 
@@ -96,19 +96,19 @@ int main(){
 			scanf("%d",&type_oc);
 			switch (type_oc){
 				case 1:
-					 buf.type = 0x04;
+					 buf.oc = 0x04;
 				break;
 				case 2:
-					 buf.type = 0x0c;
+					 buf.oc = 0x0c;
 				break;
 				case 3:
-					 buf.type = 0x82;
+					 buf.oc = 0x82;
 				break;
 				case 4:
-					 buf.type = 0x83;
+					 buf.oc = 0x83;
 				break;
 				case 5:
-					 buf.type = 0x07;
+					 buf.oc = 0x07;
 				break;
 				default:
 					 flag = 1;
@@ -128,7 +128,7 @@ int main(){
 		if (((buf.CHSbegin.c == geom.c) && (buf.CHSbegin.h == geom.h) && (buf.CHSbegin.s == geom.s)) || (k == 3))
 		{
 			tail->table[k] = buf;
-			tail->table[k].type = 0x05;
+			tail->table[k].oc = 0x05;
 			if (k != 3)
 				tail->table[k+1].LBAbegin.size = 0;
 			temp = malloc(sizeof(struct part_tables));
@@ -154,7 +154,7 @@ int main(){
 			printf("%7d", temp->table[i].CHSbegin.c);
 			printf("%4d", temp->table[i].CHSbegin.h);
 			printf("%3d", temp->table[i].CHSbegin.s + 1);
-			printf("%5x", temp->table[i].type);
+			printf("%5x", temp->table[i].oc);
 			printf("%7d", temp->table[i].CHSend.c);
 			printf("%4d", temp->table[i].CHSend.h);
 			printf("%3d", temp->table[i].CHSend.s + 1);
