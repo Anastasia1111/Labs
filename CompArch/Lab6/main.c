@@ -17,14 +17,11 @@ struct part_tables {
 	struct part_tables *next;
 } *head,*temp,*tail;
 
-	part tm;
-	tIDECHS source;
-	tLARGE geom, adr;
-	tLBA disk, adres;
-
 int main(){
 	int t,k = 0,b = 1,free_size,type_oc,flag;
 	char c;
+	tLARGE geom;
+	tLBA adres;
 	adres.size = 1; // 0 - this table
 	geom.c = 1023;
 	geom.h = 255;
@@ -33,6 +30,7 @@ int main(){
 	tail = head;
  
 	printf("Введите IDECHS геометрию диска\n");
+	tIDECHS source;
 	
 	do {
 		printf("C:"); 
@@ -60,7 +58,10 @@ int main(){
 		else break;
 	} while (1);
 	source.s=t;
-
+	
+	tLBA disk;
+	tLARGE adr;
+	part buf;
 	g_idechs2lba(source, &disk);
 	printf("Размер диска %.2f Gb\n",(double) disk.size / (2048 * 1024)); // * 512 / 1024^3
 	free_size=disk.size / 2; // * 512 / 1024 
@@ -72,17 +73,17 @@ int main(){
 		} while (t > free_size);
 		if(t == 0) break;
 		free_size -= t;
-		tm.LBAbegin.size = adres.size;
-		tm.size = t * 2;
-		adres.size += tm.size;
-		if(a_lba2large(geom,tm.LBAbegin,&adr) == 0)
-			tm.CHSbegin = adr;
+		buf.LBAbegin.size = adres.size;
+		buf.size = t * 2;
+		adres.size += buf.size;
+		if(a_lba2large(geom,buf.LBAbegin,&adr) == 0)
+			buf.CHSbegin = adr;
 		else
-			tm.CHSbegin = geom; 
+			buf.CHSbegin = geom; 
 		if (a_lba2large(geom,adres,&adr) == 0)
-			tm.CHSend = adr;
+			buf.CHSend = adr;
 		else
-			tm.CHSend = geom;
+			buf.CHSend = geom;
 		flag = 1;
 		while (flag){
 			flag = 0;
@@ -95,49 +96,49 @@ int main(){
 			scanf("%d",&type_oc);
 			switch (type_oc){
 				case 1:
-					 tm.type = 0x04;
+					 buf.type = 0x04;
 				break;
 				case 2:
-					 tm.type = 0x0c;
+					 buf.type = 0x0c;
 				break;
 				case 3:
-					 tm.type = 0x82;
+					 buf.type = 0x82;
 				break;
 				case 4:
-					 tm.type = 0x83;
+					 buf.type = 0x83;
 				break;
 				case 5:
-					 tm.type = 0x07;
+					 buf.type = 0x07;
 				break;
 				default:
 					 flag = 1;
 			}
 		}
-		tm.active = 0;
+		buf.active = 0;
 		if(b){
 			printf("Установить раздел активным (y/n)\n"); 
 			do{
 				scanf("%c",&c);
 			} while((c != 'n') && (c != 'y'));
 			if ((c == 'y')){
-				tm.active = 0x80;
+				buf.active = 0x80;
 				b = 0;
 			}
 		}
-		if (((tm.CHSbegin.c == geom.c) && (tm.CHSbegin.h == geom.h) && (tm.CHSbegin.s == geom.s)) || (k == 3))
+		if (((buf.CHSbegin.c == geom.c) && (buf.CHSbegin.h == geom.h) && (buf.CHSbegin.s == geom.s)) || (k == 3))
 		{
-			tail->table[k] = tm;
+			tail->table[k] = buf;
 			tail->table[k].type = 0x05;
 			if (k != 3)
 				tail->table[k+1].LBAbegin.size = 0;
 			temp = malloc(sizeof(struct part_tables));
 			tail->next = temp;
 			tail = temp;
-			tail->table[0] = tm;
+			tail->table[0] = buf;
 			tail->table[1].LBAbegin.size = 0;
 			k = 1;
 		} else {
-			tail->table[k] = tm;
+			tail->table[k] = buf;
 			tail->table[++k].LBAbegin.size = 0;
 		}
 	} while (free_size != 0);
