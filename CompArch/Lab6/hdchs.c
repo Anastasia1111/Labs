@@ -4,7 +4,7 @@ int g_lba2chs (tLBA input, tCHS *output)
 {
 	int CH = input.size / 63;
 	int H = CH / 1023;
-	int k;
+	int k = 2;
 	while (H > k){ 
  		if (k == 16) break;
 		k *= 2;

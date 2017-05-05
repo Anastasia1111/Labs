@@ -18,7 +18,7 @@ struct part_tables {
 } *head,*temp,*tail;
 
 int main(){
-	int t,k = 0,b = 1,free_size,type_oc,flag;
+	int t, b = 1,free_size,type_oc,flag;
 	char c;
 	tLARGE geom;
 	tLBA adres;
@@ -35,7 +35,7 @@ int main(){
 	do {
 		printf("C:"); 
 		scanf("%d",&t);
-		if(t > geom.c)
+		if(t > 16384)
 			printf("Error\n");
 		else break;
 	} while (1);
@@ -44,7 +44,7 @@ int main(){
 	do {
 		printf("H:");
 		scanf("%d",&t);
-		if(t > 15)
+		if(t > 16)
 			printf("Error\n");
 		else break;
 	} while (1);
@@ -53,7 +53,7 @@ int main(){
 	do {
 		printf("S:");
 		scanf("%d",&t);
-		if(t > geom.s)
+		if(t > 255)
 			printf("Error\n");
 		else break;
 	} while (1);
@@ -65,6 +65,7 @@ int main(){
 	g_idechs2lba(source, &disk);
 	printf("Размер диска %.2f Gb\n",(double) disk.size / (2048 * 1024)); // * 512 / 1024^3
 	free_size=disk.size / 2; // * 512 / 1024 
+	int k = 0;
 	do{
 		do{
 			printf("Свободного места: %d Кб\n",free_size);
@@ -79,36 +80,62 @@ int main(){
 		if(a_lba2large(geom,buf.LBAbegin,&adr) == 0)
 			buf.CHSbegin = adr;
 		else
-			buf.CHSbegin = geom; 
+		{
+			buf.CHSbegin = geom;
+			buf.CHSbegin.s -= 1;
+		} 
 		if (a_lba2large(geom,adres,&adr) == 0)
 			buf.CHSend = adr;
 		else
+		{
 			buf.CHSend = geom;
+			buf.CHSend.s -= 1;
+		}
 		flag = 1;
 		while (flag){
 			flag = 0;
 			printf("Тип ОС:\n");
-			printf("1 - FAT16\n");
-			printf("2 - FAT32\n");
-			printf("3 - Linux swap\n");
-			printf("4 - Linux\n");
-			printf("5 - HPFS/NTFS\n");
+			printf("1 - Empty\n");
+			printf("2 - FAT12\n");
+			printf("3 - FAT16 < 32M\n");
+			printf("4 - Расширенный\n");
+			printf("5 - MS-DOS FAT16\n");
+			printf("6 - HPFS/NTFS\n");
+			printf("7 - Win95 FAT32 (LBA)\n");
+			printf("8 - Win95 FAT16\n");
+			printf("9 - Linux swap\n");
+			printf("0 - Linux\n");
 			scanf("%d",&type_oc);
 			switch (type_oc){
 				case 1:
-					 buf.oc = 0x04;
+					 buf.oc = 0x00;
 				break;
 				case 2:
-					 buf.oc = 0x0c;
+					 buf.oc = 0x01;
 				break;
 				case 3:
-					 buf.oc = 0x82;
+					 buf.oc = 0x04;
 				break;
 				case 4:
-					 buf.oc = 0x83;
+					 buf.oc = 0x05;
 				break;
 				case 5:
+					 buf.oc = 0x06;
+				break;
+				case 6:
 					 buf.oc = 0x07;
+				break;
+				case 7:
+					 buf.oc = 0x0c;
+				break;
+				case 8:
+					 buf.oc = 0x0e;
+				break;
+				case 9:
+					 buf.oc = 0x82;
+				break;
+				case 0:
+					 buf.oc = 0x83;
 				break;
 				default:
 					 flag = 1;
@@ -128,7 +155,7 @@ int main(){
 		if (((buf.CHSbegin.c == geom.c) && (buf.CHSbegin.h == geom.h) && (buf.CHSbegin.s == geom.s)) || (k == 3))
 		{
 			tail->table[k] = buf;
-			tail->table[k].oc = 0x05;
+			tail->table[k].oc = 0x00;
 			if (k != 3)
 				tail->table[k+1].LBAbegin.size = 0;
 			temp = malloc(sizeof(struct part_tables));
@@ -146,7 +173,6 @@ int main(){
 	temp = head;
  	while (temp != NULL){
 		int i;
-		//printf("Адрес сектора где расположена таблица %d\n",temp->table[0].LBAbegin);
 		for (i = 0; i < 4; i++)
 		{ 
 			if (temp->table[i].LBAbegin.size == 0) break;
