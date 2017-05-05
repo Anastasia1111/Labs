@@ -43,6 +43,21 @@ Space::~Space()
 {
     delete ui;
     delete runningStr;
+    system.clear();
+}
+
+void Space::setBG(QGraphicsScene *scene)
+{
+    if (scene != NULL){
+        QPixmap bg(width, height);
+        bg.fill(spaceColor);
+        QPainter painter(&bg);
+        painter.setBrush(starColor);
+        for (qint32 i = 0; i < stars; ++i){
+            painter.drawEllipse(qrand()%width,qrand()%height,2,2);
+        }
+        scene->setBackgroundBrush(bg);
+    }
 }
 
 void Space::spaceInit()
@@ -53,19 +68,14 @@ void Space::spaceInit()
         delete ui->graphicsView->scene();
 
     QGraphicsScene* scene = new QGraphicsScene(this);
-    QPixmap bg(width, height);
-    bg.fill(spaceColor);
-    QPainter painter(&bg);
-    painter.setBrush(starColor);
-    for (qint32 i = 0; i < stars; ++i){
-        painter.drawEllipse(qrand()%width,qrand()%height,2,2);
-    }
-    scene->setBackgroundBrush(bg);
+    setBG(scene);
     ui->graphicsView->setScene(scene);
 
     for (qint32 i = 0; i < system.size(); ++i){
         scene->addItem(system.at(i));
     }
+
+    topLeftX = topLeftY = 0;
 }
 
 FlyObject* Space::merge(FlyObject *obj1, FlyObject *obj2)
@@ -91,9 +101,9 @@ FlyObject* Space::merge(FlyObject *obj1, FlyObject *obj2)
     }
 
     FlyObject *obj3 = new FlyObject(name, x, y, vx, vy, mass, type);
-    qreal radius = obj1->radius * mass / obj1->mass;
+    qreal radius = obj1->radius * 1.1;
     if (obj1->radius < obj2->radius)
-        radius = obj2->radius * mass / obj2->mass;
+        radius = obj2->radius * 1.1;
     obj3->initSurface(radius, new_color);
 
     return obj3;
@@ -102,23 +112,39 @@ FlyObject* Space::merge(FlyObject *obj1, FlyObject *obj2)
 void Space::timerEvent(QTimerEvent* e)
 {
     if (!paused && ui->graphicsView->scene()){
-        qreal r_min_max = std::hypot(width,height);
-        qreal r_min = r_min_max;
-        FlyObject *cobj1, *cobj2;
-
         for (qint32 i = 0; i < system.size(); ++i){
             FlyObject *obj1 = system.at(i);
             for (qint32 j = 0; j < system.size(); ++j){
                 if (obj1 != system.at(j)){
                     FlyObject *obj2 = system.at(j);
                     qreal dist = obj1->dist(obj2);
-                    dist -= (obj1->radius + obj2->radius);
                     obj1->calcAccelTo(obj2);
 
-                    if (dist < r_min) {
-                        r_min = dist;
-                        cobj1 = obj1;
-                        cobj2 = obj2;
+                    if (dist <= 0) {
+                        FlyObject *mobj = merge(obj1,obj2);
+                        switch(csType){
+                        case 1:
+                            qDebug() << "Collision detected (merge)";
+                            system.append(mobj);
+                            ui->graphicsView->scene()->addItem(mobj);
+                            system.removeAll(obj1);
+                            delete obj1;
+                            system.removeAll(obj2);
+                            delete obj2;
+                            break;
+                        case 2:
+                            qDebug() << "Collision detected (destroy)";
+                            system.removeAll(obj1);
+                            delete obj1;
+                            system.removeAll(obj2);
+                            delete obj2;
+                            break;
+                        case 3:
+                            qDebug() << "Collision detected (stop)";
+                            paused = true;
+                            break;
+                        }
+                        break;
                     }
                 }
             }
@@ -127,40 +153,12 @@ void Space::timerEvent(QTimerEvent* e)
         for (qint32 i = 0; i < system.size(); ++i)
             system.at(i)->updateXY();
 
-        if (r_min < CRASH_DIST){
-            FlyObject *mobj = merge(cobj1,cobj2);
-            switch(csType){
-            case 1:
-                qDebug() << "Collision detected (merge)";
-                system.append(mobj);
-                ui->graphicsView->scene()->addItem(mobj);
-                system.removeAll(cobj1);
-                delete cobj1;
-                system.removeAll(cobj2);
-                delete cobj2;
-                r_min = r_min_max;
-                break;
-            case 2:
-                qDebug() << "Collision detected (destroy)";
-                system.removeAll(cobj1);
-                delete cobj1;
-                system.removeAll(cobj2);
-                delete cobj2;
-                r_min = r_min_max;
-                break;
-            case 3:
-                qDebug() << "Collision detected (stop)";
-                paused = true;
-                r_min = r_min_max;
-                break;
-            }
-        }
-
         ui->graphicsView->scene()->update();
+
+        saved = false;
     }
     if (ui->graphicsView->scene())
         ui->graphicsView->setSceneRect(topLeftX,topLeftY,width,height);
-    saved = false;
 
     QString rsBefore = runningStr->text().remove(runningStr->text().length()-1,1);
     runningStr->setText(runningStr->text().remove(0,runningStr->text().length()-1)+rsBefore);
@@ -168,6 +166,8 @@ void Space::timerEvent(QTimerEvent* e)
 
 void Space::closeEvent(QCloseEvent *e)
 {
+    paused = true;
+
     if (ui->graphicsView->scene() && !saved) {
         QMessageBox question(QMessageBox::Question, "Save file?", "Do you want to save system before exit?",
                              QMessageBox::Ok, this);
@@ -190,19 +190,46 @@ void Space::closeEvent(QCloseEvent *e)
 
 void Space::on_actionNew_triggered()
 {
+    paused = true;
+
     if (!ui->graphicsView->scene() || saved) {
         spaceColor = QColor("black");
         starColor = QColor("white");
         qsrand(QTime::currentTime().msec());
         stars = qrand() % 50 + 150;
-        csType = STOP;
-        on_actionStop_triggered();
+        on_actionMerge_triggered();
         topLeftX = 0;
         topLeftY = 0;
         width = 800;
         height = 600;
 
-        //random system generation
+        qint32 planetLine = height/2;
+        FlyObject *star = new FlyObject("Star",
+                                        width/2,
+                                        planetLine,
+                                        0,
+                                        0,
+                                        qrand()%1000+4000,
+                                        STAR);
+        star->initSurface(qrand()%5+10,
+                          starColor);
+        system.append(star);
+        qint32 planetCount = qrand()%4+3;
+        for (qint32 i = 1; i <= planetCount; ++i){
+            FlyObject *planet = new FlyObject(QString("Planet %1").arg(i),
+                                              qrand()%width,
+                                              planetLine,
+                                              0,
+                                              qrand()%10-5,
+                                              qrand()%90+10,
+                                              PLANET);
+            planet->initSurface(qrand()%10,
+                              QColor(qrand()%256,
+                                     qrand()%256,
+                                     qrand()%256)
+                              );
+            system.append(planet);
+        }
 
         saved = false;
 
@@ -221,15 +248,40 @@ void Space::on_actionNew_triggered()
                 starColor = QColor("white");
                 qsrand(QTime::currentTime().msec());
                 stars = qrand() % 50 + 150;
-                csType = STOP;
-                on_actionStop_triggered();
+                on_actionMerge_triggered();
                 width = 800;
                 height = 600;
 
                 ui->graphicsView->scene()->clear();
                 system.clear();
 
-                //random system generation
+                qint32 planetLine = height/2;
+                FlyObject *star = new FlyObject("Star",
+                                                width/2,
+                                                planetLine,
+                                                0,
+                                                0,
+                                                qrand()%1000+4000,
+                                                STAR);
+                star->initSurface(qrand()%5+10,
+                                  starColor);
+                system.append(star);
+                qint32 planetCount = qrand()%4+3;
+                for (qint32 i = 1; i <= planetCount; ++i){
+                    FlyObject *planet = new FlyObject(QString("Planet %1").arg(i),
+                                                      qrand()%width,
+                                                      planetLine,
+                                                      0,
+                                                      qrand()%10-5,
+                                                      qrand()%90+10,
+                                                      PLANET);
+                    planet->initSurface(qrand()%10,
+                                      QColor(qrand()%256,
+                                             qrand()%256,
+                                             qrand()%256)
+                                      );
+                    system.append(planet);
+                }
 
                 saved = false;
 
@@ -241,6 +293,8 @@ void Space::on_actionNew_triggered()
 
 bool Space::on_actionSave_triggered()
 {
+    paused = true;
+
     if (!ui->graphicsView->scene()) {
         return false;
     }
@@ -322,6 +376,8 @@ bool Space::on_actionSave_triggered()
 
 void Space::on_actionFile_triggered()
 {
+    paused = true;
+
     bool flag;
     if (!ui->graphicsView->scene() || saved) {
         flag = true;
@@ -355,7 +411,7 @@ void Space::on_actionFile_triggered()
         starColor = QColor("white");
         qsrand(QTime::currentTime().msec());
         stars = qrand() % 50 + 150;
-        csType = STOP;
+        csType = MERGE;
         width = 800;
         height = 600;
 
@@ -473,6 +529,8 @@ void Space::on_actionSP_triggered()
 
 void Space::on_actionSize_triggered()
 {
+    paused = true;
+
     WinChange* dlg = new WinChange(this);
     if (dlg->exec() == QDialog::Accepted)
     {
@@ -483,22 +541,22 @@ void Space::on_actionSize_triggered()
 
 void Space::on_actionKey_Up_triggered()
 {
-    topLeftY -= KEY_MOVE_PX;
+    topLeftY -= STEP_SIZE;
 }
 
 void Space::on_actionKey_Down_triggered()
 {
-    topLeftY += KEY_MOVE_PX;
+    topLeftY += STEP_SIZE;
 }
 
 void Space::on_actionKey_Left_triggered()
 {
-    topLeftX -= KEY_MOVE_PX;
+    topLeftX -= STEP_SIZE;
 }
 
 void Space::on_actionKey_Right_triggered()
 {
-    topLeftX += KEY_MOVE_PX;
+    topLeftX += STEP_SIZE;
 }
 
 void Space::on_actionDestr_triggered()
@@ -530,10 +588,26 @@ void Space::on_actionMerge_triggered()
 
 void Space::on_actionSpace_color_triggered()
 {
+    paused = true;
 
+    QColor clr = QColorDialog::getColor(spaceColor,
+                                        this,
+                                        "Change space color");
+    if (clr.isValid()){
+        spaceColor = clr;
+        setBG(ui->graphicsView->scene());
+    }
 }
 
 void Space::on_actionStars_color_triggered()
 {
+    paused = true;
 
+    QColor clr = QColorDialog::getColor(starColor,
+                                        this,
+                                        "Change stars color");
+    if (clr.isValid()){
+        starColor = clr;
+        setBG(ui->graphicsView->scene());
+    }
 }

@@ -58,7 +58,7 @@ void AsteroidBelt::generate(QList<FlyObject *> &system)
         FlyObject* obj = new FlyObject(QString("Asteroid %1").arg(i), x, y,
                                        qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_x,
                                        qrand() % (speed_range_to-speed_range_from) + speed_range_from + rotation_y,
-                                       qrand() % 100 + 50,
+                                       qrand() % 5 + 1,
                                        ASTEROID);
 
         obj->initSurface(2, surfaceColor);

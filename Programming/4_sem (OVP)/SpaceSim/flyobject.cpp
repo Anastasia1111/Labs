@@ -9,7 +9,7 @@ FlyObject::FlyObject()
     others = QList<FlyObject *>();
     name = "";
 
-    qDebug() << "constructed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "constructed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass << ", color = " << surfaceColor;
 }
 
 FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, qint32 type)
@@ -23,13 +23,13 @@ FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal m
     this->type = type;
     others = QList<FlyObject *>();
 
-    qDebug() << "constructed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "constructed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass << ", color = " << surfaceColor;
 }
 
 FlyObject::~FlyObject()
 {
     others.clear();
-    qDebug() << "destroyed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "destroyed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass << ", color = " << surfaceColor;
 }
 
 QRectF FlyObject::boundingRect() const
@@ -131,10 +131,10 @@ void FlyObject::updateXY()
     calcY();
     others.clear();
 
-    qDebug() << "update:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass;
+    qDebug() << "update:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass << ", color = " << surfaceColor;
 }
 
 qreal FlyObject::dist(FlyObject *other)
 {
-    return std::hypot((x - other->x),(y - other->y));
+    return std::hypot((x - other->x),(y - other->y)) - (radius + other->radius);
 }

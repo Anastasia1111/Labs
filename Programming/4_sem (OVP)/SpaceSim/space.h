@@ -13,8 +13,7 @@
 #include "asteroidbelt.h"
 #include "winchange.h"
 
-#define CRASH_DIST 0.25
-#define KEY_MOVE_PX 20
+#define STEP_SIZE 20
 
 namespace Ui {
 class Space;
@@ -35,6 +34,7 @@ public:
     ~Space();
 
     void spaceInit();
+    void setBG(QGraphicsScene *scene);
     FlyObject *merge(FlyObject *obj1, FlyObject *obj2);
 
 private slots:
