@@ -3,11 +3,14 @@
 clear1: main
 	rm -rf *.o
 
-main: clear makes2 makes3 makes4 makes5 main2.o 
-	gcc -o main main2.o -Llib -lMyBigChars -lSimpleComputer -lMyTerm -lMyReadKey 
+main: clear makes2 makes3 makes4 makes5 SimpleComputer.o main2.o 
+	gcc -Iheaders -o main main2.o SimpleComputer.o -Llib -lMyBigChars -lSimpleComputer -lMyTerm -lMyReadKey 
 
 main2.o: main2.c
 	gcc -c main2.c
+	
+SimpleComputer.o:
+	gcc -c SimpleComputer.c
 	
 makes2:
 	make -f ./makes/MakefileLab2
