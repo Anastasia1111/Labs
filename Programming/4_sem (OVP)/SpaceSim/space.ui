@@ -84,7 +84,7 @@
     <addaction name="actionNew"/>
     <addaction name="actionFile"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSize"/>
+    <addaction name="actionScreen"/>
     <addaction name="menuCollision"/>
     <addaction name="menuColor"/>
     <addaction name="actionSP"/>
@@ -170,13 +170,16 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionSize">
+  <action name="actionScreen">
    <property name="icon">
     <iconset resource="../resources/resources.qrc">
      <normaloff>:/actions/select_all</normaloff>:/actions/select_all</iconset>
    </property>
    <property name="text">
-    <string>Set screen size</string>
+    <string>Set screen parameters</string>
+   </property>
+   <property name="toolTip">
+    <string>Set screen parameters</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>

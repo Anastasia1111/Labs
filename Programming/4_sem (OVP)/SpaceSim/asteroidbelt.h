@@ -14,16 +14,16 @@ public:
                  qreal centerY,
                  qint32 radiusMin,
                  qint32 radiusMax,
-                 QColor surfaceColor,
+                 QColor color,
                  qreal rotation);
 
     void generate(QList<FlyObject *> &system);
 
-public:
+private:
     qreal centerX, centerY;
     qint32 radiusMin, radiusMax;
     qint32 asteroidNumber;
-    QColor surfaceColor;
+    QColor color;
     qint32 speed_range_from, speed_range_to;
     qreal rotation;
 };

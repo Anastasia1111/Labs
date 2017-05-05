@@ -5,14 +5,20 @@ FlyObject::FlyObject()
     mass = 0.0;
     x = y = vx = vy = ax = ay = 0.0;
     radius = 0.0;
-    surfaceColor = QColor("black");
+    color = QColor("black");
     others = QList<FlyObject *>();
     name = "";
-
-    qDebug() << "constructed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass << ", color = " << surfaceColor;
 }
 
-FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal mass, qint32 type)
+FlyObject::FlyObject(QString name,
+                     qreal x,
+                     qreal y,
+                     qreal vx,
+                     qreal vy,
+                     qreal mass,
+                     qreal r,
+                     QColor color,
+                     qint32 type)
 {
     this->mass = mass;
     this->x = x;
@@ -20,16 +26,15 @@ FlyObject::FlyObject(QString name, qreal x, qreal y, qreal vx, qreal vy, qreal m
     this->vx = vx;
     this->vy = vy;
     this->name = name;
+    this->radius = r;
+    this->color = color;
     this->type = type;
     others = QList<FlyObject *>();
-
-    qDebug() << "constructed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass << ", color = " << surfaceColor;
 }
 
 FlyObject::~FlyObject()
 {
     others.clear();
-    qDebug() << "destroyed:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass << ", color = " << surfaceColor;
 }
 
 QRectF FlyObject::boundingRect() const
@@ -41,21 +46,16 @@ void FlyObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 {
     Q_UNUSED(widget);
     Q_UNUSED(option);
+
     this->setPos(x-radius,y-radius);
 
     QRectF rect = boundingRect();
 
-    QPen pen(surfaceColor, 1);
-    QBrush brush(surfaceColor);
+    QPen pen(color, 1);
+    QBrush brush(color);
     painter->setPen(pen);
     painter->setBrush(brush);
     painter->drawEllipse(rect);
-}
-
-void FlyObject::initSurface(qreal R, QColor surfaceColor)
-{
-    this->radius = R;
-    this->surfaceColor = surfaceColor;
 }
 
 void FlyObject::calcAccelTo(FlyObject *other)
@@ -130,8 +130,6 @@ void FlyObject::updateXY()
     calcX();
     calcY();
     others.clear();
-
-    qDebug() << "update:" << name << ", (" << x << ", " << y << ") v = (" << vx << ", " << vy << "), mass = " << mass << ", color = " << surfaceColor;
 }
 
 qreal FlyObject::dist(FlyObject *other)

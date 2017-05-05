@@ -46,7 +46,7 @@ private slots:
 
     void on_actionSP_triggered();
 
-    void on_actionSize_triggered();
+    void on_actionScreen_triggered();
 
     void on_actionKey_Up_triggered();
 

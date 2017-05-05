@@ -4,7 +4,6 @@
 #include <QPainter>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
-#include <QDebug>
 #include <cmath>
 
 #define SIM_PRECISION 0.33
@@ -27,6 +26,8 @@ public:
               qreal vx,
               qreal vy,
               qreal mass,
+              qreal r,
+              QColor color,
               qint32 type);
 
     ~FlyObject();
@@ -36,8 +37,6 @@ public:
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-
-    void initSurface(qreal R, QColor surfaceColor);
 
     qreal dist(FlyObject *other);
 
@@ -52,14 +51,17 @@ public:
     void updateXY();
 
 public:
-    qreal mass;
     qreal x, y, vx, vy, ax, ay;
+    qreal mass;
     qreal radius;
-    QColor surfaceColor;
+    QColor color;
     QString name;
-    QList<FlyObject *> others;
 
     qint32 type;
+
+private:
+    QList<FlyObject *> others;
+
 };
 
 #endif // FLYOBJECT_H
