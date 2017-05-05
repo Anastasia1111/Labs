@@ -105,9 +105,12 @@ int sc_commandEncode (int command, int operand, int *value)
 	if(value == NULL)
 		return 3; // error with value
 	
-	if((command == 0x10) || (command == 0x11) || (command == 0x20) || (command == 0x21) || 
-	(command >= 0x40 && command <= 0x43) || (command >= 0x51 && command <= 0x59) ||
-	 (command >= 0x60 && command <= 0x69) || (command >= 0x70 && command <= 0x76))
+	int flag = 0;
+	for(enum commands i = READ; i <= RCCL; ++i)
+		if(command == i)
+			flag = 1;
+	
+	if(flag == 1)
 	{	
 		// encoding
 		*value = 0;
@@ -126,13 +129,14 @@ int sc_commandDecode (int value, int *command, int *operand)
 		sc_regSet(REG_WR_COM, 1);
 		return 1; //not command
 	}
+	
 	int dec_sevbit_mask = (value >> 7)& 0x7F;
-	if((dec_sevbit_mask ) == 0x10 || ( dec_sevbit_mask ) == 0x11 || 
-	( dec_sevbit_mask ) == 0x20 || ( dec_sevbit_mask ) == 0x21 || 
-	(( dec_sevbit_mask ) >= 0x40 && ( dec_sevbit_mask ) <= 0x43) || 
-	(( dec_sevbit_mask ) >= 0x51 && ( dec_sevbit_mask ) <= 0x59) ||
-	 (( dec_sevbit_mask ) >= 0x60 && ( dec_sevbit_mask ) <= 0x69) || 
-	 (( dec_sevbit_mask ) >= 0x70 && ( dec_sevbit_mask ) <= 0x76))
+	int flag = 0;
+	for(enum commands i = READ; i <= RCCL; ++i)
+		if(dec_sevbit_mask == i)
+			flag = 1;
+	
+	if(flag == 1)
 	{
 		*command = value >> 7;
 	} else {

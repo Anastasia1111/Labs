@@ -29,6 +29,9 @@ extern char REG;
 extern char InstCount;
 extern short int Accum;
 
+enum commands {READ = 0x10, WRITE = 0x11, LOAD = 0x20, STORE = 0x21, ADD = 0x30, SUB = 0x31, DIVIDE = 0x32, MUL = 0x33, JUMP = 0x40,
+JNEG = 0x41, JZ = 0x42, HALT = 0x43,  RCR = 0x63, RCCL = 0x69};
+
 int sc_memoryInit(); /* инициализирует оперативную память Simple Computer, задавая 
 всем её ячейкам нулевые значения. В качестве «оперативной памяти» используется 
 массив целых чисел, определенный статически в рамках библиотеки. Размер массива
