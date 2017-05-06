@@ -5,6 +5,8 @@ int STRN = 0;
 int main(int argc, char* argv[])
 {
 	char string[STR_SIZE];
+	int flag;
+	int outmem;
 	
 	if(argc < 3)
 	{
@@ -31,7 +33,9 @@ int main(int argc, char* argv[])
 				return 1;
 			}
 		}
-		translate(string);
+		flag = translate(string, &outmem);
+		if(flag == -1)
+			return 1;
 		STRN++;
 	} while (1);
 	fclose(in),

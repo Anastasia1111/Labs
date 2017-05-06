@@ -14,7 +14,16 @@ void error_log(int code)
 			fprintf (stderr, "Error: cannot read input file.\n");
 		break;
 		case 4:
-			fprintf (stderr, "Error:[string %d]: no number of a memory cell", STRN);
+			fprintf (stderr, "Error:[string %d]: no number of a memory cell.", STRN);
+		break;
+		case 5:
+			fprintf (stderr, "Error:[string %d]: Wrong command.", STRN);
+		break;
+		case 6:
+			fprintf (stderr, "Error:[string %d]: Too big operand.", STRN);
+		break;
+		case 7:
+			fprintf (stderr, "Error:[string %d]: Wrong hex operand.", STRN);
 		break;
 	}
 	return;
