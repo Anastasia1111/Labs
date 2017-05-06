@@ -13,7 +13,7 @@ void instCount_window();
 void operation_window();
 void flags_window();
 void keys_window();
-void print_value(int prev);
+void print_value();
 void set_Accum();
 void set_InstCount();
 
@@ -31,3 +31,4 @@ void refresh();
 void enter_ram();
 void operation();
 void IOterminal();
+int setInput(int operand);

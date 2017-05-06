@@ -170,9 +170,20 @@ void print_flag()
 
 void IncInstCount(int signo)
 {
+	int prev = InstCount;
 	char mem[8];
 	int i, j;
-	int prev = InstCount;
+	
+	int res = CU();
+	for(i = 0; i < 10; ++i)
+		for(j = 0; j < 10; ++j)
+			write_ram(i, j);
+	if(res != 0)
+	{
+		raise(SIGUSR1);
+		return;
+	}
+	
 	int prevx = prev / 10;
 	int prevy = prev % 10;
 	if(InstCount == 99)
@@ -180,7 +191,8 @@ void IncInstCount(int signo)
 		raise(SIGUSR1);
 		return;
 	}
-	InstCount++;
+	if(prev == InstCount)
+		InstCount++;
 	int InstCountx = InstCount / 10;
 	int InstCounty = InstCount % 10;
 	int n;
@@ -203,14 +215,13 @@ void IncInstCount(int signo)
 	big_window(InstCount);
 	print_flag();
 	
-	mt_gotoXY(25, 1);	
+	mt_gotoXY(25, 8);	
 	return;
 }
 
 void StopIt(int signo)
 {
 	char mem[8];
-	int prev = InstCount - 1;
 	struct itimerval nval, oval;
 	nval.it_interval.tv_sec = 0;
 	nval.it_interval.tv_usec = 0;
@@ -222,13 +233,8 @@ void StopIt(int signo)
 	for(i = 0; i < 10; ++i)
 		for(j = 0; j < 10; ++j)
 			write_ram(i, j);
-	int prevx = prev / 10;
-	int prevy = prev % 10;
 	int InstCountx = InstCount / 10;
 	int InstCounty = InstCount % 10;
-	mt_setbgcolor(DEF);
-	mt_setfgcolor(DEF);
-	write_ram(prevx, prevy);
 	mt_setbgcolor(LRED);
 	mt_setfgcolor(LWHITE);
 	write_ram(InstCountx, InstCounty);
@@ -408,129 +414,6 @@ int write_dex_num(enum keys button, int num[2])
 	return (int)mem;
 }
 
-int ALU(int command, int operand)
-{
-	int buf;
-	int a;
-	switch(command) {
-		case ADD:
-			Accum += RAM[operand];
-		break;
-		case SUB:
-			Accum -= RAM[operand];
-		break;
-		case DIVIDE:
-			Accum /= RAM[operand];
-		break;
-		case MUL:
-			Accum *= RAM[operand];
-		break;
-		case RCR:
-			buf = (RAM[operand] & 1) << 14;
-			Accum = RAM[operand] / 2;
-			Accum += buf;
-		break;
-		case RCCL:
-			a = operand % 15;
-			for(int i = 0; i < a; ++i)
-			{
-				buf = (Accum & (1 << 14)) >> 14;
-				Accum = (RAM[operand] & 0x3FFF) * 2;
-				Accum += buf;
-			}
-		break;
-	}
-	return -1;
-}
-
-int CU()
-{
-	char out[10];
-	int value, command, operand, n, i;
-	char in[200];
-	int num[2];
-	int res;
-	enum keys inbut;
-	sc_memoryGet(InstCount, &value);
-	if(sc_commandDecode(value, &command, &operand) != 0)
-	{
-		sc_regSet(REG_WR_COM, 1);
-		raise(SIGUSR1);
-		return -1;
-	}
-	
-	if(command >= ADD && command <= MUL || command == RCR || command == RCCL)
-		return ALU(command, operand);
-	else
-	{
-		if(command == READ)
-		{
-			mt_gotoXY(23, 7);
-			read(STDIN_FILENO, in, 4);
-			
-		}
-		
-		if(command == WRITE)
-		{
-			n = sprintf(out, "%X", RAM[operand]);
-			mt_gotoXY(24, 8);
-			write(STDOUT_FILENO, out, n);
-		}
-		
-		if(command == LOAD)
-		{
-			Accum = RAM[operand];
-			return 0;
-		}
-		
-		if(command == STORE)
-		{
-			RAM[operand] = Accum;
-			return 0;
-		}
-		
-		if(command == JUMP)
-		{
-			if(operand >= 0 && operand <= 99)
-			{
-				InstCount = operand;
-				return 0;
-			} else
-				return -1;
-		}
-		
-		if(command == JNEG)
-		{
-			if(operand >= 0 && operand <= 99)
-			{
-				if(Accum < 0)
-					InstCount = operand;
-				return 0;
-			} else
-				return -1;
-		}
-		
-		if(command == JZ)
-		{
-			if(operand >= 0 && operand <= 99)
-			{
-				if(Accum == 0)
-					InstCount = operand;
-				return 0;
-			} else
-				return -1;
-		}
-		
-		if(command == HALT)
-		{
-			raise(SIGUSR1);
-			return 0;
-		}
-	}
-	return -1;
-}
-
-
 void initialize()
 {
 	mt_clrscr();
@@ -610,18 +493,13 @@ void keys_window()
 	write(STDOUT_FILENO, "F6 - InstructionCounter", 23);
 }
 
-void print_value(int prev)
+void print_value()
 {
 	for(int i = 0; i < 10; ++i)
 		for(int j = 0; j < 10; ++j)
 			write_ram(i, j);
-	int prevx = prev / 10;
-	int prevy = prev % 10;
 	int InstCountx = InstCount / 10;
 	int InstCounty = InstCount % 10;
-	mt_setbgcolor(DEF);
-	mt_setfgcolor(DEF);
-	write_ram(prevx, prevy);
 	mt_setbgcolor(LRED);
 	mt_setfgcolor(LWHITE);
 	write_ram(InstCountx, InstCounty);

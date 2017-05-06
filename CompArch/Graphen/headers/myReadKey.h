@@ -45,7 +45,8 @@ enum keys {
 	key_c,
 	key_d,
 	key_e,
-	key_f = 29
+	key_f,
+	key_min = 30
 };
 
 int rk_readkey(enum keys *key);

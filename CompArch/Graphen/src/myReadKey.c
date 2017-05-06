@@ -74,6 +74,8 @@ int rk_readkey (enum keys *key)
 		*key = key_e;
 	if (strncmp(buf, "f", 1) == 0 || strncmp(buf, "F", 1) == 0)
 		*key = key_f;
+	if (strncmp(buf, "-", 1) == 0)
+		*key = key_min;
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0)
 		return -1;
 	

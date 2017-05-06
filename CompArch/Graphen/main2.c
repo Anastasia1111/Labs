@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 	enum keys button;
 	while(!exit)
 	{
-		print_value(prev);
+		print_value();
 		mt_gotoXY(5, 70);
 		n = sprintf(mem, "%04d", InstCount);
 		write(STDOUT_FILENO, mem, n);
@@ -40,8 +40,6 @@ int main(int argc, char **argv)
 		rk_mytermregime(1, 0, 1, 0, 1);
 		mt_gotoXY(23, 7);
 		rk_readkey(&button);
-		
-		prev = InstCount;
 		
 		sc_regGet(REG_STEP_IGNORE, &flagstep);
 		
@@ -74,12 +72,10 @@ int main(int argc, char **argv)
 			break;
 			case r_key:
 				setitimer(ITIMER_REAL, &nval, &oval);
-				sc_regSet(REG_STEP_IGNORE, 0);
+				sc_regInit();
 			break;
 			case t_key:
-				InstCount++;
-				if(InstCount > 99)
-					InstCount--;
+				CU();
 			break;
 			case i_key:
 				refresh();
