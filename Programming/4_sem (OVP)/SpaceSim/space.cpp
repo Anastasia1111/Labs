@@ -211,7 +211,7 @@ void Space::on_actionNew_triggered()
                                         starColor,
                                         STAR);
         system.append(star);
-        qint32 planetCount = qrand()%4+3;
+        qint32 planetCount = qrand()%4+1;
         for (qint32 i = 1; i <= planetCount; ++i){
             FlyObject *planet = new FlyObject(QString("Planet %1").arg(i),
                                               qrand()%width,
@@ -262,7 +262,7 @@ void Space::on_actionNew_triggered()
                                                 starColor,
                                                 STAR);
                 system.append(star);
-                qint32 planetCount = qrand()%4+3;
+                qint32 planetCount = qrand()%4+1;
                 for (qint32 i = 1; i <= planetCount; ++i){
                     FlyObject *planet = new FlyObject(QString("Planet %1").arg(i),
                                                       qrand()%width,

@@ -51,7 +51,7 @@ public:
     void updateXY();
 
 public:
-    qreal x, y, vx, vy, ax, ay;
+    qreal x, y, vx, vy;
     qreal mass;
     qreal radius;
     QColor color;

@@ -3,7 +3,7 @@
 FlyObject::FlyObject()
 {
     mass = 0.0;
-    x = y = vx = vy = ax = ay = 0.0;
+    x = y = vx = vy = 0.0;
     radius = 0.0;
     color = QColor("black");
     others = QList<FlyObject *>();
