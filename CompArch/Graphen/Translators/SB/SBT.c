@@ -5,14 +5,11 @@ int STRN = 1;
 int main(int argc char* argv[])
 {
 	int i;
-	char ** string;
+	char string[STR_SIZE];
 	int outmem;
 	
 	for(i = 0; i < ramSize; ++i)
 		BRAM[i] = 0;
-	string = (char **) calloc(200, sizeof(char *));
-	for(i = 0; i < 200; ++i)
-		string[i] = (char *) calloc(STR_SIZE, sizeof(char));
 	if(argc < 3)
 	{
 		error_log(1);
@@ -31,7 +28,7 @@ int main(int argc char* argv[])
 	out = fopen(argv[2], "w");
 	fwrite(BRAM, sizeof(int), ramSize, out);
 	do {
-		if(fgets(string[i], sizeof(string[i]), in) == NULL)
+		if(fgets(string, sizeof(string), in) == NULL)
 		{
 			if(feof(in) != 0)
 			{
@@ -54,10 +51,6 @@ int main(int argc char* argv[])
 			fwrite(&outmem, sizeof(int), 1, out);
 		}
 	} while (1);
-	
-	for(i = 0; i < 200, ++i)
-		free(string[i]);
-	free(string);
 	
 	fclose(in),
 	fclose(out);
