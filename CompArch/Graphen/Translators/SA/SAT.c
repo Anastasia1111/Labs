@@ -1,12 +1,15 @@
-#include "translator.h"
+#include "Atranslator.h"
 
-int STRN = 0;
+int STRN = 1;
 
 int main(int argc, char* argv[])
 {
 	char string[STR_SIZE];
 	int flag;
 	int outmem;
+	int i;
+	for(i = 0; i < ramSize; ++i)
+		BRAM[i] = 0;
 	
 	if(argc < 3)
 	{
@@ -22,6 +25,7 @@ int main(int argc, char* argv[])
 	}
 	
 	out = fopen(argv[2], "w");
+	fwrite(BRAM, sizeof(int), ramSize, out);
 	do {
 		if(fgets(string, sizeof(string), in) == NULL)
 		{
@@ -33,10 +37,18 @@ int main(int argc, char* argv[])
 				return 1;
 			}
 		}
+		
 		flag = translate(string, &outmem);
 		if(flag == -1)
 			return 1;
 		STRN++;
+		if(flag == 100)
+			continue;
+		if(flag >= 0 && flag <= 99)
+		{
+			fseek(out, flag*sizeof(int), SEEK_SET);
+			fwrite(&outmem, sizeof(int), 1, out);
+		}
 	} while (1);
 	fclose(in),
 	fclose(out);

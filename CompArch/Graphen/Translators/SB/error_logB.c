@@ -1,4 +1,4 @@
-#include "translator.h"
+#include "Btranslator.h"
 
 void error_log(int code)
 {
@@ -14,16 +14,16 @@ void error_log(int code)
 			fprintf (stderr, "Error: cannot read input file.\n");
 		break;
 		case 4:
-			fprintf (stderr, "Error:[string %d]: no number of a memory cell.", STRN);
+			fprintf (stderr, "Error:[string %d]: no number of a memory cell.\n", STRN);
 		break;
 		case 5:
-			fprintf (stderr, "Error:[string %d]: Wrong command.", STRN);
+			fprintf (stderr, "Error:[string %d]: Wrong command.\n", STRN);
 		break;
 		case 6:
-			fprintf (stderr, "Error:[string %d]: Too big operand.", STRN);
+			fprintf (stderr, "Error:[string %d]: Too big operand.\n", STRN);
 		break;
 		case 7:
-			fprintf (stderr, "Error:[string %d]: Wrong hex operand.", STRN);
+			fprintf (stderr, "Error:[string %d]: Wrong hex operand.\n", STRN);
 		break;
 	}
 	return;

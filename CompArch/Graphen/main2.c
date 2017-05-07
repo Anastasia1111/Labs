@@ -62,13 +62,13 @@ int main(int argc, char **argv)
 		switch(button)
 		{
 			case l_key:
-				sc_memoryLoad("RAMsave.txt");
+				sc_memoryLoad("saexample.o");
 				for(i = 0; i < 10; ++i)
 					for(j = 0; j < 10; ++j)
 						write_ram(i, j);
 			break;
 			case s_key:
-				sc_memorySave("RAMsave.txt");
+				sc_memorySave("saexample.o");
 			break;
 			case r_key:
 				setitimer(ITIMER_REAL, &nval, &oval);

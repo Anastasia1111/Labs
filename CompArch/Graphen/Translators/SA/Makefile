@@ -8,7 +8,7 @@ OBJ = $(SRC:.c=.o)
 all: clean sat
 
 sat:
-	gcc -I../headers $(SRC) -o sat -L../lib -lSimpleComputer
+	gcc -I../../headers $(SRC) -o sat -L../../lib -lSimpleComputer
 	
 clean:
 	rm -rf *.o
