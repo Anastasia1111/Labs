@@ -18,8 +18,12 @@ void write_ram(int x, int y)
 	}
 	else
 	{
-		value &= ~(1 << 14);
-		n = sprintf(mem, " %04X", value);
+		int sig = (value >> 13) % 2;
+		value &= ~(3 << 13);
+		if(sig)
+			n = sprintf(mem, "-%04X", value);
+		else
+			n = sprintf(mem, " %04X", value);
 		write(STDOUT_FILENO, mem, n);
 		sc_regSet(REG_WR_COM, flagprev);
 	}
@@ -40,8 +44,13 @@ void big_window()
 		n = sprintf(mem, "+%02X%02X ", com, oper);
 	else
 	{
-		value &= ~(1 << 14);
-		n = sprintf(mem, " %04X ", value);
+		int sig = (value >> 13) % 2;
+		value &= ~(3 << 13);
+		if(sig)
+			n = sprintf(mem, "-%04X", value);
+		else
+			n = sprintf(mem, " %04X", value);
+		write(STDOUT_FILENO, mem, n);
 		sc_regSet(REG_WR_COM, flagprev);
 	}
 	if(mem[0] == '+')
@@ -49,7 +58,12 @@ void big_window()
 		int num[2] = _P_;
 		bc_printbigchar(num, 14, 2, LRED, GREEN);
 	}
-	else
+	if(mem[0] == '-')
+	{
+		int num[2] = _M_;
+		bc_printbigchar(num, 14, 2, LRED, GREEN);
+	}
+	if(mem[0] != '-' && mem[0] != '+')
 	{
 		int num[2] = {0x0, 0x0};
 		bc_printbigchar(num, 14, 2, LRED, GREEN);
@@ -170,52 +184,34 @@ void print_flag()
 
 void IncInstCount(int signo)
 {
-	int prev = InstCount;
 	char mem[8];
 	int i, j;
-	
+	int prev = InstCount;
 	int res = CU();
 	for(i = 0; i < 10; ++i)
 		for(j = 0; j < 10; ++j)
 			write_ram(i, j);
+	print_value();
+	mt_gotoXY(5, 70);
+	int n = sprintf(mem, "%04d", InstCount);
+	write(STDOUT_FILENO, mem, n);
+	print_Accum();
+	
+	big_window(InstCount);
+	print_flag();
+	mt_gotoXY(25, 8);
 	if(res != 0)
 	{
 		raise(SIGUSR1);
 		return;
 	}
-	
-	int prevx = prev / 10;
-	int prevy = prev % 10;
 	if(InstCount == 99)
 	{
 		raise(SIGUSR1);
 		return;
 	}
 	if(prev == InstCount)
-		InstCount++;
-	int InstCountx = InstCount / 10;
-	int InstCounty = InstCount % 10;
-	int n;
-	mt_setbgcolor(DEF);
-	mt_setfgcolor(DEF);
-	write_ram(prevx, prevy);
-	
-	mt_setbgcolor(LRED);
-	mt_setfgcolor(LWHITE);
-	write_ram(InstCountx, InstCounty);
-	mt_setbgcolor(DEF);
-	mt_setfgcolor(DEF);
-	mt_gotoXY(5, 70);
-	n = sprintf(mem, "%04d", InstCount);
-	write(STDOUT_FILENO, mem, n);
-	mt_gotoXY(2, 70);
-	n = sprintf(mem, "%04X", Accum);
-	write(STDOUT_FILENO, mem, n);
-	
-	big_window(InstCount);
-	print_flag();
-	
-	mt_gotoXY(25, 8);	
+		InstCount++;	
 	return;
 }
 
@@ -230,22 +226,11 @@ void StopIt(int signo)
 	setitimer(ITIMER_REAL, &nval, &oval);
 	sc_regSet(REG_STEP_IGNORE, 1);
 	int i, j, n;
-	for(i = 0; i < 10; ++i)
-		for(j = 0; j < 10; ++j)
-			write_ram(i, j);
-	int InstCountx = InstCount / 10;
-	int InstCounty = InstCount % 10;
-	mt_setbgcolor(LRED);
-	mt_setfgcolor(LWHITE);
-	write_ram(InstCountx, InstCounty);
-	mt_setbgcolor(DEF);
-	mt_setfgcolor(DEF);
+	print_value();
 	mt_gotoXY(5, 70);
 	n = sprintf(mem, "%04d", InstCount);
 	write(STDOUT_FILENO, mem, n);
-	mt_gotoXY(2, 70);
-	n = sprintf(mem, "%04X", Accum);
-	write(STDOUT_FILENO, mem, n);
+	print_Accum();
 	
 	big_window(InstCount);
 	print_flag();
@@ -316,12 +301,17 @@ int commandwindow()
 	
 	return yes;
 }
-int write_dex_num(enum keys button, int num[2])
+char write_hex_num(enum keys button, int num[2])
 {
 	char mem;
 	
 	switch(button)
 	{
+		case key_min:
+			mem = '-';
+			num[0] = _M_0_;
+			num[1] = _M_1_;
+			break;
 		case key_0:
 			mem = '0';
 			num[0] = _0_0_;
@@ -406,12 +396,7 @@ int write_dex_num(enum keys button, int num[2])
 			return -1;
 			break;
 	}
-	write(STDOUT_FILENO, &mem, 1);
-	if(mem >= 'A' && mem <= 'F')
-		mem = mem - 'A' + 10;
-	if(mem >= '0' && mem <= '9')
-		mem -= '0';
-	return (int)mem;
+	return mem;
 }
 
 void initialize()
@@ -447,8 +432,7 @@ void accumulator_window()
 	mt_gotoXY(1, 66);
 	write(STDOUT_FILENO, "Accumulator", 11);
 	mt_gotoXY(2, 70);
-	int n = sprintf(mem, "%04d", Accum);
-	write(STDOUT_FILENO, mem, n);
+	print_Accum();
 }
 
 void instCount_window()
@@ -510,7 +494,11 @@ void print_value()
 
 void set_Accum()
 {
-	mt_gotoXY(2, 70);
+	mt_gotoXY(2, 69);
+	write(STDOUT_FILENO, "     ", 5);
+	mt_gotoXY(2, 69);
+	int bufAc = 0;
+	int minus = 0;
 	for(int i = 1; i < 5; ++i)
 	{
 		enum keys subbut;
@@ -520,6 +508,15 @@ void set_Accum()
 		
 		switch(subbut)
 		{
+			case key_min:
+				if(i == 1)
+				{
+					minus = 1;
+					write(STDOUT_FILENO, "-", 1);
+				}
+				i--;
+				continue;
+				break;
 			case key_0:
 				mem = '0';
 				write(STDOUT_FILENO, &mem, 1);
@@ -561,81 +558,41 @@ void set_Accum()
 				mem = 7;
 				break;
 			case key_8:
-				if(i == 1)
-				{
-					i--;
-					break;
-				}
 				mem = '8';
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 8;
 				break;
 			case key_9:
-				if(i == 1)
-				{
-					i--;
-					break;
-				}
 				mem = '9';
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 9;
 				break;
 			case key_a:
-				if(i == 1)
-				{
-					i--;
-					break;
-				}
 				mem = 'A';
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 10;
 				break;
 			case key_b:
-				if(i == 1)
-				{
-					i--;
-					break;
-				}
 				mem = 'B';
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 11;
 				break;
 			case key_c:
-				if(i == 1)
-				{
-					i--;
-					break;
-				}
 				mem = 'C';
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 12;
 				break;
 			case key_d:
-				if(i == 1)
-				{
-					i--;
-					break;
-				}
 				mem = 'D';
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 13;
 				break;
 			case key_e:
-				if(i == 1)
-				{
-					i--;
-					break;
-				}
 				mem = 'E';
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 14;
 				break;
 			case key_f:
-				if(i == 1)
-				{
-					i--;
-					break;
-				}
 				mem = 'F';
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 15;
@@ -645,9 +602,15 @@ void set_Accum()
 				continue;
 				break;
 		}
-		Accum <<= 4;
-		Accum += mem;
+		bufAc <<= 4;
+		bufAc += mem;
 	}
+	if(bufAc > 0x3FFF)
+		return;
+	if(minus)
+		bufAc |= 1 << 14;
+	Accum = bufAc;
+	return;
 }
 
 void set_InstCount()
@@ -674,27 +637,40 @@ void refresh()
 
 void enter_ram()
 {
+	int minus;
 	int flag = commandwindow();
 	int wr = 0;
 	int com = 0, oper = 0;
-	int mem;
+	char mem;
 	int num[2];
 	
 	int InstCountx = InstCount / 10;
 	int InstCounty = InstCount % 10;
-	
+	mt_gotoXY(InstCountx + 2, InstCounty * 6 + 2 + minus);
+	write(STDOUT_FILENO, "     ", 5);
 	for(int i = 1; i < 5; ++i)
 	{
-		mt_gotoXY(InstCountx + 2, InstCounty * 6 + 2 + i);
+		mt_gotoXY(InstCountx + 2, InstCounty * 6 + 1 + i + minus);
 		rk_mytermregime(1, 0, 1, 0, 1);
 		enum keys subbut;
 		rk_readkey(&subbut);
-		mem = write_dex_num(subbut, num);
-		if(mem == -1)
+		mem = write_hex_num(subbut, num);
+		if(mem == '-' && i == 1)
+		{
+			write(STDOUT_FILENO, &mem, 1);
+			mem = -1;
+			minus = 1;
+		}
+		if(mem < 0)
 		{
 			i--;
 			continue;
 		}
+		write(STDOUT_FILENO, &mem, 1);
+		if(mem >= 'A' && mem <= 'F')
+			mem = mem - 'A' + 10;
+		if(mem >= '0' && mem <= '9')
+			mem -= '0';
 		if(!flag)
 		{
 			wr <<= 4;
@@ -727,9 +703,11 @@ void enter_ram()
 	}
 	else 
 	{
-		if(wr > 0x3FFF)
-			wr = 0x3FFF;
+		if(wr > 0x1FFF)
+			wr = 0x1FFF;
 		wr |= 0x1 << 14;
+		if(minus)
+			wr |= 0x1 << 13;
 	}
 	sc_memorySet(InstCount, wr);
 }
@@ -761,4 +739,20 @@ void IOterminal()
 {
 	mt_gotoXY(23, 1);
 	write(STDOUT_FILENO, "Input:               \nOutput:               ", 44);
+}
+
+void print_Accum()
+{
+	mt_gotoXY(2, 69);
+	char mem[6];
+	int n;
+	int value = Accum;
+	int sig = (Accum >> 14) % 2;
+	value &= ~(1 << 14);
+	if(sig)
+		n = sprintf(mem, "-%04X", value);
+	else
+		n = sprintf(mem, " %04X", value);
+	write(STDOUT_FILENO, mem, n);
+	return;
 }

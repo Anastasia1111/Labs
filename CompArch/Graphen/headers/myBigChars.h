@@ -47,6 +47,8 @@
 #define _E_1_ 0x7E060606
 #define _F_0_ 0x06067E7E
 #define _F_1_ 0x06063E3E
+#define _M_0_ 0x7E000000
+#define _M_1_ 0x0000007E
 
 #define _0 {0x81C3663C, 0x3C66C381}
 #define _1 {0x181C1810, 0x3C181818}
@@ -66,6 +68,7 @@
 #define _F {0x06067E7E, 0x06063E3E}
 
 #define _P_ {0x7E181800, 0x0018187E}
+#define _M_ {0x7E000000, 0x0000007E}
 
 #include "myTerm.h"
 

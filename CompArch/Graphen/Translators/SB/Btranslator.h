@@ -15,3 +15,4 @@ void error_log(int code);
 int Btranslate(char *input, int *output);
 int command_translator(char *input, enum bcomm *output);
 int main(int argc, char* argv[]);
+int RPN (enum bcomm *input, int n);

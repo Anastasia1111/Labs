@@ -2,56 +2,83 @@
 
 int ALU(int command, int operand)
 {
-	int buf;
+	int buf, minbuf;
 	int a;
+	int bAccum = Accum;
+	int bRAM = RAM[operand];
+	
+	int Accmin = (bAccum >> 14) & 1;
+	int RAMmin = (bRAM >> 13) & 1;
+	if(Accmin)
+		bAccum *= -1;
+	if(RAMmin)
+		bRAM *= -1;
+	int res;
 	switch(command) {
 		case ADD:
-			if(Accum + RAM[operand] <= 0x7FFF)
-				Accum += RAM[operand];
-			else
+			res = bAccum + bRAM;
+			if(res >= 0x3FFF || res <= -0x3FFF)
 			{
 				sc_regSet(REG_OVERFLOW, 1);
 				return -1;
 			}
+			Accum = 0;
+			Accum += (res & 0x3FFF);
+			if(res < 0)
+				Accum |= 1 << 14;
 		break;
 		case SUB:
-			if(Accum - RAM[operand] >= 0)
-				Accum -= RAM[operand];
-			else
+			res = bAccum - bRAM;
+			if(res >= 0x3FFF || res <= -0x3FFF)
 			{
 				sc_regSet(REG_OVERFLOW, 1);
 				return -1;
 			}
+			Accum = 0;
+			Accum += (res & 0x3FFF);
+			if(res < 0)
+				Accum |= 1 << 14;
 		break;
 		case DIVIDE:
-			if(RAM[operand] != 0)
-				Accum /= RAM[operand];
-			else
+			if(bRAM == 0)
 			{
 				sc_regSet(REG_ZERO_DIV, 1);
 				return -1;
 			}
+			res = bAccum / bRAM;
+			Accum = 0;
+			Accum += (res & 0x3FFF);
+			if(res < 0)
+				Accum |= 1 << 14;
 		break;
 		case MUL:
-			if(Accum * RAM[operand] <= 0x7FFF)
-				Accum *= RAM[operand];
-			else
+			res = bAccum * bRAM;
+			if(res >= 0x3FFF || res <= -0x3FFF)
 			{
 				sc_regSet(REG_OVERFLOW, 1);
 				return -1;
 			}
+			Accum = 0;
+			Accum += (res & 0x3FFF);
+			if(res < 0)
+				Accum |= 1 << 14;
 		break;
 		case RCR:
-			buf = (RAM[operand] & 1) << 14;
-			Accum = RAM[operand] / 2;
+			bRAM = RAM[operand] & 0x3FFF;
+			buf = (bRAM & 1) << 14;
+			Accum = 0;
+			Accum = bRAM >> 1;
 			Accum += buf;
 		break;
 		case RCCL:
-			a = operand % 15;
+			if(bAccum < 0)
+				bAccum *= -1;
+			a = bAccum % 15;
+			bRAM = RAM[operand] & 0x3FFF;
 			for(int i = 0; i < a; ++i)
 			{
-				buf = (Accum & (1 << 14)) >> 14;
-				Accum = (RAM[operand] & 0x3FFF) * 2;
+				buf = (bRAM & (1 << 14)) >> 14;
+				Accum = (bRAM << 2) & 0x3FFF;
 				Accum += buf;
 			}
 		break;
@@ -85,7 +112,15 @@ int CU()
 		
 		if(command == WRITE)
 		{
-			n = sprintf(out, "%X", RAM[operand]);
+			if(operand < 0 || operand > 99)
+			{
+				sc_regSet(REG_OVERLIMIT_MEM, 1);
+				return -1;
+			}
+			if(RAM[operand] >= 0x1FFF)
+				n = sprintf(out, "-%X", (RAM[operand] & 0x1FFF));
+			else
+				n = sprintf(out, " %X", (RAM[operand] & 0x1FFF));
 			mt_gotoXY(24, 8);
 			write(STDOUT_FILENO, out, n);
 			return 0;
@@ -93,12 +128,22 @@ int CU()
 		
 		if(command == LOAD)
 		{
+			if(operand < 0 || operand > 99)
+			{
+				sc_regSet(REG_OVERLIMIT_MEM, 1);
+				return -1;
+			}
 			Accum = RAM[operand];
 			return 0;
 		}
 		
 		if(command == STORE)
 		{
+			if(operand < 0 || operand > 99)
+			{
+				sc_regSet(REG_OVERLIMIT_MEM, 1);
+				return -1;
+			}
 			RAM[operand] = Accum;
 			return 0;
 		}

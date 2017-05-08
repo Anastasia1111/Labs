@@ -14,6 +14,7 @@ void operation_window();
 void flags_window();
 void keys_window();
 void print_value();
+void print_Accum();
 void set_Accum();
 void set_InstCount();
 
@@ -24,7 +25,7 @@ void print_flag();
 void IncInstCount(int signo);
 void StopIt(int signo);
 int commandwindow();
-int write_dex_num(enum keys button, int num[2]);
+char write_hex_num(enum keys button, int num[2]);
 int ALU(int command, int operand);
 int CU();
 void refresh();

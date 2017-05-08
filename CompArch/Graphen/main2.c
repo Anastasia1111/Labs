@@ -30,9 +30,7 @@ int main(int argc, char **argv)
 		mt_gotoXY(5, 70);
 		n = sprintf(mem, "%04d", InstCount);
 		write(STDOUT_FILENO, mem, n);
-		mt_gotoXY(2, 70);
-		n = sprintf(mem, "%04X", Accum);
-		write(STDOUT_FILENO, mem, n);
+		print_Accum();
 		
 		big_window();
 		print_flag();
@@ -73,6 +71,7 @@ int main(int argc, char **argv)
 			case r_key:
 				setitimer(ITIMER_REAL, &nval, &oval);
 				sc_regInit();
+				CU();
 			break;
 			case t_key:
 				CU();
