@@ -90,10 +90,6 @@ int CU()
 {
 	char out[10];
 	int value, command, operand, n, i;
-	char in[200];
-	int num[2];
-	int res;
-	enum keys inbut;
 	sc_memoryGet(InstCount, &value);
 	if(sc_commandDecode(value, &command, &operand) != 0)
 	{
@@ -117,10 +113,10 @@ int CU()
 				sc_regSet(REG_OVERLIMIT_MEM, 1);
 				return -1;
 			}
-			if(RAM[operand] >= 0x1FFF)
-				n = sprintf(out, "-%X", (RAM[operand] & 0x1FFF));
+			if(RAM[operand] > 0x1FFF)
+				n = sprintf(out, "-%04X", (RAM[operand] & 0x1FFF));
 			else
-				n = sprintf(out, " %X", (RAM[operand] & 0x1FFF));
+				n = sprintf(out, " %04X", (RAM[operand] & 0x1FFF));
 			mt_gotoXY(24, 8);
 			write(STDOUT_FILENO, out, n);
 			return 0;
@@ -188,8 +184,7 @@ int CU()
 		
 		if(command == HALT)
 		{
-			raise(SIGUSR1);
-			return 0;
+			return 1;
 		}
 	}
 	return -1;
@@ -201,6 +196,7 @@ int setInput(int operand)
 	write(STDOUT_FILENO, "      ", 6);
 	mt_gotoXY(23, 7);
 	int buf = 0;
+	int minflag = 0;
 	for(int i = 1; i < 5; ++i)
 	{
 		enum keys subbut;
@@ -210,6 +206,16 @@ int setInput(int operand)
 		
 		switch(subbut)
 		{
+			case key_min:
+				if(i == 1)
+				{
+					mem = '-';
+					write(STDOUT_FILENO, &mem, 1);
+					minflag = 1;
+				}
+				i--;
+				continue;
+			break;
 			case key_0:
 				mem = '0';
 				write(STDOUT_FILENO, &mem, 1);
@@ -298,18 +304,12 @@ int setInput(int operand)
 		buf <<= 4;
 		buf += mem;
 	}
-	int err_flag = 0;
-	if(operand < 0 || operand > 99)
-	{
-		sc_regSet(REG_OVERLIMIT_MEM, 1);
-		err_flag = 1;
-	}
-	if(buf < 0 || buf > 0x7FFF)
+	if(buf < 0 || buf > 0x1FFF)
 	{
 		sc_regSet(REG_OVERFLOW, 1);
-		err_flag = 1;
-	}
-	if(err_flag);
 		return -1;
+	}
+	if(minflag)
+		buf |= (1 << 13);
 	return sc_memorySet(operand, buf);
 }

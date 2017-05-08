@@ -23,7 +23,7 @@ void write_ram(int x, int y);
 void big_window();
 void print_flag();
 void IncInstCount(int signo);
-void StopIt(int signo);
+void Stop(int signo);
 int commandwindow();
 char write_hex_num(enum keys button, int num[2]);
 int ALU(int command, int operand);

@@ -2,13 +2,8 @@
 
 int main(int argc, char **argv)
 {
-	struct itimerval nval, oval;
 	signal (SIGALRM, IncInstCount);
-	signal (SIGUSR1, StopIt);
-	nval.it_interval.tv_sec = 1;
-	nval.it_interval.tv_usec = 0;
-	nval.it_value.tv_sec = 1;
-	nval.it_value.tv_usec = 0;
+	signal (SIGUSR1, Stop);
 	int i, j;
 	InstCount = 0;
 	int value = 0, flag;
@@ -60,18 +55,17 @@ int main(int argc, char **argv)
 		switch(button)
 		{
 			case l_key:
-				sc_memoryLoad("saexample.o");
+				sc_memoryLoad("satexample.o");
 				for(i = 0; i < 10; ++i)
 					for(j = 0; j < 10; ++j)
 						write_ram(i, j);
 			break;
 			case s_key:
-				sc_memorySave("saexample.o");
+				sc_memorySave("satexample.o");
 			break;
 			case r_key:
-				setitimer(ITIMER_REAL, &nval, &oval);
+				alarm(1);
 				sc_regInit();
-				CU();
 			break;
 			case t_key:
 				CU();

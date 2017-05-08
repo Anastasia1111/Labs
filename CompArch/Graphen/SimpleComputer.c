@@ -187,11 +187,8 @@ void IncInstCount(int signo)
 	char mem[8];
 	int i, j;
 	int prev = InstCount;
-	int res = CU();
-	for(i = 0; i < 10; ++i)
-		for(j = 0; j < 10; ++j)
-			write_ram(i, j);
 	print_value();
+	int res = CU();
 	mt_gotoXY(5, 70);
 	int n = sprintf(mem, "%04d", InstCount);
 	write(STDOUT_FILENO, mem, n);
@@ -202,40 +199,29 @@ void IncInstCount(int signo)
 	mt_gotoXY(25, 8);
 	if(res != 0)
 	{
-		raise(SIGUSR1);
+		sc_regSet(REG_STEP_IGNORE, 1);
+		print_flag();
+		mt_gotoXY(23, 7);
 		return;
 	}
 	if(InstCount == 99)
 	{
-		raise(SIGUSR1);
+		sc_regSet(REG_STEP_IGNORE, 1);
+		print_flag();
+		mt_gotoXY(23, 7);
 		return;
 	}
 	if(prev == InstCount)
-		InstCount++;	
+		InstCount++;
+	print_value();
+	alarm(1);	
 	return;
 }
 
-void StopIt(int signo)
+void Stop(int signo)
 {
-	char mem[8];
-	struct itimerval nval, oval;
-	nval.it_interval.tv_sec = 0;
-	nval.it_interval.tv_usec = 0;
-	nval.it_value.tv_sec = 0;
-	nval.it_value.tv_usec = 0;
-	setitimer(ITIMER_REAL, &nval, &oval);
+	alarm(0);
 	sc_regSet(REG_STEP_IGNORE, 1);
-	int i, j, n;
-	print_value();
-	mt_gotoXY(5, 70);
-	n = sprintf(mem, "%04d", InstCount);
-	write(STDOUT_FILENO, mem, n);
-	print_Accum();
-	
-	big_window(InstCount);
-	print_flag();
-	
-	mt_gotoXY(25, 1);
 	return;
 }
 
@@ -273,7 +259,7 @@ int commandwindow()
 			write(STDOUT_FILENO, "NO", 2);
 		}
 		mt_setbgcolor(LRED);
-		mt_gotoXY(25, 1);
+		mt_gotoXY(24, 7);
 		rk_mytermregime(1, 0, 1, 0, 1);
 		rk_readkey(&button);
 		switch(button)
