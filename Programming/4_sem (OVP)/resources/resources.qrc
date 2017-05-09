@@ -17,5 +17,6 @@
         <file alias="check">images/Checkmark.png</file>
         <file alias="warning">images/Warning.png</file>
         <file alias="clock">images/clock.png</file>
+        <file alias="planet">images/saturn.png</file>
     </qresource>
 </RCC>
