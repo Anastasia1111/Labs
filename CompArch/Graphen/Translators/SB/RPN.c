@@ -1,6 +1,6 @@
 #include "Btranslator.h"
 
-int RPN (enum bcomm *input, int n)
+int RPN (char *input)// string is end by \n , you can add any param, commands in sc.h
 {
-	
+	return 0;
 }
