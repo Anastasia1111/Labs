@@ -23,6 +23,12 @@ struct varlist
 	varlist *next;
 }*head, *next;
 
+struct stack
+{
+	char op;
+	stack *next;
+};
+
 int BRAM[ramSize];
 extern int STRN;
 enum bcomm {REM = 0x1, INPUT, OUTPUT, GOTO, IF, LET, END, EMPTY};
