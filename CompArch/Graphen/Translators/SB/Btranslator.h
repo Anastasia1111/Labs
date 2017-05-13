@@ -14,19 +14,20 @@ struct comlist
 	int number;
 	bcomm operand;
 	char *param;
-	comlist *next;
-}*head, *next;
+	struct comlist *next;
+}*chead, *ctail;
 
 struct varlist
 {
-	char name;
-	varlist *next;
-}*head, *next;
+	struct varlist* next;
+	char name[2];
+	int address;
+}*vhead;
 
-struct stack
+struct oplist
 {
 	char op;
-	stack *next;
+	struct oplist *next;
 };
 
 int BRAM[ramSize];
