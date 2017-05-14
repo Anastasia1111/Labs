@@ -186,7 +186,6 @@ int RPN (char* input)
 		free(pop);
 	}
 	rpn[++lci] = '\0';
-	printf("%s\n",rpn);
 	
 	struct varlist *varhead = NULL;
 	struct varlist *pnvar;
@@ -238,7 +237,6 @@ int RPN (char* input)
 				if (ahead!=NULL) atail->next = pcom;
 				else ahead = pcom;
 				atail = pcom;
-				printf("1%d %d %d\n", atail->number, atail->oper, atail->param);
 			} else {
 				if (rpn[i]>='a' && rpn[i]<='z') {
 					pvar = vhead;
@@ -262,7 +260,6 @@ int RPN (char* input)
 						if (ahead!=NULL) atail->next = pcom;
 						else ahead = pcom;
 						atail = pcom;
-						printf("2%d %d %d\n", atail->number, atail->oper, atail->param);
 					}
 					++i;
 				} else {
@@ -290,8 +287,6 @@ int RPN (char* input)
 						varhead = varhead->next;
 						free(pvar);
 						
-						printf("\nr:%s l:%s\n",right->name, left->name);
-						
 						if (rpn[i-1]!='+' && rpn[i-1]!='-' && rpn[i-1]!='*' && rpn[i-1]!='/' && rpn[i-1]!='=') {
 							pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 							pcom->number = COMNUM++;
@@ -301,12 +296,11 @@ int RPN (char* input)
 							if (ahead!=NULL) atail->next = pcom;
 							else ahead = pcom;
 							atail = pcom;
-							printf("3%d %d %d\n", atail->number, atail->oper, atail->param);
 						}
 						
 						switch(rpn[i]){
 							case '+':
-								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[0] == 0) {
+								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[2] == 0) {
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
 									pcom->param = left->address;
@@ -315,7 +309,6 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("4%d %d %d\n", atail->number, atail->oper, atail->param);
 								} else {
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -325,11 +318,10 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("5%d %d %d\n", atail->number, atail->oper, atail->param);
 								}
 								break;
 							case '-':
-								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[0] == 0) {
+								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[2] == 0) {
 									pvar = vhead;
 									while (pvar != NULL) {
 										if (pvar->name[0] == 'a' && pvar->name[1] == 'c' && pvar->name[2] == 0) break;
@@ -353,7 +345,6 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("6%d %d %d\n", atail->number, atail->oper, atail->param);
 									
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -362,7 +353,6 @@ int RPN (char* input)
 									pcom->next = NULL;
 									atail->next = pcom;
 									atail = pcom;
-									printf("7%d %d %d\n", atail->number, atail->oper, atail->param);
 									
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -371,7 +361,6 @@ int RPN (char* input)
 									pcom->next = NULL;
 									atail->next = pcom;
 									atail = pcom;
-									printf("8%d %d %d\n", atail->number, atail->oper, atail->param);
 								} else {
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -381,11 +370,10 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("9%d %d %d\n", atail->number, atail->oper, atail->param);
 								}
 								break;
 							case '*':
-								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[0] == 0) {
+								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[2] == 0) {
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
 									pcom->param = left->address;
@@ -394,7 +382,6 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("10%d %d %d\n", atail->number, atail->oper, atail->param);
 								} else {
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -404,11 +391,10 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("11%d %d %d\n", atail->number, atail->oper, atail->param);
 								}
 								break;
 							case '/':
-								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[0] == 0) {
+								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[2] == 0) {
 									pvar = vhead;
 									while (pvar != NULL) {
 										if (pvar->name[0] == 'a' && pvar->name[1] == 'c' && pvar->name[2] == 0) break;
@@ -432,7 +418,6 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("11%d %d %d\n", atail->number, atail->oper, atail->param);
 									
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -441,7 +426,6 @@ int RPN (char* input)
 									pcom->next = NULL;
 									atail->next = pcom;
 									atail = pcom;
-									printf("12%d %d %d\n", atail->number, atail->oper, atail->param);
 									
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -450,7 +434,6 @@ int RPN (char* input)
 									pcom->next = NULL;
 									atail->next = pcom;
 									atail = pcom;
-									printf("13%d %d %d\n", atail->number, atail->oper, atail->param);
 								} else {
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -460,11 +443,10 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("14%d %d %d\n", atail->number, atail->oper, atail->param);
 								}
 								break;
 							case '=':
-								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[0] == 0) {
+								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[2] == 0) {
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
 									pcom->param = left->address;
@@ -473,7 +455,6 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("15%d %d %d\n", atail->number, atail->oper, atail->param);
 								} else {
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -483,7 +464,6 @@ int RPN (char* input)
 									if (ahead!=NULL) atail->next = pcom;
 									else ahead = pcom;
 									atail = pcom;
-									printf("16%d %d %d\n", atail->number, atail->oper, atail->param);
 									
 									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 									pcom->number = COMNUM++;
@@ -492,12 +472,11 @@ int RPN (char* input)
 									pcom->next = NULL;
 									atail->next = pcom;
 									atail = pcom;
-									printf("17%d %d %d\n", atail->number, atail->oper, atail->param);
 								}
 								break;
 						}
 						
-						if (rpn[i+1]!='+' && rpn[i+1]!='-' && rpn[i+1]!='*' && rpn[i+1]!='/' && rpn[i+1]!='=') {
+						if (rpn[i+1]!='+' && rpn[i+1]!='-' && rpn[i+1]!='*' && rpn[i+1]!='/' && rpn[i+1]!='=' && rpn[i+1]!='\0') {
 							pvar = vhead;
 							char num = '0'-1;
 							while (pvar != NULL){
@@ -533,7 +512,6 @@ int RPN (char* input)
 							if (ahead!=NULL) atail->next = pcom;
 							else ahead = pcom;
 							atail = pcom;
-							printf("18%d %d %d\n", atail->number, atail->oper, atail->param);
 						} else {
 							pnvar = (struct varlist *)malloc(sizeof(struct varlist));
 							pnvar->address = 100;
@@ -550,12 +528,13 @@ int RPN (char* input)
 				}
 			}
 		}
-		printf("%d done!\n", i);
 		++i;
 	}
+	pvar = varhead;
+	varhead = varhead->next;
+	free(pvar);
 	if (varhead != NULL){
 		error_log(5);
-		printf("\nShoeta: %s\n", varhead->name);
 		return 1;
 	}
 	
