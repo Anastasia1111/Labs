@@ -9,18 +9,26 @@ FILE *out;
 
 enum bcomm {REM = 0x1, INPUT, OUTPUT, GOTO, IF, LET, END, EMPTY};
 
-struct comlist
+struct bcomlist
 {
 	int number;
-	bcomm operand;
+	enum bcomm oper;
 	char *param;
-	struct comlist *next;
-}*chead, *ctail;
+	struct bcomlist *next;
+}*bhead, *btail;
+
+struct acomlist
+{
+	int number;
+	enum commands oper;
+	int param;
+	struct acomlist *next;
+}*ahead, *atail;
 
 struct varlist
 {
 	struct varlist* next;
-	char name[2];
+	char name[5];
 	int address;
 }*vhead;
 
@@ -30,6 +38,7 @@ struct oplist
 	struct oplist *next;
 };
 
+int COMNUM;
 int BRAM[ramSize];
 extern int STRN;
 enum bcomm {REM = 0x1, INPUT, OUTPUT, GOTO, IF, LET, END, EMPTY};

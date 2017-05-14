@@ -19,6 +19,9 @@ void error_log(int code)
 		case 5:
 			fprintf (stderr, "Error: Arithmetic expression is incorrect\n");
 		break;
+		case 6:
+			fprintf (stderr, "Error: Number(s) in arithmetic expression is too big\n");
+		break;
 	}
 	return;
 }
