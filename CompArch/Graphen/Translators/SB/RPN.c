@@ -31,7 +31,7 @@ void process_op (char op, char* rpn, int* lci) {
 		rpn[*lci+1] = 'n';
 		rpn[*lci+2] = var;
 		rpn[*lci+3] = '*';
-		lci += 3;
+		*lci += 3;
 	}
 	else {
 		switch (op) {
@@ -133,7 +133,7 @@ int RPN (char* input, char* output)
 		ophead= ophead->next;
 		free(pop);
 	}
-	rpn[++lci] = '\n';
+	rpn[++lci] = '\0';
 	
 	return 0;
 }
