@@ -41,7 +41,7 @@ int process_op (char op, char* rpn, int* lci) {
 			case '*':  rpn[++*lci] = '*';  break;
 			case '/':  rpn[++*lci] = '/';  break;
 			case '=':  rpn[++*lci] = '=';  break;
-			default: return 1; 
+			default: return -1; 
 		}
 	}
 	return 0;
@@ -72,7 +72,7 @@ int RPN (char* input)
 					while (ophead != NULL && ophead->op != '(') {
 						if (process_op(ophead->op, rpn, &lci)) {
 							error_log(5);
-							return 1;
+							return -1;
 						}
 						pop = ophead;
 						ophead = ophead->next;
@@ -84,7 +84,7 @@ int RPN (char* input)
 						free(pop);
 					} else {
 						error_log(5);
-						return 1;
+						return -1;
 					}
 					may_unary = 0;
 				} else
@@ -94,7 +94,7 @@ int RPN (char* input)
 						while (ophead!=NULL && priority(ophead->op) >= priority(curop)) {
 							if (process_op(ophead->op, rpn, &lci)) {
 								error_log(5);
-								return 1;
+								return -1;
 							}
 							pop = ophead;
 							ophead = ophead->next;
@@ -165,11 +165,11 @@ int RPN (char* input)
 									may_unary = 0;
 								} else {
 									error_log(6);
-									return 1;
+									return -1;
 								}
 							} else {
 								error_log(5);
-								return 1;
+								return -1;
 							}
 						}
 					}
@@ -179,7 +179,7 @@ int RPN (char* input)
 	while (ophead != NULL) {
 		if(process_op(ophead->op, rpn, &lci)){
 			error_log(5);
-			return 1;
+			return -1;
 		}
 		pop = ophead;
 		ophead= ophead->next;
@@ -523,7 +523,7 @@ int RPN (char* input)
 						}
 					} else {
 						error_log(5);
-						return 1;
+						return -1;
 					}
 				}
 			}
@@ -535,7 +535,7 @@ int RPN (char* input)
 	free(pvar);
 	if (varhead != NULL){
 		error_log(5);
-		return 1;
+		return -1;
 	}
 	
 	return 0;
