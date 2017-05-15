@@ -45,11 +45,9 @@ int main(int argc, char* argv[])
 		if(flag == 100)
 			continue;
 		if(flag >= 0 && flag <= 99)
-		{
-			fseek(out, flag*sizeof(int), SEEK_SET);
-			fwrite(&outmem, sizeof(int), 1, out);
-		}
+			BRAM[flag] = outmem;
 	} while (1);
+	fwrite(BRAM, sizeof(int), ramSize, out);
 	fclose(in),
 	fclose(out);
 	return 0;

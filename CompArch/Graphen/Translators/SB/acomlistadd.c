@@ -1,18 +1,17 @@
 #include "Btranslator.h"
 
-int end()
+struct acomlist *addA(enum commands oper, int param)
 {
 	struct acomlist *pcom;
 	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 	pcom->number = COMNUM++;
-	pcom->param = 0;
-	pcom->oper = HALT;
+	pcom->param = param;
+	pcom->oper = oper;
 	pcom->next = NULL;
 	if (ahead != NULL)
 		atail->next = pcom;
 	else
 		ahead = pcom;
 	atail = pcom;
-	//addA(HALT, 0);
-	return 0;
+	return pcom;
 }

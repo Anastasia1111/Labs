@@ -46,6 +46,14 @@ struct oplist
 
 extern struct varlist *vhead;
 
+struct gotolist
+{
+	int stringnumber;
+	struct gotolist *next;
+};
+
+extern struct gotolist *ghead, *gtail;
+
 extern int COMNUM;
 int BRAM[ramSize];
 extern int STRN;

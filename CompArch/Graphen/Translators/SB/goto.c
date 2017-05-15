@@ -50,7 +50,18 @@ int GoTo(char *param)
 		if(a != NULL)
 			pcom->param = a->anum;
 		else
-			pcom->param = -2;
+		{
+			pcom->param = -100;//this is will changed after all program
+			struct gotolist *gl;
+			gl = (struct gotolist *)malloc(sizeof(struct gotolist));
+			gl->stringnumber = stringnum;
+			gl->next = NULL;
+			if (ghead != NULL)
+				gtail->next = gl;
+			else
+				ghead = gl;
+			gtail = gl;
+		}
 		pcom->oper = JUMP;
 		pcom->next = NULL;
 		if (ahead != NULL)

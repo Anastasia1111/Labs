@@ -63,6 +63,7 @@ int IfOper(char *param)
 	else
 		ahead = pcom;
 	atail = pcom;
+	//addA(LOAD, a->address);
 	switch(comp)
 	{
 		case 1:
@@ -92,6 +93,7 @@ int big_comp(char *param)
 	else
 		ahead = pcom;
 	atail = pcom;
+	//ifstart = addA(JNEG, -1);
 	pcom = NULL;
 	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 	pcom->number = COMNUM++;
@@ -103,6 +105,7 @@ int big_comp(char *param)
 	else
 		ahead = pcom;
 	atail = pcom;
+	//addA(JZ, -1);
 	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;
@@ -131,6 +134,8 @@ int small_comp(char *param)
 	else
 		ahead = pcom;
 	atail = pcom;
+	//int par = COMNUM + 2;
+	//addA(JNEG, par);
 	pcom = NULL;
 	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 	ifstart = pcom;
@@ -143,6 +148,7 @@ int small_comp(char *param)
 	else
 		ahead = pcom;
 	atail = pcom;
+	//ifstart = addA(JUMP, -1);
 	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;
@@ -165,6 +171,8 @@ int equal_comp(char *param)
 	else
 		ahead = pcom;
 	atail = pcom;
+	//int par = COMNUM + 2;
+	//addA(JNEG, par);
 	pcom = NULL;
 	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 	ifstart = pcom;
@@ -177,6 +185,7 @@ int equal_comp(char *param)
 	else
 		ahead = pcom;
 	atail = pcom;
+	//ifstart = addA(JUMP, -1);
 	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;

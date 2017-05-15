@@ -4,6 +4,7 @@ int STRN = 1;
 int COMNUM = 0;
 struct acomlist *ahead = NULL, *atail = NULL;
 struct bcomlist *bhead = NULL, *btail = NULL;
+struct gotolist *ghead = NULL, *gtail = NULL;
 struct varlist *vhead = NULL;
 
 
@@ -54,7 +55,30 @@ int main(int argc, char* argv[])
 			break;
 	} while (1);
 	
+	
 	struct acomlist *a = ahead;
+	struct gotolist *g = ghead;
+	struct bcomlist *b = bhead;
+	while(a != NULL)
+	{
+		if(a->param == -100)
+		{
+			while(b != NULL)
+			{
+				if(b->number == g->stringnumber)
+				{
+					a->param = b->anum;
+					break;
+				}
+				b = b->next;
+			}
+			b = bhead;
+			g = g->next;
+		}
+		a = a->next;
+	}
+	
+	a = ahead;
 	while(a != NULL)
 	{
 		fprintf(stderr, "%d ", a->number);
@@ -100,7 +124,6 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "%d\n", a->param);
 		a = a->next;
 	}
-	
 	a = ahead;
 	while(a != NULL)
 	{
