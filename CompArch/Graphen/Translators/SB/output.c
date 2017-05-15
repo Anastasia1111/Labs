@@ -34,7 +34,7 @@ int output(char * param)
 		else
 			a->address = vhead->address - 1;
 		a->next = vhead;
-			vhead = a;
+		vhead = a;
 	}
 	struct acomlist pcom;
 	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));

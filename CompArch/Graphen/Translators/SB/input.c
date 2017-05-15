@@ -1,6 +1,6 @@
 #include "Btranslator.h"
 
-int input(char * param)
+int InOutput(char * param, bool flag)
 {
 	int i = 0;
 	while(param[i] == ' ')
@@ -26,21 +26,30 @@ int input(char * param)
 	}
 	if(a == NULL)
 	{
-		a = malloc(sizeof(varlist));
-		a->name[0] = param[i];
-		a->name[1] = 0;
-		if(vhead == NULL)
-			a->address = 99;
-		else
-			a->address = vhead->address - 1;
-		a->next = vhead;
+		if(flag == true)
+		{
+			a = malloc(sizeof(varlist));
+			a->name[0] = param[i];
+			a->name[1] = 0;
+			if(vhead == NULL)
+				a->address = 99;
+			else
+				a->address = vhead->address - 1;
+			a->next = vhead;
 			vhead = a;
+		} else {
+			error_log(7);
+			return -1;
+		}
 	}
-	struct acomlist pcom;
+	struct acomlist *pcom;
 	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
 	pcom->number = COMNUM++;
 	pcom->param = a->address;
-	pcom->oper = READ;
+	if(flag == true)
+		pcom->oper = READ;
+	else
+		pcom->oper = WRITE;
 	pcom->next = NULL;
 	if (ahead!=NULL)
 		atail->next = pcom;

@@ -50,6 +50,8 @@ int process_op(char op, char* rpn, int* lci);
 int priority(char op);
 int RPN(char *input);
 int main(int argc, char* argv[]);
-int input(char *param);
+int InOutput(char *param);
+int GoTo(char *param);
+int end();
 
 

@@ -2,6 +2,7 @@
 
 int GoTo(char *param)
 {
+	int stringnum = 0;
 	while(param[i] == ' ')
 		i++;
 	while(param[i] != ' ')
@@ -29,13 +30,41 @@ int GoTo(char *param)
 		}
 	}
 	
+	struct bcomlist *a = bhead;
+	
+	while(a != NULL)
+	{
+		if(a->number == stringnum)
+			break;
+		a = a->next;
+	}
+	
+	if(a == NULL)
+	{
+		error_log(8);
+		return -1;
+	}
 	while(param[i] == ' ')
 		i++;
 	if(param[i] == 0 || param[i] == '\n')
+	{
+		struct acomlist pcom;
+		pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
+		pcom->number = COMNUM++;
+		pcom->param = a->address;
+		pcom->oper = JUMP;
+		pcom->next = NULL;
+		if (ahead != NULL)
+			atail->next = pcom;
+		else
+			ahead = pcom;
+		atail = pcom;
 		return 0;
+	}
 	else 
 	{
-		//error_log;
+		error_log(8);
 		return -1;
 	}
+	return -1;
 }

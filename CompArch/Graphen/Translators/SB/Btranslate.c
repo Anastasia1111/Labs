@@ -41,6 +41,7 @@ int Btranslate(char *input, int *output)
 	while(input[i] == ' ')
 		i++;
 	i += command_translator(input + i, &oper);
+	int ret = 0;
 	switch(oper)
 	{
 		case EMPTY:
@@ -49,25 +50,26 @@ int Btranslate(char *input, int *output)
 		case REM:
 			return 0;
 		case INPUT:
-			input(input + i);
+			ret = InOutput(input + i, 1);
 			break;
 		case OUTPUT:
-			output(input + i);
+			ret = InOutput(input + i, 0);
 			break;
 		case LET:
-			RPN(input + i);
+			ret = RPN(input + i);
 			break;
 		case IF:
 			//if_function
 			break;
 		case GOTO:
-			//jump
+			ret = GoTo(input + i);
 			break;
 		case END:
+			end();
 			return 1;
 	}
 	
-	return -1;
+	return ret;
 }
 
 int command_translator(char *input, enum bcomm *output)
