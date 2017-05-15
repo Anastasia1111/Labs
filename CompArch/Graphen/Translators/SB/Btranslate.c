@@ -4,9 +4,7 @@ int Btranslate(char *input, int *output)
 {
 	int i = 0, j;
 	int stringnum = 0;
-	enum bcomm words[100];
-	for(j = 0; j < 100; ++j)
-		words[j] = EMPTY;
+	enum bcomm oper;
 	
 	while(input[i] == ' ')
 		i++;
@@ -42,6 +40,32 @@ int Btranslate(char *input, int *output)
 	}
 	while(input[i] == ' ')
 		i++;
+	i += command_translator(input + i, &oper);
+	switch(oper)
+	{
+		case EMPTY:
+			error_log(6);
+			return -1;
+		case REM:
+			return 0;
+		case INPUT:
+			input(input + i);
+			break;
+		case OUTPUT:
+			output(input + i);
+			break;
+		case LET:
+			RPN(input + i);
+			break;
+		case IF:
+			//if_function
+			break;
+		case GOTO:
+			//jump
+			break;
+		case END:
+			return 1;
+	}
 	
 	return -1;
 }
@@ -85,7 +109,7 @@ int command_translator(char *input, enum bcomm *output)
 		*output = END;
 		n = 3;
 	}
-	if(strncmp(input, "+ ", 2) == 0)
+	/*if(strncmp(input, "+ ", 2) == 0)
 	{
 		*output = PLUS;
 		n = 2;
@@ -139,6 +163,6 @@ int command_translator(char *input, enum bcomm *output)
 	{
 		*output = VAR;
 		n = 2;
-	}
+	}*/
 	return n;
 }

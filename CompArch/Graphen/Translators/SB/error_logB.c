@@ -17,10 +17,16 @@ void error_log(int code)
 			fprintf (stderr, "Error:[line %d]: The line begins not with number.\n", STRN);
 		break;
 		case 5:
-			fprintf (stderr, "Error: Arithmetic expression is incorrect\n");
+			fprintf (stderr, "Error[line %d]: Arithmetic expression is incorrect\n", STRN);
 		break;
 		case 6:
-			fprintf (stderr, "Error: Number(s) in arithmetic expression is too big\n");
+			fprintf (stderr, "Error[line %d]: Number(s) in arithmetic expression is too big\n", STRN);
+		break;
+		case 7:
+			fprintf (stderr, "Error[line %d]: Bad variable\n", STRN);
+		break;
+		case 8:
+			fprintf (stderr, "Error[line %d]: GOTO has wrong number of line\n", STRN);
 		break;
 	}
 	return;

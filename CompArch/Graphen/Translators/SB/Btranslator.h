@@ -15,7 +15,7 @@ struct bcomlist
 	enum bcomm oper;
 	char *param;
 	struct bcomlist *next;
-}*bhead, *btail;
+}*bhead = NULL, *btail = NULL;
 
 struct acomlist
 {
@@ -23,14 +23,14 @@ struct acomlist
 	enum commands oper;
 	int param;
 	struct acomlist *next;
-}*ahead, *atail;
+}*ahead = NULL, *atail = NULL;
 
 struct varlist
 {
 	struct varlist* next;
 	char name[5];
 	int address;
-}*vhead;
+}*vhead = NULL;
 
 struct oplist
 {
@@ -46,6 +46,10 @@ enum bcomm {REM = 0x1, INPUT, OUTPUT, GOTO, IF, LET, END, EMPTY};
 void error_log(int code);
 int Btranslate(char *input, int *output);
 int command_translator(char *input, enum bcomm *output);
+int process_op(char op, char* rpn, int* lci);
+int priority(char op);
+int RPN(char *input);
 int main(int argc, char* argv[]);
-int RPN (enum bcomm *input, int n);
+int input(char *param);
+
 
