@@ -3,7 +3,6 @@
 int IfOper(char *param)
 {
 	int i = 0;
-	struct acomlist *pcom; 
 	struct varlist *a = vhead;
 	int flag = 0;
 	int minus = 0;
@@ -53,17 +52,7 @@ int IfOper(char *param)
 		return -1;
 	}
 	i++;
-	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-	pcom->number = COMNUM++;
-	pcom->param = a->address;
-	pcom->oper = LOAD;
-	pcom->next = NULL;
-	if (ahead != NULL)
-		atail->next = pcom;
-	else
-		ahead = pcom;
-	atail = pcom;
-	//addA(LOAD, a->address);
+	addA(LOAD, a->address);
 	switch(comp)
 	{
 		case 1:
@@ -80,32 +69,9 @@ int IfOper(char *param)
 
 int big_comp(char *param)
 {
-	struct acomlist *pcom;
 	struct acomlist *ifstart;
-	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-	ifstart = pcom;
-	pcom->number = COMNUM++;
-	//pcom->param = last + 1
-	pcom->oper = JNEG;
-	pcom->next = NULL;
-	if (ahead != NULL)
-		atail->next = pcom;
-	else
-		ahead = pcom;
-	atail = pcom;
-	//ifstart = addA(JNEG, -1);
-	pcom = NULL;
-	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-	pcom->number = COMNUM++;
-	//pcom->param = last + 1
-	pcom->oper = JZ;
-	pcom->next = NULL;
-	if (ahead != NULL)
-		atail->next = pcom;
-	else
-		ahead = pcom;
-	atail = pcom;
-	//addA(JZ, -1);
+	ifstart = addA(JNEG, -1);
+	addA(JZ, -1);
 	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;
@@ -122,33 +88,10 @@ int big_comp(char *param)
 
 int small_comp(char *param)
 {
-	struct acomlist *pcom;
 	struct acomlist *ifstart;
-	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-	pcom->number = COMNUM++;
-	pcom->param = COMNUM + 1;
-	pcom->oper = JNEG;
-	pcom->next = NULL;
-	if (ahead != NULL)
-		atail->next = pcom;
-	else
-		ahead = pcom;
-	atail = pcom;
-	//int par = COMNUM + 2;
-	//addA(JNEG, par);
-	pcom = NULL;
-	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-	ifstart = pcom;
-	pcom->number = COMNUM++;
-	//pcom->param = LAST + 1;
-	pcom->oper = JUMP;
-	pcom->next = NULL;
-	if (ahead != NULL)
-		atail->next = pcom;
-	else
-		ahead = pcom;
-	atail = pcom;
-	//ifstart = addA(JUMP, -1);
+	int par = COMNUM + 2;
+	addA(JNEG, par);
+	ifstart = addA(JUMP, -1);
 	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;
@@ -159,33 +102,10 @@ int small_comp(char *param)
 
 int equal_comp(char *param)
 {
-	struct acomlist *pcom;
 	struct acomlist *ifstart;
-	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-	pcom->number = COMNUM++;
-	pcom->param = COMNUM + 1;
-	pcom->oper = JZ;
-	pcom->next = NULL;
-	if (ahead != NULL)
-		atail->next = pcom;
-	else
-		ahead = pcom;
-	atail = pcom;
-	//int par = COMNUM + 2;
-	//addA(JNEG, par);
-	pcom = NULL;
-	pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-	ifstart = pcom;
-	pcom->number = COMNUM++;
-	//pcom->param = LAST + 1;
-	pcom->oper = JUMP;
-	pcom->next = NULL;
-	if (ahead != NULL)
-		atail->next = pcom;
-	else
-		ahead = pcom;
-	atail = pcom;
-	//ifstart = addA(JUMP, -1);
+	int par = COMNUM + 2;
+	addA(JNEG, par);
+	ifstart = addA(JUMP, -1);
 	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;
