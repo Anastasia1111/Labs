@@ -6,7 +6,7 @@ int GoTo(char *param)
 	int stringnum = 0;
 	while(param[i] == ' ')
 		i++;
-	while(param[i] != ' ')
+	while(param[i] != ' ' && param[i] != '\n')
 	{
 		switch(param[i])
 		{
@@ -25,6 +25,7 @@ int GoTo(char *param)
 				++i;
 			break;
 			default:
+			printf("HALT ");
 				error_log(8);
 				return -1;
 			break;
@@ -37,7 +38,8 @@ int GoTo(char *param)
 	{
 		if(a->number == stringnum)
 			break;
-		}
+		a = a->next;
+	}
 	while(param[i] == ' ')
 		i++;
 	if(param[i] == 0 || param[i] == '\n')
@@ -60,6 +62,7 @@ int GoTo(char *param)
 	}
 	else 
 	{
+		printf("NEHALT ");
 		error_log(8);
 		return -1;
 	}

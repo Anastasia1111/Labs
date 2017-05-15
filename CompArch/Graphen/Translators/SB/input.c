@@ -10,12 +10,6 @@ int InOutput(char * param, int flag)
 		error_log(7);
 		return -1;
 	}
-	i++;
-	if(param[i] != ' ' && param[i] != '\n')
-	{
-		error_log(7);
-		return -1;
-	}
 	
 	struct varlist *a = vhead;
 	while(a != NULL)
@@ -56,4 +50,13 @@ int InOutput(char * param, int flag)
 	else
 		ahead = pcom;
 	atail = pcom;
+	
+	i++;
+	while(param[i] == ' ')
+		i++;
+	if(param[i] != '\n')
+	{
+		error_log(7);
+		return -1;
+	}
 }

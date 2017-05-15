@@ -31,6 +31,9 @@ void error_log(int code)
 		case 9:
 			fprintf (stderr, "Error[line %d]: IF has wrong comparision.\n", STRN);
 		break;
+		case 10:
+			fprintf (stderr, "Error[line %d]: String has no operand.\n", STRN);
+		break;
 	}
 	return;
 }

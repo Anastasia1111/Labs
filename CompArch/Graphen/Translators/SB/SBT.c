@@ -57,6 +57,53 @@ int main(int argc, char* argv[])
 	struct acomlist *a = ahead;
 	while(a != NULL)
 	{
+		fprintf(stderr, "%d ", a->number);
+		switch(a->oper)
+		{
+			case READ:
+				fprintf(stderr, "READ ");
+				break;
+			case WRITE:
+				fprintf(stderr, "WRITE ");
+				break;
+			case LOAD:
+				fprintf(stderr, "LOAD ");
+				break;
+			case STORE:
+				fprintf(stderr, "STORE ");
+				break;
+			case ADD:
+				fprintf(stderr, "ADD ");
+				break;
+			case SUB:
+				fprintf(stderr, "SUB ");
+				break;
+			case DIVIDE:
+				fprintf(stderr, "DIVIDE ");
+				break;
+			case MUL:
+				fprintf(stderr, "MUL ");
+				break;
+			case JUMP:
+				fprintf(stderr, "JUMP ");
+				break;
+			case JNEG:
+				fprintf(stderr, "JNEG ");
+				break;
+			case JZ:
+				fprintf(stderr, "JZ ");
+				break;
+			case HALT:
+				fprintf(stderr, "HALT ");
+				break;
+		}
+		fprintf(stderr, "%d\n", a->param);
+		a = a->next;
+	}
+	
+	a = ahead;
+	while(a != NULL)
+	{
 		fprintf(out, "%d ", a->number);
 		switch(a->oper)
 		{

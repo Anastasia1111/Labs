@@ -11,6 +11,7 @@ int Btranslate(char *input)
 		btail->next = com;
 	else
 		bhead = com;
+	btail = com;
 	
 	while(input[i] == ' ')
 		i++;
@@ -58,7 +59,7 @@ int Btranslate(char *input)
 	switch(oper)
 	{
 		case EMPTY:
-			error_log(6);
+			error_log(10);
 			return -1;
 		case REM:
 			return 0;
@@ -81,7 +82,6 @@ int Btranslate(char *input)
 			end();
 			return 1;
 	}
-	btail = com;
 	return ret;
 }
 

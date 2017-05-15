@@ -8,7 +8,7 @@ OBJ = $(SRC:.c=.o)
 all: clean sbt
 
 sbt:
-	gcc -I../../headers $(SRC) -o sbt -L../../lib -lSimpleComputer
+	gcc -g -I../../headers $(SRC) -o sbt -L../../lib -lSimpleComputer
 	
 clean:
 	rm -rf *.o
