@@ -1,12 +1,16 @@
 #include "Btranslator.h"
 
 int STRN = 1;
+int COMNUM = 0;
+struct acomlist *ahead = NULL, *atail = NULL;
+struct bcomlist *bhead = NULL, *btail = NULL;
+struct varlist *vhead = NULL;
 
-int main(int argc char* argv[])
+
+int main(int argc, char* argv[])
 {
 	int i;
 	char string[STR_SIZE];
-	int outmem;
 	
 	for(i = 0; i < ramSize; ++i)
 		BRAM[i] = 0;
@@ -27,6 +31,7 @@ int main(int argc char* argv[])
 	
 	out = fopen(argv[2], "w");
 	fwrite(BRAM, sizeof(int), ramSize, out);
+	int flag;
 	do {
 		if(fgets(string, sizeof(string), in) == NULL)
 		{
@@ -39,18 +44,62 @@ int main(int argc char* argv[])
 			}
 		}
 		
-		flag = translate(string, &outmem);
+		flag = Btranslate(string);
 		if(flag == -1)
 			return 1;
 		STRN++;
 		if(flag == 100)
 			continue;
-		if(flag >= 0 && flag <= 99)
-		{
-			fseek(out, flag*sizeof(int), SEEK_SET);
-			fwrite(&outmem, sizeof(int), 1, out);
-		}
+		if(flag == 1)
+			break;
 	} while (1);
+	
+	struct acomlist *a = ahead;
+	while(a != NULL)
+	{
+		fprintf(out, "%d ", a->number);
+		switch(a->oper)
+		{
+			case READ:
+				fprintf(out, "READ ");
+				break;
+			case WRITE:
+				fprintf(out, "WRITE ");
+				break;
+			case LOAD:
+				fprintf(out, "LOAD ");
+				break;
+			case STORE:
+				fprintf(out, "STORE ");
+				break;
+			case ADD:
+				fprintf(out, "ADD ");
+				break;
+			case SUB:
+				fprintf(out, "SUB ");
+				break;
+			case DIVIDE:
+				fprintf(out, "DIVIDE ");
+				break;
+			case MUL:
+				fprintf(out, "MUL ");
+				break;
+			case JUMP:
+				fprintf(out, "JUMP ");
+				break;
+			case JNEG:
+				fprintf(out, "JNEG ");
+				break;
+			case JZ:
+				fprintf(out, "JZ ");
+				break;
+			case HALT:
+				fprintf(out, "HALT ");
+				break;
+		}
+		fprintf(out, "%d\n", a->param);
+		a = a->next;
+	}
 	
 	fclose(in),
 	fclose(out);

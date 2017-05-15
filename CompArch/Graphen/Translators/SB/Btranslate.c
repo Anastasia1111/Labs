@@ -1,10 +1,16 @@
 #include "Btranslator.h"
 
-int Btranslate(char *input, int *output)
+int Btranslate(char *input)
 {
 	int i = 0, j;
 	int stringnum = 0;
 	enum bcomm oper;
+	struct bcomlist *com;
+	com = (struct bcomlist *)malloc(sizeof(struct bcomlist));
+	if (bhead != NULL)
+		btail->next = com;
+	else
+		bhead = com;
 	
 	while(input[i] == ' ')
 		i++;
@@ -26,12 +32,18 @@ int Btranslate(char *input, int *output)
 				stringnum += (input[i] - '0');
 				++i;
 			break;
+			case '\n':
+				return 100;
 			default:
 				error_log(4);
 				return -1;
 			break;
 		}
 	}
+	
+	com->number = stringnum;
+	com->anum = COMNUM;
+	
 	if(input[i] == ' ')
 		i++;
 	else {
@@ -41,6 +53,7 @@ int Btranslate(char *input, int *output)
 	while(input[i] == ' ')
 		i++;
 	i += command_translator(input + i, &oper);
+	com->oper = oper;
 	int ret = 0;
 	switch(oper)
 	{
@@ -59,7 +72,7 @@ int Btranslate(char *input, int *output)
 			ret = RPN(input + i);
 			break;
 		case IF:
-			//if_function
+			ret = IfOper(input + i);
 			break;
 		case GOTO:
 			ret = GoTo(input + i);
@@ -68,7 +81,7 @@ int Btranslate(char *input, int *output)
 			end();
 			return 1;
 	}
-	
+	btail = com;
 	return ret;
 }
 
@@ -111,60 +124,5 @@ int command_translator(char *input, enum bcomm *output)
 		*output = END;
 		n = 3;
 	}
-	/*if(strncmp(input, "+ ", 2) == 0)
-	{
-		*output = PLUS;
-		n = 2;
-	}
-	if(strncmp(input, "- ", 2) == 0)
-	{
-		*output = MINUS;
-		n = 2;
-	}
-	if(strncmp(input, "* ", 2) == 0)
-	{
-		*output = MULTI;
-		n = 2;
-	}
-	if(strncmp(input, "/ ", 2) == 0)
-	{
-		*output = DIVIS;
-		n = 2;
-	}
-	if(strncmp(input, "= ", 2) == 0)
-	{
-		*output = EQUAL;
-		n = 2;
-	}
-	if(strncmp(input, "> ", 2) == 0)
-	{
-		*output = BIG;
-		n = 2;
-	}
-	if(strncmp(input, "< ", 2) == 0)
-	{
-		*output = LES;
-		n = 2;
-	}
-	if(strncmp(input, "== ", 3) == 0)
-	{
-		*output = EQUALITY;
-		n = 3;
-	}
-	if(input[i] == '(')
-	{
-		*output = LBRACK;
-		n = 1;
-	}
-	if(input[i] == ')')
-	{
-		*output = RBRACK;
-		n = 1;
-	}
-	if(input[i] >= 'A' && input[i] <= 'Z' && input[i+1] == ' ')
-	{
-		*output = VAR;
-		n = 2;
-	}*/
 	return n;
 }

@@ -41,7 +41,7 @@ int process_op (char op, char* rpn, int* lci) {
 			case '*':  rpn[++*lci] = '*';  break;
 			case '/':  rpn[++*lci] = '/';  break;
 			case '=':  rpn[++*lci] = '=';  break;
-			default: return -1; 
+			default: return 1; 
 		}
 	}
 	return 0;

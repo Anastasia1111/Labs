@@ -1,4 +1,4 @@
-#Makefile for translator
+#Makefile for translatorA
 
 SRC = SAT.c error_log.c translate.c
 OBJ = $(SRC:.c=.o)

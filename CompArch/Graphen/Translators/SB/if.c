@@ -2,6 +2,7 @@
 
 int IfOper(char *param)
 {
+	int i = 0;
 	struct acomlist *pcom; 
 	struct varlist *a = vhead;
 	int flag = 0;
@@ -65,13 +66,13 @@ int IfOper(char *param)
 	switch(comp)
 	{
 		case 1:
-			big_comp(param + i, a);
+			big_comp(param + i);
 			break;
 		case 0:
-			equal_comp(param + i, a);
+			equal_comp(param + i);
 			break;
 		case -1:
-			small_comp(param + i, a);
+			small_comp(param + i);
 			break;
 	}
 }
@@ -102,7 +103,7 @@ int big_comp(char *param)
 	else
 		ahead = pcom;
 	atail = pcom;
-	int end = if_handler(char *param);// should return NOT -1, error_log inside
+	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;
 	else
@@ -116,7 +117,7 @@ int big_comp(char *param)
 	return 0;
 }
 
-int small_comp(char *param, struct varlist *a)
+int small_comp(char *param)
 {
 	struct acomlist *pcom;
 	struct acomlist *ifstart;
@@ -142,7 +143,7 @@ int small_comp(char *param, struct varlist *a)
 	else
 		ahead = pcom;
 	atail = pcom;
-	int end = if_handler(char *param);// should return NOT -1, error_log inside
+	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;
 	else
@@ -150,7 +151,7 @@ int small_comp(char *param, struct varlist *a)
 	return 0;
 }
 
-int equal_comp(char *param, struct varlist *a)
+int equal_comp(char *param)
 {
 	struct acomlist *pcom;
 	struct acomlist *ifstart;
@@ -176,7 +177,7 @@ int equal_comp(char *param, struct varlist *a)
 	else
 		ahead = pcom;
 	atail = pcom;
-	int flag = if_handler(char *param);// should return NOT -1, error_log inside
+	int end = if_handler(param);// should return NOT -1, error_log inside
 	if(end == -1)
 		return -1;
 	else
@@ -188,9 +189,18 @@ int if_handler(char *param)
 {
 	int i = 0;
 	enum bcomm oper;
+	struct bcomlist *com;
+	com = (struct bcomlist *)malloc(sizeof(struct bcomlist));
+	if (bhead != NULL)
+		btail->next = com;
+	else
+		bhead = com;
+	com->anum = COMNUM;
+	com->number = btail->number;
 	while(param[i] == ' ')
 		i++;
 	i += command_translator(param + i, &oper);
+	com->oper = oper;
 	int ret = 0;
 	switch(oper)
 	{
@@ -215,6 +225,7 @@ int if_handler(char *param)
 			end();
 			return 1;
 	}
+	btail = com;
 	return ret;
 }
 

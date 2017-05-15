@@ -1,7 +1,10 @@
+#ifndef BTRANSLATOR_H_
+#define BTRANSLATOR_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sc.c"
+#include "sc.h"
 
 #define STR_SIZE 256
 FILE *in;
@@ -13,9 +16,9 @@ struct bcomlist
 {
 	int number;
 	enum bcomm oper;
-	char *param;
+	int anum;
 	struct bcomlist *next;
-}*bhead = NULL, *btail = NULL;
+};
 
 struct acomlist
 {
@@ -23,14 +26,17 @@ struct acomlist
 	enum commands oper;
 	int param;
 	struct acomlist *next;
-}*ahead = NULL, *atail = NULL;
+};
+
+extern struct bcomlist *bhead, *btail;
+extern struct acomlist *ahead, *atail;
 
 struct varlist
 {
 	struct varlist* next;
 	char name[5];
 	int address;
-}*vhead = NULL;
+};
 
 struct oplist
 {
@@ -38,20 +44,26 @@ struct oplist
 	struct oplist *next;
 };
 
-int COMNUM;
+extern struct varlist *vhead;
+
+extern int COMNUM;
 int BRAM[ramSize];
 extern int STRN;
-enum bcomm {REM = 0x1, INPUT, OUTPUT, GOTO, IF, LET, END, EMPTY};
 
 void error_log(int code);
-int Btranslate(char *input, int *output);
+int Btranslate(char *input);
 int command_translator(char *input, enum bcomm *output);
 int process_op(char op, char* rpn, int* lci);
 int priority(char op);
 int RPN(char *input);
 int main(int argc, char* argv[]);
-int InOutput(char *param);
+int InOutput(char *param, int flag);
 int GoTo(char *param);
+int IfOper();
+int big_comp(char *param);
+int small_comp(char *param);
+int equal_comp(char *param);
+int if_handler(char *param);
 int end();
 
-
+#endif //BTRANSLATOR_H_

@@ -1,14 +1,14 @@
-#Makefile for translator
+#Makefile for translatorB
 
-SRC = SAT.c error_log.c translate.c
+SRC = SBT.c error_logB.c Btranslate.c input.c RPN.c goto.c if.c end.c
 OBJ = $(SRC:.c=.o)
 
-.PHONY: all sat clean
+.PHONY: all sbt clean
 
-all: clean sat
+all: clean sbt
 
-sat:
-	gcc -I../../headers $(SRC) -o sat -L../../lib -lSimpleComputer
+sbt:
+	gcc -I../../headers $(SRC) -o sbt -L../../lib -lSimpleComputer
 	
 clean:
 	rm -rf *.o
