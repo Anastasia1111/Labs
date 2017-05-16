@@ -238,7 +238,7 @@ int CU()
 int setInput(int operand)
 {
 	mt_gotoXY(23, 7);
-	write(STDOUT_FILENO, "      ", 6);
+	write(STDOUT_FILENO, "                     ", 21);
 	mt_gotoXY(23, 7);
 	int buf = 0;
 	int minflag = 0;

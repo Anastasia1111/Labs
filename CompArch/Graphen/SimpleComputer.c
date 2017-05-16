@@ -1,5 +1,51 @@
 #include "SimpleComputer.h"
 
+void load()
+{
+	int i, j;
+	char *filename;
+	int len = 0;
+	mt_gotoXY(23, 7);
+	write(STDOUT_FILENO, "                     ", 21);
+	mt_gotoXY(23, 7);
+	filename = (char *)malloc(sizeof(char) * 20);
+	rk_mytermregime(1, 0, 1, 1, 1);
+	do {
+		read(STDIN_FILENO, filename + len, 1);
+		len++;
+	} while(len < 20 && filename[len - 1] != '\n' && filename[len - 1] != ' ');
+	if(filename[len - 1] == '\n' || filename[len - 1] == ' ')
+		filename[len - 1] = 0;
+	filename[len] = 0;
+	sc_memoryLoad(filename);
+	free(filename);
+	filename = NULL;
+	for(i = 0; i < 10; ++i)
+		for(j = 0; j < 10; ++j)
+			write_ram(i, j);
+}
+
+void save()
+{
+	char *filename;
+	int len = 0;
+	mt_gotoXY(23, 7);
+	write(STDOUT_FILENO, "                     ", 21);
+	mt_gotoXY(23, 7);
+	filename = (char *)malloc(sizeof(char) * 20);
+	rk_mytermregime(1, 0, 1, 1, 1);
+	do {
+		read(STDIN_FILENO, filename + len, 1);
+		len++;
+	} while(len < 20 && filename[len - 1] != '\n' && filename[len - 1] != ' ');
+	if(filename[len - 1] == '\n' || filename[len - 1] == ' ')
+		filename[len - 1] = 0;
+	filename[len] = 0;
+	sc_memorySave(filename);
+	free(filename);
+	filename = NULL;
+}
+
 void write_ram(int x, int y)
 {
 	char mem[6];

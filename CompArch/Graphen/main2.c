@@ -55,13 +55,10 @@ int main(int argc, char **argv)
 		switch(button)
 		{
 			case l_key:
-				sc_memoryLoad("satexample.o");
-				for(i = 0; i < 10; ++i)
-					for(j = 0; j < 10; ++j)
-						write_ram(i, j);
+				load();
 			break;
 			case s_key:
-				sc_memorySave("satexample.o");
+				save();
 			break;
 			case r_key:
 				alarm(1);

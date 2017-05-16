@@ -19,6 +19,8 @@ void set_Accum();
 void set_InstCount();
 
 int pause(void);
+void load();
+void save();
 void write_ram(int x, int y);
 void big_window();
 void print_flag();
