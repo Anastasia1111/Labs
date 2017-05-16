@@ -11,7 +11,7 @@ void error_log(int code)
 			fprintf (stderr, "Error: Input file doesn't exist.\n");
 		break;
 		case 3:
-			fprintf (stderr, "Error: Can not read input file.\n");
+			fprintf (stderr, "Error: Can not read input/open output file.\n");
 		break;
 		case 4:
 			fprintf (stderr, "Error:[line %d]: The line begins not with number.\n", STRN);

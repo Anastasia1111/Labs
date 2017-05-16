@@ -20,7 +20,6 @@ int main(int argc, char* argv[])
 		error_log(1);
 		return 1;
 	}
-	
 	in = fopen(argv[1], "r");
 	if(in == NULL)
 	{
@@ -28,10 +27,12 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
-	
-	
-	out = fopen(argv[2], "w");
-	fwrite(BRAM, sizeof(int), ramSize, out);
+	out = fopen(argv[2], "wt");
+	if(in == NULL)
+	{
+		error_log(2);
+		return 1;
+	}
 	int flag;
 	do {
 		if(fgets(string, sizeof(string), in) == NULL)
@@ -77,68 +78,10 @@ int main(int argc, char* argv[])
 		}
 		a = a->next;
 	}
-	
 	a = ahead;
 	while(a != NULL)
 	{
-		fprintf(stderr, "%d ", a->number);
-		switch(a->oper)
-		{
-			case READ:
-				fprintf(stderr, "READ ");
-				break;
-			case WRITE:
-				fprintf(stderr, "WRITE ");
-				break;
-			case LOAD:
-				fprintf(stderr, "LOAD ");
-				break;
-			case STORE:
-				fprintf(stderr, "STORE ");
-				break;
-			case ADD:
-				fprintf(stderr, "ADD ");
-				break;
-			case SUB:
-				fprintf(stderr, "SUB ");
-				break;
-			case DIVIDE:
-				fprintf(stderr, "DIVIDE ");
-				break;
-			case MUL:
-				fprintf(stderr, "MUL ");
-				break;
-			case JUMP:
-				fprintf(stderr, "JUMP ");
-				break;
-			case JNEG:
-				fprintf(stderr, "JNEG ");
-				break;
-			case JZ:
-				fprintf(stderr, "JZ ");
-				break;
-			case HALT:
-				fprintf(stderr, "HALT ");
-				break;
-			case EQU:
-				fprintf(stderr, "= ");
-				break;
-		}
-		if((a->oper) == EQU)
-		{
-			if((a->param) < 0)
-				fprintf(stderr, "-%04X\n", a->param * (-1));
-			else
-				fprintf(stderr, "%04X\n", a->param);
-		}
-		else
-			fprintf(stderr, "%d\n", a->param);
-		a = a->next;
-	}
-	a = ahead;
-	while(a != NULL)
-	{
-		fprintf(out, "%d ", a->number);
+		fprintf(out, "%02d ", a->number);
 		switch(a->oper)
 		{
 			case READ:
@@ -192,7 +135,7 @@ int main(int argc, char* argv[])
 			fprintf(out, "%d\n", a->param);
 		a = a->next;
 	}
-	
+	fflush(out);
 	fclose(in),
 	fclose(out);
 	return 0;

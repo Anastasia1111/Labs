@@ -102,6 +102,7 @@ int main(int argc, char **argv)
 			break;
 		}
 	}
-	
+	rk_mytermregime(1, 0, 1, 1, 1);
+	rk_mytermregime(0, 0, 1, 1, 1);
 	return 0;
 }

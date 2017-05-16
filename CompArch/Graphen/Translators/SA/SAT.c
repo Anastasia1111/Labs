@@ -24,8 +24,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
-	out = fopen(argv[2], "w");
-	fwrite(BRAM, sizeof(int), ramSize, out);
+	out = fopen(argv[2], "wb");
 	do {
 		if(fgets(string, sizeof(string), in) == NULL)
 		{
@@ -37,7 +36,6 @@ int main(int argc, char* argv[])
 				return 1;
 			}
 		}
-		
 		flag = translate(string, &outmem);
 		if(flag == -1)
 			return 1;

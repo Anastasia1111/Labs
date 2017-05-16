@@ -9,7 +9,7 @@ int translate(char *input, int *output)
 	
 	while(input[i] == ' ')
 		i++;
-	if((input[i]) == '\n' || input[i] == ';')// empty line
+	if(input[i] == '\n' || input[i] == ';')// empty line
 		return 100;
 	
 	while(input[i] != ' ')
@@ -55,7 +55,6 @@ int translate(char *input, int *output)
 	i += translate_command(input+i, &command); 
 	if(command == NO_COM)
 	{
-		printf("this? ");
 		error_log(5);
 		return -1;
 	}
@@ -134,7 +133,7 @@ int translate(char *input, int *output)
 		while(input[i] == ' ')
 			i++;
 		
-		while((input[i] != ' ') && (input[i] != ';'))
+		while((input[i] != ' ') && (input[i] != ';') && (input[i] != '\n'))
 			switch(input[i])
 			{
 				case '0':
