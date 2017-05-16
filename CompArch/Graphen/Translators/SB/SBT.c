@@ -120,8 +120,14 @@ int main(int argc, char* argv[])
 			case HALT:
 				fprintf(stderr, "HALT ");
 				break;
+			case EQU:
+				fprintf(stderr, "= ");
+				break;
 		}
-		fprintf(stderr, "%d\n", a->param);
+		if(a->oper == EQU)
+			fprintf(stderr, "%04X\n", a->param);
+		else
+			fprintf(stderr, "%d\n", a->param);
 		a = a->next;
 	}
 	a = ahead;
@@ -166,8 +172,14 @@ int main(int argc, char* argv[])
 			case HALT:
 				fprintf(out, "HALT ");
 				break;
+			case EQU:
+				fprintf(out, "= ");
+				break;
 		}
-		fprintf(out, "%d\n", a->param);
+		if(a->oper == EQU)
+			fprintf(out, "%04X\n", a->param);
+		else
+			fprintf(out, "%d\n", a->param);
 		a = a->next;
 	}
 	

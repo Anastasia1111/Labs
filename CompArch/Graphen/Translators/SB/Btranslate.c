@@ -70,7 +70,7 @@ int Btranslate(char *input)
 			ret = InOutput(input + i, 0);
 			break;
 		case LET:
-			//ret = RPN(input + i);
+			ret = RPN(input + i);
 			break;
 		case IF:
 			ret = IfOper(input + i);

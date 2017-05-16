@@ -1,7 +1,7 @@
 10 REM comment
 20 INPUT A
 30 INPUT B
-40 LET C = A – B
+40 LET C = -18
 50 IF B < 0 GOTO 10 
 60 OUTPUT A
 70 END

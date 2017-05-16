@@ -25,7 +25,6 @@ int GoTo(char *param)
 				++i;
 			break;
 			default:
-			printf("HALT ");
 				error_log(8);
 				return -1;
 			break;
@@ -73,7 +72,6 @@ int GoTo(char *param)
 	}
 	else 
 	{
-		printf("NEHALT ");
 		error_log(8);
 		return -1;
 	}
