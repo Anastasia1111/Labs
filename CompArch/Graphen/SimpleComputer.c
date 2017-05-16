@@ -274,19 +274,18 @@ void Stop(int signo)
 int commandwindow()
 {
 	enum keys button;
-	char buf[] = "                         ";
-	char buf1[] = "                           ";
+	char buf[] = "                           ";
 	int yes = 1, retflag = 0;
 	mt_setbgcolor(LRED);
 	mt_setfgcolor(LWHITE);
+	for(int i = 3; i < 10; ++i)
+	{
+		mt_gotoXY(i, 15);
+		write(STDOUT_FILENO, buf, 27);
+	}
 	bc_box(3, 15, 6, 26);
 	mt_gotoXY(3, 25);
 	write(STDOUT_FILENO, "Warning", 7);
-	for(int i = 4; i < 9; ++i)
-	{
-		mt_gotoXY(i, 16);
-		write(STDOUT_FILENO, buf, 25);
-	}
 	mt_gotoXY(4, 17);
 	write(STDOUT_FILENO, "Is this an command?", 19);
 	while (!(retflag))
@@ -325,7 +324,7 @@ int commandwindow()
 	for(int i = 3; i < 10; ++i)
 	{
 		mt_gotoXY(i, 15);
-		write(STDOUT_FILENO, buf1, 27);
+		write(STDOUT_FILENO, buf, 27);
 	}
 	for(int i = 0; i < 10; ++i)
 		for(int j = 0; j < 10; ++j)
