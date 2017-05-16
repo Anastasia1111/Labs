@@ -5,12 +5,13 @@ int translate(char *input, int *output)
 	int memory = 0;
 	int operand = 0;
 	int i = 0;
+	int minusflag = 0;
 	
 	while(input[i] == ' ')
 		i++;
 	if((input[i]) == '\n' || input[i] == ';')// empty line
 		return 100;
-
+	
 	while(input[i] != ' ')
 	{
 		switch(input[i])
@@ -62,6 +63,8 @@ int translate(char *input, int *output)
 	{
 		while(input[i] == ' ')
 			i++;
+		if(input[i] == '-')
+			minusflag++;
 		while((input[i] != ' ') && (input[i] != ';'))
 			switch(input[i])
 			{
@@ -104,7 +107,16 @@ int translate(char *input, int *output)
 					return -1;
 				break;
 			}
-		*output = operand;
+		if(operand >= 0 && operand <= 0x1FFF)
+		{
+			if(minusflag)
+				operand |= (1 << 13);
+			operand |= (1 << 14);
+			*output = operand;
+		} else {
+			error_log(8);
+			return -1;
+		}
 		return memory;
 	} else {
 		if(command == HALT)

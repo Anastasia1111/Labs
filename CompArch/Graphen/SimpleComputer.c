@@ -378,6 +378,9 @@ char write_hex_num(enum keys button, int num[2])
 			num[0] = _F_0_;
 			num[1] = _F_1_;
 			break;
+		case enter_key:
+			return -2;
+			break;
 		default:
 			return -1;
 			break;
@@ -491,7 +494,7 @@ void set_Accum()
 		rk_readkey(&subbut);
 		
 		char mem;
-		
+		int ret_flag = 0;
 		switch(subbut)
 		{
 			case key_min:
@@ -583,11 +586,16 @@ void set_Accum()
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 15;
 				break;
+			case enter_key:
+				ret_flag = 1;
+				break;
 			default: 
 				--i;
 				continue;
 				break;
 		}
+		if(ret_flag == 1)
+			break;
 		bufAc <<= 4;
 		bufAc += mem;
 	}
@@ -628,7 +636,7 @@ void enter_ram()
 	int wr = 0;
 	int com = 0, oper = 0;
 	char mem;
-	int num[2];
+	int num[2] = {0, 0};
 	
 	int InstCountx = InstCount / 10;
 	int InstCounty = InstCount % 10;
@@ -647,10 +655,14 @@ void enter_ram()
 			mem = -1;
 			minus = 1;
 		}
-		if(mem < 0)
+		if(mem == -1)
 		{
 			i--;
 			continue;
+		}
+		if(mem == -2)
+		{
+			break;
 		}
 		write(STDOUT_FILENO, &mem, 1);
 		if(mem >= 'A' && mem <= 'F')
@@ -675,17 +687,12 @@ void enter_ram()
 		}
 		bc_printbigchar(num, 14, 2 + i * 8 + i, LRED, GREEN);
 	}
+	int bad_com = 0;
 	if(flag)
 	{
 		int enc = sc_commandEncode(com, oper, &wr);
 		if(enc != 0)
-		{
-			wr = 0;
-			wr += com;
-			wr <<= 4;
-			wr += oper;
-			wr |= 0x1 << 14;
-		}
+			bad_com = 1;
 	}
 	else 
 	{
@@ -695,7 +702,8 @@ void enter_ram()
 		if(minus)
 			wr |= 0x1 << 13;
 	}
-	sc_memorySet(InstCount, wr);
+	if(!bad_com)
+		sc_memorySet(InstCount, wr);
 }
 
 void operation()

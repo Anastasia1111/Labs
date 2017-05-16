@@ -124,8 +124,13 @@ int main(int argc, char* argv[])
 				fprintf(stderr, "= ");
 				break;
 		}
-		if(a->oper == EQU)
-			fprintf(stderr, "%04X\n", a->param);
+		if((a->oper) == EQU)
+		{
+			if((a->param) < 0)
+				fprintf(stderr, "-%04X\n", a->param * (-1));
+			else
+				fprintf(stderr, "%04X\n", a->param);
+		}
 		else
 			fprintf(stderr, "%d\n", a->param);
 		a = a->next;
@@ -177,7 +182,12 @@ int main(int argc, char* argv[])
 				break;
 		}
 		if(a->oper == EQU)
-			fprintf(out, "%04X\n", a->param);
+		{
+			if(a->param < 0)
+				fprintf(out, "-%04X\n", a->param * (-1));
+			else
+				fprintf(out, "%04X\n", a->param);
+		}
 		else
 			fprintf(out, "%d\n", a->param);
 		a = a->next;

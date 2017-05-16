@@ -8,7 +8,18 @@ int ALU(int command, int operand)
 	int bRAM = RAM[operand];
 	
 	int Accmin = (bAccum >> 14) & 1;
+	bAccum &= ~(1 << 14);
+	if(Accmin == 1)
+		bAccum *= -1;
+		
 	int RAMmin = (bRAM >> 13) & 1;
+	int RAMcom = (bRAM >> 14) & 1;
+	bRAM &= ~(3 << 13);
+	if(RAMmin == 1)
+		bRAM *= -1;
+	if(RAMcom)
+		bRAM |= (1 << 13);
+	
 	if(Accmin)
 		bAccum *= -1;
 	if(RAMmin)
@@ -23,9 +34,13 @@ int ALU(int command, int operand)
 				return -1;
 			}
 			Accum = 0;
-			Accum += (res & 0x3FFF);
 			if(res < 0)
+			{
+				res *= -1;
 				Accum |= 1 << 14;
+			}
+			Accum += (res & 0x3FFF);
+			
 		break;
 		case SUB:
 			res = bAccum - bRAM;
@@ -35,9 +50,12 @@ int ALU(int command, int operand)
 				return -1;
 			}
 			Accum = 0;
-			Accum += (res & 0x3FFF);
 			if(res < 0)
+			{
+				res *= -1;
 				Accum |= 1 << 14;
+			}
+			Accum += (res & 0x3FFF);
 		break;
 		case DIVIDE:
 			if(bRAM == 0)
@@ -47,9 +65,12 @@ int ALU(int command, int operand)
 			}
 			res = bAccum / bRAM;
 			Accum = 0;
-			Accum += (res & 0x3FFF);
 			if(res < 0)
+			{
+				res *= -1;
 				Accum |= 1 << 14;
+			}
+			Accum += (res & 0x3FFF);
 		break;
 		case MUL:
 			res = bAccum * bRAM;
@@ -59,12 +80,15 @@ int ALU(int command, int operand)
 				return -1;
 			}
 			Accum = 0;
-			Accum += (res & 0x3FFF);
 			if(res < 0)
+			{
+				res *= -1;
 				Accum |= 1 << 14;
+			}
+			Accum += (res & 0x3FFF);
 		break;
 		case RCR:
-			bRAM = RAM[operand] & 0x3FFF;
+			bRAM = RAM[operand] & 0x7FFF;
 			buf = (bRAM & 1) << 14;
 			Accum = 0;
 			Accum = bRAM >> 1;
@@ -74,11 +98,14 @@ int ALU(int command, int operand)
 			if(bAccum < 0)
 				bAccum *= -1;
 			a = bAccum % 15;
-			bRAM = RAM[operand] & 0x3FFF;
-			for(int i = 0; i < a; ++i)
+			bRAM = RAM[operand] & 0x7FFF;
+			buf = (bRAM & (1 << 14)) >> 14;
+			Accum = (bRAM << 1) & 0x7FFF;
+			Accum += buf;
+			for(int i = 0; i < (a - 1); ++i)
 			{
-				buf = (bRAM & (1 << 14)) >> 14;
-				Accum = (bRAM << 2) & 0x3FFF;
+				buf = (Accum & (1 << 14)) >> 14;
+				Accum = (Accum << 1) & 0x7FFF;
 				Accum += buf;
 			}
 		break;
@@ -91,6 +118,10 @@ int CU()
 	char out[10];
 	int value, command, operand, n, i;
 	sc_memoryGet(InstCount, &value);
+	int b14, b15;
+	int bAccum;
+	int bRAM;
+	
 	if(sc_commandDecode(value, &command, &operand) != 0)
 	{
 		sc_regSet(REG_WR_COM, 1);
@@ -113,7 +144,7 @@ int CU()
 				sc_regSet(REG_OVERLIMIT_MEM, 1);
 				return -1;
 			}
-			if(RAM[operand] > 0x1FFF)
+			if(((RAM[operand] >> 13) & 1) == 1)
 				n = sprintf(out, "-%04X", (RAM[operand] & 0x1FFF));
 			else
 				n = sprintf(out, " %04X", (RAM[operand] & 0x1FFF));
@@ -129,7 +160,14 @@ int CU()
 				sc_regSet(REG_OVERLIMIT_MEM, 1);
 				return -1;
 			}
-			Accum = RAM[operand];
+			b14 = (RAM[operand] >> 13) & 1;
+			b15 = (RAM[operand] >> 14) & 1;
+			bAccum = RAM[operand] & 0x1FFF;
+			if(b14 == 1)
+				bAccum |= 1 << 14;
+			if(b15 == 1)
+				bAccum |= 1 << 13;
+			Accum = bAccum;
 			return 0;
 		}
 		
@@ -140,7 +178,14 @@ int CU()
 				sc_regSet(REG_OVERLIMIT_MEM, 1);
 				return -1;
 			}
-			RAM[operand] = Accum;
+			bRAM = Accum & 0x1FFF;
+			b14 = (Accum >> 13) & 1;
+			b15 = (Accum >> 14) & 1;
+			if(b14 == 1)
+				bRAM |= 1 << 14;
+			if(b15 == 1)
+				bRAM |= 1 << 13;
+			RAM[operand] = bRAM;
 			return 0;
 		}
 		
@@ -201,7 +246,7 @@ int setInput(int operand)
 	{
 		enum keys subbut;
 		rk_readkey(&subbut);
-		
+		int ret_flag = 0;
 		char mem;
 		
 		switch(subbut)
@@ -296,11 +341,16 @@ int setInput(int operand)
 				write(STDOUT_FILENO, &mem, 1);
 				mem = 15;
 				break;
+			case enter_key:
+				ret_flag = 1;
+				break;
 			default: 
 				i--;
 				continue;
 				break;
 		}
+		if(ret_flag == 1)
+			break;
 		buf <<= 4;
 		buf += mem;
 	}
@@ -309,6 +359,7 @@ int setInput(int operand)
 		sc_regSet(REG_OVERFLOW, 1);
 		return -1;
 	}
+	buf |= (1 << 14);// NOT an command
 	if(minflag)
 		buf |= (1 << 13);
 	return sc_memorySet(operand, buf);

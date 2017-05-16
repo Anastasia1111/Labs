@@ -25,6 +25,9 @@ void error_log(int code)
 		case 7:
 			fprintf (stderr, "Error:[line %d]: Wrong hex operand.\n", STRN);
 		break;
+		case 8:
+			fprintf (stderr, "Error:[line %d]: Too big value for cell.\n", STRN);
+		break;
 	}
 	return;
 }

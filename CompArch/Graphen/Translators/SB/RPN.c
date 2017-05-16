@@ -27,12 +27,26 @@ int process_op (char op, char* rpn, int* lci) {
 			vhead = pvar;
 		}
 		
-		char var = rpn[*lci];
-		rpn[*lci] = 'm';
-		rpn[*lci+1] = 'n';
-		rpn[*lci+2] = var;
-		rpn[*lci+3] = '*';
-		*lci += 3;
+		if (rpn[*lci]>='0' && rpn[*lci]<='9') {
+			char dig1 = rpn[*lci-3];
+			char dig2 = rpn[*lci-2];
+			char dig3 = rpn[*lci-1];
+			char dig4 = rpn[*lci];
+			rpn[*lci-3] = 'm';
+			rpn[*lci-2] = 'n';
+			rpn[*lci-1] = dig1;
+			rpn[*lci] = dig2;
+			rpn[*lci+1] = dig3;
+			rpn[*lci+2] = dig4;
+			rpn[*lci+3] = '*';	
+		} else {
+			char var = rpn[*lci];
+			rpn[*lci] = 'm';
+			rpn[*lci+1] = 'n';
+			rpn[*lci+2] = var;
+			rpn[*lci+3] = '*';	
+		}
+		*lci += 3;		
 	}
 	else {
 		switch (op) {
@@ -288,36 +302,15 @@ int RPN (char* input)
 						free(pvar);
 						
 						if (rpn[i-1]!='+' && rpn[i-1]!='-' && rpn[i-1]!='*' && rpn[i-1]!='/' && rpn[i-1]!='=') {
-							pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-							pcom->number = COMNUM++;
-							pcom->param = left->address;
-							pcom->oper = LOAD;
-							pcom->next = NULL;
-							if (ahead!=NULL) atail->next = pcom;
-							else ahead = pcom;
-							atail = pcom;
+							addA(LOAD, left->address);
 						}
 						
 						switch(rpn[i]){
 							case '+':
 								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[2] == 0) {
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = left->address;
-									pcom->oper = ADD;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(ADD, left->address);
 								} else {
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = right->address;
-									pcom->oper = ADD;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(ADD, right->address);
 								}
 								break;
 							case '-':
@@ -337,60 +330,20 @@ int RPN (char* input)
 										pvar->next = vhead;
 										vhead = pvar;
 									}
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = pvar->address;
-									pcom->oper = STORE;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(STORE, pvar->address);
 									
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = left->address;
-									pcom->oper = LOAD;
-									pcom->next = NULL;
-									atail->next = pcom;
-									atail = pcom;
+									addA(LOAD, left->address);
 									
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = pvar->address;
-									pcom->oper = SUB;
-									pcom->next = NULL;
-									atail->next = pcom;
-									atail = pcom;
+									addA(SUB, pvar->address);
 								} else {
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = right->address;
-									pcom->oper = SUB;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(SUB, right->address);
 								}
 								break;
 							case '*':
 								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[2] == 0) {
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = left->address;
-									pcom->oper = MUL;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(MUL, left->address);
 								} else {
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = right->address;
-									pcom->oper = MUL;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(MUL, right->address);
 								}
 								break;
 							case '/':
@@ -410,68 +363,22 @@ int RPN (char* input)
 										pvar->next = vhead;
 										vhead = pvar;
 									}
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = pvar->address;
-									pcom->oper = STORE;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(STORE, pvar->address);
 									
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = left->address;
-									pcom->oper = LOAD;
-									pcom->next = NULL;
-									atail->next = pcom;
-									atail = pcom;
+									addA(STORE, left->address);
 									
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = pvar->address;
-									pcom->oper = DIVIDE;
-									pcom->next = NULL;
-									atail->next = pcom;
-									atail = pcom;
+									addA(DIVIDE, pvar->address);
 								} else {
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = right->address;
-									pcom->oper = DIVIDE;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(DIVIDE, right->address);
 								}
 								break;
 							case '=':
 								if (right->name[0] == 'a' && right->name[1] == 'c' && right->name[2] == 0) {
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = left->address;
-									pcom->oper = STORE;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(STORE, left->address);
 								} else {
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = right->address;
-									pcom->oper = LOAD;
-									pcom->next = NULL;
-									if (ahead!=NULL) atail->next = pcom;
-									else ahead = pcom;
-									atail = pcom;
+									addA(LOAD, right->address);
 									
-									pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-									pcom->number = COMNUM++;
-									pcom->param = left->address;
-									pcom->oper = STORE;
-									pcom->next = NULL;
-									atail->next = pcom;
-									atail = pcom;
+									addA(STORE, left->address);
 								}
 								break;
 						}
@@ -504,14 +411,7 @@ int RPN (char* input)
 							pnvar->next = varhead;
 							varhead = pnvar;
 							
-							pcom = (struct acomlist *)malloc(sizeof(struct acomlist));
-							pcom->number = COMNUM++;
-							pcom->param = pnvar->address;
-							pcom->oper = STORE;
-							pcom->next = NULL;
-							if (ahead!=NULL) atail->next = pcom;
-							else ahead = pcom;
-							atail = pcom;
+							addA(STORE, pnvar->address);
 						} else {
 							pnvar = (struct varlist *)malloc(sizeof(struct varlist));
 							pnvar->address = 100;
