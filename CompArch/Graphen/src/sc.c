@@ -110,7 +110,7 @@ int sc_commandEncode (int command, int operand, int *value)
 	(command >= 0x30 && command <= 0x33) || 
 	(command >= 0x40 && command <= 0x43) || 
 	(command >= 0x51 && command <= 0x59) ||
-	 command >= 0x63 || command >= 0x69)
+	 command >= 0x69)
 	{	
 		// encoding
 		*value = 0;
@@ -136,7 +136,7 @@ int sc_commandDecode (int value, int *command, int *operand)
 	(( dec_sevbit_mask ) >= 0x30 && ( dec_sevbit_mask ) <= 0x33) || 
 	(( dec_sevbit_mask ) >= 0x40 && ( dec_sevbit_mask ) <= 0x43) || 
 	(( dec_sevbit_mask ) >= 0x51 && ( dec_sevbit_mask ) <= 0x59) ||
-	( dec_sevbit_mask ) == 0x63 || ( dec_sevbit_mask ) == 0x69)
+	( dec_sevbit_mask ) == 0x69)
 	{
 		*command = (value >> 7) & 0x7F;
 	} else {

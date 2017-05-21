@@ -30,7 +30,7 @@ extern char InstCount;
 extern short int Accum;
 
 enum commands {READ = 0x10, WRITE = 0x11, LOAD = 0x20, STORE = 0x21, ADD = 0x30, SUB = 0x31, DIVIDE = 0x32, MUL = 0x33, JUMP = 0x40,
-JNEG = 0x41, JZ = 0x42, HALT = 0x43, RCR = 0x63, RCCL = 0x69, EQU = 0x80, NO_COM = 0x90};
+JNEG = 0x41, JZ = 0x42, HALT = 0x43, RCCL = 0x69, EQU = 0x80, NO_COM = 0x90};
 
 int sc_memoryInit();
 int sc_memorySet (int address, int value);

@@ -34,6 +34,9 @@ void error_log(int code)
 		case 10:
 			fprintf (stderr, "Error[line %d]: String has no operand.\n", STRN);
 		break;
+		case 11:
+			fprintf (stderr, "Input file has no END.\n");
+		break;
 	}
 	return;
 }

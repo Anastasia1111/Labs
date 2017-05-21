@@ -4,21 +4,12 @@ int ALU(int command, int operand)
 {
 	int buf, minbuf;
 	int a;
-	int bAccum = Accum;
-	int bRAM = RAM[operand];
+	int bAccum = Accum & 0x3FFF;
+	int bRAM = RAM[operand] & 0x1FFF;
 	
-	int Accmin = (bAccum >> 14) & 1;
-	bAccum &= ~(1 << 14);
-	if(Accmin == 1)
-		bAccum *= -1;
+	int Accmin = (Accum >> 14) & 1;
 		
-	int RAMmin = (bRAM >> 13) & 1;
-	int RAMcom = (bRAM >> 14) & 1;
-	bRAM &= ~(3 << 13);
-	if(RAMmin == 1)
-		bRAM *= -1;
-	if(RAMcom)
-		bRAM |= (1 << 13);
+	int RAMmin = (RAM[operand] >> 13) & 1;
 	
 	if(Accmin)
 		bAccum *= -1;
@@ -27,8 +18,8 @@ int ALU(int command, int operand)
 	int res;
 	switch(command) {
 		case ADD:
-			res = bAccum + bRAM;
-			if(res >= 0x3FFF || res <= -0x3FFF)
+			res = bAccum  + bRAM;
+			if(res > 0x3FFF || res < -0x3FFF)
 			{
 				sc_regSet(REG_OVERFLOW, 1);
 				return -1;
@@ -44,7 +35,7 @@ int ALU(int command, int operand)
 		break;
 		case SUB:
 			res = bAccum - bRAM;
-			if(res >= 0x3FFF || res <= -0x3FFF)
+			if(res > 0x3FFF || res < -0x3FFF)
 			{
 				sc_regSet(REG_OVERFLOW, 1);
 				return -1;
@@ -74,7 +65,7 @@ int ALU(int command, int operand)
 		break;
 		case MUL:
 			res = bAccum * bRAM;
-			if(res >= 0x3FFF || res <= -0x3FFF)
+			if(res > 0x3FFF || res < -0x3FFF)
 			{
 				sc_regSet(REG_OVERFLOW, 1);
 				return -1;
@@ -86,13 +77,6 @@ int ALU(int command, int operand)
 				Accum |= 1 << 14;
 			}
 			Accum += (res & 0x3FFF);
-		break;
-		case RCR:
-			bRAM = RAM[operand] & 0x7FFF;
-			buf = (bRAM & 1) << 14;
-			Accum = 0;
-			Accum = bRAM >> 1;
-			Accum += buf;
 		break;
 		case RCCL:
 			if(bAccum < 0)
@@ -128,7 +112,7 @@ int CU()
 		return -1;
 	}
 	
-	if(command >= ADD && command <= MUL || command == RCR || command == RCCL)
+	if(command >= ADD && command <= MUL || command == RCCL)
 		return ALU(command, operand);
 	else
 	{
@@ -165,8 +149,6 @@ int CU()
 			bAccum = RAM[operand] & 0x1FFF;
 			if(b14 == 1)
 				bAccum |= 1 << 14;
-			if(b15 == 1)
-				bAccum |= 1 << 13;
 			Accum = bAccum;
 			return 0;
 		}
@@ -178,11 +160,13 @@ int CU()
 				sc_regSet(REG_OVERLIMIT_MEM, 1);
 				return -1;
 			}
-			bRAM = Accum & 0x1FFF;
-			b14 = (Accum >> 13) & 1;
+			bRAM = Accum & 0x3FFF;
+			if(bRAM > 0x1FFF)
+			{
+				sc_regSet(REG_OVERFLOW, 1);
+				return -1;
+			}
 			b15 = (Accum >> 14) & 1;
-			if(b14 == 1)
-				bRAM |= 1 << 14;
 			if(b15 == 1)
 				bRAM |= 1 << 13;
 			RAM[operand] = bRAM;
@@ -203,7 +187,7 @@ int CU()
 		
 		if(command == JNEG)
 		{
-			if(Accum < 0)
+			if(((Accum >> 14) & 1) == 1)
 				if(operand >= 0 && operand <= 99)
 					InstCount = operand;
 				else

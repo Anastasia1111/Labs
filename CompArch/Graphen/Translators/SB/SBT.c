@@ -55,7 +55,13 @@ int main(int argc, char* argv[])
 		if(flag == 1)
 			break;
 	} while (1);
-	
+	if(flag != 1)
+	{
+		error_log(11);
+		fclose(in);
+		fclose(out);
+		return 1;
+	}
 	
 	struct acomlist *a = ahead;
 	struct gotolist *g = ghead;
@@ -135,8 +141,7 @@ int main(int argc, char* argv[])
 			fprintf(out, "%d\n", a->param);
 		a = a->next;
 	}
-	fflush(out);
-	fclose(in),
+	fclose(in);
 	fclose(out);
 	return 0;
 }
