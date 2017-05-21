@@ -67,7 +67,7 @@ int RPN(char *input);
 int main(int argc, char* argv[]);
 int InOutput(char *param, int flag);
 int GoTo(char *param);
-int IfOper();
+int IfOper(char *param);
 int big_comp(char *param);
 int small_comp(char *param);
 int equal_comp(char *param);
