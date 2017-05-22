@@ -4,6 +4,7 @@ int IfOper(char *param)
 {
 	int i = 0;
 	struct varlist *a = vhead;
+	int fstnum = -1;
 	int flag = 0;
 	int minus = 0;
 	int stringnum = 0;
@@ -15,7 +16,10 @@ int IfOper(char *param)
 		while(a != NULL)
 		{
 			if(a->name[0] == param[i] && a->name[1] == 0)
+			{
+				fstnum = a->address;
 				break;
+			}
 			a = a->next;
 		}
 		if(a == NULL)
@@ -46,13 +50,35 @@ int IfOper(char *param)
 	i++;
 	while(param[i] == ' ')
 		i++;
+	flag = 0;
 	if(param[i] != '0')
 	{
-		error_log(9);
-		return -1;
+		if(param[i] >= 'A' && param[i] <= 'Z') // comparision with var
+		{
+			a = vhead;
+			while(a != NULL)
+			{
+				if(a->name[0] == param[i] && a->name[1] == 0)
+				{
+					flag = 1;
+					addA(LOAD, fstnum);
+					addA(SUB, a->address);
+					break;
+				}
+				a = a->next;
+			}
+			if(a == NULL)
+				flag = 0;
+		}
+		if(flag == 0)// neither var, nor 0
+		{
+			error_log(9);
+			return -1;
+		}
 	}
 	i++;
-	addA(LOAD, a->address);
+	if(flag == 0) // comparision with 0
+		addA(LOAD, fstnum);
 	switch(comp)
 	{
 		case 1:
