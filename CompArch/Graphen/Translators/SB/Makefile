@@ -1,6 +1,6 @@
 #Makefile for translatorB
 
-SRC = SBT.c error_logB.c Btranslate.c io.c RPN.c goto.c if.c end.c acomlistadd.c
+SRC = SBT.c error_logB.c Btranslate.c io.c RPN.c goto.c if.c end.c acomlistadd.c freeram.c
 OBJ = $(SRC:.c=.o)
 
 .PHONY: all sbt clean

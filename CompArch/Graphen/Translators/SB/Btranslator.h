@@ -73,6 +73,7 @@ int small_comp(char *param);
 int equal_comp(char *param);
 int if_handler(char *param);
 int end();
+int freeram();
 struct acomlist *addA(enum commands oper, int param);
 
 #endif //BTRANSLATOR_H_

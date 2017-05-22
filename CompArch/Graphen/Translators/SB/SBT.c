@@ -141,6 +141,7 @@ int main(int argc, char* argv[])
 			fprintf(out, "%d\n", a->param);
 		a = a->next;
 	}
+	freeram();
 	fclose(in);
 	fclose(out);
 	return 0;
