@@ -4,19 +4,31 @@ void load()
 {
 	int i, j;
 	char *filename;
-	int len = 0;
+	int t = 0;
 	mt_gotoXY(23, 7);
 	write(STDOUT_FILENO, "                     ", 21);
 	mt_gotoXY(23, 7);
 	filename = (char *)malloc(sizeof(char) * 20);
 	rk_mytermregime(1, 0, 1, 1, 1);
-	do {
-		read(STDIN_FILENO, filename + len, 1);
-		len++;
-	} while(len < 20 && filename[len - 1] != '\n' && filename[len - 1] != ' ');
-	if(filename[len - 1] == '\n' || filename[len - 1] == ' ')
-		filename[len - 1] = 0;
-	filename[len] = 0;
+	for(i = 0; i < 20; ++i)
+	{
+		read(STDIN_FILENO, filename + i, 1);
+		if(filename[i] == '\n' || filename[i] == ' ')
+			break;
+		if(!((filename[i] >= 'A' && filename[i] <= 'Z') || (filename[i] >= '0' && filename[i] <= '9') 
+		|| (filename[i] >= 'a' && filename[i] <= 'z') || (filename[i] == '.' && t == 0)))
+		{
+			mt_gotoXY(23, 7);
+			write(STDOUT_FILENO, "                     ", 21);
+			mt_gotoXY(23, 7);
+			write(STDOUT_FILENO, "Wrong name", 10);
+			return;
+		}
+		if(filename[i] == '.')
+			if(t == 0)
+				t++;
+	}
+	filename[++i] = 0;
 	sc_memoryLoad(filename);
 	free(filename);
 	filename = NULL;
@@ -28,19 +40,32 @@ void load()
 void save()
 {
 	char *filename;
-	int len = 0;
+	int t = 0;
+	int i;
 	mt_gotoXY(23, 7);
 	write(STDOUT_FILENO, "                     ", 21);
 	mt_gotoXY(23, 7);
-	filename = (char *)malloc(sizeof(char) * 20);
+	filename = (char *)malloc(sizeof(char) * 21);
 	rk_mytermregime(1, 0, 1, 1, 1);
-	do {
-		read(STDIN_FILENO, filename + len, 1);
-		len++;
-	} while(len < 20 && filename[len - 1] != '\n' && filename[len - 1] != ' ');
-	if(filename[len - 1] == '\n' || filename[len - 1] == ' ')
-		filename[len - 1] = 0;
-	filename[len] = 0;
+	for(i = 0; i < 20; ++i)
+	{
+		read(STDIN_FILENO, filename + i, 1);
+		if(filename[i] == '\n' || filename[i] == ' ')
+			break;
+		if(!((filename[i] >= 'A' && filename[i] <= 'Z') || (filename[i] >= '0' && filename[i] <= '9') 
+		|| (filename[i] >= 'a' && filename[i] <= 'z') || (filename[i] == '.' && t == 0)))
+		{
+			mt_gotoXY(23, 7);
+			write(STDOUT_FILENO, "                     ", 21);
+			mt_gotoXY(23, 7);
+			write(STDOUT_FILENO, "Wrong name", 10);
+			return;
+		}
+		if(filename[i] == '.')
+			if(t == 0)
+				t++;
+	}
+	filename[++i] = 0;
 	sc_memorySave(filename);
 	free(filename);
 	filename = NULL;
