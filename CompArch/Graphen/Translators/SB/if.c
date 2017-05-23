@@ -6,12 +6,10 @@ int IfOper(char *param)
 	struct varlist *a = vhead;
 	int fstnum = -1;
 	int flag = 0;
-	int minus = 0;
-	int stringnum = 0;
 	int comp = -2;
 	while(param[i] == ' ')
 		i++;
-	if(param[i] >= 'A' && param[i] <= 'Z')
+	if(param[i] >= 'A' && param[i] <= 'Z' && param[i+1] == ' ')
 	{
 		while(a != NULL)
 		{
@@ -53,7 +51,7 @@ int IfOper(char *param)
 	flag = 0;
 	if(param[i] != '0')
 	{
-		if(param[i] >= 'A' && param[i] <= 'Z') // comparision with var
+		if(param[i] >= 'A' && param[i] <= 'Z' && param[i+1] == ' ') // comparision with var
 		{
 			a = vhead;
 			while(a != NULL)
