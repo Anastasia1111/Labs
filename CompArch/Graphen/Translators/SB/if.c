@@ -15,6 +15,7 @@ int IfOper(char *param)
 		{
 			if(a->name[0] == param[i] && a->name[1] == 0)
 			{
+				flag = 0;
 				fstnum = a->address;
 				break;
 			}
@@ -48,7 +49,8 @@ int IfOper(char *param)
 	i++;
 	while(param[i] == ' ')
 		i++;
-	flag = 0;
+	
+	flag = 1;
 	if(param[i] != '0')
 	{
 		if(param[i] >= 'A' && param[i] <= 'Z' && param[i+1] == ' ') // comparision with var
@@ -73,10 +75,11 @@ int IfOper(char *param)
 			error_log(9);
 			return -1;
 		}
+	} else {
+		addA(LOAD, fstnum);// comparision with 0
 	}
 	i++;
-	if(flag == 0) // comparision with 0
-		addA(LOAD, fstnum);
+	
 	switch(comp)
 	{
 		case 1:
