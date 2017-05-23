@@ -28,7 +28,7 @@ void load()
 			if(t == 0)
 				t++;
 	}
-	filename[++i] = 0;
+	filename[i] = 0;
 	sc_memoryLoad(filename);
 	free(filename);
 	filename = NULL;
@@ -65,7 +65,7 @@ void save()
 			if(t == 0)
 				t++;
 	}
-	filename[++i] = 0;
+	filename[i] = 0;
 	sc_memorySave(filename);
 	free(filename);
 	filename = NULL;
