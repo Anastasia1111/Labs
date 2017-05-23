@@ -5,7 +5,7 @@ int IfOper(char *param)
 	int i = 0;
 	struct varlist *a = vhead;
 	int fstnum = -1;
-	int flag = 0;
+	int flag = 1;
 	int comp = -2;
 	while(param[i] == ' ')
 		i++;
