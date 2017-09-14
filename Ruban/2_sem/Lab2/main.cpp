@@ -1,9 +1,11 @@
-//#include "complex.cpp"
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <ctime>
 
 #define PI 3.14159265359
+
+int T = 0;
 
 struct complex
 {
@@ -11,39 +13,68 @@ struct complex
 	double im;
 };
 
-void fourier(double* f, complex* a, int n)
+void DFT(double* f, complex* a, int n)
 {
-	for(int k=0; k<n; k++)
+	for(int k=0; k<n; ++k)
 	{
-		complex tmp; tmp.re = 0; tmp.im = 0;
-		for(int j=0; j<n; j++)
+		a[k].re = 0;
+		a[k].im = 0;
+		for(int j=0; j<n; ++j)
 		{
-			complex exp;
-			exp.re = cos(-2*k*j*PI/n);
-			printf("re%d:%f\n",j,exp.re);
-			exp.im = sin(-2*k*j*PI/n);
-			printf("im%d:%f\n\n",j,exp.im);
-			tmp.re += exp.re * f[j];
-			tmp.im += exp.im * f[j];
+			a[k].re += cos(-2 * k * j * PI / n) * f[j];
+			a[k].im += sin(-2 * k * j * PI / n) * f[j];
+			T += 5;
 		}
-		a[k].re = tmp.re/(double)n;
-		a[k].im = tmp.im/(double)n;
+		a[k].re /= n;
+		a[k].im /= n;
 	}
 }
 
-void PrintMas(complex* A, int n)
+double fRand(double fMin, double fMax)
 {
-	int i;
-	printf("\nMassiv:\n");
-	for (i = 0;i<n;i++) printf("(%f + %f i)\n", A[i].re, A[i].im);
+    double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
+}
+
+void FillRand(double* a, int n)
+{
+	srand(time(0));
+	for (int i = 0; i<n; ++i)
+		a[i] = fRand(-1.0 * n, 1.0 * n);
+}
+
+void Output(double* a, int n)
+{
+	printf("\nArray:\n");
+	for (int i = 0; i<n; ++i)
+		printf("%.3f ", a[i]);
+	printf("\n");
+}
+
+void Output(complex* a, int n)
+{
+	printf("\nArray:\n");
+	for (int i = 0; i<n; ++i)
+		printf("(%.3f + %.3fi)\n", a[i].re, a[i].im);
+	printf("T = %d\n", T);
 }
 
 int main()
 {
-	double f[] = {0, 1, 0, 1, 0};
-	complex a[5];
-	fourier(f, a, 5);
-	PrintMas(a, 5);
-	system("pause");
+	int n;
+	printf("Array size: ");
+	scanf("%d", &n);
+	double *f = new double[n];
+	complex *a = new complex[n];
+	if (a == NULL || f == NULL) {
+		printf("\nERROR\n");
+		system("Pause");
+		return 1;
+	}
+	FillRand(f, n);
+	Output(f, n);
+	DFT(f, a, n);
+	Output(a, n);
+	system("Pause");
 	return 0;
 }
