@@ -5,7 +5,7 @@
 
 #define PI 3.14159265359
 
-int T = 0;
+int T;
 
 struct complex
 {
@@ -15,6 +15,8 @@ struct complex
 
 void DFT(double* f, complex* a, int n)
 {
+	T = 0;
+	
 	for(int k=0; k<n; ++k)
 	{
 		a[k].re = 0;
@@ -28,6 +30,44 @@ void DFT(double* f, complex* a, int n)
 		a[k].re /= n;
 		a[k].im /= n;
 	}
+}	
+
+void SFFT(double* f, complex* a, int n)
+{
+	T = 0;
+	
+	int p1, p2;
+	p1 = sqrt(n);
+	while (n % p1)
+		--p1;
+	p2 = n/p1;
+	
+	for(int k=0; k<n; ++k)
+	{
+		int k1 = k % p1,
+			k2 = k / p1;
+		a[k].re = 0;
+		a[k].im = 0;
+		for(int j2=0; j2<p2; ++j2)
+		{
+			complex a1;
+			a1.re = 0;
+			a1.im = 0;
+			for(int j1=0; j1<p1; ++j1)
+			{
+				a1.re += cos(-2 * k1 * j1 * PI / p1) * f[j2 + p2 * j1];
+				a1.im += sin(-2 * k1 * j1 * PI / p1) * f[j2 + p2 * j1];
+			}
+			complex exp;
+			exp.re = cos(-2 * (k1 + p1 * k2) * j2 * PI / (p1 * p2));
+			exp.im = sin(-2 * (k1 + p1 * k2) * j2 * PI / (p1 * p2));
+			a[k].re += (a1.re * exp.re - a1.im * exp.im) / p1;
+			a[k].im += (a1.re * exp.im + a1.im * exp.re) / p1;
+		}
+		a[k].re /= p2;
+		a[k].im /= p2;
+	}
+	T = n * (p1 + p2);
 }
 
 double fRand(double fMin, double fMax)
@@ -74,6 +114,8 @@ int main()
 	FillRand(f, n);
 	Output(f, n);
 	DFT(f, a, n);
+	Output(a, n);
+	SFFT(f, a, n);
 	Output(a, n);
 	system("Pause");
 	return 0;
