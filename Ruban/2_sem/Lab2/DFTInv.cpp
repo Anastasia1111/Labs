@@ -18,7 +18,7 @@ struct complex
 void DFTInv (complex *a, complex *f, int n);
 void SFFTInv (complex* a, complex* f, int n);
 void FFTInv (complex* a, complex* f, int n);
-void FillComplexRand(complex* a, int n);
+void FillRand(complex* a, int n);
 complex AsInv(complex* a, int* k, int s, int jsum, int add);
 
 //Isn't requred for integration
@@ -152,6 +152,16 @@ complex AsInv(complex* a, int* k, int s, int jsum, int add)
 	}
 	return res;
 }
+void FillRand(complex* a, int n)
+{
+	srand(time(0));
+	for (int i=0; i<n; ++i)
+	{
+		a[i].re = fRand(-1.0 * n, 1.0 * n);
+		a[i].im = fRand(-1.0 * n, 1.0 * n);
+	}
+
+}
 
 void Output(complex* a, int n)
 {
@@ -167,13 +177,4 @@ double fRand(double fMin, double fMax)
     return fMin + f * (fMax - fMin);
 }
 
-void FillComplexRand(complex* a, int n)
-{
-	srand(time(0));
-	for (int i=0; i<n; ++i)
-	{
-		a[i].re = fRand(-1.0 * n, 1.0 * n);
-		a[i].im = fRand(-1.0 * n, 1.0 * n);
-	}
 
-}

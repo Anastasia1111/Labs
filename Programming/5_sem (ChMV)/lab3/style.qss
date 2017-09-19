@@ -1,0 +1,11 @@
+QWidget {
+    background-color: red
+}
+
+QProgressDialog {
+    background-color: blue;
+}
+
+QPushButton:hover {
+    background-color: green;
+}
