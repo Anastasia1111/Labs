@@ -23,6 +23,7 @@ int IsNum(char* ProcString)
 int main()
 {
     struct dirent* ent = NULL ;
+    int count = 0;
     DIR* dir = NULL ;
     dir = opendir("/proc/") ;
     if (dir == NULL)
@@ -45,9 +46,11 @@ int main()
 
 
                 cout << "pid: " << ent->d_name << " " << statString.substr(start,end+1) << endl;
+                count++;
             }
         }
     }
+    cout << count << " processes" << endl;
     closedir(dir);
     return 0;
 }
