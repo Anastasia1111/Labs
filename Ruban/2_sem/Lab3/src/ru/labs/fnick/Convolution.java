@@ -13,7 +13,7 @@ public class Convolution {
             {
                 c[i] += a[k]*b[i-k];
                 c[2*n-2-i] += a[n-1-k]*b[n-1-i+k];
-                ++lastT;
+                lastT+=2;
             }
         return c;
     }
