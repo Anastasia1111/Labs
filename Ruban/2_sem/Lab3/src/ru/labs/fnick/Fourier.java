@@ -78,10 +78,14 @@ public class Fourier {
         } else {
             res = As(f, k, s - 1, jsum, add * 2);
             Complex tmp = As(f, k, s - 1, jsum + add, add * 2);
-            Complex exp = new Complex(0, -2.0 * k[s] * Math.PI / (2 << s));
+            double power = 0;
+            for (int l = 0; l < s; ++l)
+                power += k[l] * (2 << l);
+            Complex exp = new Complex(0, -2.0 * power * Math.PI / (2 << s));
             exp = exp.exp();
             res = Complex.plus(res, exp.times(tmp));
             res = res.scale(0.5);
+            lastT += 4;
         }
         return res;
     };
@@ -92,14 +96,12 @@ public class Fourier {
         int n = f.length;
         int r = (int) (Math.log(n)/Math.log(2));
 
-        int[][] k = new int[n][r];
+        int[] k = new int[r];
         for (int km = 0; km < n; ++km)
         {
             for (int l = 0; l < r; ++l)
-            {
-                k[km][r - l - 1] = ((km << l) & ((1 << r) - 1)) >> l;
-            }
-            a[km] = As(f, k[km], r - 1, 0, 1);
+                k[l] = (km >> l) & 1;
+            a[km] = As(f, k, r, 0, 1);
         }
     }
 
