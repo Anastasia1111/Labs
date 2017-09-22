@@ -80,8 +80,8 @@ public class Fourier {
             Complex tmp = As(f, k, s - 1, jsum + add, add * 2);
             double power = 0;
             for (int l = 0; l < s; ++l)
-                power += k[l] * (2 << l);
-            Complex exp = new Complex(0, -2.0 * power * Math.PI / (2 << s));
+                power += k[l] * (1 << l);
+            Complex exp = new Complex(0, -2.0 * power * Math.PI / (1 << s));
             exp = exp.exp();
             res = Complex.plus(res, exp.times(tmp));
             res = res.scale(0.5);
