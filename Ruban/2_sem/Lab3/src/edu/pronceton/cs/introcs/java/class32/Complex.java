@@ -45,10 +45,15 @@ public class Complex {
 
     // return a string representation of the invoking Complex object
     public String toString() {
-        if (im == 0) return re + "";
-        if (re == 0) return im + "i";
-        if (im <  0) return re + " - " + (-im) + "i";
-        return re + " + " + im + "i";
+        String formatedR = String.format("%.2f", re);
+        String formatedI = String.format("%.2fi", im);
+        if (im == 0) return formatedR;
+        if (re == 0) return formatedI;
+        if (im <  0){
+            formatedI = String.format("%.2fi", -im);
+            return formatedR + " - " + formatedI;
+        }
+        return formatedR + " + " + formatedI;
     }
 
     // return abs/modulus/magnitude
