@@ -2,6 +2,10 @@ package ru.labs.fnick;
 
 import edu.pronceton.cs.introcs.java.class32.Complex;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+
 public class Fourier {
     public static int lastT = 0;
 
@@ -20,7 +24,6 @@ public class Fourier {
                 lastT += 5;
             }
             a[k] = a[k].scale(1.0 / n);
-            ++lastT;
         }
     }
 
@@ -48,7 +51,6 @@ public class Fourier {
                     lastT += 5;
                 }
                 a1[k1][j2] = a1[k1][j2].scale(1.0 / p1);
-                ++lastT;
             }
         }
 
@@ -66,7 +68,6 @@ public class Fourier {
                     lastT += 5;
                 }
                 a2[k1][k2] = a2[k1][k2].scale(1.0 / p2);
-                ++lastT;
             }
         }
 
@@ -78,23 +79,21 @@ public class Fourier {
         }
     }
 
-    private static Complex As(Complex[] f, int[] k, int s, int jsum, int add)
+    private static Complex As(Complex[] f, double[] w, int s, int jsum, int add)
     {
         Complex res;
         if (s == 0)
         {
             res = new Complex(f[jsum].re(), f[jsum].im());
         } else {
-            res = As(f, k, s - 1, jsum, add * 2);
-            Complex tmp = As(f, k, s - 1, jsum + add, add * 2);
-            double power = 0;
-            for (int l = 0; l < s; ++l)
-                power += k[l] * (1 << l);
-            Complex exp = new Complex(0, -2.0 * power * Math.PI / (1 << s));
+            Complex a0 = As(f, w, s - 1, jsum, add * 2);
+            Complex a1 = As(f, w, s - 1, jsum + add, add * 2);
+            Complex exp = new Complex(0, w[s-1]);
             exp = exp.exp();
-            res = Complex.plus(res, exp.times(tmp));
+            res = Complex.plus(a0, exp.times(a1));
+            ++lastT;
             res = res.scale(0.5);
-            lastT += 5;
+            //System.out.println("s="+s+" "+lastT);
         }
         return res;
     };
@@ -105,37 +104,101 @@ public class Fourier {
         int n = f.length;
         int r = (int) (Math.log(n)/Math.log(2));
 
-        int[] k = new int[r];
-        for (int km = 0; km < n; ++km)
+        /*Complex[][] As = new Complex[r + 1][n];
+        double[][] w = new double[n][r];
+        for (int k = 0; k < n; ++k)
         {
-            for (int l = 0; l < r; ++l)
-                k[l] = (km >> l) & 1;
-            a[km] = As(f, k, r, 0, 1);
+            for (int s = 0; s < r; ++s) {
+                w[k][s] = -1.0 * (((k << (r - s - 1)) & (n - 1)) >> (r - s - 1)) * Math.PI / (1 << s);
+                //lastT += 3;
+            }
+        }
+        for (int s = 0; s <= r; ++s)
+        {
+            for (int k = 0; k < n; ++k)
+            {
+                if (s == 0)
+                {
+                    As[s][k] = new Complex(f[k].re(), f[k].im());
+                } else {
+                    Complex a0 = As[s - 1][k & ~(1 << (r - s))];
+                    Complex a1 = As[s - 1][k | (1 << (r - s))];
+                    Complex exp = new Complex(0, w[k][s - 1]);
+                    exp = exp.exp();
+                    As[s][k] = Complex.plus(a0, exp.times(a1));
+                    ++lastT;
+                    As[s][k] = As[s][k].scale(0.5);
+                }
+            }
+        }
+        for (int k = 0; k < n; ++k)
+        {
+            a[k] = As[r][k];
+        }*/
+
+        for (int k = 0; k < n; ++k)
+        {
+            Complex[][] As = new Complex[r + 1][];
+            double[] w = new double[r];
+            for (int s = 0; s < r; ++s)
+            {
+                w[s] = -1.0 * (((k << (r - s - 1)) & (n - 1)) >> (r - s - 1)) * Math.PI / (1 << s);
+                //lastT += 3;
+            }
+            for (int s = 0; s <= r; ++s)
+            {
+                As[s] = new Complex[n / (1 << s)];
+                for (int i = 0; i < As[s].length; ++i)
+                {
+                    if (s == 0)
+                    {
+                        As[s][i] = new Complex(f[i].re(), f[i].im());
+                    } else {
+                        Complex a0 = As[s - 1][i];
+                        Complex a1 = As[s - 1][i + (1 << (r - s))];
+                        Complex exp = new Complex(0, w[s - 1]);
+                        exp = exp.exp();
+                        As[s][i] = Complex.plus(a0, exp.times(a1));
+                        ++lastT;
+                        As[s][i] = As[s][i].scale(0.5);
+                        //System.out.println("s="+s+" "+lastT);
+                    }
+                }
+                //lastT += 3;
+            }
+            a[k] = As[r][0];
         }
     }
 
     public static void main(String[] args) {
-        int n = 4096;
+        int n = 16;
         System.out.println("Размер массивов: " + n);
         Complex[] f = new Complex[n];
         for (int i = 0; i < n; ++i)
             f[i] = new Complex(i % 2, 0);
         Complex[] a = new Complex[n];
         Complex[] fi = new Complex[n];
-        /*for (Complex c : f)
+        for (Complex c : f)
             System.out.println(c + " ");
-        System.out.println();*/
+        System.out.println();
+        long start = System.currentTimeMillis();
         Fourier.DFT(f, a);
-        /*for (Complex c : a)
-            System.out.println(c + " ");*/
-        System.out.println("T = " + lastT);
+        for (Complex c : a)
+            System.out.println(c + " ");
+        long finish = System.currentTimeMillis();
+        System.out.println("T = " + lastT + " Time: " + (finish - start));
+        start = finish;
         Fourier.SFFT(f, a);
-        /*for (Complex c : a)
-            System.out.println(c + " ");*/
-        System.out.println("T = " + lastT);
+        for (Complex c : a)
+            System.out.println(c + " ");
+        finish = System.currentTimeMillis();
+        System.out.println("T = " + lastT + " Time: " + (finish - start));
+        start = finish;
         Fourier.FFT(f, a);
-        /*for (Complex c : a)
-            System.out.println(c + " ");*/
-        System.out.println("T = " + lastT);
+        for (Complex c : a)
+            System.out.println(c + " ");
+        finish = System.currentTimeMillis();
+        System.out.println("T = " + lastT + " Time: " + (finish - start));
+        start = finish;
     }
 }
