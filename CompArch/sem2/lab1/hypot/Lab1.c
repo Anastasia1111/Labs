@@ -6,7 +6,7 @@ int main()
 {
 	int start = clock();
 	for(int i = 0; i < 1000000; ++i)
-		floor(0.4);
+		hypot(3, 4);
 	int end = clock();
 	printf("runtime = %ims\n", end - start);
 	return 0;
