@@ -104,7 +104,6 @@ public class Fourier {
         int n = f.length;
         int r = (int) (Math.log(n)/Math.log(2));
 
-        /*Complex[][] As = new Complex[r + 1][n];
         double[][] w = new double[n][r];
         for (int k = 0; k < n; ++k)
         {
@@ -113,8 +112,10 @@ public class Fourier {
                 //lastT += 3;
             }
         }
-        for (int s = 0; s <= r; ++s)
+        Complex[][] As = new Complex[r + 1][n];
+        /*for (int s = 0; s <= r; ++s)
         {
+            As[s] = new Complex[n];
             for (int k = 0; k < n; ++k)
             {
                 if (s == 0)
@@ -138,32 +139,28 @@ public class Fourier {
 
         for (int k = 0; k < n; ++k)
         {
-            Complex[][] As = new Complex[r + 1][];
-            double[] w = new double[r];
-            for (int s = 0; s < r; ++s)
-            {
-                w[s] = -1.0 * (((k << (r - s - 1)) & (n - 1)) >> (r - s - 1)) * Math.PI / (1 << s);
-                //lastT += 3;
-            }
             for (int s = 0; s <= r; ++s)
             {
-                As[s] = new Complex[n / (1 << s)];
-                for (int i = 0; i < As[s].length; ++i)
+                for (int i = k; i < n / (1 << s) + k; ++i)
                 {
+                    int t = i;
+                    while (t >= n / (1 << s)) t = t - n / (1 << s);
+                    System.out.print(t + " ");
                     if (s == 0)
                     {
-                        As[s][i] = new Complex(f[i].re(), f[i].im());
+                        As[s][t] = new Complex(f[t].re(), f[t].im());
                     } else {
-                        Complex a0 = As[s - 1][i];
-                        Complex a1 = As[s - 1][i + (1 << (r - s))];
-                        Complex exp = new Complex(0, w[s - 1]);
+                        Complex a0 = As[s - 1][t];
+                        Complex a1 = As[s - 1][t + (1 << (r - s))];
+                        Complex exp = new Complex(0, w[k][s - 1]);
                         exp = exp.exp();
-                        As[s][i] = Complex.plus(a0, exp.times(a1));
+                        As[s][t] = Complex.plus(a0, exp.times(a1));
                         ++lastT;
-                        As[s][i] = As[s][i].scale(0.5);
+                        As[s][t] = As[s][t].scale(0.5);
                         //System.out.println("s="+s+" "+lastT);
                     }
                 }
+                System.out.println();
                 //lastT += 3;
             }
             a[k] = As[r][0];
@@ -171,7 +168,7 @@ public class Fourier {
     }
 
     public static void main(String[] args) {
-        int n = 16;
+        int n = 8;
         System.out.println("Размер массивов: " + n);
         Complex[] f = new Complex[n];
         for (int i = 0; i < n; ++i)
