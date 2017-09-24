@@ -47,7 +47,25 @@ public class Fourier {
                     a1[k1][j2] = Complex.plus(a1[k1][j2], exp.times(f[j2 + p2 * j1]));
                     lastT += 5;
                 }
-                a1[k1][j2] = a1[k1][j2].scale(1.0 / p2);
+                a1[k1][j2] = a1[k1][j2].scale(1.0 / p1);
+                ++lastT;
+            }
+        }
+
+        Complex[][] a2 = new Complex[p1][p2];
+        for (int k1 = 0; k1 < p1; ++k1)
+        {
+            for (int k2 = 0; k2 < p2; ++k2)
+            {
+                a2[k1][k2] = new Complex(0, 0);
+                for (int j2 = 0; j2 < p2; ++j2)
+                {
+                    Complex exp = new Complex(0, -2.0 * (k1 + p1 * k2) * j2 * Math.PI / n);
+                    exp = exp.exp();
+                    a2[k1][k2] = Complex.plus(a2[k1][k2], exp.times(a1[k1][j2]));
+                    lastT += 5;
+                }
+                a2[k1][k2] = a2[k1][k2].scale(1.0 / p2);
                 ++lastT;
             }
         }
@@ -56,16 +74,7 @@ public class Fourier {
         {
             int k1 = k % p1;
             int k2 = k / p1;
-            a[k] = new Complex(0, 0);
-            for (int j2 = 0; j2 < p2; ++j2)
-            {
-                Complex exp = new Complex(0, -2.0 * (k1 + p1 * k2) * j2 * Math.PI / n);
-                exp = exp.exp();
-                a[k] = Complex.plus(a[k], exp.times(a1[k1][j2]));
-                lastT += 5;
-            }
-            a[k] = a[k].scale(1.0 / p1);
-            ++lastT;
+            a[k] = a2[k1][k2];
         }
     }
 
@@ -85,7 +94,7 @@ public class Fourier {
             exp = exp.exp();
             res = Complex.plus(res, exp.times(tmp));
             res = res.scale(0.5);
-            lastT += 4;
+            lastT += 5;
         }
         return res;
     };
@@ -106,27 +115,27 @@ public class Fourier {
     }
 
     public static void main(String[] args) {
-        int n = 8;
+        int n = 4096;
         System.out.println("Размер массивов: " + n);
         Complex[] f = new Complex[n];
         for (int i = 0; i < n; ++i)
             f[i] = new Complex(i % 2, 0);
         Complex[] a = new Complex[n];
         Complex[] fi = new Complex[n];
-        for (Complex c : f)
+        /*for (Complex c : f)
             System.out.println(c + " ");
-        System.out.println();
+        System.out.println();*/
         Fourier.DFT(f, a);
-        for (Complex c : a)
-            System.out.println(c + " ");
+        /*for (Complex c : a)
+            System.out.println(c + " ");*/
         System.out.println("T = " + lastT);
         Fourier.SFFT(f, a);
-        for (Complex c : a)
-            System.out.println(c + " ");
+        /*for (Complex c : a)
+            System.out.println(c + " ");*/
         System.out.println("T = " + lastT);
         Fourier.FFT(f, a);
-        for (Complex c : a)
-            System.out.println(c + " ");
+        /*for (Complex c : a)
+            System.out.println(c + " ");*/
         System.out.println("T = " + lastT);
     }
 }
