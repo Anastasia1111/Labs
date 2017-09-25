@@ -5,6 +5,7 @@ import edu.pronceton.cs.introcs.java.class32.Complex;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.SortedMap;
 
 public class Fourier {
     public static int lastT = 0;
@@ -79,96 +80,50 @@ public class Fourier {
         }
     }
 
-    private static Complex As(Complex[] f, double[] w, int s, int jsum, int add)
-    {
-        Complex res;
-        if (s == 0)
-        {
-            res = new Complex(f[jsum].re(), f[jsum].im());
-        } else {
-            Complex a0 = As(f, w, s - 1, jsum, add * 2);
-            Complex a1 = As(f, w, s - 1, jsum + add, add * 2);
-            Complex exp = new Complex(0, w[s-1]);
-            exp = exp.exp();
-            res = Complex.plus(a0, exp.times(a1));
-            ++lastT;
-            res = res.scale(0.5);
-            //System.out.println("s="+s+" "+lastT);
-        }
-        return res;
-    };
-
     public static void FFT(Complex[] f, Complex[] a)
     {
         lastT = 0;
         int n = f.length;
         int r = (int) (Math.log(n)/Math.log(2));
 
-        double[][] w = new double[n][r];
-        for (int k = 0; k < n; ++k)
-        {
-            for (int s = 0; s < r; ++s) {
-                w[k][s] = -1.0 * (((k << (r - s - 1)) & (n - 1)) >> (r - s - 1)) * Math.PI / (1 << s);
-                //lastT += 3;
-            }
-        }
         Complex[][] As = new Complex[r + 1][n];
-        /*for (int s = 0; s <= r; ++s)
+        for (int k = 0; k < n; ++k)
         {
-            As[s] = new Complex[n];
-            for (int k = 0; k < n; ++k)
-            {
-                if (s == 0)
-                {
-                    As[s][k] = new Complex(f[k].re(), f[k].im());
-                } else {
-                    Complex a0 = As[s - 1][k & ~(1 << (r - s))];
-                    Complex a1 = As[s - 1][k | (1 << (r - s))];
-                    Complex exp = new Complex(0, w[k][s - 1]);
-                    exp = exp.exp();
-                    As[s][k] = Complex.plus(a0, exp.times(a1));
-                    ++lastT;
-                    As[s][k] = As[s][k].scale(0.5);
-                }
-            }
+            As[0][k] = f[k];
         }
-        for (int k = 0; k < n; ++k)
+        for (int s = 0; s < r; ++s)
         {
-            a[k] = As[r][k];
-        }*/
-
-        for (int k = 0; k < n; ++k)
-        {
-            for (int s = 0; s <= r; ++s)
-            {
-                for (int i = k; i < n / (1 << s) + k; ++i)
+            for (int k = 0; k < n; ++k) {
+                int[] k_bit = new int[r]; // Ki = k_bit[i-1];
+                for (int l = 0; l < r; ++l)
                 {
-                    int t = i;
-                    while (t >= n / (1 << s)) t = t - n / (1 << s);
-                    System.out.print(t + " ");
-                    if (s == 0)
+                    k_bit[l] = ((k << l) & (n - 1)) >> (r - 1);
+                }
+                As[s + 1][k] = new Complex(0, 0);
+                System.out.printf("A%d(%d) calls: ", s+1, k);
+                for (int j1 = 0; j1 <= 1; ++j1) // Js+1 = j1
+                {
+                    int k_sum = 0;
+                    for (int l = 1; l <= s + 1; ++l)
                     {
-                        As[s][t] = new Complex(f[t].re(), f[t].im());
-                    } else {
-                        Complex a0 = As[s - 1][t];
-                        Complex a1 = As[s - 1][t + (1 << (r - s))];
-                        Complex exp = new Complex(0, w[k][s - 1]);
-                        exp = exp.exp();
-                        As[s][t] = Complex.plus(a0, exp.times(a1));
-                        ++lastT;
-                        As[s][t] = As[s][t].scale(0.5);
-                        //System.out.println("s="+s+" "+lastT);
+                        k_sum += (k_bit[l - 1] << (l - 1));
                     }
+                    Complex arg = new Complex(0, -2.0 * Math.PI * j1 * k_sum / (1 << (s + 1)));
+                    Complex exp = arg.exp();
+                    int new_k = (k & ~(1 << (r - s - 1))) + (j1 << (r - s - 1));
+                    System.out.printf("A%d(%d) ", s, new_k);
+                    As[s+1][k] = Complex.plus(As[s + 1][k], As[s][new_k].times(exp));
                 }
                 System.out.println();
-                //lastT += 3;
+                As[s+1][k] = As[s+1][k].scale(0.5);
             }
-            a[k] = As[r][0];
         }
+        for (int k = 0; k < n; ++k)
+            a[k] = As[r][k];
     }
 
     public static void main(String[] args) {
-        int n = 8;
+        int n = 4;
         System.out.println("Размер массивов: " + n);
         Complex[] f = new Complex[n];
         for (int i = 0; i < n; ++i)
