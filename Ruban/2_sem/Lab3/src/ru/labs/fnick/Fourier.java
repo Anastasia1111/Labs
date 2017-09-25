@@ -100,11 +100,11 @@ public class Fourier {
                 {
                     k_sum += ((k << l) & (1 << (r - 1))) >> (r - 1 - l);
                 }
-                Complex arg = new Complex(0, -2.0 * Math.PI * k_sum / (1 << (s + 1)));
+                Complex arg = new Complex(0, -Math.PI * k_sum / (1 << s));
                 Complex exp = arg.exp();
                 int new_k = (k | (1 << (r - s - 1)));
                 As[s + 1][k] = Complex.plus(As[s + 1][k], As[s][new_k].times(exp));
-                lastT += 4;
+                lastT += 3;
                 As[s + 1][k] = As[s+1][k].scale(0.5);
             }
         }
@@ -118,32 +118,32 @@ public class Fourier {
     }
 
     public static void main(String[] args) {
-        int n = 16384;
+        int n = 4;
         System.out.println("Размер массивов: " + n);
         Complex[] f = new Complex[n];
         for (int i = 0; i < n; ++i)
             f[i] = new Complex(i % 2, 0);
         Complex[] a = new Complex[n];
         Complex[] fi = new Complex[n];
-        /*for (Complex c : f)
-            System.out.println(c + " ");*/
+        for (Complex c : f)
+            System.out.println(c + " ");
         System.out.println();
         long start = System.currentTimeMillis();
         Fourier.DFT(f, a);
-        /*for (Complex c : a)
-            System.out.println(c + " ");*/
+        for (Complex c : a)
+            System.out.println(c + " ");
         long finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start));
         start = finish;
         Fourier.SFFT(f, a);
-        /*for (Complex c : a)
-            System.out.println(c + " ");*/
+        for (Complex c : a)
+            System.out.println(c + " ");
         finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start));
         start = finish;
         Fourier.FFT(f, a);
-        /*for (Complex c : a)
-            System.out.println(c + " ");*/
+        for (Complex c : a)
+            System.out.println(c + " ");
         finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start));
         start = finish;
