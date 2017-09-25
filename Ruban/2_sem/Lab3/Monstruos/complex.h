@@ -51,6 +51,10 @@ public:
 		this->re += sec;
 		return *this;
 	}
+	Complex operator*= (const Complex& sec) {
+		this->set(re*sec.re - im*sec.im, re*sec.im + im*sec.re);
+		return *this;
+	}
 	Complex operator= (const Complex& sec) {
 		this->re = sec.re;
 		this->im = sec.im;
@@ -67,7 +71,7 @@ public:
 		return *this;
 	}
 	void print() {
-		printf("(%.4f + %.4fi)", re, im);
+		printf("(%.4f + %4.4fi)", re, im);
 		return;
 	}
 	void set(double real, double image) {
