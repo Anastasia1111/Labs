@@ -94,61 +94,56 @@ public class Fourier {
         for (int s = 0; s < r; ++s)
         {
             for (int k = 0; k < n; ++k) {
-                int[] k_bit = new int[r]; // Ki = k_bit[i-1];
-                for (int l = 0; l < r; ++l)
+                As[s + 1][k] = As[s][(k & ~(1 << (r - s - 1)))];
+                int k_sum = 0;
+                for (int l = 0; l <= s; ++l)
                 {
-                    k_bit[l] = ((k << l) & (n - 1)) >> (r - 1);
+                    k_sum += ((k << l) & (1 << (r - 1))) >> (r - 1 - l);
                 }
-                As[s + 1][k] = new Complex(0, 0);
-                System.out.printf("A%d(%d) calls: ", s+1, k);
-                for (int j1 = 0; j1 <= 1; ++j1) // Js+1 = j1
-                {
-                    int k_sum = 0;
-                    for (int l = 1; l <= s + 1; ++l)
-                    {
-                        k_sum += (k_bit[l - 1] << (l - 1));
-                    }
-                    Complex arg = new Complex(0, -2.0 * Math.PI * j1 * k_sum / (1 << (s + 1)));
-                    Complex exp = arg.exp();
-                    int new_k = (k & ~(1 << (r - s - 1))) + (j1 << (r - s - 1));
-                    System.out.printf("A%d(%d) ", s, new_k);
-                    As[s+1][k] = Complex.plus(As[s + 1][k], As[s][new_k].times(exp));
-                }
-                System.out.println();
-                As[s+1][k] = As[s+1][k].scale(0.5);
+                Complex arg = new Complex(0, -2.0 * Math.PI * k_sum / (1 << (s + 1)));
+                Complex exp = arg.exp();
+                int new_k = (k | (1 << (r - s - 1)));
+                As[s + 1][k] = Complex.plus(As[s + 1][k], As[s][new_k].times(exp));
+                lastT += 4;
+                As[s + 1][k] = As[s+1][k].scale(0.5);
             }
         }
         for (int k = 0; k < n; ++k)
-            a[k] = As[r][k];
+        {
+            int rev = 0;
+            for (int l = 0; l < r; ++l)
+                rev = (rev << 1) + ((k >> l) & 1);
+            a[k] = As[r][rev];
+        }
     }
 
     public static void main(String[] args) {
-        int n = 4;
+        int n = 16384;
         System.out.println("Размер массивов: " + n);
         Complex[] f = new Complex[n];
         for (int i = 0; i < n; ++i)
             f[i] = new Complex(i % 2, 0);
         Complex[] a = new Complex[n];
         Complex[] fi = new Complex[n];
-        for (Complex c : f)
-            System.out.println(c + " ");
+        /*for (Complex c : f)
+            System.out.println(c + " ");*/
         System.out.println();
         long start = System.currentTimeMillis();
         Fourier.DFT(f, a);
-        for (Complex c : a)
-            System.out.println(c + " ");
+        /*for (Complex c : a)
+            System.out.println(c + " ");*/
         long finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start));
         start = finish;
         Fourier.SFFT(f, a);
-        for (Complex c : a)
-            System.out.println(c + " ");
+        /*for (Complex c : a)
+            System.out.println(c + " ");*/
         finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start));
         start = finish;
         Fourier.FFT(f, a);
-        for (Complex c : a)
-            System.out.println(c + " ");
+        /*for (Complex c : a)
+            System.out.println(c + " ");*/
         finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start));
         start = finish;
