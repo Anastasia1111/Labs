@@ -31,7 +31,7 @@ int main(int argc, char const *argv[])
 
 	Complex *a = new Complex [n];
 	Complex *b = new Complex [n];
-	Complex *c = new Complex [n];
+	Complex *c = new Complex [2*n - 1];
 	random(a, n);
 	random(b, n);
 
