@@ -51,9 +51,19 @@ public:
 		this->re += sec;
 		return *this;
 	}
+	Complex operator= (const Complex& sec) {
+		this->re = sec.re;
+		this->im = sec.im;
+		return *this;
+	}
 	Complex operator= (const double& sec) {
-		this->re += sec;
+		this->re = sec;
 		this->im = 0.0;
+		return *this;
+	}
+	Complex operator/= (const double& sec) {
+		this->re /= sec;
+		this->im /= sec;
 		return *this;
 	}
 	void print() {
