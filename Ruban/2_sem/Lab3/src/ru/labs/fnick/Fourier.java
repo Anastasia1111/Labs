@@ -28,6 +28,23 @@ public class Fourier {
         }
     }
 
+    public static void RDFT(Complex[] a, Complex[] f)
+    {
+        lastT = 0;
+        int n = a.length;
+        for (int k = 0; k < n; k++)
+        {
+            f[k] = new Complex(0, 0);
+            for (int j = 0; j < n; ++j)
+            {
+                Complex exp = new Complex(0, 2.0 * k * j * Math.PI / n);
+                exp = exp.exp();
+                f[k] = Complex.plus(f[k], exp.times(a[j]));
+                lastT += 5;
+            }
+        }
+    }
+
     public static void SFFT(Complex[] f, Complex[] a)
     {
         lastT = 0;
@@ -80,6 +97,56 @@ public class Fourier {
         }
     }
 
+    public static void RSFFT(Complex[] a, Complex[] f)
+    {
+        lastT = 0;
+        int n = a.length;
+        int p1 = (int) Math.sqrt(n * 1.0);
+        int p2;
+        while (n % p1 != 0)
+            --p1;
+        p2 = n / p1;
+
+        Complex[][] f1 = new Complex[p1][p2];
+        for (int k1 = 0; k1 < p1; ++k1)
+        {
+            for (int j2 = 0; j2 < p2; ++j2)
+            {
+                f1[k1][j2] = new Complex(0, 0);
+                for (int j1 = 0; j1 < p1; ++j1)
+                {
+                    Complex exp = new Complex(0, 2.0 * k1 * j1 * Math.PI / p1);
+                    exp = exp.exp();
+                    f1[k1][j2] = Complex.plus(f1[k1][j2], exp.times(a[j2 + p2 * j1]));
+                    lastT += 5;
+                }
+            }
+        }
+
+        Complex[][] f2 = new Complex[p1][p2];
+        for (int k1 = 0; k1 < p1; ++k1)
+        {
+            for (int k2 = 0; k2 < p2; ++k2)
+            {
+                f2[k1][k2] = new Complex(0, 0);
+                for (int j2 = 0; j2 < p2; ++j2)
+                {
+                    Complex exp = new Complex(0, 2.0 * (k1 + p1 * k2) * j2 * Math.PI / n);
+                    exp = exp.exp();
+                    f2[k1][k2] = Complex.plus(f2[k1][k2], exp.times(f1[k1][j2]));
+                    lastT += 5;
+                }
+            }
+        }
+
+        for (int k = 0; k < n; k++)
+        {
+            int k1 = k % p1;
+            int k2 = k / p1;
+            f[k] = f2[k1][k2];
+        }
+    }
+
     public static void FFT(Complex[] f, Complex[] a)
     {
         lastT = 0;
@@ -117,6 +184,42 @@ public class Fourier {
         }
     }
 
+    public static void RFFT(Complex[] a, Complex[] f)
+    {
+        lastT = 0;
+        int n = a.length;
+        int r = (int) (Math.log(n)/Math.log(2));
+
+        Complex[][] Fs = new Complex[r + 1][n];
+        for (int k = 0; k < n; ++k)
+        {
+            Fs[0][k] = a[k];
+        }
+        for (int s = 0; s < r; ++s)
+        {
+            for (int k = 0; k < n; ++k) {
+                Fs[s + 1][k] = Fs[s][(k & ~(1 << (r - s - 1)))];
+                int k_sum = 0;
+                for (int l = 0; l <= s; ++l)
+                {
+                    k_sum += ((k << l) & (1 << (r - 1))) >> (r - 1 - l);
+                }
+                Complex arg = new Complex(0, Math.PI * k_sum / (1 << s));
+                Complex exp = arg.exp();
+                int new_k = (k | (1 << (r - s - 1)));
+                Fs[s + 1][k] = Complex.plus(Fs[s + 1][k], Fs[s][new_k].times(exp));
+                lastT += 3;
+            }
+        }
+        for (int k = 0; k < n; ++k)
+        {
+            int rev = 0;
+            for (int l = 0; l < r; ++l)
+                rev = (rev << 1) + ((k >> l) & 1);
+            f[k] = Fs[r][rev];
+        }
+    }
+
     public static void main(String[] args) {
         int n = 4;
         System.out.println("Размер массивов: " + n);
@@ -125,27 +228,52 @@ public class Fourier {
             f[i] = new Complex(i % 2, 0);
         Complex[] a = new Complex[n];
         Complex[] fi = new Complex[n];
+      
         for (Complex c : f)
             System.out.println(c + " ");
         System.out.println();
+      
         long start = System.currentTimeMillis();
         Fourier.DFT(f, a);
         for (Complex c : a)
             System.out.println(c + " ");
         long finish = System.currentTimeMillis();
-        System.out.println("T = " + lastT + " Time: " + (finish - start));
+        System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
+      
+        start = finish;
+        Fourier.RDFT(a, fi);
+        for (Complex c : fi)
+            System.out.println(c + " ");
+        finish = System.currentTimeMillis();
+        System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
+      
         start = finish;
         Fourier.SFFT(f, a);
         for (Complex c : a)
             System.out.println(c + " ");
         finish = System.currentTimeMillis();
-        System.out.println("T = " + lastT + " Time: " + (finish - start));
+        System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
+      
+        start = finish;
+        Fourier.RSFFT(a, fi);
+        for (Complex c : fi)
+            System.out.println(c + " ");
+        finish = System.currentTimeMillis();
+        System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
+      
         start = finish;
         Fourier.FFT(f, a);
         for (Complex c : a)
             System.out.println(c + " ");
         finish = System.currentTimeMillis();
-        System.out.println("T = " + lastT + " Time: " + (finish - start));
+        System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
         start = finish;
+      
+        start = finish;
+        Fourier.RFFT(a, fi);
+        for (Complex c : fi)
+            System.out.println(c + " ");
+        finish = System.currentTimeMillis();
+        System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
     }
 }
