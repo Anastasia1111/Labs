@@ -10,10 +10,11 @@ public class Main {
     public static Random rand = new Random();
 
     public static void main(String[] args) {
-        System.out.println("Введите размеры массивов А и В: ");
-        Scanner in = new Scanner(System.in);
-        int n = in.nextInt();
-        int m = in.nextInt();
+        //System.out.println("Введите размеры массивов А и В: ");
+        //Scanner in = new Scanner(System.in);
+        //int n = in.nextInt();
+        //int m = in.nextInt();
+      	int n, m; n = m = 4;
         if (n > m)
         {
             a = new int[n];
@@ -24,14 +25,16 @@ public class Main {
         }
         for (int i = 0; i < n; ++i)
         {
-            a[i] = rand.nextInt(2*n) - n;
+            //a[i] = rand.nextInt(2*n) - n;
+          	a[i] = i + 1;
         }
         for (int i : a)
             System.out.print(i + " ");
         System.out.println();
         for (int i = 0; i < m; ++i)
         {
-            b[i] = rand.nextInt(2*m) - m;
+            //b[i] = rand.nextInt(2*m) - m;
+          	b[i] = i + 1;
         }
         for (int i : b)
             System.out.print(i + " ");
