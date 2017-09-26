@@ -1,18 +1,18 @@
 ; task #7
-(defun adding (x l &optional s)
+(defun adding (x l)
 	(cond
 		((null l)
-			nil
+			(list x)
 		)
 		((< x (car l)) 
-			(append s (list x) l)
+			(append (list x) l)
 		)
 		(t
-			(adding x (cdr l) (append s (list (car l))) )
+			(append (list (car l)) (adding x (cdr l)) )
 		)
 	)
 )
-(adding 7 '(0 3 3 6 9))
+(adding 10 '(0 3 3 6 9))
 
 ;task #17
 (defun summar (l &optional s)
