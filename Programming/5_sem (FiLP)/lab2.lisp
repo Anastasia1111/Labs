@@ -18,24 +18,26 @@
 (defun summar (l)
 	(cond
 		((equal l nil)
-			0
+			nil
 		)
 		(T
-			(+ (car l) (summar (cddr l)))
+			(append (list (car l)) (summar (cddr l)))
 		)
 	)
 )
-(summar '(-2 3 2 5 -6 5 2 1 3))
+(summar '(-2 6 s -1 4 f 0 z x r))
 
 ;task #27
 (defun inpredfix (l)
 	(cond
 		( (null l) 0 )
 		( (numberp l) l )
-		( (equal (cadr l) '*) (* (inpredfix (car l)) (inpredfix (caddr l))) )
-		( (equal (cadr l) '/) (/ (inpredfix (car l)) (inpredfix (caddr l))) )
-		( (equal (cadr l) '+) (+ (inpredfix (car l)) (inpredfix (caddr l))) )
-		( (equal (cadr l) '-) (- (inpredfix (car l)) (inpredfix (caddr l))) )
+		( (equal (cadr l) '*) (inpredfix (cons (* (inpredfix (car l)) (inpredfix (caddr l))) (cdddr l))) )
+		( (equal (cadr l) '/) (inpredfix (cons (/ (inpredfix (car l)) (inpredfix (caddr l))) (cdddr l))) )
+		( (equal (cadr l) '+) (+ (inpredfix (car l)) (inpredfix (cddr l))) )
+		( (equal (cadr l) '-) (- (inpredfix (car l)) (inpredfix (cddr l))) )
+		( (equal (cdr l) nil) (inpredfix (car l)) )
 	)
 )
-(inpredfix '((-8 + 10) * (12 / 3)))
+(trace inpredfix)
+(inpredfix '(8 * 10))
