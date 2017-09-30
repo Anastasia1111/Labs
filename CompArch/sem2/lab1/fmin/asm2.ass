@@ -1,0 +1,47 @@
+	.syntax unified
+	.arch armv7-a
+	.eabi_attribute 27, 3
+	.eabi_attribute 28, 1
+	.fpu vfpv3-d16
+	.eabi_attribute 20, 1
+	.eabi_attribute 21, 1
+	.eabi_attribute 23, 3
+	.eabi_attribute 24, 1
+	.eabi_attribute 25, 1
+	.eabi_attribute 26, 2
+	.eabi_attribute 30, 2
+	.eabi_attribute 34, 1
+	.eabi_attribute 18, 4
+	.thumb
+	.file	"lab1-12.cpp"
+	.section	.text.startup,"ax",%progbits
+	.align	2
+	.global	main
+	.thumb
+	.thumb_func
+	.type	main, %function
+main:
+	.fnstart
+.LFB116:
+	@ args = 0, pretend = 0, frame = 0
+	@ frame_needed = 0, uses_anonymous_args = 0
+	push	{r4, lr}
+	.save {r4, lr}
+	bl	clock
+	mov	r4, r0
+	bl	clock
+	movw	r1, #:lower16:.LC0
+	movt	r1, #:upper16:.LC0
+	subs	r2, r0, r4
+	movs	r0, #1
+	bl	__printf_chk
+	movs	r0, #0
+	pop	{r4, pc}
+	.fnend
+	.size	main, .-main
+	.section	.rodata.str1.4,"aMS",%progbits,1
+	.align	2
+.LC0:
+	.ascii	"%d ms\012\000"
+	.ident	"GCC: (Ubuntu/Linaro 4.8.4-2ubuntu1~14.04.3) 4.8.4"
+	.section	.note.GNU-stack,"",%progbits

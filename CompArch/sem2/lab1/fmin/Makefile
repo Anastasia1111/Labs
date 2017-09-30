@@ -1,6 +1,6 @@
 CC=g++
 
-CFLAGS=-c -Wall
+CFLAGS=-c -Wall -mthumb
 
 all: lab1-1 lab1-2 lab1-3 asm
 
