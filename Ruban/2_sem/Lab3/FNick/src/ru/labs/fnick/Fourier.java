@@ -8,7 +8,7 @@ import java.time.ZoneId;
 import java.util.SortedMap;
 
 final public class Fourier {
-    public static int lastT = 0;
+    public static long lastT = 0;
 
     private Fourier() {}
 
