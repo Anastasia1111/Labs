@@ -7,8 +7,10 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.SortedMap;
 
-public class Fourier {
+final public class Fourier {
     public static int lastT = 0;
+
+    private Fourier() {}
 
     public static void DFT(Complex[] f, Complex[] a)
     {
@@ -171,7 +173,7 @@ public class Fourier {
                 Complex exp = arg.exp();
                 int new_k = (k | (1 << (r - s - 1)));
                 As[s + 1][k] = Complex.plus(As[s + 1][k], As[s][new_k].times(exp));
-                lastT += 3;
+                lastT += 4;
                 As[s + 1][k] = As[s+1][k].scale(0.5);
             }
         }
@@ -220,7 +222,7 @@ public class Fourier {
         }
     }
 
-    public static void main(String[] args) {
+    public static void test() {
         int n = 4;
         System.out.println("Размер массивов: " + n);
         Complex[] f = new Complex[n];
