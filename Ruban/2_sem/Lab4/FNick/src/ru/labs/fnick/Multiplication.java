@@ -6,6 +6,13 @@ final public class Multiplication {
 
     private Multiplication(){}
 
+    /*static private int[] summator(int[] a, int[] b)
+    {
+        int n = a.length;
+        int pi, po;
+        int[] s = new int[n + 1];
+    }*/
+
     static private long recursiveColumnStep(int[] x, int[] y)
     {
         int n = x.length;

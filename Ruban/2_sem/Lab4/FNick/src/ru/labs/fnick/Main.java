@@ -10,7 +10,6 @@ public class Main {
     public static Random rand = new Random();
 
     public static void main(String[] args) {
-        //Fourier.test();
-        Convolution.test();
+        Multiplication.test();
     }
 }
