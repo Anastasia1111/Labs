@@ -43,12 +43,12 @@ public:
 		return tmp;
 	}
 	Complex operator+= (const Complex& sec) {
-		this->re += sec.re;
-		this->im += sec.im;
+		re += sec.re;
+		im += sec.im;
 		return *this;
 	}
 	Complex operator+= (const double& sec) {
-		this->re += sec;
+		re += sec;
 		return *this;
 	}
 	Complex operator*= (const Complex& sec) {
