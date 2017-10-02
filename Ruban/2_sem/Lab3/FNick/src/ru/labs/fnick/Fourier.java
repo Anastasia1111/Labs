@@ -2,17 +2,12 @@ package ru.labs.fnick;
 
 import edu.pronceton.cs.introcs.java.class32.Complex;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.SortedMap;
-
 final public class Fourier {
     public static long lastT = 0;
 
     private Fourier() {}
 
-    public static void DFT(Complex[] f, Complex[] a)
+    public static void dft(Complex[] f, Complex[] a)
     {
         lastT = 0;
         int n = f.length;
@@ -30,7 +25,7 @@ final public class Fourier {
         }
     }
 
-    public static void RDFT(Complex[] a, Complex[] f)
+    public static void dftReverse(Complex[] a, Complex[] f)
     {
         lastT = 0;
         int n = a.length;
@@ -47,7 +42,7 @@ final public class Fourier {
         }
     }
 
-    public static void SFFT(Complex[] f, Complex[] a)
+    public static void sfft(Complex[] f, Complex[] a)
     {
         lastT = 0;
         int n = f.length;
@@ -99,7 +94,7 @@ final public class Fourier {
         }
     }
 
-    public static void RSFFT(Complex[] a, Complex[] f)
+    public static void sfftReverse(Complex[] a, Complex[] f)
     {
         lastT = 0;
         int n = a.length;
@@ -149,7 +144,7 @@ final public class Fourier {
         }
     }
 
-    public static void FFT(Complex[] f, Complex[] a)
+    public static void fft(Complex[] f, Complex[] a)
     {
         lastT = 0;
         int n = f.length;
@@ -186,7 +181,7 @@ final public class Fourier {
         }
     }
 
-    public static void RFFT(Complex[] a, Complex[] f)
+    public static void fftReverse(Complex[] a, Complex[] f)
     {
         lastT = 0;
         int n = a.length;
@@ -223,7 +218,7 @@ final public class Fourier {
     }
 
     public static void test() {
-        int n = 4;
+        int n = 2;
         System.out.println("Размер массивов: " + n);
         Complex[] f = new Complex[n];
         for (int i = 0; i < n; ++i)
@@ -236,35 +231,35 @@ final public class Fourier {
         System.out.println();
       
         long start = System.currentTimeMillis();
-        Fourier.DFT(f, a);
+        Fourier.dft(f, a);
         for (Complex c : a)
             System.out.println(c + " ");
         long finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
       
         start = finish;
-        Fourier.RDFT(a, fi);
+        Fourier.dftReverse(a, fi);
         for (Complex c : fi)
             System.out.println(c + " ");
         finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
       
         start = finish;
-        Fourier.SFFT(f, a);
+        Fourier.sfft(f, a);
         for (Complex c : a)
             System.out.println(c + " ");
         finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
       
         start = finish;
-        Fourier.RSFFT(a, fi);
+        Fourier.sfftReverse(a, fi);
         for (Complex c : fi)
             System.out.println(c + " ");
         finish = System.currentTimeMillis();
         System.out.println("T = " + lastT + " Time: " + (finish - start) + "\n");
       
         start = finish;
-        Fourier.FFT(f, a);
+        Fourier.fft(f, a);
         for (Complex c : a)
             System.out.println(c + " ");
         finish = System.currentTimeMillis();
@@ -272,7 +267,7 @@ final public class Fourier {
         start = finish;
       
         start = finish;
-        Fourier.RFFT(a, fi);
+        Fourier.fftReverse(a, fi);
         for (Complex c : fi)
             System.out.println(c + " ");
         finish = System.currentTimeMillis();

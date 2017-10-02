@@ -21,7 +21,7 @@ final public class Convolution {
         return c;
     }
 
-    static public long[] DFTbased(long[] a, long[] b)
+    static public long[] dftBased(long[] a, long[] b)
     {
         lastT = 0;
         int n = a.length;
@@ -39,9 +39,9 @@ final public class Convolution {
         for (int i = n; i < 2 * n; ++i)
             bf[i] = new Complex(0, 0);
 
-        Fourier.DFT(af, aa);
+        Fourier.dft(af, aa);
         lastT += Fourier.lastT;
-        Fourier.DFT(bf, ba);
+        Fourier.dft(bf, ba);
         lastT += Fourier.lastT;
 
         Complex[] ca = new Complex[2 * n];
@@ -49,7 +49,7 @@ final public class Convolution {
         for (int i = 0; i < 2 * n; ++i)
             ca[i] = aa[i].times(ba[i]).scale(2 * n);
         lastT += 2 * n;
-        Fourier.RDFT(ca, cf);
+        Fourier.dftReverse(ca, cf);
         lastT += Fourier.lastT;
 
         long[] c = new long[2 * n];
@@ -59,7 +59,7 @@ final public class Convolution {
         return c;
     }
 
-    static public long[] SFFTbased(long[] a, long[] b)
+    static public long[] sfftBased(long[] a, long[] b)
     {
         lastT = 0;
         int n = a.length;
@@ -77,9 +77,9 @@ final public class Convolution {
         for (int i = n; i < 2 * n; ++i)
             bf[i] = new Complex(0, 0);
 
-        Fourier.SFFT(af, aa);
+        Fourier.sfft(af, aa);
         lastT += Fourier.lastT;
-        Fourier.SFFT(bf, ba);
+        Fourier.sfft(bf, ba);
         lastT += Fourier.lastT;
 
         Complex[] ca = new Complex[2 * n];
@@ -87,7 +87,7 @@ final public class Convolution {
         for (int i = 0; i < 2 * n; ++i)
             ca[i] = aa[i].times(ba[i]).scale(2 * n);
         lastT += 2 * n;
-        Fourier.RSFFT(ca, cf);
+        Fourier.sfftReverse(ca, cf);
         lastT += Fourier.lastT;
 
         long[] c = new long[2 * n];
@@ -97,7 +97,7 @@ final public class Convolution {
         return c;
     }
 
-    static public long[] FFTbased(long[] a, long[] b)
+    static public long[] fftBased(long[] a, long[] b)
     {
         lastT = 0;
         int n = a.length;
@@ -115,9 +115,9 @@ final public class Convolution {
         for (int i = n; i < 2 * n; ++i)
             bf[i] = new Complex(0, 0);
 
-        Fourier.FFT(af, aa);
+        Fourier.fft(af, aa);
         lastT += Fourier.lastT;
-        Fourier.FFT(bf, ba);
+        Fourier.fft(bf, ba);
         lastT += Fourier.lastT;
 
         Complex[] ca = new Complex[2 * n];
@@ -125,7 +125,7 @@ final public class Convolution {
         for (int i = 0; i < 2 * n; ++i)
             ca[i] = aa[i].times(ba[i]).scale(2 * n);
         lastT += 2 * n;
-        Fourier.RFFT(ca, cf);
+        Fourier.fftReverse(ca, cf);
         lastT += Fourier.lastT;
 
         long[] c = new long[2 * n];
@@ -158,19 +158,19 @@ final public class Convolution {
         System.out.println();
         System.out.println("T = " + lastT);
 
-        c = Convolution.DFTbased(a, b);
+        c = Convolution.dftBased(a, b);
         for (long i : c)
             System.out.print(i + " ");
         System.out.println();
         System.out.println("T = " + lastT);
 
-        c = Convolution.SFFTbased(a, b);
+        c = Convolution.sfftBased(a, b);
         for (long i : c)
             System.out.print(i + " ");
         System.out.println();
         System.out.println("T = " + lastT);
 
-        c = Convolution.FFTbased(a, b);
+        c = Convolution.fftBased(a, b);
         for (long i : c)
             System.out.print(i + " ");
         System.out.println();

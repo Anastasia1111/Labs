@@ -11,6 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
         //Fourier.test();
-        Convolution.test();
+        //Convolution.test();
+        Multiplication.test();
     }
 }
