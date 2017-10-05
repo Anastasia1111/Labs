@@ -48,9 +48,34 @@ final public class Multiplication {
         return res;
     }
 
-    static public long inColumn(int x, int y)
+    static public long fast(int x, int y)
     {
         lastT = 0;
+        int k1 = 0, k2 = 0;
+        long sum = 0;
+        while ((x >> k1) != 0)
+            ++k1;
+        while ((y >> k2) != 0)
+            ++k2;
+        //int k =
+        if (k1 > k2)
+            for (int i = 0; i < k2; ++i)
+            {
+                if (((y >> i) & 1) == 1)
+                {
+                    sum += x << i;
+                    lastT += k1;
+                }
+            }
+        else
+            for (int i = 0; i < k1; ++i)
+            {
+                if (((x >> i) & 1) == 1)
+                {
+                    sum += y << i;
+                    lastT += k2;
+                }
+            }
         int n = INT_LENGTH;
         int[] arrx = new int[n];
         int[] arry = new int[n];
@@ -62,7 +87,37 @@ final public class Multiplication {
         return recursiveColumnStep(arrx, arry);
     }
 
+    static public long column(int x, int y)
+    {
+        lastT = 0;
+        int k1 = 0, k2 = 0;
+        long sum = 0;
+        while ((x >> k1) != 0)
+            ++k1;
+        while ((y >> k2) != 0)
+            ++k2;
+        if (k1 > k2)
+            for (int i = 0; i < k2; ++i)
+            {
+                if (((y >> i) & 1) == 1)
+                {
+                    sum += x << i;
+                    lastT += k1;
+                }
+            }
+        else
+            for (int i = 0; i < k1; ++i)
+            {
+                if (((x >> i) & 1) == 1)
+                {
+                    sum += y << i;
+                    lastT += k2;
+                }
+            }
+        return sum;
+    }
+
     public static void test() {
-        System.out.println(Multiplication.inColumn(32000, 32000) + "\nT = " + lastT);
+        System.out.println(Multiplication.column(255, 255) + "\nT = " + lastT);
     }
 }
