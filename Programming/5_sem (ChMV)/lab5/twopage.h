@@ -2,6 +2,8 @@
 #define TWOPAGE_H
 
 
+#include "spisok.h"
+
 #include <QLabel>
 #include <QComboBox>
 #include <QWizardPage>

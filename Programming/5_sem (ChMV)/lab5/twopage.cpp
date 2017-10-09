@@ -1,6 +1,6 @@
 #include "twopage.h"
 
-TwoPage::TwoPage(QWidget *parent) : QWizardPage(parent)
+TwoPage::TwoPage(QString a, QWidget *parent /*= 0*/) : QWizardPage(parent)
 {
     setTitle("Шаг 2");
 //    setSubTitle("Выберите файл шаблона из списка");

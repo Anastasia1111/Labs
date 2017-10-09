@@ -6,6 +6,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFileDialog>
+#include <QPushButton>
+
 class FinalPage : public QWizardPage
 {
     Q_OBJECT
