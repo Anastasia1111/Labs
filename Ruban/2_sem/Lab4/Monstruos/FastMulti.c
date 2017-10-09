@@ -5,7 +5,6 @@ using namespace std;
 
 int multi(short int x, short int y, int k2);
 int capacity(short int x);
-int pow(int x, int a);
 int max(int a, int b);
 int theory_labour (int n);
 
@@ -73,13 +72,6 @@ int capacity(short int x) {
     for (; x ; x >>= 1)
         ++i;
     return i;
-}
-
-int pow(int x, int a){
-	int res = 1;
-	for(int i = 0; i < a; ++i)
-		res *= x;
-	return res;
 }
 
 int max(int a, int b){
