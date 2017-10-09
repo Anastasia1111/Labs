@@ -35,16 +35,19 @@ int main(int argc, char const *argv[])
 int multi(short int x, short int y, int k2) {
 	if( k2 <= 1 ) 
 		return x*y;
-	int res;
+	int res = 0;
 	if( k2 % 2 )
 	{
 		int a1 = x >> k2-1;
 		int b1 = y >> k2-1;
 		int a2 = x & (~(1 << (k2-1)));
 		int b2 = y & (~(1 << (k2-1)));
-		res = ( (x >> (k2-1))  * (y >> (k2-1)) << 2*(k2-1) );
-		res += ( multi(a1, b2, k2-1) << (k2-1) );
-		res += ( multi(a2, b1, k2-1) << (k2-1) );
+		if(a1 && b1)
+			res = ( (a1  * b1) << 2*(k2-1) );
+		if(a1)
+			res += ( multi(a1, b2, k2-1) << (k2-1) );
+		if(b1)
+			res += ( multi(a2, b1, k2-1) << (k2-1) );
 		res += multi(a2, b2, k2-1);
 	} else {
 		int k = k2 / 2;
