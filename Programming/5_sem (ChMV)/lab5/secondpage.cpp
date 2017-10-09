@@ -12,13 +12,13 @@ SecondPage::SecondPage(QWidget *parent) : QWizardPage(parent)
     cmb->addItem("anketa2.txt");
     cmb->addItem("anketa3.txt");
     setLayout(vbl);
-    registerField("combo1", cmb);
+    registerField("combo", cmb);
 }
 
 void SecondPage::initializePage()
 {
     if(field("rbt_1")== 1)
-        lbl->setText(trUtf8("Вы выбрали тип анлеты 1"));
+        lbl->setText(trUtf8("Вы выбрали тип анкеты 1"));
 }
 
 int SecondPage::nextId() const

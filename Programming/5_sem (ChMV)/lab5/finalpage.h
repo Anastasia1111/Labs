@@ -7,6 +7,8 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QPushButton>
+#include <QProgressBar>
+#include <QTimer>
 
 class FinalPage : public QWizardPage
 {
@@ -18,8 +20,13 @@ protected:
 private:
     QTextEdit *txt;
     QPushButton *btn;
+    QProgressBar *bar;
+    QTimer *time;
+    QString lFileName;
 private slots:
     void fileSave();
+    void TimerTick( void );
+    void setAble();
 };
 
 #endif // FINALPAGE_H

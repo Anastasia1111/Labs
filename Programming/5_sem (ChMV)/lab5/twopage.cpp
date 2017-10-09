@@ -17,8 +17,8 @@ TwoPage::TwoPage(QString a, QWidget *parent /*= 0*/) : QWizardPage(parent)
 
 void TwoPage::initializePage()
 {
-    if(field("rbt_1")== 1)
-        lbl->setText(trUtf8("Вы выбрали тип анлеты 1"));
+    if(field("rbt_2")== 1)
+        lbl->setText(trUtf8("Вы выбрали тип анкеты 2"));
 }
 
 int TwoPage::nextId() const
