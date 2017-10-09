@@ -2,89 +2,78 @@ package ru.labs.fnick;
 
 final public class Multiplication {
     public static long lastT = 0;
-    private static final int INT_LENGTH = 32;
 
     private Multiplication(){}
 
-    /*static private int[] summator(int[] a, int[] b)
+    static private long recursiveFastStep(int x, int y, int n)
     {
-        int n = a.length;
-        int pi, po;
-        int[] s = new int[n + 1];
-    }*/
+        if (n <= 1)
+            return x & y;
 
-    static private long recursiveColumnStep(int[] x, int[] y)
-    {
-        int n = x.length;
-        int k = n / 2;
-        int[] a = new int[k];
-        int[] b = new int[k];
-        int[] c = new int[k];
-        int[] d = new int[k];
-        for (int i = 0; i < k; ++i)
+        long res;
+        if (n % 2 != 0)
         {
-            a[i] = x[i];
-            b[i] = x[i + k];
-            c[i] = y[i];
-            d[i] = y[i + k];
-        }
-        long ac, ad, bc, bd;
-        if (k == 1)
-        {
-            ac = a[0] * c[0];
-            ad = a[0] * d[0];
-            bc = b[0] * c[0];
-            bd = b[0] * d[0];
+            int a1 = x >> (n - 1),
+                a2 = x & (~(1 << (n - 1))),
+                b1 = y >> (n - 1),
+                b2 = y & (~(1 << (n - 1)));
+            res = (a1 & b1) << (2 * (n - 1));
+            if (a1 == 0)
+            {
+                res += a2 << (n - 1);
+            } else {
+                if (b1 == 0)
+                {
+                    res += b2 << (n - 1);
+                } else {
+                    int sum = a2 + b2;
+                    if (a2 != 0 && b2 != 0)
+                        lastT += (n - 1) / 2;
+                    res += sum << (n - 1);
+                }
+            }
+            res += recursiveFastStep(a2, b2, (n - 1));
         } else {
-            ac = recursiveColumnStep(a, c);
-            ad = recursiveColumnStep(a, d);
-            bc = recursiveColumnStep(b, c);
-            bd = recursiveColumnStep(b, d);
+            int k = n / 2;
+            int a = x >> k;
+            int b = x & ((1 << k) - 1);
+            int c = y >> k;
+            int d = y & ((1 << k) - 1);
+            int apb = a + b;
+            if (a != 0 && b != 0)
+                lastT += k;
+            int cpd = c + d;
+            if (c != 0 && d != 0)
+                lastT += k;
+            long u;
+            if (apb >= (1 << k) || cpd >= (1 << k))
+            {
+                u = recursiveFastStep(apb, cpd, k + 1);
+            } else {
+                u = recursiveFastStep(apb, cpd, k);
+            }
+            long v = recursiveFastStep(a, c, k);
+            long w = recursiveFastStep(b, d, k);
+            res = (v << n) + ((u - v - w) << k) + w;
+            if (u != 0 && v != 0)
+                lastT += n;
+            if ((u - v) != 0 && w != 0)
+                lastT += n;
         }
-        lastT += 4;
-        long res = (ac << n) + ((ad + bc) << k) + bd;
-        lastT += k;
-        System.out.println(lastT);
         return res;
     }
 
     static public long fast(int x, int y)
     {
         lastT = 0;
-        int k1 = 0, k2 = 0;
-        long sum = 0;
-        while ((x >> k1) != 0)
-            ++k1;
-        while ((y >> k2) != 0)
-            ++k2;
-        //int k =
-        if (k1 > k2)
-            for (int i = 0; i < k2; ++i)
-            {
-                if (((y >> i) & 1) == 1)
-                {
-                    sum += x << i;
-                    lastT += k1;
-                }
-            }
+        int n = 0;
+        if (x > y)
+            while ((x >> n) != 0)
+                ++n;
         else
-            for (int i = 0; i < k1; ++i)
-            {
-                if (((x >> i) & 1) == 1)
-                {
-                    sum += y << i;
-                    lastT += k2;
-                }
-            }
-        int n = INT_LENGTH;
-        int[] arrx = new int[n];
-        int[] arry = new int[n];
-        for (int i = 0; i < n; ++i)
-        {
-            arrx[i] = (x << i) >>> (n - 1);
-            arry[i] = (y << i) >>> (n - 1);
-        }
-        return recursiveColumnStep(arrx, arry);
+            while ((y >> n) != 0)
+                ++n;
+        return recursiveFastStep(x, y, n);
     }
 
     static public long column(int x, int y)
@@ -116,8 +105,18 @@ final public class Multiplication {
             }
         return sum;
     }
+    private static int T(int n)
+    {
+        if(n == 1) return 1;
+        return 3*T(n/2) + (n % 2 != 0 ? 4*n : 3*n);
+    }
 
-    public static void test() {
-        System.out.println(Multiplication.column(255, 255) + "\nT = " + lastT);
+    public static void test()
+    {
+        int x = 3869;//65535;
+        int y = 8324;//65535;
+        System.out.println(x + " * " + y + " = " + Multiplication.column(x, y) + "\nT = " + lastT);
+        System.out.println(x + " * " + y + " = " + Multiplication.fast(x, y) + "\nT = " + lastT);
+        System.out.println("Theoretical fast T = " + T(16));
     }
 }
