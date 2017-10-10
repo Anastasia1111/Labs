@@ -9,8 +9,8 @@ SecondPage::SecondPage(QWidget *parent) : QWizardPage(parent)
     vbl->addWidget(lbl = new QLabel);
     vbl->addWidget(cmb = new QComboBox);
     cmb->addItem("Выберите файл шаблона из списка");
-    cmb->addItem("anketa2.txt");
-    cmb->addItem("anketa3.txt");
+    cmb->addItem("МИЭТ");
+    cmb->addItem("Гусевский ПолиТех");
     setLayout(vbl);
     registerField("combo", cmb);
 }

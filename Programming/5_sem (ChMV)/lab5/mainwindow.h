@@ -4,6 +4,7 @@
 #include <QWizard>
 #include <QWidget>
 #include <QLabel>
+#include <QMessageBox>
 #include "firstpage.h"
 #include "secondpage.h"
 #include "twopage.h"

@@ -9,8 +9,8 @@ TwoPage::TwoPage(QString a, QWidget *parent /*= 0*/) : QWizardPage(parent)
     vbl->addWidget(lbl = new QLabel);
     vbl->addWidget(cmb1 = new QComboBox);
     cmb1->addItem("Выберите файл шаблона из списка");
-    cmb1->addItem("anketa2.txt");
-    cmb1->addItem("anketa3.txt");
+    cmb1->addItem("БизГид");
+    cmb1->addItem("НоуНэйм");
     setLayout(vbl);
     registerField("combo1", cmb1);
 }

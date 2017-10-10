@@ -17,7 +17,6 @@ SOURCES += main.cpp\
     firstpage.cpp \
     secondpage.cpp \
     finalpage.cpp \
-    wizard.cpp \
     twopage.cpp
 
 HEADERS  += mainwindow.h \
@@ -25,7 +24,6 @@ HEADERS  += mainwindow.h \
     firstpage.h \
     secondpage.h \
     finalpage.h \
-    wizard.h \
     twopage.h
 
 FORMS    +=

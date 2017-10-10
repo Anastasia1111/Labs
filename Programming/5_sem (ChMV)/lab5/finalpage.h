@@ -17,6 +17,7 @@ public:
     explicit FinalPage(QWidget *parent = 0);
 protected:
     void initializePage();
+    void cleanupPage();
 private:
     QTextEdit *txt;
     QPushButton *btn;

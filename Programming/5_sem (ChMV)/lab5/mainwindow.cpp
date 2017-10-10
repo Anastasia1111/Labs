@@ -9,8 +9,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::showHelp()
 {
-    QLabel *help = new QLabel("Помочь?");
+    /*QLabel *help = new QLabel("Помочь?");
     help->setWindowTitle("Help");
     help->setGeometry(500, 200, 400, 400);
-    show();
+    show();*/
+    QMessageBox *msg = new QMessageBox(QMessageBox::Information, "Help?", "Keep calm and relax.");
+    msg->show();
 }
