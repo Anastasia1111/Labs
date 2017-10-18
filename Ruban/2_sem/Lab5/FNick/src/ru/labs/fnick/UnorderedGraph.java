@@ -33,6 +33,14 @@ public class UnorderedGraph {
         return graph;
     }
 
+    public int getWeight()
+    {
+        int weight = 0;
+        for (Edge e : edges)
+            weight += e.weight;
+        return weight;
+    }
+
     public ArrayList<Edge> getEdges()
     {
         ArrayList<Edge> _edges = new ArrayList<Edge>(edges);
@@ -107,7 +115,8 @@ public class UnorderedGraph {
         }
 
         @Override
-        public int compareTo(Edge o) {
+        public int compareTo(Edge o)
+        {
             return v1.compareTo(o.v1);
         }
 
@@ -122,7 +131,7 @@ public class UnorderedGraph {
         {
             if (obj instanceof Edge)
             {
-                return v1 == ((Edge)obj).v1 && v2 == ((Edge)obj).v2 && weight == ((Edge)obj).weight;
+                return v1 == ((Edge) obj).v1 && v2 == ((Edge) obj).v2 && weight == ((Edge) obj).weight;
             }
             return false;
         }

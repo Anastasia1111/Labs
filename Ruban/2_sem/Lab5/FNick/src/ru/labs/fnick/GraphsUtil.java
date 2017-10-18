@@ -1,7 +1,5 @@
 package ru.labs.fnick;
 
-import com.sun.corba.se.impl.orbutil.graph.Graph;
-
 import java.util.*;
 
 final public class GraphsUtil {
@@ -162,7 +160,7 @@ final public class GraphsUtil {
     public static void test()
     {
         ArrayList<UnorderedGraph.Edge> edges = new ArrayList<UnorderedGraph.Edge>();
-        edges.add(new UnorderedGraph.Edge(1, 2, 20));
+        /*edges.add(new UnorderedGraph.Edge(1, 2, 20));
         edges.add(new UnorderedGraph.Edge(6, 1, 23));
         edges.add(new UnorderedGraph.Edge(5, 6, 28));
         edges.add(new UnorderedGraph.Edge(7, 5, 25));
@@ -173,7 +171,7 @@ final public class GraphsUtil {
         edges.add(new UnorderedGraph.Edge(1, 7, 1));
         edges.add(new UnorderedGraph.Edge(7, 2, 4));
         edges.add(new UnorderedGraph.Edge(4, 7, 16));
-        edges.add(new UnorderedGraph.Edge(5, 4, 17));
+        edges.add(new UnorderedGraph.Edge(5, 4, 17));*/
         /*edges.add(new UnorderedGraph.Edge(0, 4, 2));
         edges.add(new UnorderedGraph.Edge(0, 3, 7));
         edges.add(new UnorderedGraph.Edge(0, 2, 15));
@@ -181,6 +179,25 @@ final public class GraphsUtil {
         edges.add(new UnorderedGraph.Edge(1, 2, 6));
         edges.add(new UnorderedGraph.Edge(4, 3, 3));
         edges.add(new UnorderedGraph.Edge(2, 3, 4));*/
+        edges.add(new UnorderedGraph.Edge(1,  2,  1));
+        edges.add(new UnorderedGraph.Edge(2,  3,  1));
+        edges.add(new UnorderedGraph.Edge(3,  7,  3));
+        edges.add(new UnorderedGraph.Edge(7,  8,  1));
+        edges.add(new UnorderedGraph.Edge(8,  9,  3));
+        edges.add(new UnorderedGraph.Edge(9,  10,  5));
+        edges.add(new UnorderedGraph.Edge(10,  4,  2));
+        edges.add(new UnorderedGraph.Edge(4,  1,  1));
+        edges.add(new UnorderedGraph.Edge(1,  5,  8));
+        edges.add(new UnorderedGraph.Edge(5,  2,  4));
+        edges.add(new UnorderedGraph.Edge(2,  6,  2));
+        edges.add(new UnorderedGraph.Edge(6,  3,  1));
+        edges.add(new UnorderedGraph.Edge(6,  7,  2));
+        edges.add(new UnorderedGraph.Edge(8,  6,  1));
+        edges.add(new UnorderedGraph.Edge(6,  9,  2));
+        edges.add(new UnorderedGraph.Edge(9,  5,  1));
+        edges.add(new UnorderedGraph.Edge(5,  10,  1));
+        edges.add(new UnorderedGraph.Edge(4,  5,  7));
+        edges.add(new UnorderedGraph.Edge(5,  6,  3));
         UnorderedGraph graph = new UnorderedGraph(edges);
         System.out.println("Graph:\n" + graph);
 
@@ -188,7 +205,7 @@ final public class GraphsUtil {
         if (tree == null)
             System.out.println("Graph is disconnected");
         else
-            System.out.println("Tree:\n" + tree + "T = " + lastT);
+            System.out.println("Tree:\n" + tree + "Weight: " + tree.getWeight() + "\nT = " + lastT);
 
         int[] path = GraphsUtil.shortestPathFB(graph);
         int index = 0;
