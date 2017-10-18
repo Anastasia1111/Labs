@@ -7,34 +7,31 @@ final public class GraphsUtil {
 
     private GraphsUtil(){}
 
-    /*public static UndirectedGraph spanningTree(UndirectedGraph graph)
+    public static Graph spanningTree(Graph graph)
     {
         lastT = 0;
 
-        ArrayList<UndirectedGraph.Edge> edges = graph.getEdges();
+        ArrayList<Graph.Edge> edges = graph.getEdges();
         ArrayList<String> vertices = graph.getVertices();
         int k = edges.size();
         int n = vertices.size();
-        HashMap<String, String> component = new HashMap<String, String>();
+        HashMap<String, Integer> component = new HashMap<>();
+        int i = 0;
         for (String v : vertices)
-            component.put(v, v);
+            component.put(v, ++i);
+        int graphComponent = 0;
 
-        UndirectedGraph tree = UndirectedGraph.fromVerticesArray(vertices);
+        Graph tree = (graph instanceof UndirectedGraph) ? new UndirectedGraph() : new DirectedGraph();
 
-        Collections.sort(edges, new Comparator<UndirectedGraph.Edge>() {
+        Collections.sort(edges, new Comparator<Graph.Edge>() {
             @Override
-            public int compare(UndirectedGraph.Edge o1, UndirectedGraph.Edge o2) {
+            public int compare(Graph.Edge o1, Graph.Edge o2) {
                 return o1.weight.compareTo(o2.weight);
             }
         });
         lastT += k * (int) Math.ceil(Math.log(k)/Math.log(2));
 
-        int graphComponent = 0;
-        for (String c : component.keySet())
-            graphComponent = Math.min(graphComponent, c);
-        --graphComponent;
-
-        UndirectedGraph.Edge edge = edges.get(0);
+        Graph.Edge edge = edges.get(0);
         component.replace(edge.v1, graphComponent);
         component.replace(edge.v2, graphComponent);
         lastT += 2;
@@ -50,7 +47,7 @@ final public class GraphsUtil {
             if (c1 != c2)
             {
                 int minComp = Math.min(c1, c2);
-                for (Map.Entry<Integer, Integer> entry : component.entrySet())
+                for (Map.Entry<String, Integer> entry : component.entrySet())
                     if (entry.getValue().equals(c1 == minComp ? c2 : c1))
                     {
                         entry.setValue(minComp);
@@ -62,9 +59,9 @@ final public class GraphsUtil {
             edges.remove(0);
         }
         return tree;
-    }*/
+    }
 
-    public static int[] shortestPathFB(UndirectedGraph graph)
+    public static int[] shortestPathFB(Graph graph)
     {
         lastT = 0;
         boolean lock = false;
@@ -79,7 +76,7 @@ final public class GraphsUtil {
                 C[i][j] = inf;
             C[i][i] = 0;
         }
-        for (UndirectedGraph.Edge e : graph.getEdges())
+        for (Graph.Edge e : graph.getEdges())
             C[vertices.indexOf(e.v1)][vertices.indexOf(e.v2)] = C[vertices.indexOf(e.v2)][vertices.indexOf(e.v1)] = e.weight;
 
         int[] D = new int[n];
@@ -111,7 +108,7 @@ final public class GraphsUtil {
         return D;
     }
 
-    public static int[] shortestPathDijkstra(UndirectedGraph graph)
+    public static int[] shortestPathDijkstra(Graph graph)
     {
         lastT = 0;
         ArrayList<String> V = graph.getVertices();
@@ -126,7 +123,7 @@ final public class GraphsUtil {
                 C[i][j] = inf;
             C[i][i] = 0;
         }
-        for (UndirectedGraph.Edge e : graph.getEdges())
+        for (Graph.Edge e : graph.getEdges())
             C[vertices.indexOf(e.v1)][vertices.indexOf(e.v2)] = C[vertices.indexOf(e.v2)][vertices.indexOf(e.v1)] = e.weight;
 
         int[] D = new int[n];
@@ -159,53 +156,34 @@ final public class GraphsUtil {
 
     public static void test()
     {
-        ArrayList<UndirectedGraph.Edge> edges = new ArrayList<UndirectedGraph.Edge>();
-        /*edges.add(new UndirectedGraph.Edge(1, 2, 20));
-        edges.add(new UndirectedGraph.Edge(6, 1, 23));
-        edges.add(new UndirectedGraph.Edge(5, 6, 28));
-        edges.add(new UndirectedGraph.Edge(7, 5, 25));
-        edges.add(new UndirectedGraph.Edge(6, 7, 36));
-        edges.add(new UndirectedGraph.Edge(3, 2, 5));
-        edges.add(new UndirectedGraph.Edge(3, 7, 9));
-        edges.add(new UndirectedGraph.Edge(4, 3, 3));
-        edges.add(new UndirectedGraph.Edge(1, 7, 1));
-        edges.add(new UndirectedGraph.Edge(7, 2, 4));
-        edges.add(new UndirectedGraph.Edge(4, 7, 16));
-        edges.add(new UndirectedGraph.Edge(5, 4, 17));*/
-        /*edges.add(new UndirectedGraph.Edge(0, 4, 2));
-        edges.add(new UndirectedGraph.Edge(0, 3, 7));
-        edges.add(new UndirectedGraph.Edge(0, 2, 15));
-        edges.add(new UndirectedGraph.Edge(0, 1, 25));
-        edges.add(new UndirectedGraph.Edge(1, 2, 6));
-        edges.add(new UndirectedGraph.Edge(4, 3, 3));
-        edges.add(new UndirectedGraph.Edge(2, 3, 4));*/
-        edges.add(new UndirectedGraph.Edge("1",  "2",  1));
-        edges.add(new UndirectedGraph.Edge("2",  "3",  1));
-        edges.add(new UndirectedGraph.Edge("3",  "7",  3));
-        edges.add(new UndirectedGraph.Edge("7",  "8",  1));
-        edges.add(new UndirectedGraph.Edge("8",  "9",  3));
-        edges.add(new UndirectedGraph.Edge("9",  "10",  5));
-        edges.add(new UndirectedGraph.Edge("10",  "4",  2));
-        edges.add(new UndirectedGraph.Edge("4",  "1",  1));
-        edges.add(new UndirectedGraph.Edge("1",  "5",  8));
-        edges.add(new UndirectedGraph.Edge("5",  "2",  4));
-        edges.add(new UndirectedGraph.Edge("2",  "6",  2));
-        edges.add(new UndirectedGraph.Edge("6",  "3",  1));
-        edges.add(new UndirectedGraph.Edge("6",  "7",  2));
-        edges.add(new UndirectedGraph.Edge("8",  "6",  1));
-        edges.add(new UndirectedGraph.Edge("6",  "9",  2));
-        edges.add(new UndirectedGraph.Edge("9",  "5",  1));
-        edges.add(new UndirectedGraph.Edge("5",  "10",  1));
-        edges.add(new UndirectedGraph.Edge("4",  "5",  7));
-        edges.add(new UndirectedGraph.Edge("5",  "6",  3));
-        UndirectedGraph graph = new UndirectedGraph(edges);
+        ArrayList<Graph.Edge> edges = new ArrayList<>();
+        edges.add(new Graph.Edge("1",  "2",  1));
+        edges.add(new Graph.Edge("2",  "3",  1));
+        edges.add(new Graph.Edge("3",  "7",  3));
+        edges.add(new Graph.Edge("7",  "8",  1));
+        edges.add(new Graph.Edge("8",  "9",  3));
+        edges.add(new Graph.Edge("9",  "10",  5));
+        edges.add(new Graph.Edge("10",  "4",  2));
+        edges.add(new Graph.Edge("4",  "1",  1));
+        edges.add(new Graph.Edge("1",  "5",  8));
+        edges.add(new Graph.Edge("5",  "2",  4));
+        edges.add(new Graph.Edge("2",  "6",  2));
+        edges.add(new Graph.Edge("6",  "3",  1));
+        edges.add(new Graph.Edge("6",  "7",  2));
+        edges.add(new Graph.Edge("8",  "6",  1));
+        edges.add(new Graph.Edge("6",  "9",  2));
+        edges.add(new Graph.Edge("9",  "5",  1));
+        edges.add(new Graph.Edge("5",  "10",  1));
+        edges.add(new Graph.Edge("4",  "5",  7));
+        edges.add(new Graph.Edge("5",  "6",  3));
+        DirectedGraph graph = new DirectedGraph(edges);
         System.out.println("Graph:\n" + graph);
 
-        /*UndirectedGraph tree = GraphsUtil.spanningTree(graph);
+        DirectedGraph tree = (DirectedGraph) GraphsUtil.spanningTree(graph);
         if (tree == null)
             System.out.println("Graph is disconnected");
         else
-            System.out.println("Tree:\n" + tree + "Weight: " + tree.getWeight() + "\nT = " + lastT);*/
+            System.out.println("Tree:\n" + tree + "Weight: " + tree.getWeight() + "\nT = " + lastT);
 
         int[] path = GraphsUtil.shortestPathFB(graph);
         int index = 0;

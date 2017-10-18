@@ -6,21 +6,21 @@ import java.util.TreeSet;
 
 public interface Graph {
 
-    public int getWeight();
+    int getWeight();
 
-    public ArrayList<Edge> getEdges();
+    ArrayList<Edge> getEdges();
 
-    public boolean addEdge(Edge edge);
+    boolean addEdge(Edge edge);
 
-    public boolean removeEdge(Edge edge);
+    boolean removeEdge(Edge edge);
 
-    public ArrayList<String> getVertices();
+    ArrayList<String> getVertices();
 
-    public boolean addVertex(String vertex);
+    boolean addVertex(String vertex);
 
-    public boolean removeVertex(String vertex);
+    boolean removeVertex(String vertex);
 
-    public static class Edge implements Comparable<Edge>
+    class Edge implements Comparable<Edge>
     {
         String v1;
         String v2;
@@ -28,9 +28,8 @@ public interface Graph {
 
         public Edge(String v1, String v2, Integer w)
         {
-            int compare = v1.compareTo(v2);
-            this.v1 = compare < 0 ? v1 : v2;
-            this.v2 = compare < 0 ? v2 : v1;
+            this.v1 = v1;
+            this.v2 = v2;
             weight = w;
         }
 
@@ -44,8 +43,8 @@ public interface Graph {
         @Override
         public int compareTo(Edge o)
         {
-            int compareV1 = v1.compareTo(o.v1);
-            int compareV2 = v2.compareTo(o.v2);
+            int compareV1 = v1.length() == o.v1.length() ? v1.compareTo(o.v1) : (v1.length() < o.v1.length() ? -1 : 1);
+            int compareV2 = v2.length() == o.v2.length() ? v2.compareTo(o.v2) : (v2.length() < o.v2.length() ? -1 : 1);
             int compareWeight = weight.compareTo(o.weight);
             return compareV1 == 0 ? ( compareV2 == 0 ? compareWeight : compareV2 ) : compareV1;
         }
@@ -61,7 +60,7 @@ public interface Graph {
         {
             if (obj instanceof Edge)
             {
-                return (this.compareTo((Edge)obj) == 0);
+                return (this.compareTo((Edge) obj) == 0);
             }
             return false;
         }

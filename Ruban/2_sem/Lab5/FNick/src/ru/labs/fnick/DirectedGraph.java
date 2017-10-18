@@ -4,32 +4,35 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeSet;
 
-public class UndirectedGraph implements Graph
+public class DirectedGraph implements Graph
 {
     private ArrayList<Edge> edges;
     private TreeSet<String> vertices;
 
-    public UndirectedGraph()
+    public DirectedGraph()
     {
         edges = new ArrayList<Edge>();
         vertices = new TreeSet<String>();
     }
 
-    public UndirectedGraph(ArrayList<Edge> edges)
+    public DirectedGraph(ArrayList<Edge> edges)
     {
-        ArrayList<Edge> _edges = new ArrayList<Edge>();
+        this.edges = edges;
+        Collections.sort(this.edges);
+
         vertices = new TreeSet<String>();
         for (Edge e : edges)
         {
-            int compare = e.v1.length() == e.v2.length() ? e.v1.compareTo(e.v2) : (e.v1.length() < e.v2.length() ? -1 : 1);
-            String v1 = compare < 0 ? e.v1 : e.v2;
-            String v2 = compare < 0 ? e.v2 : e.v1;
-            _edges.add(new Edge(v1, v2, e.weight));
             vertices.add(e.v1);
             vertices.add(e.v2);
         }
-        this.edges = _edges;
-        Collections.sort(this.edges);
+    }
+
+    public static DirectedGraph fromVerticesArray(ArrayList<String> vertices)
+    {
+        DirectedGraph graph = new DirectedGraph();
+        graph.vertices = new TreeSet<String>(vertices);
+        return graph;
     }
 
     public int getWeight()
@@ -48,10 +51,7 @@ public class UndirectedGraph implements Graph
 
     public boolean addEdge(Edge edge)
     {
-        int compare = edge.v1.length() == edge.v2.length() ? edge.v1.compareTo(edge.v2) : (edge.v1.length() < edge.v2.length() ? -1 : 1);
-        String v1 = compare < 0 ? edge.v1 : edge.v2;
-        String v2 = compare < 0 ? edge.v2 : edge.v1;
-        Edge e = new Edge(v1, v2, edge.weight);
+        Edge e = new Edge(edge);
         vertices.add(edge.v1);
         vertices.add(edge.v2);
         boolean suc = edges.add(e);
