@@ -14,22 +14,23 @@ public interface Graph {
 
     public boolean removeEdge(Edge edge);
 
-    public ArrayList<Integer> getVertices();
+    public ArrayList<String> getVertices();
 
-    public boolean addVertex(Integer vertex);
+    public boolean addVertex(String vertex);
 
-    public boolean removeVertex(Integer vertex);
+    public boolean removeVertex(String vertex);
 
     public static class Edge implements Comparable<Edge>
     {
-        Integer v1;
-        Integer v2;
+        String v1;
+        String v2;
         Integer weight;
 
-        public Edge(int v1, int v2, int w)
+        public Edge(String v1, String v2, Integer w)
         {
-            this.v1 = Math.min(v1, v2);
-            this.v2 = Math.max(v1, v2);
+            int compare = v1.compareTo(v2);
+            this.v1 = compare < 0 ? v1 : v2;
+            this.v2 = compare < 0 ? v2 : v1;
             weight = w;
         }
 
@@ -41,14 +42,18 @@ public interface Graph {
         }
 
         @Override
-        public int compareTo(Edge o) {
-            return v1.compareTo(o.v1);
+        public int compareTo(Edge o)
+        {
+            int compareV1 = v1.compareTo(o.v1);
+            int compareV2 = v2.compareTo(o.v2);
+            int compareWeight = weight.compareTo(o.weight);
+            return compareV1 == 0 ? ( compareV2 == 0 ? compareWeight : compareV2 ) : compareV1;
         }
 
         @Override
         public String toString()
         {
-            return new String("(" + v1 + ")" + "---" + weight + "---" + "(" + v2 + ")");
+            return "(" + v1 + ")" + "---" + weight + "---" + "(" + v2 + ")";
         }
 
         @Override
@@ -56,7 +61,7 @@ public interface Graph {
         {
             if (obj instanceof Edge)
             {
-                return v1 == ((Edge)obj).v1 && v2 == ((Edge)obj).v2 && weight == ((Edge)obj).weight;
+                return (this.compareTo((Edge)obj) == 0);
             }
             return false;
         }
