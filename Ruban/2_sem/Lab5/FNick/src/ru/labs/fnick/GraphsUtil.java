@@ -158,7 +158,7 @@ final public class GraphsUtil {
         for (int i = 1; i < n; ++i)
         {
             D[i] = C[0][i];
-            path[i] = D[i] != inf ? vertices.get(0) + "->" + vertices.get(i) : "";
+            path[i] = D[i] != inf ? vertices.get(0) + "->" + vertices.get(i) : "none";
         }
 
         ArrayList<String> S = new ArrayList<String>();
@@ -186,13 +186,13 @@ final public class GraphsUtil {
             }
         }
         for (int i = 0; i < n; ++i)
-            path[i] += (" for " + D[i]);
+            path[i] += (D[i] != inf ? (" for " + D[i]) : "");
         return path;
     }
 
     public static void test()
     {
-        boolean directed = false;
+        boolean directed = true;
         GraphAdapter graph = new GraphAdapter(directed);
         /*graph.addEdge("1",  "2",  1);
         graph.addEdge("2",  "3",  1);
@@ -214,18 +214,18 @@ final public class GraphsUtil {
         graph.addEdge("4",  "5",  7);
         graph.addEdge("5",  "6",  3);*/
         graph.addEdge("A", "B", 1);
-        graph.addEdge("A", "D", 2);
+        graph.addEdge("D", "A", 2);
         graph.addEdge("A", "G", 3);
         graph.addEdge("A", "F", 15);
-        graph.addEdge("B", "D", 1);
+        graph.addEdge("D", "B", 1);
         graph.addEdge("D", "C", 5);
-        graph.addEdge("C", "B", 6);
+        graph.addEdge("B", "C", 6);
         graph.addEdge("C", "F", 2);
         graph.addEdge("E", "F", 4);
         graph.addEdge("K", "F", 2);
-        graph.addEdge("E", "D", 7);
+        graph.addEdge("D", "E", 7);
         graph.addEdge("K", "E", 3);
-        graph.addEdge("K", "D", 4);
+        graph.addEdge("D", "K", 4);
         graph.addEdge("G", "K", 1);
         graph.addEdge("D", "G", 1);
         System.out.println("Graph:\n" + graph);
