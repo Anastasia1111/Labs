@@ -1,10 +1,6 @@
 package ru.labs.fnick;
 
-import javafx.util.Pair;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 final public class Dynamic {
     public static long lastT = 0;
@@ -16,12 +12,12 @@ final public class Dynamic {
         lastT = 0;
         int n = c.length;
 
-        ArrayList<Pair<Integer, Integer>> items = new ArrayList<>();
+        ArrayList<AbstractMap.SimpleEntry<Integer, Integer>> items = new ArrayList<>();
         for (int i = 0; i < n; ++i)
-            items.add(new Pair<>(m[i], c[i]));
-        Collections.sort(items, new Comparator<Pair<Integer, Integer>>() {
+            items.add(new AbstractMap.SimpleEntry<>(m[i], c[i]));
+        Collections.sort(items, new Comparator<AbstractMap.SimpleEntry<Integer, Integer>>() {
             @Override
-            public int compare(Pair<Integer, Integer> o1, Pair<Integer, Integer> o2) {
+            public int compare(AbstractMap.SimpleEntry<Integer, Integer> o1, AbstractMap.SimpleEntry<Integer, Integer> o2) {
                 return o1.getKey().compareTo(o2.getKey());
             }
         });
@@ -81,12 +77,12 @@ final public class Dynamic {
 
     public static void test()
     {
-        int[] m = {8, 5, 2};
-        int[] c = {23, 1, 1};
-        int M = 13;
-        System.out.println("F(" + M + ") = " + Dynamic.knapsack(m, c, M) + "\nT = " + lastT);
+        /*int[] m = {10, 100, 55, 4};
+        int[] c = {15, 400, 300, 5};
+        int M = 100;
+        System.out.println("F(" + M + ") : " + Dynamic.knapsack(m, c, M) + "\nT = " + lastT);*/
 
-        int[] r = {10, 20, 50, 1, 100};
+        int[] r = {30, 40, 100, 1, 45, 37};
         System.out.println(matrix(r) + "\nT = " + lastT);
     }
 }
