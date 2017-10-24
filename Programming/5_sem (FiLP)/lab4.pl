@@ -5,7 +5,8 @@ parent(X, Y):-
     X = bob,Y = liz;
     X = bob,Y = paul;
     X = bob,Y = sam;
-    X = paul,Y = pat.
+    X = paul,Y = pat;
+    X = jonh,Y = bob.
 % Мужчины и женщины:
 man(john).
 man(bob).
