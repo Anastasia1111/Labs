@@ -1,4 +1,4 @@
-% Определение родителей:
+% ГЋГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГҐ Г°Г®Г¤ГЁГІГҐГ«ГҐГ©:
 parent(X, Y):-
     X = mary,Y = bob;
     X = mary,Y = ann;
@@ -7,7 +7,7 @@ parent(X, Y):-
     X = bob,Y = sam;
     X = paul,Y = pat;
     X = john,Y = bob.
-% Мужчины и женщины:
+% ГЊГіГ¦Г·ГЁГ­Г» ГЁ Г¦ГҐГ­Г№ГЁГ­Г»:
 man(john).
 man(bob).
 man(sam).
@@ -16,16 +16,16 @@ man(pat).
 woman(mary).
 woman(liz).
 woman(ann).
-% Родственники:
+% ГђГ®Г¤Г±ГІГўГҐГ­Г­ГЁГЄГЁ:
 diff(X,Y):- X\==Y.
 diff(X,Y,Z):- X\==Y, Y\==Z, X\==Z.
 father(X,Y):-parent(X,Y),man(X).
 mother(X,Y):-parent(X,Y),woman(X).
 brother(X,Y):-man(X),parent(Z,X),parent(Z,Y), diff(X,Y).
 sister(X,Y):-parent(Z,X),parent(Z,Y), woman(X), diff(X,Y).
-grandchilds(X, Y):-parent(Y,Z),parent(Z,X).
+grandchild(X, Y):-parent(Y,Z),parent(Z,X).
 aunt(X,Y):-parent(Z,Y),sister(X, Z).
-has_2_childs(X):-
+has_2_children(X):-
     setof(Y,parent(X, Y), L),
     length(L, 2).
 successor(X):-parent(X,Y),man(Y),man(X).
