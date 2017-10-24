@@ -25,5 +25,7 @@ brother(X,Y):-man(X),parent(Z,X),parent(Z,Y), diff(X,Y).
 sister(X,Y):-parent(Z,X),parent(Z,Y), woman(X), diff(X,Y).
 grandchilds(X, Y):-parent(Y,Z),parent(Z,X).
 aunt(X,Y):-parent(Z,Y),sister(X, Z).
-has_2_childs(X):-parent(X,Y),parent(X,Z),diff(Y,Z),not(parent(X,W)), diff(W,Y,Z).
+has_2_childs(X):-
+    setof(Y,parent(X, Y), L),
+    length(L, 2).
 successor(X):-parent(X,Y),man(Y),man(X).
