@@ -1,7 +1,7 @@
 #include "dialog.h"
 #include "ui_dialog.h"
 
-Dialog::Dialog(QMap<QString, QString>* map, QWidget *parent) :
+Dialog::Dialog(QMap<QPair<QString, QString>, QPair<QString, QString> > *map, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog),
     map(map)
@@ -20,14 +20,22 @@ Dialog::~Dialog()
 
 void Dialog::on_linelogin_editingFinished()
 {
-    bool flag1 = false;
-    foreach (QString item, map->keys()) {
-        if(ui->linelogin->text() == item)
-            flag1 = true;
+    bool flag = false;
+    typedef QPair<QString, QString> item_type;
+    foreach (item_type item, map->keys()) {
+        if(ui->linelogin->text() == item.first)
+        {
+            flag = true;
+            login = item.first;
+            password = item.second;
+            question = map->find(item).value().first;
+            answer = map->find(item).value().first;
+            break;
+        }
     }
-    if (flag1)
+    if (flag)
     {
-        ui->question->setText("Test question");
+        ui->question->setText(question);
         ui->linequestion->show();
         ui->pass->hide();
         ui->finish->hide();
@@ -38,4 +46,25 @@ void Dialog::on_linelogin_editingFinished()
         ui->finish->hide();
     }
     ui->question->show();
+}
+
+void Dialog::on_linequestion_editingFinished()
+{
+    bool flag = false;
+    if (ui->linequestion->text() == answer)
+        flag = true;
+    if (flag)
+    {
+        ui->pass->setText(password);
+        ui->finish->show();
+    } else {
+        ui->pass->setText("Incorrect answer");
+        ui->finish->hide();
+    }
+    ui->pass->show();
+}
+
+void Dialog::on_finish_clicked()
+{
+    this->accept();
 }

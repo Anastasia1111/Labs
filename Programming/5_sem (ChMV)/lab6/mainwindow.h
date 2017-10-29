@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "dialog.h"
+#include "database.h"
+#include "dbwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,8 +21,13 @@ public:
 private slots:
     void on_remember_clicked();
 
+    void on_pushButtonNext_clicked();
+
 private:
     Ui::MainWindow *ui;
+    DataBase *db;
+    QMap< QPair<QString, QString>, QPair<QString, QString> > *map;
+
 };
 
 #endif // MAINWINDOW_H

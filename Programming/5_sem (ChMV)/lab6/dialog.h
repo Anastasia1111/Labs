@@ -13,15 +13,23 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    Dialog(QMap<QString, QString> *map, QWidget *parent = 0);
+    Dialog(QMap< QPair<QString, QString>, QPair<QString, QString> > *map, QWidget *parent = 0);
     ~Dialog();
 
 private slots:
     void on_linelogin_editingFinished();
 
+    void on_linequestion_editingFinished();
+
+    void on_finish_clicked();
+
 private:
     Ui::Dialog *ui;
-    QMap<QString, QString>* map;
+    QMap< QPair<QString, QString>, QPair<QString, QString> >* map;
+    QString login;
+    QString password;
+    QString question;
+    QString answer;
 };
 
 #endif // DIALOG_H
