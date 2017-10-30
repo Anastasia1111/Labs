@@ -45,12 +45,6 @@ int main(int argc, char const *argv[])
 	
 	res = Ford_Bellman_for_all(A, n, start, W);
 	cout << endl << endl;
-	
-	cout << "W = ";
-	for(i = 0; i < n; ++i)
-		cout << " " << W[i];
-	cout << endl;
-	cin >> i;
 
 	for(i = 0; i < n; ++i) {
 		cout << "mass of way from " << start << " to " << i << " is eq to " << res[i] << ":";
@@ -65,7 +59,7 @@ int main(int argc, char const *argv[])
 int* Ford_Bellman_for_all(int **C, int n, int start, int *W) {
 	int z ,i, j, k;
 	char x;
-	static int **D = new int *[2];
+	int **D = new int *[2];
 	for(i = 0; i < 2; ++i) {
 		D[i] = new int [n];
 		for(j = 0; j < n; ++j)
@@ -97,14 +91,11 @@ int* Ford_Bellman_for_all(int **C, int n, int start, int *W) {
 	return D[k1];
 }
 
-void print_way(int *W, int n, int start, int end)
-{
-	int a;
+void print_way(int *W, int n, int start, int end){
 	int i = end;
 	while((i != start)) {
 		cout << i << " <- ";
 		i = W[i];
-		//cin >> a;
 	}
 	cout << i;
 	return;
