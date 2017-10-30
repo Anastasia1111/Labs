@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "crypter.h"
 #include "dialog.h"
 #include "database.h"
 #include "dbwindow.h"
