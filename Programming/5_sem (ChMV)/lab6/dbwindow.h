@@ -16,15 +16,16 @@ class DBWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit DBWindow(QString login, QSqlDatabase db, QWidget *parent = 0);
+    explicit DBWindow(QString login, QString password, QSqlDatabase db, QWidget *parent = 0);
     ~DBWindow();
+
+signals:
+    void newUserAdded();
 
 private slots:
     void on_actionExit_triggered();
 
     void on_lineEdit_CharSearch_textChanged(const QString &arg1);
-
-    void on_lineEdit_WordSearch_textChanged(const QString &arg1);
 
     void on_actionNewUser_triggered();
 
@@ -32,7 +33,8 @@ private slots:
 
 private:
     Ui::DBWindow *ui;
-    QString login;
+    QString log;
+    QString pass;
     QSqlTableModel* mod;
     QSqlDatabase db;
 };

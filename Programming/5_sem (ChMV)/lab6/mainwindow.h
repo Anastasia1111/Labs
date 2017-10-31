@@ -24,6 +24,12 @@ private slots:
 
     void on_pushButtonNext_clicked();
 
+    void on_linelogin_editingFinished();
+
+    void on_linepass_editingFinished();
+
+    void updateMap();
+
 private:
     Ui::MainWindow *ui;
     DataBase *db;

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QMap>
+#include <QDebug>
 
 namespace Ui {
 class Dialog;

@@ -1,9 +1,10 @@
 #include "dbwindow.h"
 #include "ui_dbwindow.h"
 
-DBWindow::DBWindow(QString login, QSqlDatabase db, QWidget *parent) :
+DBWindow::DBWindow(QString login, QString password, QSqlDatabase db, QWidget *parent) :
     QMainWindow(parent),
-    login(login),
+    log(login),
+    pass(password),
     db(db),
     ui(new Ui::DBWindow)
 {
@@ -19,11 +20,17 @@ DBWindow::DBWindow(QString login, QSqlDatabase db, QWidget *parent) :
     mod = new QSqlTableModel();
     mod->setTable(TABLE1);
     mod->setHeaderData(1, Qt::Horizontal, QObject::tr("ФИО"));
+    ui->comboBox->addItem("ФИО");
     mod->setHeaderData(2, Qt::Horizontal, QObject::tr("Пол"));
+    ui->comboBox->addItem("Пол");
     mod->setHeaderData(3, Qt::Horizontal, QObject::tr("Мобильный телефон"));
+    ui->comboBox->addItem("Мобильный телефон");
     mod->setHeaderData(4, Qt::Horizontal, QObject::tr("Дата регистрации абонемента"));
+    ui->comboBox->addItem("Дата регистрации абонемента");
     mod->setHeaderData(5, Qt::Horizontal, QObject::tr("Длительность абонемента"));
+    ui->comboBox->addItem("Длительность абонемента");
     mod->setHeaderData(6, Qt::Horizontal, QObject::tr("Прошлые абонементы"));
+    ui->comboBox->addItem("Прошлые абонементы");
     mod->setHeaderData(7, Qt::Horizontal, QObject::tr("Справка"), Qt::DecorationRole);
     mod->setHeaderData(8, Qt::Horizontal, QObject::tr("Длительность справки"));
     mod->select();
@@ -47,32 +54,17 @@ void DBWindow::on_actionExit_triggered()
 
 void DBWindow::on_lineEdit_CharSearch_textChanged(const QString &arg1)
 {
+    int index = ui->comboBox->currentIndex() + 1;
     ui->tableView->setSelectionMode(QAbstractItemView::MultiSelection);
     ui->tableView->clearSelection();
     for (int i = 0; i < mod->rowCount(); ++i){
-        QString str = mod->index(i,1).data().toString();
-        if (str.contains(arg1) == true) ui->tableView->selectRow(i);
+        ui->tableView->showRow(i);
+        QString str = mod->index(i,index).data().toString();
+        if (!str.startsWith(arg1, Qt::CaseInsensitive)) ui->tableView->hideRow(i);
+        else ui->tableView->showRow(i);
     }
     if (arg1 == "")
-    {
-        ui->tableView->clearSelection();
         ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-    }
-}
-
-void DBWindow::on_lineEdit_WordSearch_textChanged(const QString &arg1)
-{
-    ui->tableView->setSelectionMode(QAbstractItemView::MultiSelection);
-    ui->tableView->clearSelection();
-    for (int i = 0; i < mod->rowCount(); ++i){
-        QString str = mod->index(i,1).data().toString();
-        if (str == arg1) ui->tableView->selectRow(i);
-    }
-    if (arg1 == "")
-    {
-        ui->tableView->clearSelection();
-        ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-    }
 }
 
 void DBWindow::on_actionNewUser_triggered()
@@ -81,7 +73,7 @@ void DBWindow::on_actionNewUser_triggered()
     QString login = QInputDialog::getText(this, "Новый пользователь (логин)", "Введите логин", QLineEdit::Normal, "", &ok);
     if (!ok || login.isEmpty())
         return;
-    QString password = QInputDialog::getText(this, "Новый пользователь (пароль)", "Введите пароль", QLineEdit::Normal, "", &ok);
+    QString password = QInputDialog::getText(this, "Новый пользователь (пароль)", "Введите пароль", QLineEdit::Password, "", &ok);
     if (!ok || password.isEmpty())
         return;
     QString question = QInputDialog::getText(this, "Новый пользователь (вопрос)", "Введите контрольный вопрос", QLineEdit::Normal, "", &ok);
@@ -91,13 +83,21 @@ void DBWindow::on_actionNewUser_triggered()
     if (!ok || answer.isEmpty())
         return;
     QSqlQuery* query = new QSqlQuery(db);
-    query->exec("INSERT INTO " TABLE2 " VALUES(null,'" + Crypter::cryptString(login) + "', '" + Crypter::cryptString(password) + "', '" + Crypter::cryptString(question) + "', '" + Crypter::cryptString(answer) + "');");
+    query->prepare(QString("INSERT INTO " TABLE2 " VALUES(null, '%1', '%2', '%3', '%4');")
+                   .arg(Crypter::cryptString(login))
+                   .arg(Crypter::cryptString(password))
+                   .arg(Crypter::cryptString(question))
+                   .arg(Crypter::cryptString(answer))
+                   );
+    qDebug() << query->lastQuery() << endl;
+    query->exec();
     if (!query->isActive())
         QMessageBox::warning(
                     this,
                     tr("Database Error"),
                     query->lastError().text()
         );
+    emit newUserAdded();
     while (query->next())
     {
         qDebug() << "hm..." << endl;
@@ -107,11 +107,47 @@ void DBWindow::on_actionNewUser_triggered()
 void DBWindow::on_actionChangePassword_triggered()
 {
     bool ok;
-    QString password = QInputDialog::getText(this, "Новый пароль", "Введите новый пароль", QLineEdit::Normal, "", &ok);
-    if (!ok || password.isEmpty())
+    QString oldPassword = QInputDialog::getText(this, "Новый пароль", "Введите старый пароль", QLineEdit::Password, "", &ok);
+    if (!ok)
         return;
+    if (oldPassword != pass)
+    {
+        QMessageBox::warning(
+                    this,
+                    tr("Неверный пароль"),
+                    tr("Неверный пароль")
+        );
+        return;
+    }
+    while (true)
+    {
+        QString password1 = QInputDialog::getText(this, "Новый пароль", "Введите новый пароль", QLineEdit::Password, "", &ok);
+        if (!ok) return;
+        if (password1.isEmpty())
+        {
+            QMessageBox::warning(
+                        this,
+                        tr("Неверный пароль"),
+                        tr("Пароль не может быть пустым")
+            );
+            continue;
+        }
+        QString password2 = QInputDialog::getText(this, "Новый пароль", "Еще раз введите новый пароль", QLineEdit::Password, "", &ok);
+        if (!ok) return;
+        if (password1 != password2)
+        {
+            QMessageBox::warning(
+                        this,
+                        tr("Неверный пароль"),
+                        tr("Введенные пароли не совпадают")
+            );
+            continue;
+        }
+        pass = password1;
+        break;
+    }
     QSqlQuery* query = new QSqlQuery(db);
-    query->exec("UPDATE " TABLE2 " SET " TABLE2_PAS " = '" + Crypter::cryptString(password) + "' WHERE " TABLE2_LOG " = '" + Crypter::cryptString(login) + "';");
+    query->exec("UPDATE " TABLE2 " SET " TABLE2_PAS " = '" + Crypter::cryptString(pass) + "' WHERE " TABLE2_LOG " = '" + Crypter::cryptString(log) + "';");
     if (!query->isActive())
         QMessageBox::warning(
                     this,
@@ -122,5 +158,5 @@ void DBWindow::on_actionChangePassword_triggered()
     {
         qDebug() << "hm..." << endl;
     }
-
+    emit newUserAdded();
 }

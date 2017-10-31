@@ -29,7 +29,7 @@ void Dialog::on_linelogin_editingFinished()
             login = item.first;
             password = item.second;
             question = map->find(item).value().first;
-            answer = map->find(item).value().first;
+            answer = map->find(item).value().second;
             break;
         }
     }
