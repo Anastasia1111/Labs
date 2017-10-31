@@ -8,22 +8,28 @@
 
 int main()
 {
-	int sock = socket(AF_INET, SOCK_STREAM, 0);
+	int sock, listener;
 	struct sockaddr_in addr, client;
+	char buf[256];
+	
+	listener = socket(AF_INET, SOCK_STREAM, 0);
+	
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(1337);
-	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	bind(sock, (struct sockaddr *)&addr, sizeof(addr));
-	listen(sock, 1);
-	unsigned int cllen = sizeof(client);
-	int newsock = accept(sock, (struct sockaddr*)&client, &cllen);
-	printf("Newsock: %i\n", newsock);
-	char buf[80] = "";
-	recv(newsock, buf, 20, 0);
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	bind(listener, (struct sockaddr *)&addr, sizeof(addr));
+	
+	listen(listener, 1);
+	
+	sock = accept(listener, NULL, NULL);
+	
+	recv(sock, buf, 256, 0);
 	printf("TCPServer received from Client: %s\n", buf);
-	char mess[255] = "You are connected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-	send(newsock, mess, 20, 0);
-	printf("TCPServer sended: %s\n", mess);
-	close(newsock);
+	
+	char msg[256] = "You are connected!";
+	send(sock, msg, 256, 0);
+	printf("TCPServer sended: %s\n", msg);
+	
+	close(sock);
 	return 0;
 }
