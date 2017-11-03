@@ -3,6 +3,7 @@
 package ru.labs.fnick;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TSP {
     static int T = 0;
@@ -12,7 +13,7 @@ public class TSP {
     private static class Route
     {
         ArrayList<Integer> route;
-        int lentgth = 0;
+        int lentgth;
         
         public Route()
         {
@@ -21,10 +22,11 @@ public class TSP {
         }
     }
 
-    private static void findBestRoute(int[][] c, Route r, ArrayList<Integer> verticesNotInRoute)
+    private static void bfRouteSearcher(int[][] c, Route r, ArrayList<Integer> verticesNotInRoute)
     {
         int firstIndex = r.route.get(0) - 1;
         int lastIndex = r.route.get(r.route.size() - 1) - 1;
+
         if(!verticesNotInRoute.isEmpty())
         {
             for(int i = 0; i<verticesNotInRoute.size(); ++i)
@@ -38,7 +40,7 @@ public class TSP {
                 else
                     newRoute.lentgth = Infinity;
 
-                findBestRoute(c, newRoute, verticesNotInRoute);
+                bfRouteSearcher(c, newRoute, verticesNotInRoute);
                 verticesNotInRoute.add(justRemoved);
             }
         }
@@ -51,66 +53,176 @@ public class TSP {
             if(r.lentgth < bestRoute.lentgth)
                 bestRoute = r;
         }
-
     }
 
     public static void bruteforce(int[][] c)
     {
         T = 0;
         int n = c.length;
+        bestRoute = new Route();
         bestRoute.lentgth = Infinity;
+
         ArrayList<Integer> lst = new ArrayList<Integer>();
         for (int i = 2; i <= n; ++i)
             lst.add(i);
         Route route = new Route();
         route.route.add(1);
-        findBestRoute(c, route, lst);
+
+        bfRouteSearcher(c, route, lst);
+    }
+
+    public static void bnbRouteSearcher(int[][] c, Route r, ArrayList<Integer> verticesNotInRoute, int record)
+    {
+        int n = c.length;
+
+        int firstIndex = r.route.get(0) - 1;
+        int lastIndex = r.route.get(r.route.size() - 1) - 1;
+
+        for(int i = 0; i<verticesNotInRoute.size(); ++i)
+        {
+            Integer justRemoved = (Integer) verticesNotInRoute.remove(0);
+            Route newRoute = new Route();
+            newRoute.route = (ArrayList<Integer>) r.route.clone();
+            newRoute.route.add(justRemoved);
+
+            if (c[lastIndex][justRemoved - 1] != Infinity)
+            {
+                newRoute.lentgth = r.lentgth + c[lastIndex][justRemoved - 1];
+
+                int alpha, beta;
+                int h = newRoute.lentgth;
+
+                int[][] c_new = new int[n][n];
+                for (int j = 0; j < n; ++j)
+                    System.arraycopy(c[j], 0, c_new[j], 0, n);
+                c_new[justRemoved - 1][firstIndex] = Infinity;
+
+                for (Integer j = 0; j < n; ++j)
+                {
+                    boolean out = false;
+                    if (r.route.contains(j + 1))
+                        out = true;
+                    if (!out)
+                    {
+                        alpha = Infinity;
+
+                        for (Integer k = 0; k < n; ++k)
+                        {
+                            boolean in = false;
+                            newRoute.route.remove(0);
+                            if (newRoute.route.contains(k + 1))
+                                in = true;
+                            newRoute.route.add(0, firstIndex + 1);
+
+                            if (!in)
+                                alpha = Math.min(alpha, c_new[j][k]);
+                        }
+
+                        if (alpha != Infinity)
+                            h += alpha;
+                        else
+                        {
+                            h = Infinity;
+                            break;
+                        }
+
+                        for (Integer k = 0; k < n; ++k)
+                            if (c_new[j][k] != Infinity)
+                                c_new[j][k] -= alpha;
+                    }
+                }
+
+                for (Integer k = 0; k < n; ++k)
+                {
+                    boolean in = false;
+                    newRoute.route.remove(0);
+                    if (newRoute.route.contains(k + 1))
+                        in = true;
+                    newRoute.route.add(0, firstIndex + 1);
+                    if (!in)
+                    {
+                        beta = Infinity;
+
+                        for (Integer j = 0; j < n; ++j)
+                        {
+                            boolean out = false;
+                            if (r.route.contains(j + 1))
+                                out = true;
+
+                            if (!out)
+                                beta = Math.min(beta, c_new[j][k]);
+                        }
+
+                        if (beta != Infinity && h != Infinity)
+                            h += beta;
+                        else
+                        {
+                            h = Infinity;
+                            break;
+                        }
+                    }
+                }
+
+                if (h < record)
+                {
+                    if (verticesNotInRoute.size() == 1)
+                    {
+                        Integer lastRemoved = (Integer) verticesNotInRoute.remove(0);
+                        newRoute.route.add(lastRemoved);
+                        newRoute.lentgth = h;
+                        if (h < bestRoute.lentgth)
+                            bestRoute = newRoute;
+                        verticesNotInRoute.add(lastRemoved);
+
+                        T += newRoute.route.size();
+                    } else
+                        bnbRouteSearcher(c, newRoute, verticesNotInRoute, record);
+                } else
+                    T += (newRoute.route.size() - 1);
+            } else
+                T += (newRoute.route.size() - 1);
+
+            verticesNotInRoute.add(justRemoved);
+        }
     }
 
     public static void branchNbound(int[][] c)
     {
         int n = c.length;
-        int[] di = new int[n];
-        int[] dj = new int[n];
-        for (int i = 0; i < n; ++i)
+
+        bestRoute = new Route();
+        bestRoute.route.add(1);
+        Route route = new Route();
+        route.route.add(1);
+
+        ArrayList<Integer> lst = new ArrayList<Integer>();
+        for (int i = 2; i <= n; ++i)
+            lst.add(i);
+        ArrayList<Integer> vertices = (ArrayList<Integer>) lst.clone();
+
+        int lastVertex = 1;
+        while (!lst.isEmpty())
         {
-            di[i] = Infinity;
-            for (int j = 0; j < n; ++j)
-                di[i] = Math.min(di[i], c[i][j]);
-            for (int j = 0; j < n; ++j)
-                c[i][j] -= di[i];
+            Integer min = lst.get(0);
+            for (Integer v : lst)
+                if (c[lastVertex - 1][v - 1] < c[lastVertex - 1][min - 1])
+                    min = v;
+            bestRoute.route.add(min);
+            if (bestRoute.lentgth != Infinity && c[lastVertex - 1][min - 1] != Infinity)
+                bestRoute.lentgth += c[lastVertex - 1][min - 1];
+            else
+                bestRoute.lentgth = Infinity;
+            lastVertex = min;
+            lst.remove(min);
         }
-        for (int j = 0; j < n; ++j)
-        {
-            dj[j] = Infinity;
-            for (int i = 0; i < n; ++i)
-                dj[j] = Math.min(dj[j], c[i][j]);
-            for (int i = 0; i < n; ++i)
-                c[i][j] -= dj[j];
-        }
-        int dSum = 0;
-        for (int i = 0; i < n; ++i)
-            dSum += (di[i] + dj[i]);
-        int newMi, newMj, newM = -1;
-        for (int i = 0; i < n; ++i)
-        {
-            di[i] = Infinity;
-            dj[i] = Infinity;
-            for (int j = 0; j < n; ++j)
-            {
-                if (c[i][j] != 0) di[i] = Math.min(di[i], c[i][j]);
-                if (c[j][i] != 0) dj[j] = Math.min(dj[j], c[j][i]);
-            }
-            for (int j = 0; j < n; ++j)
-            {
-                if (c[i][j] == 0 && (di[i] + dj[j]) > newM)
-                {
-                    newMi = i;
-                    newMj = j;
-                    newM = di[i] + dj[j];
-                }
-            }
-        }
+        if (bestRoute.lentgth != Infinity && c[lastVertex - 1][0] != Infinity)
+            bestRoute.lentgth += c[lastVertex - 1][0];
+        else
+            bestRoute.lentgth = Infinity;
+
+        T = bestRoute.route.size();
+
+        bnbRouteSearcher(c, route, vertices, bestRoute.lentgth);
     }
 
     public static void main(String[] args)
@@ -123,6 +235,9 @@ public class TSP {
                      {b, 6, 1, 4, b, b},
                      {0, 0, b, 3, 7, b}};
         bruteforce(c);
+        System.out.println("Best route: " + bestRoute.route.toString() + " for " + bestRoute.lentgth + "\nT = " + T);
+
+        branchNbound(c);
         System.out.println("Best route: " + bestRoute.route.toString() + " for " + bestRoute.lentgth + "\nT = " + T);
     }
 }
