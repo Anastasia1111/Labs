@@ -17,7 +17,7 @@ void *clientHandler(void *arg);
 
 int main()
 {
-	pthread_t thr[NUM_USER]; 
+	pthread_t thr[NUM_USER];
 	struct sockaddr_in addr;
 	char buf[256];
 	
@@ -59,17 +59,15 @@ void *clientHandler(void *arg) {
 	int i = *((int *)arg);
 	char buf[200];
 	char msg[256];
-	sprintf(msg, "[%d] ", i);
 	while(1) {
 		int ret = recv(sock[i], buf, 200, 0);
+		sprintf(msg, "[%d] ", i);
 		if(ret > 0 && buf[0] != 0) {
 			strcat(msg, buf);
 			printf("%s\n", msg);
-
 			for(int j = 0; j < NUM_USER; ++j)
-				if(sock[j] != -1)
+				if(sock[j] != -1 && i != j)
 					send(sock[j], msg, 256, 0);//Its worked, return 256.
-			sprintf(msg, "[%d] ", i);
 			buf[0] = 0;
 		}
 	}

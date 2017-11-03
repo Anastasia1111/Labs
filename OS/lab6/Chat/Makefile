@@ -6,11 +6,11 @@ all: clean chat
 
 chat: chClient chServer
 
-chServer: TCPsch.c
-	$(CC) -pthread -o TCPsch TCPsch.c
+chServer: server.c
+	$(CC) -pthread -o server server.c
 
-chClient: TCPcch.c
-	$(CC) -pthread -o TCPcch TCPcch.c
+chClient: client.c
+	$(CC) -pthread -o client client.c
 
 clean:
 	rm -rf *.o 
