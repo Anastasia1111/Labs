@@ -6,10 +6,10 @@ all: clean main
 	./main
 
 main: main.o
-	$(CC) main.o -o main
+	$(CC) -pthread main.o -o main
 
 main.o: main.cpp
-	$(CC) $(CFLAGS) main.cpp
+	$(CC) $(CFLAGS) -pthread main.cpp
 
 clean:
 	rm -rf *.o main

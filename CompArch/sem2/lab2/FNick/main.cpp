@@ -5,22 +5,40 @@
 
 using namespace std;
 
-int mult(int* m1i, int* m2j, int n)
+struct thrData
 {
-	int sum = 0;
-	for (int i = 0; i < n; ++i)
-		sum += m1i[i] * m2j[i];
-	return sum;
+	int i;
+	int j;
+	thrData* next;
+};
+
+int** matrix1;
+int** matrix2;
+int** matrix;
+int matrixSize[3];
+
+void* mult(void* arg)
+{
+	thrData* data = (thrData*) arg;
+	while(data != NULL)
+	{
+		int sum = 0;
+		int* m1i = matrix1[data->i];
+		int* m2j = matrix2[data->j];
+		for (int i = 0; i < matrixSize[1]; ++i)
+			sum += m1i[i] * m2j[i];
+		matrix[data->i][data->j] = sum;
+		data = data->next;
+	}
 }
 
 int main()
 {
-	int matrixSize[3];
 	srand(time(NULL));
 	
 	cout << "Line number (matrix 1): ";
 	cin >> matrixSize[0];
-	int** matrix1 = new int*[matrixSize[0]];
+	matrix1 = new int*[matrixSize[0]];
 	cout << "Column number (matrix 1): ";
 	cin >> matrixSize[1];
 	int n = matrixSize[0] * matrixSize[1];
@@ -36,7 +54,7 @@ int main()
 	}
 	
 	cout << "Line number (matrix 2): " << matrixSize[1] << endl;
-	int** matrix2 = new int*[matrixSize[1]];
+	matrix2 = new int*[matrixSize[1]];
 	cout << "Column number (matrix 2): ";
 	cin >> matrixSize[2];
 	n = matrixSize[1] * matrixSize[2];
@@ -64,17 +82,32 @@ int main()
 	cin >> threadNumber;
 	
 	pthread_t* thread = new pthread_t[threadNumber];
+	thrData** index = new thrData*[threadNumber];
+	for(int i = 0; i < threadNumber; ++i)
+		index[i] = NULL;
 	
 	cout << "M1 * M2 =" << endl;
-	int** matrix = new int*[matrixSize[0]];
+	matrix = new int*[matrixSize[0]];
 	for (int i = 0; i < matrixSize[0]; ++i)
 	{
 		matrix[i] = new int[matrixSize[2]];
 		for (int j = 0; j < matrixSize[2]; ++j)
 		{
-			matrix[i][j] = mult(matrix1[i], matrix2[j], matrixSize[1]);
-			cout << matrix[i][j] << "\t";
+			thrData* newIndex = new thrData;
+			newIndex->i = i;
+			newIndex->j = j;
+			newIndex->next = index[(i * matrixSize[2] + j) % threadNumber];
+			index[(i * matrixSize[2] + j) % threadNumber] = newIndex;
 		}
+	}
+	for (int i = 0; i < threadNumber; ++i)
+		pthread_create(&thread[i], NULL, mult, (void*)index[i]);
+	for (int i = 0; i < threadNumber; ++i)
+		pthread_join(thread[i], NULL);
+	for (int i = 0; i < matrixSize[0]; ++i)
+	{
+		for (int j = 0; j < matrixSize[2]; ++j)
+			cout << matrix[i][j] << "\t";
 		cout << endl;
 	}
 	return 0;
