@@ -1,43 +1,53 @@
 odd():-
     writeln('print X:'),
-    read(X),nl,
+    read(X),
     writeln('print Y:'),
-    read(Y),nl,
+    read(Y),
     odd(X,Y).
-odd(X,Y):-
+odd(X, Y):-
     (Y >= X),
     (((Y mod 2) =:= 1) -> write(Y); write(' ')),
     Z is (Y - 1),
     odd(X, Z).
 sum():-
     writeln('print X:'),
-    read(X),nl,
+    read(X),
     writeln('print Y:'),
-    read(Y),nl,
+    read(Y),
     Z is 0,
-    sum(X,Y,Z).
-sum(X,Y,Z):-
+    sum(X, Y, Z).
+sum(X, Y, Z):-
     V is (Z + Y),
     W is (Y - 1),
-    ((W >= X) -> true; write(V), !, fail),
-    sum(X, W, V).
+    ((W >= X) -> sum(X, W, V); write(V), !, fail).
 min():-
     writeln('print X:'),
     read(X),nl,
-    Min = 10,
+    Min is 10,
     min(X, Min).
+min(0, 10):- write('0').
 min(X, M):-
     (X =\= 0 ->
-    Y is (X mod 10),
-    Xnew is (X//10),
+     Y is (X mod 10),
+     Xnew is (X//10),
     (Y < M -> min(Xnew, Y); min(Xnew, M));
-    write(M)).
-min(0,10) :- write('0').
+     write(M)).
 fib():-
     repeat,
     writeln('print X'),
-    read(X),nl,
-    (X < 0 -> fail; write(fib(X))).
-fib(X)=fib((X-1)) + fib((X-2)).
-fib(0)=1:-!.
-fib(1)=1:-!.
+    read(X),
+    fib(X, Y),
+    writeln(Y),
+    fibcheck(X),
+    !.
+fib(X, Y):-
+    (X =:= 0 -> Y is 1;
+    (X =:= 1 -> Y is 1;
+    (X < 0 -> Y = 'end';
+     X1 is X - 1,
+     X2 is X - 2,
+     fib(X1, Y1),
+     fib(X2, Y2),
+     Y is Y1 + Y2))).
+fibcheck(X):-
+    X < 0.
