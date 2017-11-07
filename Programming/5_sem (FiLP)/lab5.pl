@@ -3,12 +3,14 @@ odd():-
     read(X),
     writeln('print Y:'),
     read(Y),
-    odd(X,Y).
+    odd(X,Y),
+    !.
 odd(X, Y):-
-    (Y >= X),
+    (Y >= X ->
     (((Y mod 2) =:= 1) -> write(Y); write(' ')),
     Z is (Y - 1),
-    odd(X, Z).
+    odd(X, Z);
+    true).
 sum():-
     writeln('print X:'),
     read(X),
@@ -19,7 +21,7 @@ sum():-
 sum(X, Y, Z):-
     V is (Z + Y),
     W is (Y - 1),
-    ((W >= X) -> sum(X, W, V); write(V), !, fail).
+    ((W >= X) -> sum(X, W, V); write(V), !, true).
 min():-
     writeln('print X:'),
     read(X),nl,
