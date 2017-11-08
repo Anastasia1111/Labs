@@ -28,7 +28,7 @@
        <widget class="QTextEdit" name="textEdit"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="Label2">
         <property name="text">
          <string>TextLabel</string>
         </property>

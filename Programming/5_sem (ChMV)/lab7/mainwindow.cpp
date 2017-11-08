@@ -10,8 +10,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->progressBar->setMinimum(0);
     ui->progressBar->setMaximum(100);
     ui->progressBar->hide();
+    ui->Label2->hide();
 
-    tmpFile = new QTemporaryFile();
+    tmpFile = NULL;
 
     time = new QTimer(this);
     time->setInterval(1000 * 60 * 3);
@@ -23,6 +24,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    if (tmpFile != NULL)
+    {
+        QFile file(fileName);
+        if(file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QTextStream in(&file);
+            QTextStream out(tmpFile);
+            QString tmp = out.readAll();
+            qDebug() << tmp;
+            in << tmp;
+            file.close();
+        }
+
+        tmpFile->remove();
+    }
     delete ui;
 }
 
@@ -31,12 +47,11 @@ void MainWindow::on_save_clicked()
     QFile file(ui->Label1->text());
     if(file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << "AAAAAA";
         QTextStream textStream(&file);
         textStream << ui->textEdit->toPlainText();
         file.close();
+        temporaryFileSave();
     } else {
-        qDebug() << "MAMA";
         fileName = QFileDialog::getSaveFileName(0,
                                                 QObject::tr("Save File..."),
                                                 QDir::currentPath(),
@@ -49,6 +64,12 @@ void MainWindow::on_save_clicked()
             textStream << ui->textEdit->toPlainText();
             file.close();
             ui->Label1->setText(fileName);
+            if (tmpFile != NULL)
+            {
+                tmpFile->close();
+                tmpFile = NULL;
+            }
+            temporaryFileSave();
         }
     }
 }
@@ -67,23 +88,47 @@ void MainWindow::on_save_as_clicked()
         textStream << ui->textEdit->toPlainText();
         file.close();
         ui->Label1->setText(fileName);
+        if (tmpFile != NULL)
+        {
+            tmpFile->close();
+            tmpFile = NULL;
+        }
+        temporaryFileSave();
     }
 }
 
 void MainWindow::temporaryFileSave()
 {
-    qDebug() << "Autosave";
-    if (!fileName.isEmpty())
+    qDebug() << "Save";
+    ui->progressBar->show();
+    ui->Label2->show();
+    for (int i = 0; i < 500000; ++i)
     {
-        ui->progressBar->show();
-        for (int i = 0; i < 100; ++i)
-            ui->progressBar->setValue(i);
+        ui->progressBar->setValue(i/5000);
+        ui->Label2->setText("Cохранение...");
+    }
 
-        tmpFile->open();
+    if (fileName.isEmpty())
+    {
+        if (tmpFile == NULL)
+            tmpFile = new QTemporaryFile();
+
+        tmpFile->close();
+        ((QTemporaryFile*)tmpFile)->open();
         QTextStream textStream(tmpFile);
         textStream << ui->textEdit->toPlainText();
-        tmpFile->close();
+    } else {
+        if (tmpFile == NULL)
+            tmpFile = new QFile(fileName + "~");
 
-        ui->progressBar->hide();
+        tmpFile->close();
+        tmpFile->open(QIODevice::ReadWrite | QIODevice::Text);
+        QTextStream textStream(tmpFile);
+        textStream << ui->textEdit->toPlainText();
     }
+
+    ui->progressBar->hide();
+    ui->Label2->hide();
+
+    time->start();
 }

@@ -30,7 +30,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QTemporaryFile *tmpFile;
+    QFile *tmpFile;
     QTimer *time;
     QString fileName;
 };
