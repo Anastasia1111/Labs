@@ -3,14 +3,12 @@ odd():-
     read(X),
     writeln('print Y:'),
     read(Y),
-    odd(X,Y),
-    !.
+    odd(X,Y).
 odd(X, Y):-
     (Y >= X ->
     (((Y mod 2) =:= 1) -> write(Y); write(' ')),
     Z is (Y - 1),
-    odd(X, Z);
-    true).
+    odd(X, Z); true).
 sum():-
     writeln('print X:'),
     read(X),
@@ -40,7 +38,7 @@ fib():-
     read(X),
     fib(X, Y),
     writeln(Y),
-    fibcheck(X),
+    X < 0,
     !.
 fib(X, Y):-
     (X =:= 0 -> Y is 1;
@@ -51,5 +49,3 @@ fib(X, Y):-
      fib(X1, Y1),
      fib(X2, Y2),
      Y is Y1 + Y2))).
-fibcheck(X):-
-    X < 0.
