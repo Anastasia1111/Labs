@@ -8,6 +8,8 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QTimer>
+#include <QMessageBox>
+#include "domparser.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,11 +30,21 @@ private slots:
 
     void temporaryFileSave();
 
+    void on_open_clicked();
+
+    void on_textEdit_textChanged();
+
+    void on_clear_clicked();
+
+    void on_exit_clicked();
+
+    void on_update_clicked();
+
 private:
     Ui::MainWindow *ui;
-    QFile *tmpFile;
     QTimer *time;
     QString fileName;
+    QString tmpFileName;
 };
 
 #endif // MAINWINDOW_H

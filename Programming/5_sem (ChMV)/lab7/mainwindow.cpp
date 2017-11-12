@@ -12,88 +12,89 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->progressBar->hide();
     ui->Label2->hide();
 
-    tmpFile = NULL;
+    QStringList labels;
+    labels << QObject::tr("Terms") << QObject::tr("Pages");
+    ui->treeWidget->setHeaderLabels(labels);
 
     time = new QTimer(this);
-    time->setInterval(1000 * 60 * 3);
+    time->setInterval(1000 /* * 60 */ * 3);
     time->start();
     connect(time, SIGNAL(timeout()), this, SLOT(temporaryFileSave()));
 
     fileName = "";
+    tmpFileName = "";
 }
 
 MainWindow::~MainWindow()
 {
-    if (tmpFile != NULL)
+    if (!tmpFileName.isEmpty())
     {
-        QFile file(fileName);
-        if(file.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            QTextStream in(&file);
-            QTextStream out(tmpFile);
-            QString tmp = out.readAll();
-            qDebug() << tmp;
-            in << tmp;
-            file.close();
-        }
-
-        tmpFile->remove();
+        QFile tmpFile(tmpFileName);
+        tmpFile.remove();
     }
     delete ui;
 }
 
 void MainWindow::on_save_clicked()
 {
-    QFile file(ui->Label1->text());
+    QFile file(fileName);
     if(file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream textStream(&file);
         textStream << ui->textEdit->toPlainText();
         file.close();
         temporaryFileSave();
+
+        ui->update->setEnabled(true);
     } else {
-        fileName = QFileDialog::getSaveFileName(0,
-                                                QObject::tr("Save File..."),
-                                                QDir::currentPath(),
-                                                QObject::tr("XML Files(*.xml);;All Files (*.*)"));
-        if(!fileName.isEmpty())
+        QString lFileName = QFileDialog::getSaveFileName(0,
+                                                        QObject::tr("Save File..."),
+                                                        QDir::currentPath(),
+                                                        QObject::tr("XML Files(*.xml);;All Files (*.*)"));
+        if(!lFileName.isEmpty())
         {
-            file.setFileName(fileName);
+            file.setFileName(lFileName);
             file.open(QIODevice::WriteOnly | QIODevice::Text);
             QTextStream textStream(&file);
             textStream << ui->textEdit->toPlainText();
             file.close();
+            fileName = lFileName;
             ui->Label1->setText(fileName);
-            if (tmpFile != NULL)
+            if (!tmpFileName.isEmpty())
             {
-                tmpFile->close();
-                tmpFile = NULL;
+                QFile tmpFile(tmpFileName);
+                tmpFile.remove();
             }
             temporaryFileSave();
+
+            ui->update->setEnabled(true);
         }
     }
 }
 
 void MainWindow::on_save_as_clicked()
 {
-    fileName = QFileDialog::getSaveFileName(0,
-                                            QObject::tr("Save File..."),
-                                            QDir::currentPath(),
-                                            QObject::tr("XML Files(*.xml);;All Files (*.*)"));
-    if(!fileName.isEmpty())
+    QString lFileName = QFileDialog::getSaveFileName(0,
+                                                    QObject::tr("Save File..."),
+                                                    QDir::currentPath(),
+                                                    QObject::tr("XML Files(*.xml);;All Files (*.*)"));
+    if(!lFileName.isEmpty())
     {
-        QFile file(fileName);
+        QFile file(lFileName);
         file.open(QIODevice::WriteOnly | QIODevice::Text);
         QTextStream textStream(&file);
         textStream << ui->textEdit->toPlainText();
         file.close();
+        fileName = lFileName;
         ui->Label1->setText(fileName);
-        if (tmpFile != NULL)
+        if (!tmpFileName.isEmpty())
         {
-            tmpFile->close();
-            tmpFile = NULL;
+            QFile tmpFile(tmpFileName);
+            tmpFile.remove();
         }
         temporaryFileSave();
+
+        ui->update->setEnabled(true);
     }
 }
 
@@ -102,33 +103,96 @@ void MainWindow::temporaryFileSave()
     qDebug() << "Save";
     ui->progressBar->show();
     ui->Label2->show();
-    for (int i = 0; i < 500000; ++i)
+
+    int speed_index = 5000;
+
+    for (int i = 0; i < 100 * speed_index; ++i)
     {
-        ui->progressBar->setValue(i/5000);
+        ui->progressBar->setValue(i/speed_index);
         ui->Label2->setText("Cохранение...");
     }
 
+    QFile* tmpFile;
+
     if (fileName.isEmpty())
-    {
-        if (tmpFile == NULL)
-            tmpFile = new QTemporaryFile();
+        tmpFileName = QDir::tempPath() + "/" + qApp->applicationName() + "~";
+    else
+        tmpFileName = fileName + "~";
 
-        tmpFile->close();
-        ((QTemporaryFile*)tmpFile)->open();
-        QTextStream textStream(tmpFile);
-        textStream << ui->textEdit->toPlainText();
-    } else {
-        if (tmpFile == NULL)
-            tmpFile = new QFile(fileName + "~");
-
-        tmpFile->close();
-        tmpFile->open(QIODevice::ReadWrite | QIODevice::Text);
-        QTextStream textStream(tmpFile);
-        textStream << ui->textEdit->toPlainText();
-    }
+    tmpFile = new QFile(tmpFileName);
+    tmpFile->open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream textStream(tmpFile);
+    textStream << ui->textEdit->toPlainText();
+    tmpFile->close();
 
     ui->progressBar->hide();
     ui->Label2->hide();
 
     time->start();
+}
+
+void MainWindow::on_open_clicked()
+{
+    QString lFileName = QFileDialog::getOpenFileName(0,
+                                                    QObject::tr("Open File..."),
+                                                    QDir::currentPath(),
+                                                    QObject::tr("XML Files(*.xml);;All Files (*.*)"));
+    if(!lFileName.isEmpty())
+    {
+        QFile file(lFileName);
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream out(&file);
+        ui->textEdit->setText(out.readAll());
+        file.close();
+        fileName = lFileName;
+        ui->Label1->setText(fileName);
+        if (!tmpFileName.isEmpty())
+        {
+            QFile tmpFile(tmpFileName);
+            tmpFile.remove();
+        }
+        temporaryFileSave();
+
+        ui->update->setEnabled(true);
+    }
+
+    ui->update->setEnabled(true);
+}
+
+void MainWindow::on_textEdit_textChanged()
+{
+    ui->update->setEnabled(false);
+}
+
+void MainWindow::on_clear_clicked()
+{
+    ui->textEdit->clear();
+}
+
+void MainWindow::on_exit_clicked()
+{
+    QMessageBox question(QMessageBox::Question, "Save file?", "Do you want to save file before exit?",
+                             QMessageBox::Ok, this);
+    question.addButton(QMessageBox::No);
+    question.addButton(QMessageBox::Cancel);
+    question.exec();
+    if (question.clickedButton() == question.button(QMessageBox::Ok)){
+        on_save_clicked();
+    } else {
+        if (question.clickedButton() == question.button(QMessageBox::Cancel)){
+            return;
+        }
+    }
+    this->close();
+}
+
+void MainWindow::on_update_clicked()
+{
+    QTreeWidget* treeWidget = ui->treeWidget;
+    QFile file(fileName);
+    if (ui->dom->isChecked())
+        DomParser(&file, treeWidget);
+    if (ui->sax->isChecked());
+    treeWidget->resizeColumnToContents(0);
+    treeWidget->resizeColumnToContents(1);
 }

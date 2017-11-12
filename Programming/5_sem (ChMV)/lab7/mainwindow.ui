@@ -105,13 +105,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QTreeWidget" name="treeWidget">
-        <column>
-         <property name="text">
-          <string notr="true">1</string>
-         </property>
-        </column>
-       </widget>
+       <widget class="QTreeWidget" name="treeWidget"/>
       </item>
       <item>
        <widget class="QProgressBar" name="progressBar_2">
@@ -123,14 +117,14 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QCheckBox" name="checkBox">
+         <widget class="QCheckBox" name="dom">
           <property name="text">
            <string>DOM</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_2">
+         <widget class="QCheckBox" name="sax">
           <property name="text">
            <string>SAX</string>
           </property>
@@ -150,7 +144,13 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_6">
+         <widget class="QPushButton" name="update">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Сохраните данные и обновите струкутру&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Обновить</string>
           </property>
