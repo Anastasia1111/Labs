@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    domparser.cpp
+    domparser.cpp \
+    saxparser.cpp
 
 HEADERS  += mainwindow.h \
-    domparser.h
+    domparser.h \
+    saxparser.h
 
 FORMS    += mainwindow.ui

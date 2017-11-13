@@ -10,6 +10,7 @@
 #include <QTimer>
 #include <QMessageBox>
 #include "domparser.h"
+#include "saxparser.h"
 
 namespace Ui {
 class MainWindow;

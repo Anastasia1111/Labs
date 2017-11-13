@@ -190,9 +190,22 @@ void MainWindow::on_update_clicked()
 {
     QTreeWidget* treeWidget = ui->treeWidget;
     QFile file(fileName);
+
+//    ui->progressBar_2->show();
+//    int speed_index = 5000;
+//    for (int i = 0; i < 50 * speed_index; ++i)
+//        ui->progressBar_2->setValue(i/speed_index);
+
     if (ui->dom->isChecked())
         DomParser(&file, treeWidget);
-    if (ui->sax->isChecked());
+    if (ui->sax->isChecked())
+        SaxParser(&file, treeWidget);
+
+//    for (int i = 50*speed_index; i < 100 * speed_index; ++i)
+//        ui->progressBar_2->setValue(i/speed_index);
+
     treeWidget->resizeColumnToContents(0);
     treeWidget->resizeColumnToContents(1);
+
+//    ui->progressBar_2->hide();
 }
