@@ -1,17 +1,90 @@
-<?xml version="1.0"?>
-<bookindex>
-	<entry term = "sidebearings">
-		<page>10</page>
-		<page>34-35</page>
-		<page>307-308</page>
-	</entry>
-	<entry term = "substraction">
-		<entry term = "of pictures">
-			<page>115</page>
-			<page>244</page>
-		</entry>
-		<entry term = "of vectors">
-			<page>9</page>
-		</entry>
-	</entry>
-</bookindex>
+<?xml version="1.0" encoding="Windows-1251"?>
+<breakfast_menu>
+ <food name =
+ "Бельгийские Вафли"
+ >
+  <attr name = "Цена">
+   <value>$6.05</value>
+  </attr>
+  <attr name = "Описание">
+   <value>
+   две известных Бельгийских Вафли
+   с обилием настоящего кленового
+   сиропа
+   </value>
+  </attr>
+  <attr name = "Калории">
+   <value>650</value>
+  </attr>
+ </food>
+ <food name =
+ "Бельгийские Вафли 
+ с Земляникой"
+ >
+  <attr name = "Цена">
+   <value>$7.95</value>
+  </attr>
+  <attr name = "Описание">
+   <value>
+   легкие Бельгийские вафли с
+   земляникой, покрытые взбитыми
+   сливками
+   </value>
+  </attr>
+  <attr name = "Калории">
+   <value>900</value>
+  </attr>
+ </food>
+ <food name =
+ "Бельгийские Вафли 
+ с Ягодами"
+ >
+  <attr name = "Цена">
+   <value>$8.95</value>
+  </attr>
+  <attr name = "Описание">
+   <value>
+   легкие Бельгийские вафли с
+   различными свежими ягодами,
+   покрытые взбитыми сливками
+   </value>
+  </attr>
+  <attr name = "Калории">
+   <value>900</value>
+  </attr>
+ </food>
+ <food name =
+ "Французский Тост"
+ >
+  <attr name = "Цена">
+   <value>$4.50</value>
+  </attr>
+  <attr name = "Описание">
+   <value>
+   толстые куски, сделанные из
+   кусочков домашнего хлеба из
+   опары
+   </value>
+  </attr>
+  <attr name = "Калории">
+   <value>600</value>
+  </attr>
+ </food>
+ <food name =
+ "Домашний Завтрак"
+ >
+  <attr name = "Цена">
+   <value>$6.95</value>
+  </attr>
+  <attr name = "Описание">
+   <value>
+   пара яиц, бекон или колбаса,
+   тост, и наши всегда популярные
+   картофельные оладьи
+   </value>
+  </attr>
+  <attr name = "Калории">
+   <value>950</value>
+  </attr>
+ </food>
+</breakfast_menu>

@@ -1,7 +1,8 @@
 #include "domparser.h"
 
-DomParser::DomParser(QIODevice *device, QTreeWidget *tree) :
-    treeWidget(tree)
+DomParser::DomParser(QIODevice *device, QTreeWidget *tree, QProgressBar *bar) :
+    treeWidget(tree),
+    progress(bar)
 {
     QString errorStr;
     int errorLine;
@@ -17,12 +18,22 @@ DomParser::DomParser(QIODevice *device, QTreeWidget *tree) :
                              );
         return;
     }
+
+    nodeCount = 1;
+    nodeCount += doc.elementsByTagName("value").count();
+    nodeCount += doc.elementsByTagName("attr").count();
+    nodeCount += doc.elementsByTagName("food").count();
+    progress->setMinimum(1);
+    progress->setMaximum(nodeCount);
+    progress->setValue(1);
+    progress->show();
+
     QDomElement root = doc.documentElement();
-    if (root.tagName() != "bookindex")
+    if (root.tagName() != "breakfast_menu")
         return;
     QDomNode node = root.firstChild();
     while (!node.isNull()) {
-        if (node.toElement().tagName() == "entry")
+        if (node.toElement().tagName() == "food")
             parseEntry(node.toElement(), 0);
         node = node.nextSibling();
     }
@@ -36,12 +47,12 @@ void DomParser::parseEntry(const QDomElement &element, QTreeWidgetItem *parent)
     } else {
         item = new QTreeWidgetItem(treeWidget);
     }
-    item->setText(0, element.attribute("term"));
+    item->setText(0, element.attribute("name"));
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
-        if (node.toElement().tagName() == "entry") {
+        if (node.toElement().tagName() == "food" || node.toElement().tagName() == "attr") {
             parseEntry(node.toElement(), item);
-        } else if (node.toElement().tagName() == "page") {
+        } else if (node.toElement().tagName() == "value") {
             QDomNode childNode = node.firstChild();
             while (!childNode.isNull()) {
                 if (childNode.nodeType() == QDomNode::TextNode) {
@@ -56,6 +67,7 @@ void DomParser::parseEntry(const QDomElement &element, QTreeWidgetItem *parent)
                 childNode = childNode.nextSibling();
             }
         }
+        progress->setValue(progress->value() + 1);
         node = node.nextSibling();
     }
 }

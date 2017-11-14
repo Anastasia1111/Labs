@@ -16,11 +16,11 @@ bool SaxParser::startElement(const QString &namespaceURI,
                              const QString &qName,
                              const QXmlAttributes &atts)
 {
-    if (qName == "entry") {
+    if (qName == "food" || qName == "attr") {
         currentItem = new QTreeWidgetItem(currentItem ?
                                               currentItem : treeWidget->invisibleRootItem());
-        currentItem->setText(0, atts.value("term"));
-    } else if (qName == "page") {
+        currentItem->setText(0, atts.value("name"));
+    } else if (qName == "value") {
         currentText.clear();
     }
     return true;
@@ -36,9 +36,9 @@ bool SaxParser::endElement(const QString &namespaceURI,
                            const QString &localName,
                            const QString &qName)
 {
-    if(qName == "entry") {
+    if(qName == "food" || qName == "attr") {
         currentItem = currentItem->parent();
-    } else if (qName == "page") {
+    } else if (qName == "value") {
         if(currentItem) {
             QString allPages = currentItem->text(1);
             if(!allPages.isEmpty())
