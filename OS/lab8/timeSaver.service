@@ -1,0 +1,9 @@
+[Unit]
+Description=timeSaver
+
+[Service]
+Type=simple
+ExecStart=/home/fnick/time
+
+[Install]
+WantedBy=multi-user.target
