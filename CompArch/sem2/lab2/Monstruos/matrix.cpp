@@ -7,12 +7,12 @@
 
 using namespace std;
 
-void multiplication(int **A, int **B, int **R, int size, int start_thr = 0,int num_of_threads = 1);
+void multiplication(float **A, float **B, float **R, int size, int start_thr = 0,int num_of_threads = 1);
 
 typedef struct{
-	int **A;
-	int **B;
-	int **R;
+	float **A;
+	float **B;
+	float **R;
 	int size;
 	int start_thr;
 	int num_of_threads;
@@ -27,101 +27,134 @@ static void* thread_func( void* vptr_args )
 
 
 
-int main() {
+int main(int argc, char *argv[]) {
+
 	srand(time(NULL));
 	int i, j;
 	int n;
 	int thread_num;
-	cout << "size and number of threads:" << endl;
-	FILE *out = fopen("./result.txt", "w+");
-	cin >> n >> thread_num;
-	int **A = new int *[n];
-	int **B = new int *[n];
-	int **res = new int *[n];
+	char str[256];
+
+	n = atoi(argv[1]);
+	thread_num = atoi(argv[2]);
+
+	sprintf(str, "./results.tsv");
+	printf("Open savefile...");
+	FILE *out = fopen(str, "a");
+	if(out == NULL) {
+		printf("Error.\n");
+		return 1;
+	}
+	fprintf(out, "%d\t%d\t", n, thread_num);
+	printf("Complete.\n");
+
+	printf("Memory allocation...");
+	float **A = new float *[n];
+	float **B = new float *[n];
+	float **res = new float *[n];
 	for(i = 0; i < n; ++i) {
-		A[i] = new int [n];
-		B[i] = new int [n];
-		res[i] = new int [n];
-		
-	}
-	
-	/*for(i = 0; i < n; ++i) {
-		cout.width(6);
-		for(j = 0; j < n; ++j)
-			cout << A[i][j] << " |";
-		cout << endl;
-	}
-	cout << endl << endl;
-	
-	for(i = 0; i < n; ++i) {
-		cout.width(6);
-		for(j = 0; j < n; ++j)
-			cout << B[i][j] << " |";
-		cout << endl;
-	}
-	cout << endl << endl;*/
-	for(int w = 0; w < 100; w++) {
-		int start = clock();
-		params p;
-		p.A = A;
-		p.B = B;
-		p.R = res;
-		p.size = n;
-		p.num_of_threads = thread_num;
-		p.start_thr = 0;
-		params *pth = new params[thread_num];
-		for(i = 0; i < thread_num; ++i) {
-			pth[i] = p;
-			pth[i].start_thr = i;
+		A[i] = new float [n];
+		B[i] = new float [n];
+		res[i] = new float [n];
+		if(A[i] == NULL) {
+			printf("Error(A, %d str).\n", i);
+			return 1;
 		}
+		if(B[i] == NULL) {
+			printf("Error(B, %d str).\n", i);
+			return 1;
+		}
+		if(res[i] == NULL) {
+			printf("Error(Res, %d str).\n", i);
+			return 1;
+		}
+	}
+	printf("Complete.\n");
+	printf("Starting...\n");
 		
-		pthread_t *thread = new pthread_t[thread_num];
-		
-		for(i = 0; i < n; ++i) {
-			for(j = 0; j < n; ++j) {
-				A[i][j] = (rand() % (2*n)) + n;
-				B[i][j] = (rand() % (2*n)) + n;
-				res[i][j] = 0;
+	params p;
+	p.A = A;
+	p.B = B;
+	p.R = res;
+	p.size = n;
+	p.num_of_threads = thread_num;
+	p.start_thr = 0;
+	printf("Making thread parameters...");
+	params *pth = new params[thread_num];
+	if(pth == NULL) {
+		printf("Error.\n");
+		return 1;
+	}
+	for(i = 0; i < thread_num; ++i) {
+		pth[i] = p;
+		pth[i].start_thr = i;
+	}
+	printf("Complete.\n");
+	
+	printf("Making thread descriptions...");
+	pthread_t *thread = new pthread_t[thread_num];
+	if(thread == NULL) {
+		printf("Error.\n");
+		return 1;
+	}
+	printf("Complete.\n");
+	printf("Matrixes determination...");
+	for(i = 0; i < n; ++i) {
+		for(j = 0; j < n; ++j) {
+			A[i][j] = ((float)((rand() % (2*n)) + n))/((rand() % n) + 1);
+			B[i][j] = ((float)((rand() % (2*n)) + n))/((rand() % n) + 1);
+			res[i][j] = 0;
+		}
+	}
+	printf("Complete.\n");
+
+	clock_t start, time;
+	double t;
+	for(int w = 0; w < 5; w++) {
+		start = clock();
+		printf("Thread creating...\n");
+		for(i = 0; i < thread_num; ++i) {
+			if ( pthread_create( thread+i, NULL, thread_func, (void *)(pth+i) ) ) {
+				printf("Error(thread #%d).\n", i);
+				return EXIT_FAILURE;
 			}
 		}
-
-		for(i = 0; i < thread_num; ++i) {
-			if ( pthread_create( thread+i, NULL, thread_func, (void *)(pth+i) ) )
-				return EXIT_FAILURE;
-		}
-		
+		printf("Complete thread creating.\n");
 		for(i = 0; i < thread_num; ++i)
-			if ( pthread_join( thread[i], NULL ) )
+			if ( pthread_join( thread[i], NULL ) ) {
+				printf("Error(Failed to join thread #%d)\n", i);
 				return EXIT_FAILURE;
-		
-		/*for(i = 0; i < n; ++i) {
-			cout.width(6);
-			for(j = 0; j < n; ++j)
-				cout << res[i][j] << " |";
-			cout << endl;
-		}*/
-		
-		int finish = clock();
-		fprintf(out, "%f ", (float)(finish - start)/CLOCKS_PER_SEC);
+			}
+		time = clock() - start;
+		t = ((double)time)/CLOCKS_PER_SEC;
+		printf("Complete caluclating.\n");
+		fprintf(out, "%f\t", t);
+		printf("Complete %d%%...\n", (w+1)*20);
 	}
+
+	printf("Writing results into file...");
+	fprintf(out, "\n");
+	printf("Time of last trying: %f\n", t);
 	for(i = 0; i < n; ++i) {
 		delete A[i];
 		delete B[i];
 	}
 	delete A;
 	delete B;
+	fclose(out);
 	return 0;
 }
 
-void multiplication(int **A, int **B, int **R, int size, int start_thr,int num_of_threads) {
+void multiplication(float **A, float **B, float **R, int size, int start_thr,int num_of_threads) {
 	int a, b, i;
-	if(start_thr < size)
-		for(a = start_thr; a < size; a += num_of_threads) {
-			for(b = 0; b < size; ++b) {
-				for(i = 0; i < size; ++i) {
-					R[a][b] += A[a][i] * B[i][b];
-				}
+	printf("Thread #%d is calculating.\n", start_thr);
+	for(a = start_thr; a < size; a += num_of_threads) {
+		for(b = 0; b < size; ++b) {
+			for(i = 0; i < size; ++i) {
+				R[a][i] += A[a][b] * B[b][i];
 			}
 		}
+	}
+	printf("Thread #%d complete calculating.\n", start_thr);
 	return;
 }
