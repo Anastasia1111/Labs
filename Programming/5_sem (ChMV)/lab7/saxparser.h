@@ -4,11 +4,13 @@
 #include <QTreeWidget>
 #include <QMessageBox>
 #include <QXmlSimpleReader>
+#include <QProgressBar>
+#include <QDebug>
 
 class SaxParser : public QXmlDefaultHandler
 {
 public:
-    SaxParser(QIODevice *device, QTreeWidget* tree);
+    SaxParser(QIODevice *device, QTreeWidget* tree, QProgressBar *bar);
 protected:
     bool startElement(const QString &namespaceURI,
                       const QString &localName,
@@ -20,6 +22,8 @@ protected:
     bool characters(const QString &ch);
     bool fatalError(const QXmlParseException &exception);
 private:
+    int nodeCount;
+    QProgressBar *progress;
     QTreeWidget *treeWidget;
     QTreeWidgetItem *currentItem;
     QXmlInputSource *inputSource;

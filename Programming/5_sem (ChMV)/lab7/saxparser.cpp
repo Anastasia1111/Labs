@@ -1,14 +1,24 @@
 #include "saxparser.h"
 
-SaxParser::SaxParser(QIODevice *device, QTreeWidget* tree)
+SaxParser::SaxParser(QIODevice *device, QTreeWidget* tree, QProgressBar *bar)
 {
+    progress = bar;
     treeWidget = tree;
     inputSource = new QXmlInputSource(device);
     currentItem = NULL;
     QXmlSimpleReader reader;
+
+    progress->setMinimum(1);
+    progress->setMaximum(100);
+    progress->setValue(1);
+    progress->show();
+    for(int i = 2; i < 50; ++i)
+        progress->setValue(i);
     reader.setContentHandler(this);
     reader.setErrorHandler(this);
     reader.parse(inputSource);
+    for(int i = 50; i < 101; ++i)
+        progress->setValue(i);
 }
 
 bool SaxParser::startElement(const QString &namespaceURI,

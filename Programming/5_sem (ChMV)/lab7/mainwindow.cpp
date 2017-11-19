@@ -191,10 +191,10 @@ void MainWindow::on_update_clicked()
     QProgressBar* bar = ui->progressBar_2;
     QFile file(fileName);
 
-    if (ui->dom->isChecked())
+    if (ui->dom->isChecked() && !fileName.isEmpty())
         DomParser(&file, treeWidget, bar);
-    if (ui->sax->isChecked())
-        SaxParser(&file, treeWidget);
+    if (ui->sax->isChecked() && !fileName.isEmpty())
+        SaxParser(&file, treeWidget, bar);
 
     treeWidget->resizeColumnToContents(0);
     treeWidget->resizeColumnToContents(1);

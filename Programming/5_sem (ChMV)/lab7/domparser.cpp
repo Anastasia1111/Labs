@@ -35,6 +35,7 @@ DomParser::DomParser(QIODevice *device, QTreeWidget *tree, QProgressBar *bar) :
     while (!node.isNull()) {
         if (node.toElement().tagName() == "food")
             parseEntry(node.toElement(), 0);
+        progress->setValue(progress->value() + 1);
         node = node.nextSibling();
     }
 }
