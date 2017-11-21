@@ -57,20 +57,28 @@ freq():-
     write("Enter the list"), nl,
     read(X),
     msort(X, Y),
-    freq(Y).
+    freq(Y, Z),
+    write(Z).
 
-freq([]):- write([]).
-freq([H|T]):-
-    freq(T, H, 1, [H], 1).
+freq([], []).
+freq([H|T], Res):-
+    freq([H|T], _, Res, _).
 
-freq([], _, _, A, _):- write(A).
-freq([H|T], Prev, Count, A, Max):-
-    Count1 is Count+1,
-    (H =:= Prev)->
-          ((Count1 > Max)->
-          freq(T, H, Count1, [H], Count1);
-          (Count1 =:= Max)->
-              append(A, [H], A1),
-              freq(T, H, Count1, A1, Max);
-              freq(T, H, Count1, A, Max));
-    freq(T, H, 1, A, Max).
+freq([], 0, [], 0).
+freq([H], 1, [H], 1).
+freq([H, H1|T], Count, Res, Max):-
+    freq([H1|T], Count1, Res1, Max1),
+    Count2 is Count1 + 1,
+    ((H =:= H1)->
+         (Count = Count2,
+         ((Count2 > Max1)->
+          Max = Count2,
+          Res = [H];
+          (Max = Max1,
+          ((Count2 =:= Max1)->
+              append([H], Res1, Res);
+          Res = Res1
+          ))));
+    Count = 1,
+    Max = Max1,
+    Res = Res1).
