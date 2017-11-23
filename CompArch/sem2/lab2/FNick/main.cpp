@@ -1,133 +1,108 @@
-#include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 #include <cstdio>
 #include <pthread.h>
 
-using namespace std;
-
-struct thrData
+struct t_data
 {
-	int i;
-	int j;
-	thrData* next;
+	int first;
+	int last;
 };
 
-int** matrix1;
-int** matrix2;
-int** matrix;
-int matrixSize[3];
+int* M1;
+int* M2;
+int* Res;
+int Size;
+int ThrNum;
 
 void* mult(void* arg)
 {
-	thrData* data = (thrData*) arg;
-	while(data != NULL)
+	t_data d = *((t_data*) arg);
+	printf("from %d to %d\n", d.first, d.last);
+	
+	/*while(data != NULL)
 	{
+		int di = data->num / Size;
+		int dj = data->num % Size;
 		int sum = 0;
-		int* m1i = matrix1[data->i];
-		int* m2j = matrix2[data->j];
-		for (int i = 0; i < matrixSize[1]; ++i)
+		int* m1i = M1[di];
+		int* m2j = M2[dj];
+		for (int i = 0; i < Size; ++i)
 			sum += m1i[i] * m2j[i];
-		matrix[data->i][data->j] = sum;
+		Res[di][dj] = sum;
 		data = data->next;
-	}
+	}*/
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+	Size = atoi(argv[1]);
+	ThrNum = atoi(argv[2]);
+	
 	srand(time(NULL));
 	
-	FILE* out = fopen("./res.tsv", "w+");
+	FILE* out = fopen("./res.tsv", "a");
 	
-	cout << "Line number (matrix 1): ";
-	cin >> matrixSize[0];
-	matrix1 = new int*[matrixSize[0]];
-	cout << "Column number (matrix 1): ";
-	cin >> matrixSize[1];
-	int n = matrixSize[0] * matrixSize[1];
-	for (int i = 0; i < matrixSize[0]; ++i)
-	{
-		matrix1[i] = new int[matrixSize[1]];
-		for (int j = 0; j < matrixSize[1]; ++j)
+	int size = Size * Size;
+	
+	M1 = new int[size];
+	M2 = new int[size];
+	Res = new int[size];
+	for (int i = 0; i < Size; ++i)
+		for (int j = 0; j < Size; ++j)
 		{
-			matrix1[i][j] = rand() % (3 * n);
-			//cout << matrix1[i][j] << "\t";
+			M1[i * Size + j] = rand() % (3 * size);
+			M2[i * Size + j] = rand() % (3 * size);
 		}
-		//cout << endl;
+		
+	printf("First matrix:\n");
+	for (int i = 0; i < Size; ++i)
+	{
+		for (int j = 0; j < Size; ++j)
+			printf("%d ", M1[i * Size + j]);
+		printf("\n");
 	}
 	
-	cout << "Line number (matrix 2): " << matrixSize[1] << endl;
-	matrix2 = new int*[matrixSize[1]];
-	cout << "Column number (matrix 2): ";
-	cin >> matrixSize[2];
-	n = matrixSize[1] * matrixSize[2];
-	for (int i = 0; i < matrixSize[1]; ++i)
+	printf("Second matrix:\n");
+	for (int i = 0; i < Size; ++i)
 	{
-		matrix2[i] = new int[matrixSize[2]];
-		for (int j = 0; j < matrixSize[2]; ++j)
-		{
-			matrix2[i][j] = rand() % (3 * n);
-			//cout << matrix2[i][j] << "\t";
-		}
-		//cout << endl;
+		for (int j = 0; j < Size; ++j)
+			printf("%d ", M2[i * Size + j]);
+		printf("\n");
 	}
-	int** tempMatrix = new int*[matrixSize[2]];
-	for (int i = 0; i < matrixSize[2]; ++i)
+	
+	pthread_t* thread = new pthread_t[ThrNum];
+	t_data* data = new t_data[ThrNum];
+	
+	int bandSize = 0, first = 0;
+	for (int i = 0; i < ThrNum; ++i)
 	{
-		tempMatrix[i] = new int[matrixSize[1]];
-		for (int j = 0; j < matrixSize[1]; ++j)
-			tempMatrix[i][j] = matrix2[j][i];
+		first += bandSize;
+		bandSize = ceil((float)size / (ThrNum - i));
+		size -= bandSize;
+		data[i].first = first;
+		data[i].last = first + bandSize - 1;
 	}
-	delete matrix2;
-	matrix2 = tempMatrix;
 	
-	matrix = new int*[matrixSize[0]];
-	for (int i = 0; i < matrixSize[0]; ++i)
-		matrix[i] = new int[matrixSize[2]];
+	int time = 0.0;
+	int start, finish;
 	
-	int threadNumber;
-	cout << "Max thread number (from 2 to " << (matrixSize[0] * matrixSize[2]) << "): ";
-	cin >> threadNumber;
-	
-	for (int thn = threadNumber; thn <= threadNumber; ++thn)
+	for (int k = 0; k < 5; ++k)
 	{
+		start = clock();
+		
+		for (int i = 0; i < ThrNum; ++i)
+			pthread_create(&thread[i], NULL, mult, (void*)&data[i]);
+		for (int i = 0; i < ThrNum; ++i)
+			pthread_join(thread[i], NULL);
 			
-		pthread_t* thread = new pthread_t[thn];
-		thrData** index = new thrData*[thn];
-		for (int k = 0; k < 100; ++k)
-		{
-			int start = clock();
-			for(int i = 0; i < thn; ++i)
-				index[i] = NULL;
-				
-			for (int i = 0; i < matrixSize[0]; ++i)
-			{
-				for (int j = 0; j < matrixSize[2]; ++j)
-				{
-					thrData* newIndex = new thrData;
-					newIndex->i = i;
-					newIndex->j = j;
-					newIndex->next = index[(i * matrixSize[2] + j) % thn];
-					index[(i * matrixSize[2] + j) % thn] = newIndex;
-				}
-			}
-			for (int i = 0; i < thn; ++i)
-				pthread_create(&thread[i], NULL, mult, (void*)index[i]);
-			for (int i = 0; i < thn; ++i)
-				pthread_join(thread[i], NULL);
-				
-			int finish = clock();
-			fprintf(out, "%f\t", (float)(finish - start)/CLOCKS_PER_SEC);
-		}
-		fprintf(out, "\n");
+		finish = clock();
+		
+		time += (finish - start);
 	}
 	
-	cout << "M1 * M2 =" << endl;
-	for (int i = 0; i < matrixSize[0]; ++i)
-	{
-		for (int j = 0; j < matrixSize[2]; ++j);
-			//cout << matrix[i][j] << "\t";
-		//cout << endl;
-	}
+	fprintf(out, "N = %d\tTN = %d\tM = %f\n", Size, ThrNum, (time/CLOCKS_PER_SEC)/5);
+	
 	return 0;
 }
