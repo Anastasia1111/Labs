@@ -3,7 +3,10 @@ CC=g++
 CFLAGS=-c -Wall
 
 all: clean main
-	./main 3 2
+	./main 1500 1
+	./main 1500 2
+	./main 1500 3
+	./main 1500 4
 
 main: main.o
 	$(CC) -pthread main.o -o main

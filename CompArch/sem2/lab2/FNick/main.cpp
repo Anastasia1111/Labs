@@ -19,20 +19,14 @@ int ThrNum;
 void* mult(void* arg)
 {
 	t_data d = *((t_data*) arg);
-	printf("from %d to %d\n", d.first, d.last);
 	
-	/*while(data != NULL)
+	for (int k = d.first; k <= d.last; ++k)
 	{
-		int di = data->num / Size;
-		int dj = data->num % Size;
-		int sum = 0;
-		int* m1i = M1[di];
-		int* m2j = M2[dj];
-		for (int i = 0; i < Size; ++i)
-			sum += m1i[i] * m2j[i];
-		Res[di][dj] = sum;
-		data = data->next;
-	}*/
+		int i = k / Size;
+		int j = k % Size;
+		for (int r = 0; r < Size; ++r)
+			Res[k] += M1[i * Size + r] * M2[j * Size + r]; // Для чистоты эксперимента вторая матрица воспринимается как транспонированная
+	}
 }
 
 int main(int argc, char* argv[])
@@ -54,23 +48,8 @@ int main(int argc, char* argv[])
 		{
 			M1[i * Size + j] = rand() % (3 * size);
 			M2[i * Size + j] = rand() % (3 * size);
+			Res[i * Size + j] = 0;
 		}
-		
-	printf("First matrix:\n");
-	for (int i = 0; i < Size; ++i)
-	{
-		for (int j = 0; j < Size; ++j)
-			printf("%d ", M1[i * Size + j]);
-		printf("\n");
-	}
-	
-	printf("Second matrix:\n");
-	for (int i = 0; i < Size; ++i)
-	{
-		for (int j = 0; j < Size; ++j)
-			printf("%d ", M2[i * Size + j]);
-		printf("\n");
-	}
 	
 	pthread_t* thread = new pthread_t[ThrNum];
 	t_data* data = new t_data[ThrNum];
@@ -85,7 +64,7 @@ int main(int argc, char* argv[])
 		data[i].last = first + bandSize - 1;
 	}
 	
-	int time = 0.0;
+	double time = 0.0;
 	int start, finish;
 	
 	for (int k = 0; k < 5; ++k)
