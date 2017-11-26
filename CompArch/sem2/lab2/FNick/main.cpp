@@ -64,24 +64,27 @@ int main(int argc, char* argv[])
 		data[i].last = first + bandSize - 1;
 	}
 	
-	double time = 0.0;
-	int start, finish;
+	double time, total_time = 0.0;
+	timespec start, finish;
 	
 	for (int k = 0; k < 5; ++k)
 	{
-		start = clock();
+		clock_gettime(CLOCK_MONOTONIC, &start);
 		
 		for (int i = 0; i < ThrNum; ++i)
 			pthread_create(&thread[i], NULL, mult, (void*)&data[i]);
 		for (int i = 0; i < ThrNum; ++i)
 			pthread_join(thread[i], NULL);
 			
-		finish = clock();
+		clock_gettime(CLOCK_MONOTONIC, &finish);
 		
-		time += (finish - start);
+		time = (finish.tv_sec - start.tv_sec) + ((finish.tv_nsec - start.tv_nsec) * 1.0) / 1000000000;
+		total_time += time;
+		
+		printf("%f\n", time);
 	}
 	
-	fprintf(out, "N = %d\tTN = %d\tM = %f\n", Size, ThrNum, (time/CLOCKS_PER_SEC)/5);
+	fprintf(out, "N = %d\tTN = %d\tM = %f\n", Size, ThrNum, total_time/5);
 	
 	return 0;
 }
