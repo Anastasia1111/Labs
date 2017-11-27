@@ -1,0 +1,10 @@
+[Unit]
+Description=testWS
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/monstruos/GitHub/Labs/OS/lab8/part2/TCP
+
+[Install]
+WantedBy=multi-user.target
