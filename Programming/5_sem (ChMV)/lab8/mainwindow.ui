@@ -6,141 +6,304 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>886</width>
-    <height>609</height>
+    <width>800</width>
+    <height>800</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Browser</string>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>800</height>
+   </size>
   </property>
-  <property name="windowIcon">
-   <iconset resource="../resources/resources.qrc">
-    <normaloff>:/other/logo</normaloff>:/other/logo</iconset>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Простой Web-браузер</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <widget class="QWebView" name="webView">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>25</y>
+      <width>800</width>
+      <height>491</height>
+     </rect>
+    </property>
+    <property name="url">
+     <url>
+      <string>about:blank</string>
+     </url>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="urlLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>2</x>
+      <y>1</y>
+      <width>497</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="loadPushButton">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Загрузить</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="forwardPushButton">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Вперед</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="backPushButton">
+    <property name="geometry">
+     <rect>
+      <x>575</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Назад</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="updatePushButton">
+    <property name="geometry">
+     <rect>
+      <x>725</x>
+      <y>0</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Обновить</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>494</x>
+      <y>520</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="editable">
+     <bool>false</bool>
+    </property>
+    <property name="currentText">
+     <string>Google</string>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="pushButtonPOST">
-        <property name="text">
-         <string>POST</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonGET">
-        <property name="text">
-         <string>GET</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <property name="text">
+      <string>Google</string>
+     </property>
     </item>
     <item>
-     <widget class="QLineEdit" name="urlPath"/>
+     <property name="text">
+      <string>Cyber</string>
+     </property>
     </item>
     <item>
-     <widget class="QTextEdit" name="textEdit"/>
+     <property name="text">
+      <string>Cn.ru</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="weatherLabel">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>520</y>
+      <width>161</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Текущая температура:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>520</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Поиск в интернете:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="searchLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>172</x>
+      <y>521</y>
+      <width>151</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="searchPushButton">
+    <property name="geometry">
+     <rect>
+      <x>325</x>
+      <y>520</y>
+      <width>75</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Искать</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="searchComboBox">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>521</y>
+      <width>69</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Google</string>
+     </property>
     </item>
     <item>
-     <widget class="QWebView" name="webView">
-      <property name="url">
-       <url>
-        <string>about:blank</string>
-       </url>
-      </property>
-     </widget>
+     <property name="text">
+      <string>Yahoo</string>
+     </property>
     </item>
-   </layout>
+    <item>
+     <property name="text">
+      <string>Bing</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Rambler</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Yandex</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Mail</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>520</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Закладки:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="loginPushButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>560</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Залогиниться</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="downloadPushButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>590</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Скачать</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pictureLabel">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>550</y>
+      <width>231</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::WinPanel</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>886</width>
+     <width>800</width>
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuMenu">
-    <property name="title">
-     <string>Меню</string>
-    </property>
-    <addaction name="actionBack"/>
-    <addaction name="actionForward"/>
-    <addaction name="actionReload"/>
-    <addaction name="actionStop"/>
-   </widget>
-   <addaction name="menuMenu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
-   <property name="movable">
-    <bool>false</bool>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::LeftToolBarArea</set>
-   </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionBack"/>
-   <addaction name="actionForward"/>
-   <addaction name="actionReload"/>
-   <addaction name="actionStop"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionBack">
-   <property name="icon">
-    <iconset resource="../resources/resources.qrc">
-     <normaloff>:/actions/undo</normaloff>:/actions/undo</iconset>
-   </property>
-   <property name="text">
-    <string>Назад</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Left</string>
-   </property>
-  </action>
-  <action name="actionForward">
-   <property name="icon">
-    <iconset resource="../resources/resources.qrc">
-     <normaloff>:/actions/redo</normaloff>:/actions/redo</iconset>
-   </property>
-   <property name="text">
-    <string>Вперед</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Right</string>
-   </property>
-  </action>
-  <action name="actionReload">
-   <property name="icon">
-    <iconset resource="../resources/resources.qrc">
-     <normaloff>:/actions/reload</normaloff>:/actions/reload</iconset>
-   </property>
-   <property name="text">
-    <string>Обновить</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+R, F5</string>
-   </property>
-  </action>
-  <action name="actionStop">
-   <property name="icon">
-    <iconset resource="../resources/resources.qrc">
-     <normaloff>:/actions/X</normaloff>:/actions/X</iconset>
-   </property>
-   <property name="text">
-    <string>Остановить</string>
-   </property>
-   <property name="shortcut">
-    <string>Esc</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -150,8 +313,6 @@
    <header>QtWebKitWidgets/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../resources/resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

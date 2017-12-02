@@ -2,11 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QWebSettings>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QTimer>
 #include <QTextCodec>
+#include <QNetworkCookieJar>
+#include <QNetworkCookie>
+#include <QList>
+#include <QPixmap>
 
 namespace Ui {
 class MainWindow;
@@ -21,34 +26,27 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionBack_triggered();
-
-    void on_actionForward_triggered();
-
-    void on_actionReload_triggered();
-
-    void on_actionStop_triggered();
-
-    void on_webView_loadProgress(int progress);
-
-    void smartLoad(QString value);
-
-    void on_urlPath_returnPressed();
-
-    void on_webView_loadFinished(bool arg1);
-
-    void replyFinished();
-
-    void on_pushButtonPOST_clicked();
-
-    void on_pushButtonGET_clicked();
-
-    void on_webView_linkClicked(const QUrl &arg1);
+    void on_loadPushButton_clicked();
+    void on_urlLineEdit_returnPressed();
+    void on_updatePushButton_clicked();
+    void on_forwardPushButton_clicked();
+    void on_backPushButton_clicked();
+    void on_webView_urlChanged(const QUrl &arg1);
+    void on_comboBox_activated(int index);
+    void on_searchPushButton_clicked();
+    void on_searchLineEdit_returnPressed();
+    void weatherReplyFinished();
+    void updateWeather();
+    void loginReplyFinished();
+    void on_loginPushButton_clicked();
+    void on_downloadPushButton_clicked();
+    void downloadReplyFinished();
+    void replyFinished_POST();
 
 private:
     Ui::MainWindow *ui;
+    QTimer *timer;
     QNetworkAccessManager *manager;
-    QNetworkReply *reply;
 };
 
 #endif // MAINWINDOW_H
