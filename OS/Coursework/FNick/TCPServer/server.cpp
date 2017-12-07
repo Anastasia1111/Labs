@@ -25,8 +25,9 @@ void Server::onReady()
         qDebug() << "Read line:" << line;
 
         QRegExp meRegex("^/me:(.*)$");
+        QRegExp privRegex("^/to:(.*)$");
 
-        if(meRegex.indexIn(line) != -1)
+        if(meRegex.indexIn(line) != -1) // Сообщение на присоединение
         {
             QString user = meRegex.cap(1);
             users[client] = user;
@@ -34,15 +35,28 @@ void Server::onReady()
                 client->write(QString("Server:" + user + " has joined.\n").toUtf8());
             sendUserList();
         }
-        else if(users.contains(client))
+        else if(privRegex.indexIn(line) != -1) // Приватное сообщение
         {
-            QString message = line;
-            QString user = users[client];
-            qDebug() << "User:" << user;
-            qDebug() << "Message:" << message;
+            QStringList usrNmsg = privRegex.cap(1).split(",");
+            QString reciver = usrNmsg.at(0);
+            QString msg = usrNmsg.at(1);
+            QString usr = users[client];
+            foreach(QTcpSocket *otherClient, clients)
+                if (users[otherClient] == reciver || users[otherClient] == usr)
+                {
+                    otherClient->write(QString("<i>" + usr + "</i>:" + msg + "\n").toUtf8());
+                    break;
+                }
+        }
+        else if(users.contains(client)) // Обычное сообщение
+        {
+            QString msg = line;
+            QString usr = users[client];
+            qDebug() << "User:" << usr;
+            qDebug() << "Message:" << msg;
 
             foreach(QTcpSocket *otherClient, clients)
-                otherClient->write(QString(user + ":" + message + "\n").toUtf8());
+                otherClient->write(QString(usr + ":" + msg + "\n").toUtf8()); // На самом деле отправляется всем клиентам, а не только другим. Я просто не придумал другого названия переменной(
         }
         else
         {
