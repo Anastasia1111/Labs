@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     db = new DataBase(this);
-    db->connectToDataBase("/home/fnick/chmvCurs/resources/database/db1.db");
+    db->connectToDataBase("/home/fnick/Repositories/Labs/Programming/5_sem (ChMV)/resources/databases/db1.db");
 }
 
 MainWindow::~MainWindow()
