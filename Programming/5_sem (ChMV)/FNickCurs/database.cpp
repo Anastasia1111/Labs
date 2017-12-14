@@ -34,7 +34,7 @@ bool DataBase::openDataBase(const QString &name)
         qDebug() << "Can open DB: " << name;
         return true;
     } else {
-        qDebug() << "Can't open DB: " << name;
+        qCritical() << "Can't open DB: " << name;
         return false;
     }
 }

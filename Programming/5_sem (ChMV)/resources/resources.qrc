@@ -24,5 +24,6 @@
     <qresource prefix="/other">
         <file alias="logo">images/camera-shutter.png</file>
         <file alias="wedding">images/ring.png</file>
+        <file alias="weddingbg">other/Fon-dlja-svadebnoj-otkrytki.jpg</file>
     </qresource>
 </RCC>

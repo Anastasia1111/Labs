@@ -24,12 +24,11 @@ public:
     QSqlDatabase getDB();
 
 private:
-    QSqlDatabase    db;
+    QSqlDatabase db;
 
 private:
     bool openDataBase(const QString &name);
     void closeDataBase();
-
 };
 
 #endif // DATABASE_H
