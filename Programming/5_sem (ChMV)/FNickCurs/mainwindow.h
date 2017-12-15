@@ -7,8 +7,10 @@
 #include <QSqlRelationalDelegate>
 #include <QSqlRelation>
 #include <QModelIndex>
+#include <QMessageBox>
 
 #include "database.h"
+#include "dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,10 +35,16 @@ private slots:
 
     void on_tabWidget_tabBarClicked(int index);
 
+    void on_buttonDelete_clicked();
+
+    void on_tableView_clicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
     DataBase *db;
-    QSqlRelationalTableModel *mod;
+    QSqlRelationalTableModel *wedMod;
+    bool deleteMode;
+    bool editMode;
 };
 
 #endif // MAINWINDOW_H
