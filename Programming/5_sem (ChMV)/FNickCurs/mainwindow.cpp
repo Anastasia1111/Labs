@@ -76,6 +76,12 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
     int id = wedMod->index(index.row(), 0).data().toInt();
     QDate date = QDate::fromString(wedMod->index(index.row(), 2).data().toString(), "yyyy-MM-dd");
+    int bougette = wedMod->index(index.row(), 3).data().toInt();
+
+    if (date >= QDate::currentDate())
+        editMode = true;
+    else
+        editMode = false;
 
     ui->stackedWidget->setCurrentIndex(1);
     ui->tabWidget->clear();
@@ -91,15 +97,10 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             QTime time = QTime::fromString(events->record(i).value(3).toString(), "hh:mm:ss");
             int price = events->record(i).value(4).toInt();
             QPixmap pic = QPixmap(events->record(i).value(5).toString());
-            ui->tabWidget->addTab(new QWidget(), name);
+            Page *page = new Page(editMode, bougette, this);
+            ui->tabWidget->addTab(page, name);
         }
     }
-    if (date >= QDate::currentDate())
-    {
-        ui->tabWidget->addTab(new QWidget(), "+");
-        editMode = true;
-    } else
-        editMode = false;
 }
 
 void MainWindow::on_buttonBack_clicked()

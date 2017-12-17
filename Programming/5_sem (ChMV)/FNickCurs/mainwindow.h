@@ -11,6 +11,7 @@
 
 #include "database.h"
 #include "dialog.h"
+#include "page.h"
 
 namespace Ui {
 class MainWindow;
