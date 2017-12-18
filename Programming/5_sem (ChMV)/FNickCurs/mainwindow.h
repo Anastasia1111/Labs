@@ -34,11 +34,13 @@ private slots:
 
     void on_buttonBack_clicked();
 
-    void on_tabWidget_tabBarClicked(int index);
-
     void on_buttonDelete_clicked();
 
     void on_tableView_clicked(const QModelIndex &index);
+
+    void nameChange(QString arg);
+
+    void on_buttonCancel_clicked();
 
 private:
     Ui::MainWindow *ui;

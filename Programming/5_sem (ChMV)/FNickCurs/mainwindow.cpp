@@ -92,26 +92,24 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     {
         if (events->record(i).value(6).toInt() == id)
         {
-            QString name = events->record(i).value(1).toString();
-            QString description = events->record(i).value(2).toString();
-            QTime time = QTime::fromString(events->record(i).value(3).toString(), "hh:mm:ss");
-            int price = events->record(i).value(4).toInt();
-            QPixmap pic = QPixmap(events->record(i).value(5).toString());
-            Page *page = new Page(editMode, bougette, this);
-            ui->tabWidget->addTab(page, name);
+            Page *page = new Page(editMode, bougette, events->record(i), this);
+            ui->tabWidget->addTab(page, page->getName());
+            connect(page, SIGNAL(nameChanged(QString)), this, SLOT(nameChange(QString)));
         }
     }
+    if (ui->tabWidget->count() == 0)
+    {
+        QSqlQuery query;
+        query.exec(QString("insert into Events values(null, 'Мероприятие', '', '00:00:00', 0, '', %1)").arg(id));
+        qDebug() << query.lastError();
+        on_tableView_doubleClicked(index);
+    }
+    (ui->tabWidget->count() == 1) ? ui->buttonCancel->hide() : ui->buttonCancel->show();
 }
 
 void MainWindow::on_buttonBack_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
-}
-
-void MainWindow::on_tabWidget_tabBarClicked(int index)
-{
-    if (ui->tabWidget->tabText(index) == "+")
-        qDebug() << "Yep";
 }
 
 void MainWindow::on_buttonDelete_clicked()
@@ -131,7 +129,7 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         {
             QSqlQuery delQuery;
             delQuery.exec("delete from Weddings where id = " + id);
-            qDebug() << delQuery.lastQuery();
+            qDebug() << delQuery.lastError();
         } else {
             QMessageBox *mb = new QMessageBox(QMessageBox::Warning,"Нелья отменить свадьбу", "Эта свадьба уже закончилась");
             mb->show();
@@ -139,4 +137,15 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         wedMod->select();
         on_buttonDelete_clicked();
     }
+}
+
+void MainWindow::nameChange(QString arg)
+{
+    int curTabIndex = ui->tabWidget->currentIndex();
+    ui->tabWidget->setTabText(curTabIndex, arg);
+}
+
+void MainWindow::on_buttonCancel_clicked()
+{
+
 }
