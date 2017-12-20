@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     wedMod->setHeaderData(1, Qt::Horizontal, QObject::tr("Название свадьбы"));
     wedMod->setHeaderData(2, Qt::Horizontal, QObject::tr("Дата проведения"));
     wedMod->setHeaderData(3, Qt::Horizontal, QObject::tr("Бюджет"));
-    wedMod->setHeaderData(4, Qt::Horizontal, QObject::tr("Муж"));
-    wedMod->setHeaderData(5, Qt::Horizontal, QObject::tr("Жена"));
+    wedMod->setHeaderData(4, Qt::Horizontal, QObject::tr("Жених"));
+    wedMod->setHeaderData(5, Qt::Horizontal, QObject::tr("Невеста"));
     wedMod->setRelation(4, QSqlRelation("People", "id", "FullName"));
     wedMod->setRelation(5, QSqlRelation("People", "id", "FullName"));
     wedMod->select();
@@ -26,8 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->hideColumn(0);
     ui->tableView->setItemDelegate(new QSqlRelationalDelegate(ui->tableView));
-
-    deleteMode = false;
 }
 
 MainWindow::~MainWindow()
@@ -42,9 +40,9 @@ void MainWindow::on_buttonOrganize_clicked()
     {
         QSqlTableModel *pMod = new QSqlTableModel();
         int husband, wife;
-        QSqlQuery hwQuery;
-        hwQuery.exec(QString("insert into People values(null, '%1')").arg(dial->husband));
-        hwQuery.exec(QString("insert into People values(null, '%1')").arg(dial->wife));
+        QSqlQuery query;
+        query.exec(QString("insert into People values(null, '%1')").arg(dial->husband));
+        query.exec(QString("insert into People values(null, '%1')").arg(dial->wife));
         pMod->setTable("People");
         pMod->select();
         for (int i = 0; i < pMod->rowCount(); ++i)
@@ -58,22 +56,21 @@ void MainWindow::on_buttonOrganize_clicked()
                 .arg(dial->bougette)
                 .arg(husband)
                 .arg(wife);
-        QSqlQuery query;
         query.exec(rec);
-        qDebug() << query.lastError();
+        qDebug() << QString("new wedding (%1): '%2' (%3)")
+                    .arg(query.lastQuery())
+                    .arg(query.lastError().text())
+                    .arg(query.lastError().type() ? "not ok" : "ok");
 
         wedMod->select();
         on_tableView_doubleClicked(wedMod->index(wedMod->rowCount() - 1, 0));
     }
 }
 
-void MainWindow::on_actionOrganize_triggered()
-{
-    on_buttonOrganize_clicked();
-}
-
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
+    curWedding = index;
+
     int id = wedMod->index(index.row(), 0).data().toInt();
     QDate date = QDate::fromString(wedMod->index(index.row(), 2).data().toString(), "yyyy-MM-dd");
     int bougette = wedMod->index(index.row(), 3).data().toInt();
@@ -85,6 +82,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
     ui->stackedWidget->setCurrentIndex(1);
     ui->tabWidget->clear();
+    evIndex.clear();
     QSqlTableModel *events = new QSqlTableModel();
     events->setTable("Events");
     events->select();
@@ -94,6 +92,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
         {
             Page *page = new Page(editMode, bougette, events->record(i), this);
             ui->tabWidget->addTab(page, page->getName());
+            evIndex.insert(ui->tabWidget->count() - 1, events->record(i).value(0).toInt());
             connect(page, SIGNAL(nameChanged(QString)), this, SLOT(nameChange(QString)));
         }
     }
@@ -101,10 +100,19 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     {
         QSqlQuery query;
         query.exec(QString("insert into Events values(null, 'Мероприятие', '', '00:00:00', 0, '', %1)").arg(id));
-        qDebug() << query.lastError();
-        on_tableView_doubleClicked(index);
+        qDebug() << QString("event for new wedding (%1): '%2' (%3)")
+                    .arg(query.lastQuery())
+                    .arg(query.lastError().text())
+                    .arg(query.lastError().type() ? "not ok" : "ok");
+
+        events->select();
+        Page *page = new Page(editMode, bougette, events->record(events->rowCount() - 1), this);
+        ui->tabWidget->addTab(page, page->getName());
+        evIndex.insert(0, events->record(events->rowCount() - 1).value(0).toInt());
+        connect(page, SIGNAL(nameChanged(QString)), this, SLOT(nameChange(QString)));
     }
-    (ui->tabWidget->count() == 1) ? ui->buttonCancel->hide() : ui->buttonCancel->show();
+    ui->buttonCancel->setHidden(ui->tabWidget->count() == 1 || !editMode);
+    if (editMode) ui->tabWidget->addTab(new QWidget(), "+");
 }
 
 void MainWindow::on_buttonBack_clicked()
@@ -114,28 +122,28 @@ void MainWindow::on_buttonBack_clicked()
 
 void MainWindow::on_buttonDelete_clicked()
 {
-    ui->buttonDelete->setChecked(!ui->buttonDelete->isChecked());
-    deleteMode = !deleteMode;
-    deleteMode ? ui->buttonDelete->setStyleSheet("color: red;") : ui->buttonDelete->setStyleSheet("color: black;");
-}
-
-void MainWindow::on_tableView_clicked(const QModelIndex &index)
-{
-    if (deleteMode)
+    QModelIndexList selectedList = ui->tableView->selectionModel()->selectedRows();
+    for (int i = 0; i < selectedList.count(); ++i)
     {
-        QString id = wedMod->index(index.row(), 0).data().toString();
-        QDate date = QDate::fromString(wedMod->index(index.row(), 2).data().toString(), "yyyy-MM-dd");
+        int index = selectedList.at(i).row();
+        QString id = wedMod->index(index, 0).data().toString();
+        QDate date = QDate::fromString(wedMod->index(index, 2).data().toString(), "yyyy-MM-dd");
         if (date >= QDate::currentDate())
         {
-            QSqlQuery delQuery;
-            delQuery.exec("delete from Weddings where id = " + id);
-            qDebug() << delQuery.lastError();
+            if (QMessageBox::warning(this, "Отмена свадьбы", "Вы уверены, что хотите отменить эту свадьбу?",
+                                     QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+                QSqlQuery query;
+                query.exec("delete from Weddings where id = " + id);
+                qDebug() << QString("delete (%1): '%2' (%3)")
+                            .arg(query.lastQuery())
+                            .arg(query.lastError().text())
+                            .arg(query.lastError().type() ? "not ok" : "ok");
+            }
         } else {
-            QMessageBox *mb = new QMessageBox(QMessageBox::Warning,"Нелья отменить свадьбу", "Эта свадьба уже закончилась");
+            QMessageBox *mb = new QMessageBox(QMessageBox::Warning, "Нелья отменить свадьбу", "Эта свадьба уже закончилась");
             mb->show();
         }
         wedMod->select();
-        on_buttonDelete_clicked();
     }
 }
 
@@ -147,5 +155,46 @@ void MainWindow::nameChange(QString arg)
 
 void MainWindow::on_buttonCancel_clicked()
 {
+    if (QMessageBox::warning(this, "Отмена мероприятия", "Вы уверены, что хотите отменить это мероприятие?",
+                             QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+        int id = evIndex.value(ui->tabWidget->currentIndex());
+        QSqlQuery query;
+        query.exec(QString("delete from Events where id = %1").arg(id));
+        qDebug() << QString("cancel (%1): '%2' (%3)")
+                    .arg(query.lastQuery())
+                    .arg(query.lastError().text())
+                    .arg(query.lastError().type() ? "not ok" : "ok");
+        Page *wid = static_cast<Page*>(ui->tabWidget->currentWidget());
+        ui->tabWidget->removeTab(id);
+        delete wid;
+        ui->buttonCancel->setHidden(ui->tabWidget->count() == 2);
+        ui->tabWidget->setCurrentIndex(0);
+    }
+}
 
+void MainWindow::on_tabWidget_tabBarClicked(int index)
+{
+    int ind = ui->tabWidget->currentIndex();
+    if (ui->tabWidget->tabText(index) == "+")
+    {
+        int id = wedMod->index(curWedding.row(), 0).data().toInt();
+        QSqlQuery query;
+        query.exec(QString("insert into Events values(null, 'Мероприятие', '', '00:00:00', 0, '', %1)").arg(id));
+        qDebug() << QString("new event (%1): '%2' (%3)")
+                    .arg(query.lastQuery())
+                    .arg(query.lastError().text())
+                    .arg(query.lastError().type() ? "not ok" : "ok");
+
+        QDate date = QDate::fromString(wedMod->index(curWedding.row(), 2).data().toString(), "yyyy-MM-dd");
+        int bougette = wedMod->index(curWedding.row(), 3).data().toInt();
+        QSqlTableModel *events = new QSqlTableModel();
+        events->setTable("Events");
+        events->select();
+        Page *page = new Page(true, bougette, events->record(events->rowCount() - 1), this);
+        ui->tabWidget->insertTab(ind + 1, page, page->getName());
+        evIndex.insert(ui->tabWidget->count() - 1, events->record(events->rowCount() - 1).value(0).toInt());
+        connect(page, SIGNAL(nameChanged(QString)), this, SLOT(nameChange(QString)));
+
+        ui->tabWidget->setCurrentIndex(ind);
+    }
 }

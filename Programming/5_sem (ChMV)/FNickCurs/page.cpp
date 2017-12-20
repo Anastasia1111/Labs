@@ -10,12 +10,14 @@ Page::Page(bool editMode, int bougette, QSqlRecord record, QWidget *parent) :
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
 
+    inConstruction = true;
     id = record.value(0).toInt();
     ui->nameEdit->setText(record.value(1).toString());
     ui->descriptionEdit->setPlainText(record.value(2).toString());
     ui->timeEdit->setTime(QTime::fromString(record.value(3).toString(), "hh:mm:ss"));
     ui->bougetteSpinBox->setValue(record.value(4).toInt());
     setPhoto(record.value(5).toString());
+    inConstruction = false;
 }
 
 Page::~Page()
@@ -34,8 +36,7 @@ void Page::on_bougetteSpinBox_valueChanged(int arg1)
 {
     price = arg1;
     ui->bougetteSpinBox->setReadOnly(!editMode);
-    ui->bougetteLabel->setText(QString("Бюджет: %1/%2").arg(arg1).arg(allBougette));
-    updateRecord(QString("%1").arg(arg1), "Price");
+    if (!inConstruction) updateRecord(QString("%1").arg(arg1), "Price");
 }
 
 void Page::on_photoButton_clicked()
@@ -51,7 +52,10 @@ void Page::updateRecord(QString value, QString field)
 {
     QSqlQuery query;
     query.exec(QString("update Events set %1 = %2 where id = %3").arg(field).arg(value).arg(id));
-    qDebug() << query.lastError();
+    qDebug() << QString("update (%1): '%2' (%3)")
+                .arg(query.lastQuery())
+                .arg(query.lastError().text())
+                .arg(query.lastError().type() ? "not ok" : "ok");
 }
 
 QString Page::getName() const
@@ -64,14 +68,14 @@ void Page::setPhoto(const QString &value)
     photo = value;
     ui->photoLabel->setPixmap(QPixmap(value));
     ui->photoButton->setHidden(!editMode);
-    updateRecord(QString("'%1'").arg(value), "Photo");
+    if (!inConstruction) updateRecord(QString("'%1'").arg(value), "Photo");
 }
 
 void Page::on_nameEdit_textChanged(const QString &arg1)
 {
     name = arg1;
     ui->nameEdit->setReadOnly(!editMode);
-    updateRecord(QString("'%1'").arg(arg1), "Name");
+    if (!inConstruction) updateRecord(QString("'%1'").arg(arg1), "Name");
     emit nameChanged(arg1);
 }
 
@@ -79,12 +83,12 @@ void Page::on_descriptionEdit_textChanged()
 {
     descr = ui->descriptionEdit->toPlainText();
     ui->descriptionEdit->setReadOnly(!editMode);
-    updateRecord(QString("'%1'").arg(descr), "Description");
+    if (!inConstruction) updateRecord(QString("'%1'").arg(descr), "Description");
 }
 
 void Page::on_timeEdit_timeChanged(const QTime &time)
 {
     this->time = time;
     ui->timeEdit->setReadOnly(!editMode);
-    updateRecord(QString("'%1'").arg(time.toString("hh:mm:ss")), "Time");
+    if (!inConstruction) updateRecord(QString("'%1'").arg(time.toString("hh:mm:ss")), "Time");
 }

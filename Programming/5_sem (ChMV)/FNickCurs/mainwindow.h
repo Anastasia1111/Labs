@@ -8,6 +8,7 @@
 #include <QSqlRelation>
 #include <QModelIndex>
 #include <QMessageBox>
+#include <QMap>
 
 #include "database.h"
 #include "dialog.h"
@@ -28,26 +29,25 @@ public:
 private slots:
     void on_buttonOrganize_clicked();
 
-    void on_actionOrganize_triggered();
-
     void on_tableView_doubleClicked(const QModelIndex &index);
 
     void on_buttonBack_clicked();
 
     void on_buttonDelete_clicked();
 
-    void on_tableView_clicked(const QModelIndex &index);
-
     void nameChange(QString arg);
 
     void on_buttonCancel_clicked();
+
+    void on_tabWidget_tabBarClicked(int index);
 
 private:
     Ui::MainWindow *ui;
     DataBase *db;
     QSqlRelationalTableModel *wedMod;
-    bool deleteMode;
     bool editMode;
+    QModelIndex curWedding;
+    QMap<int, int> evIndex;
 };
 
 #endif // MAINWINDOW_H

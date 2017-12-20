@@ -188,14 +188,8 @@
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="bougetteLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <property name="text">
-        <string>Бюджет</string>
+        <string>TextLabel</string>
        </property>
       </widget>
      </item>
@@ -208,7 +202,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Next</string>
+        <string>К перечням участников/предметов</string>
        </property>
       </widget>
      </item>

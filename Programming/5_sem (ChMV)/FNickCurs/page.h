@@ -25,6 +25,8 @@ public:
 
     QString getName() const;
 
+public slots:
+
 signals:
     void nameChanged(QString);
 
@@ -49,7 +51,6 @@ private:
     Ui::Page *ui;
     bool editMode;
     int allBougette;
-    int usedBougette;
     QSqlRecord record;
     int id;
     QString name;
@@ -57,6 +58,7 @@ private:
     QTime time;
     int price;
     QString photo;
+    bool inConstruction;
 };
 
 #endif // PAGE_H

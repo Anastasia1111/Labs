@@ -50,7 +50,7 @@ border-width: 0px;
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="weddingPage">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -87,9 +87,6 @@ border-width: 0px;
           </item>
           <item>
            <widget class="QPushButton" name="buttonDelete">
-            <property name="styleSheet">
-             <string notr="true">color: black;</string>
-            </property>
             <property name="text">
              <string>Отменить свадьбу</string>
             </property>
@@ -100,9 +97,6 @@ border-width: 0px;
           </item>
           <item>
            <widget class="QPushButton" name="buttonOrganize">
-            <property name="styleSheet">
-             <string notr="true">color: black;</string>
-            </property>
             <property name="text">
              <string>Организовать свадьбу</string>
             </property>
@@ -160,26 +154,6 @@ border-width: 0px;
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuMenu">
-    <property name="title">
-     <string>Меню</string>
-    </property>
-    <addaction name="actionOrganize"/>
-    <addaction name="separator"/>
-    <addaction name="actionExit"/>
-   </widget>
-   <addaction name="menuMenu"/>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOrganize">
    <property name="icon">
     <iconset resource="../resources/resources.qrc">
@@ -203,22 +177,5 @@ border-width: 0px;
  <resources>
   <include location="../resources/resources.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>actionExit</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
