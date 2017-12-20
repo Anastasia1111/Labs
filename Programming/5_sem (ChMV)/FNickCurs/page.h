@@ -23,12 +23,13 @@ public:
 
     ~Page();
 
-    QString getName() const;
-
 public slots:
+    void setUsedBougette(int value);
 
 signals:
     void nameChanged(QString);
+
+    void bougetteChanged();
 
 private slots:
     void on_navigationButton_clicked();
@@ -49,16 +50,14 @@ private slots:
 
 private:
     Ui::Page *ui;
+
     bool editMode;
-    int allBougette;
-    QSqlRecord record;
-    int id;
-    QString name;
-    QString descr;
-    QTime time;
-    int price;
-    QString photo;
     bool inConstruction;
+
+    int bougette;
+    int id;
+
+    QSqlRecord record;
 };
 
 #endif // PAGE_H

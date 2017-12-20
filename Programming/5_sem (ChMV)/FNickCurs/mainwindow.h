@@ -26,6 +26,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+signals:
+    void usedBougetteUpdated(int value);
+
 private slots:
     void on_buttonOrganize_clicked();
 
@@ -37,6 +40,8 @@ private slots:
 
     void nameChange(QString arg);
 
+    void updateUsedBougette();
+
     void on_buttonCancel_clicked();
 
     void on_tabWidget_tabBarClicked(int index);
@@ -45,6 +50,7 @@ private:
     Ui::MainWindow *ui;
     DataBase *db;
     QSqlRelationalTableModel *wedMod;
+    QSqlRelationalTableModel *evMod;
     bool editMode;
     QModelIndex curWedding;
     QMap<int, int> evIndex;

@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->hideColumn(0);
     ui->tableView->setItemDelegate(new QSqlRelationalDelegate(ui->tableView));
+
+    evMod = new QSqlRelationalTableModel();
+    evMod->setTable("Events");
 }
 
 MainWindow::~MainWindow()
@@ -83,17 +86,18 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     ui->stackedWidget->setCurrentIndex(1);
     ui->tabWidget->clear();
     evIndex.clear();
-    QSqlTableModel *events = new QSqlTableModel();
-    events->setTable("Events");
-    events->select();
-    for (int i = 0; i < events->rowCount(); ++i)
+    evMod->select();
+    for (int i = 0; i < evMod->rowCount(); ++i)
     {
-        if (events->record(i).value(6).toInt() == id)
+        if (evMod->record(i).value(6).toInt() == id)
         {
-            Page *page = new Page(editMode, bougette, events->record(i), this);
-            ui->tabWidget->addTab(page, page->getName());
-            evIndex.insert(ui->tabWidget->count() - 1, events->record(i).value(0).toInt());
+            Page *page = new Page(editMode, bougette, evMod->record(i), this);
+            ui->tabWidget->addTab(page, evMod->record(i).value(1).toString());
+            evIndex.insert(ui->tabWidget->count() - 1, evMod->record(i).value(0).toInt());
+
             connect(page, SIGNAL(nameChanged(QString)), this, SLOT(nameChange(QString)));
+            connect(page, SIGNAL(bougetteChanged()), this, SLOT(updateUsedBougette()));
+            connect(this, SIGNAL(usedBougetteUpdated(int)), page, SLOT(setUsedBougette(int)));
         }
     }
     if (ui->tabWidget->count() == 0)
@@ -104,20 +108,28 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
                     .arg(query.lastQuery())
                     .arg(query.lastError().text())
                     .arg(query.lastError().type() ? "not ok" : "ok");
+        evMod->select();
+        Page *page = new Page(editMode, bougette, evMod->record(evMod->rowCount() - 1), this);
+        ui->tabWidget->addTab(page, "Мероприятие");
+        evIndex.insert(0, evMod->record(evMod->rowCount() - 1).value(0).toInt());
 
-        events->select();
-        Page *page = new Page(editMode, bougette, events->record(events->rowCount() - 1), this);
-        ui->tabWidget->addTab(page, page->getName());
-        evIndex.insert(0, events->record(events->rowCount() - 1).value(0).toInt());
         connect(page, SIGNAL(nameChanged(QString)), this, SLOT(nameChange(QString)));
+        connect(page, SIGNAL(bougetteChanged()), this, SLOT(updateUsedBougette()));
+        connect(this, SIGNAL(usedBougetteUpdated(int)), page, SLOT(setUsedBougette(int)));
     }
     ui->buttonCancel->setHidden(ui->tabWidget->count() == 1 || !editMode);
     if (editMode) ui->tabWidget->addTab(new QWidget(), "+");
+    updateUsedBougette();
 }
 
 void MainWindow::on_buttonBack_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    while (ui->tabWidget->count() != 0 && ui->tabWidget->tabText(0) != "+")
+    {
+        Page *wid = static_cast<Page*>(ui->tabWidget->widget(0));
+        delete wid;
+    }
 }
 
 void MainWindow::on_buttonDelete_clicked()
@@ -153,6 +165,18 @@ void MainWindow::nameChange(QString arg)
     ui->tabWidget->setTabText(curTabIndex, arg);
 }
 
+void MainWindow::updateUsedBougette()
+{
+    int id = wedMod->index(curWedding.row(), 0).data().toInt();
+    int usedBougette = 0;
+    evMod->select();
+    for (int i = 0; i < evMod->rowCount(); ++i)
+        if (evMod->record(i).value(6).toInt() == id)
+            usedBougette += evMod->record(i).value(4).toInt();
+    qDebug() << "used bougette now = " << usedBougette;
+    emit usedBougetteUpdated(usedBougette);
+}
+
 void MainWindow::on_buttonCancel_clicked()
 {
     if (QMessageBox::warning(this, "Отмена мероприятия", "Вы уверены, что хотите отменить это мероприятие?",
@@ -169,6 +193,7 @@ void MainWindow::on_buttonCancel_clicked()
         delete wid;
         ui->buttonCancel->setHidden(ui->tabWidget->count() == 2);
         ui->tabWidget->setCurrentIndex(0);
+        updateUsedBougette();
     }
 }
 
@@ -185,16 +210,17 @@ void MainWindow::on_tabWidget_tabBarClicked(int index)
                     .arg(query.lastError().text())
                     .arg(query.lastError().type() ? "not ok" : "ok");
 
-        QDate date = QDate::fromString(wedMod->index(curWedding.row(), 2).data().toString(), "yyyy-MM-dd");
         int bougette = wedMod->index(curWedding.row(), 3).data().toInt();
-        QSqlTableModel *events = new QSqlTableModel();
-        events->setTable("Events");
-        events->select();
-        Page *page = new Page(true, bougette, events->record(events->rowCount() - 1), this);
-        ui->tabWidget->insertTab(ind + 1, page, page->getName());
-        evIndex.insert(ui->tabWidget->count() - 1, events->record(events->rowCount() - 1).value(0).toInt());
+        evMod->select();
+        Page *page = new Page(true, bougette, evMod->record(evMod->rowCount() - 1), this);
+        ui->tabWidget->insertTab(ind + 1, page, "Мероприятие");
+        evIndex.insert(ui->tabWidget->count() - 1, evMod->record(evMod->rowCount() - 1).value(0).toInt());
+
         connect(page, SIGNAL(nameChanged(QString)), this, SLOT(nameChange(QString)));
+        connect(page, SIGNAL(bougetteChanged()), this, SLOT(updateUsedBougette()));
+        connect(this, SIGNAL(usedBougetteUpdated(int)), page, SLOT(setUsedBougette(int)));
 
         ui->tabWidget->setCurrentIndex(ind);
+        updateUsedBougette();
     }
 }

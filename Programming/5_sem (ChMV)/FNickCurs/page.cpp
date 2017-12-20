@@ -4,7 +4,8 @@
 Page::Page(bool editMode, int bougette, QSqlRecord record, QWidget *parent) :
     QWidget(parent),
     editMode(editMode),
-    allBougette(bougette),
+    bougette(bougette),
+    record(record),
     ui(new Ui::Page)
 {
     ui->setupUi(this);
@@ -18,11 +19,14 @@ Page::Page(bool editMode, int bougette, QSqlRecord record, QWidget *parent) :
     ui->bougetteSpinBox->setValue(record.value(4).toInt());
     setPhoto(record.value(5).toString());
     inConstruction = false;
+
+    qDebug() << "page " << record << " initialized";
 }
 
 Page::~Page()
 {
     delete ui;
+    qDebug() << "i'm dying";
 }
 
 void Page::on_navigationButton_clicked()
@@ -34,9 +38,9 @@ void Page::on_navigationButton_clicked()
 
 void Page::on_bougetteSpinBox_valueChanged(int arg1)
 {
-    price = arg1;
     ui->bougetteSpinBox->setReadOnly(!editMode);
     if (!inConstruction) updateRecord(QString("%1").arg(arg1), "Price");
+    emit bougetteChanged();
 }
 
 void Page::on_photoButton_clicked()
@@ -58,14 +62,8 @@ void Page::updateRecord(QString value, QString field)
                 .arg(query.lastError().type() ? "not ok" : "ok");
 }
 
-QString Page::getName() const
-{
-    return name;
-}
-
 void Page::setPhoto(const QString &value)
 {
-    photo = value;
     ui->photoLabel->setPixmap(QPixmap(value));
     ui->photoButton->setHidden(!editMode);
     if (!inConstruction) updateRecord(QString("'%1'").arg(value), "Photo");
@@ -73,7 +71,6 @@ void Page::setPhoto(const QString &value)
 
 void Page::on_nameEdit_textChanged(const QString &arg1)
 {
-    name = arg1;
     ui->nameEdit->setReadOnly(!editMode);
     if (!inConstruction) updateRecord(QString("'%1'").arg(arg1), "Name");
     emit nameChanged(arg1);
@@ -81,14 +78,18 @@ void Page::on_nameEdit_textChanged(const QString &arg1)
 
 void Page::on_descriptionEdit_textChanged()
 {
-    descr = ui->descriptionEdit->toPlainText();
     ui->descriptionEdit->setReadOnly(!editMode);
-    if (!inConstruction) updateRecord(QString("'%1'").arg(descr), "Description");
+    if (!inConstruction) updateRecord(QString("'%1'").arg(ui->descriptionEdit->toPlainText()), "Description");
 }
 
 void Page::on_timeEdit_timeChanged(const QTime &time)
 {
-    this->time = time;
     ui->timeEdit->setReadOnly(!editMode);
     if (!inConstruction) updateRecord(QString("'%1'").arg(time.toString("hh:mm:ss")), "Time");
+}
+
+void Page::setUsedBougette(int value)
+{
+    ui->bougetteLabel->setText(QString("Бюджет: %1/%2").arg(value).arg(bougette));
+    ui->bougetteSpinBox->setMaximum(bougette - (value - ui->bougetteSpinBox->value()));
 }
