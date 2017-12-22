@@ -64,7 +64,6 @@ void MainWindow::on_buttonOrganize_clicked()
                     .arg(query.lastQuery())
                     .arg(query.lastError().text())
                     .arg(query.lastError().type() ? "not ok" : "ok");
-
         wedMod->select();
         on_tableView_doubleClicked(wedMod->index(wedMod->rowCount() - 1, 0));
     }
@@ -145,6 +144,29 @@ void MainWindow::on_buttonDelete_clicked()
             if (QMessageBox::warning(this, "Отмена свадьбы", "Вы уверены, что хотите отменить эту свадьбу?",
                                      QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
                 QSqlQuery query;
+                query.exec("delete from ParticipationOrganizations where ev_id in "
+                           "(select id from Events where wed_id = " + id +")");
+                qDebug() << QString("delete (%1): '%2' (%3)")
+                            .arg(query.lastQuery())
+                            .arg(query.lastError().text())
+                            .arg(query.lastError().type() ? "not ok" : "ok");
+                query.exec("delete from ParticipationPeople where ev_id in "
+                           "(select id from Events where wed_id = " + id +")");
+                qDebug() << QString("delete (%1): '%2' (%3)")
+                            .arg(query.lastQuery())
+                            .arg(query.lastError().text())
+                            .arg(query.lastError().type() ? "not ok" : "ok");
+                query.exec("delete from Items where ev_id in "
+                           "(select id from Events where wed_id = " + id +")");
+                qDebug() << QString("delete (%1): '%2' (%3)")
+                            .arg(query.lastQuery())
+                            .arg(query.lastError().text())
+                            .arg(query.lastError().type() ? "not ok" : "ok");
+                query.exec("delete from Events where wed_id = " + id);
+                qDebug() << QString("delete (%1): '%2' (%3)")
+                            .arg(query.lastQuery())
+                            .arg(query.lastError().text())
+                            .arg(query.lastError().type() ? "not ok" : "ok");
                 query.exec("delete from Weddings where id = " + id);
                 qDebug() << QString("delete (%1): '%2' (%3)")
                             .arg(query.lastQuery())
@@ -183,6 +205,21 @@ void MainWindow::on_buttonCancel_clicked()
                              QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
         int id = evIndex.value(ui->tabWidget->currentIndex());
         QSqlQuery query;
+        query.exec(QString("delete from ParticipationOrganizations where ev_id = %1").arg(id));
+        qDebug() << QString("delete (%1): '%2' (%3)")
+                    .arg(query.lastQuery())
+                    .arg(query.lastError().text())
+                    .arg(query.lastError().type() ? "not ok" : "ok");
+        query.exec(QString("delete from ParticipationPeople where ev_id = %1").arg(id));
+        qDebug() << QString("delete (%1): '%2' (%3)")
+                    .arg(query.lastQuery())
+                    .arg(query.lastError().text())
+                    .arg(query.lastError().type() ? "not ok" : "ok");
+        query.exec(QString("delete from Items where ev_id = %1").arg(id));
+        qDebug() << QString("delete (%1): '%2' (%3)")
+                    .arg(query.lastQuery())
+                    .arg(query.lastError().text())
+                    .arg(query.lastError().type() ? "not ok" : "ok");
         query.exec(QString("delete from Events where id = %1").arg(id));
         qDebug() << QString("cancel (%1): '%2' (%3)")
                     .arg(query.lastQuery())

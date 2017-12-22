@@ -3,9 +3,11 @@
 
 #include <QWidget>
 #include <QTime>
-#include <QSqlTableModel>
 #include <QFileDialog>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QSqlQuery>
+#include <QSqlQueryModel>
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QDebug>
@@ -48,6 +50,18 @@ private slots:
 
     void on_timeEdit_timeChanged(const QTime &time);
 
+    void on_itemAddButton_clicked();
+
+    void on_itemRemoveButton_clicked();
+
+    void on_peopleAddButton_clicked();
+
+    void on_peopleRemoveButton_clicked();
+
+    void on_orgAddButton_clicked();
+
+    void on_orgRemoveButton_clicked();
+
 private:
     Ui::Page *ui;
 
@@ -58,6 +72,10 @@ private:
     int id;
 
     QSqlRecord record;
+
+    QSqlQueryModel *itemMod;
+    QSqlQueryModel *peopleMod;
+    QSqlQueryModel *orgMod;
 };
 
 #endif // PAGE_H

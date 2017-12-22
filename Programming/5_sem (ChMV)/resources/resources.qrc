@@ -20,6 +20,8 @@
         <file alias="planet">images/saturn.png</file>
         <file alias="add_user">images/add-contact.png</file>
         <file alias="reload">images/rotate-to-right.png</file>
+        <file alias="add">images/add.png</file>
+        <file alias="rem">images/remove.png</file>
     </qresource>
     <qresource prefix="/other">
         <file alias="logo">images/camera-shutter.png</file>

@@ -112,7 +112,7 @@ border-width: 0px;
          <widget class="QTabWidget" name="tabWidget">
           <widget class="QWidget" name="tab">
            <attribute name="title">
-            <string>Страница</string>
+            <string>+</string>
            </attribute>
           </widget>
          </widget>
