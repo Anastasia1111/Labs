@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="io.github.fnickru.calc.MainActivity">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:layout_constraintTop_creator="1" tools:layout_constraintRight_creator="1"
+            tools:layout_constraintBottom_creator="1" android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintRight_toRightOf="parent" android:layout_marginTop="8dp"
+            tools:layout_constraintLeft_creator="1" android:layout_marginBottom="8dp"
+            app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="8dp" android:layout_marginRight="8dp">
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:ems="10"
+                android:id="@+id/editText" android:textAlignment="textEnd"
+                android:layout_gravity="end" android:textSize="36sp"/>
+        <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:stretchColumns="*" android:gravity="center">
+
+            <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent"
+            >
+                <Button
+                        android:text="7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button7"/>
+                <Button
+                        android:text="8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button8"/>
+                <Button
+                        android:text="9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button9"/>
+                <Button
+                        android:text="C"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/buttonC"/>
+            </TableRow>
+            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+                <Button
+                        android:text="4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button4"/>
+                <Button
+                        android:text="5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button5"/>
+                <Button
+                        android:text="6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button6"/>
+                <Button
+                        android:text="*"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/buttonM"/>
+            </TableRow>
+            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+                <Button
+                        android:text="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button1"/>
+                <Button
+                        android:text="2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button2"/>
+                <Button
+                        android:text="3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button3"/>
+                <Button
+                        android:text="/"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/buttonD"/>
+            </TableRow>
+            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+                <Button
+                        android:text="+"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/buttonA"/>
+                <Button
+                        android:text="0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/button0"/>
+                <Button
+                        android:text="-"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/buttonS"/>
+                <Button
+                        android:text="="
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/buttonE"/>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
