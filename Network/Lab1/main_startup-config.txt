@@ -35,7 +35,6 @@ spanning-tree mode pvst
 !
 !
 interface FastEthernet0/0
- description Connect to main office
  no ip address
  duplex auto
  speed auto
@@ -48,6 +47,7 @@ interface FastEthernet0/1
  shutdown
 !
 interface Serial0/3/0
+ description Connect to second office
  no ip address
  clock rate 2000000
  shutdown

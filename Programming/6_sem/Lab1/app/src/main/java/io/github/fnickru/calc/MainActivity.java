@@ -14,19 +14,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Integer arg1;
     private Integer arg2;
     private OperationClicked currOp;
+    private boolean isNumberClicked;
 
     private enum OperationClicked {
         ADD, SUB, MUL, DIV, EQU
     }
 
-    void doOperation() {
-        switch (currOp) {
-            case ADD: arg1 = arg1 + arg2; break;
-            case SUB: arg1 = arg1 - arg2; break;
-            case MUL: arg1 = arg1 * arg2; break;
-            case DIV: arg1 = arg1 / arg2; break;
+    int doOperation() {
+        try {
+            switch (currOp) {
+                case ADD: arg1 += arg2; break;
+                case SUB: arg1 -= arg2; break;
+                case MUL: arg1 *= arg2; break;
+                case DIV: arg1 /= arg2; break;
+            }
+            arg2 = 0;
+        } catch (ArithmeticException e) {
+            editText.setText("ERR");
+            return 1;
         }
-        arg2 = 0;
+        return 0;
     }
 
     @Override
@@ -72,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         arg1 = arg2 = 0;
         currOp = OperationClicked.EQU;
+        isNumberClicked = false;
     }
 
     @Override
@@ -92,17 +100,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     currOp = OperationClicked.ADD;
                 }
                 arg2 = arg2 * 10 + new Integer(((Button)v).getText().toString());
+                isNumberClicked = true;
                 break;
             case R.id.buttonC:
                 arg1 = arg2 = 0;
                 currOp = OperationClicked.ADD;
                 break;
-            case R.id.buttonA: doOperation(); currOp = OperationClicked.ADD; break;
-            case R.id.buttonS: doOperation(); currOp = OperationClicked.SUB; break;
-            case R.id.buttonM: doOperation(); currOp = OperationClicked.MUL; break;
-            case R.id.buttonD: doOperation(); currOp = OperationClicked.DIV; break;
-            case R.id.buttonE: doOperation(); currOp = OperationClicked.EQU; break;
+            case R.id.buttonA:
+                if (isNumberClicked) {
+                    isNumberClicked = false;
+                    if (doOperation() == 0) {
+                        currOp = OperationClicked.ADD;
+                        break;
+                    }
+                    return;
+                }
+            case R.id.buttonS:
+                if (isNumberClicked) {
+                    isNumberClicked = false;
+                    if (doOperation() == 0) {
+                        currOp = OperationClicked.SUB;
+                        break;
+                    }
+                    return;
+                }
+            case R.id.buttonM:
+                if (isNumberClicked) {
+                    isNumberClicked = false;
+                    if (doOperation() == 0) {
+                        currOp = OperationClicked.MUL;
+                        break;
+                    }
+                    return;
+                }
+            case R.id.buttonD:
+                if (isNumberClicked) {
+                    isNumberClicked = false;
+                    if (doOperation() == 0) {
+                        currOp = OperationClicked.DIV;
+                        break;
+                    }
+                    return;
+                }
+            case R.id.buttonE:
+                if (isNumberClicked) {
+                    isNumberClicked = false;
+                    if (doOperation() == 0) {
+                        currOp = OperationClicked.EQU;
+                        break;
+                    }
+                    return;
+                }
         }
-        editText.setText(currOp == OperationClicked.EQU ? arg1.toString() : arg2.toString());
+        editText.setText(currOp == OperationClicked.EQU && !isNumberClicked ? arg1.toString() : arg2.toString());
     }
 }

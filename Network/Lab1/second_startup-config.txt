@@ -40,15 +40,17 @@ interface FastEthernet0/0
  shutdown
 !
 interface Serial0/0
+ description Connect to main office
  no ip address
+ clock rate 2000000
  shutdown
 !
 interface Serial0/1
  no ip address
+ clock rate 2000000
  shutdown
 !
 interface Ethernet1/0
- description Connect to second office
  no ip address
  duplex auto
  speed auto
