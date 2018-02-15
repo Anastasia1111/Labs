@@ -18,18 +18,8 @@ public class Fraction extends Number implements Comparable<Fraction> {
         this.denominator = BigInteger.ONE;
     }
 
-    public Fraction(BigInteger numerator, BigInteger denominator) {
-        if(denominator.equals(BigInteger.ZERO)) {
-            throw new IllegalArgumentException("Denominator is null!");
-        }
-        if(denominator.signum() == -1) {
-            numerator.negate();
-            denominator.negate();
-        }
-        this.numerator = numerator;
-        this.denominator = denominator;
-
-        reduce();
+    public Fraction(long numerator) {
+        this(BigInteger.valueOf(numerator));
     }
 
     /**
@@ -88,6 +78,34 @@ public class Fraction extends Number implements Comparable<Fraction> {
         this.denominator = tmpDenominator;
     }
 
+    public Fraction(BigInteger numerator, BigInteger denominator) {
+        if(denominator.equals(BigInteger.ZERO)) {
+            throw new IllegalArgumentException("Denominator is null!");
+        }
+        if(denominator.signum() == -1) {
+            numerator = numerator.negate();
+            denominator = denominator.negate();
+        }
+        this.numerator = numerator;
+        this.denominator = denominator;
+
+        reduce();
+    }
+
+    public Fraction(long numerator, long denominator) {
+        if(denominator == 0) {
+            throw new IllegalArgumentException("Denominator is null!");
+        }
+        if(denominator < 0) {
+            numerator *= -1;
+            denominator *= -1;
+        }
+        this.numerator = BigInteger.valueOf(numerator);
+        this.denominator = BigInteger.valueOf(denominator);
+
+        reduce();
+    }
+
     private void reduce() {
         BigInteger gcd = numerator.gcd(denominator);
         numerator = numerator.divide(gcd);
@@ -129,25 +147,36 @@ public class Fraction extends Number implements Comparable<Fraction> {
 
     @Override
     public double doubleValue() {
-        return numerator.divide(denominator).doubleValue();
+        return numerator.doubleValue()/denominator.doubleValue();
     }
 
-    public Fraction add(Fraction f){
+    public Fraction add(Fraction f) {
         return new Fraction(numerator.multiply(f.getDenominator()).add(denominator.multiply(f.getNumerator())), denominator.multiply(f.getDenominator()));
     }
 
-    public Fraction substract(Fraction f){
+    public Fraction subtract(Fraction f) {
         return new Fraction(numerator.multiply(f.getDenominator()).subtract(denominator.multiply(f.getNumerator())), denominator.multiply(f.getDenominator()));
     }
 
-    public Fraction multiply(Fraction f){
+    public Fraction multiply(Fraction f) {
         return new Fraction(numerator.multiply(f.getNumerator()), denominator.multiply(f.getDenominator()));
     }
 
-    public Fraction divide(Fraction f){
+    public Fraction divide(Fraction f) {
         return new Fraction(numerator.multiply(f.getDenominator()), denominator.multiply(f.getNumerator()));
     }
 
+    public Fraction abs() {
+        return new Fraction(numerator.abs(), denominator);
+    }
+
+    public Fraction pow(int power) {
+        return new Fraction(numerator.pow(power), denominator.pow(power));
+    }
+
+    public Fraction negate() {
+        return new Fraction(numerator.negate(), denominator);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -170,6 +199,8 @@ public class Fraction extends Number implements Comparable<Fraction> {
 
     @Override
     public String toString() {
+        if (denominator.equals(BigInteger.ONE))
+            return numerator.toString();
         return numerator + "/" + denominator;
     }
 }
