@@ -46,7 +46,7 @@ public enum ScientificCalculator implements Calculator {
             "sqrt"
     };
 
-    private String[] separators = ArrayUtils.addAll(operators,"(", " ", ")");
+    private String[] separators = ArrayUtils.addAll(operators,"(", ")");
     private boolean isExpressionCorrect = true;
     private String lastResult = "";
     private String lastError = "";
@@ -79,6 +79,7 @@ public enum ScientificCalculator implements Calculator {
         String postfix = "";
         Stack<String> stack = new Stack<>();
 
+        infix = infix.replaceAll("\\s", "");
         for (String separator : separators) {
             infix = infix.replace(separator, "~" + separator + "~");
         }
@@ -94,7 +95,6 @@ public enum ScientificCalculator implements Calculator {
                 isExpressionCorrect = false;
                 return postfix;
             }
-            if (curr.equals(" ")) continue;
             if (isSeparator(curr)) {
                 switch (curr) {
                     case "(":
@@ -166,7 +166,7 @@ public enum ScientificCalculator implements Calculator {
         System.out.println(calc.result());
         calc.calculate("2+2-2*2/2");
         System.out.println(calc.result());
-        calc.calculate("(15) * -((3) - (4))");
+        calc.calculate("1 5 * -((3) - (4))");
         System.out.println(calc.result());
         calc.calculate("(25+sqrt(4)*5)/10--5%sin(45+90/2)");
         System.out.println(calc.result());
