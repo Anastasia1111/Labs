@@ -1,8 +1,12 @@
 package io.github.fnickru.calc;
 
+import android.support.v4.math.MathUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Stack;
 
 /**
@@ -27,9 +31,9 @@ public enum ScientificCalculator implements Calculator {
      *     <li>/ - деление</li>
      *     <li>% - остаток от деления</li>
      *     <li>u- - унарный минус</>
-     *     <li>sin - синус</li>
-     *     <li>cos - косинус</li>
-     *     <li>log - двоичный логарифм</li>
+     *     <li>sin - синус (аргумент в градусах)</li>
+     *     <li>cos - косинус (аргумент в градусах)</li>
+     *     <li>log - натуральный логарифм</li>
      *     <li>sqrt - квадратный корень</li>
      * </ul>
      */
@@ -91,8 +95,8 @@ public enum ScientificCalculator implements Calculator {
         {
             curr = tokens[i];
             if (i == (tokens.length - 1) && isOperator(curr)) {
-                postfix = ("#ERR1"); // Некорректное выражение
                 isExpressionCorrect = false;
+                lastError = "#WRONGEXP"; // Некорректное выражение
                 return postfix;
             }
             if (isSeparator(curr)) {
@@ -104,14 +108,14 @@ public enum ScientificCalculator implements Calculator {
                         while (!stack.peek().equals("(")) {
                             postfix = postfix.concat(stack.pop() + " ");
                             if (stack.isEmpty()) {
-                                postfix = ("#ERR2"); // Скобки не согласованы
                                 isExpressionCorrect = false;
+                                lastError = "#BRACERR"; // Скобки не согласованы
                                 return postfix;
                             }
                         }
                         stack.pop();
                         break;
-                    default:
+                    default: // Операторы
                         if (curr.equals("-") && (prev.equals("") || (isSeparator(prev)  && !prev.equals(")")))) {
                             curr = "u-";
                         } else {
@@ -130,8 +134,8 @@ public enum ScientificCalculator implements Calculator {
             if (isOperator(stack.peek()))
                 postfix = postfix.concat(stack.pop() + " ");
             else {
-                postfix = "#ERR2"; // Скобки не согласованы
                 isExpressionCorrect = false;
+                lastError = "#BRACERR"; // Скобки не согласованы
                 return postfix;
             }
         }
@@ -139,10 +143,108 @@ public enum ScientificCalculator implements Calculator {
         return postfix.trim();
     }
 
+    private String postfixCalc(String expression)
+    {
+        String[] tokens = expression.split(" ");
+        Stack<String> stack = new Stack<>();
+
+        try {
+            for (String token : tokens) {
+                Double res, arg1, arg2;
+                switch (token) {
+                    case "+":
+                        arg1 = Double.valueOf(stack.pop());
+                        arg2 = Double.valueOf(stack.pop());
+                        res = arg2 + arg1;
+                        lastOperation = "+" + arg1;
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "-":
+                        arg1 = Double.valueOf(stack.pop());
+                        arg2 = Double.valueOf(stack.pop());
+                        res = arg2 - arg1;
+                        lastOperation = "-" + arg1;
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "*":
+                        arg1 = Double.valueOf(stack.pop());
+                        arg2 = Double.valueOf(stack.pop());
+                        res = arg2 * arg1;
+                        lastOperation = "*" + arg1;
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "/":
+                        arg1 = Double.valueOf(stack.pop());
+                        arg2 = Double.valueOf(stack.pop());
+                        res = arg2 / arg1;
+                        lastOperation = "/" + arg1;
+                        if (res.isNaN() || res.isInfinite())
+                            throw new ArithmeticException("Division by zero");
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "%":
+                        arg1 = Double.valueOf(stack.pop());
+                        arg2 = Double.valueOf(stack.pop());
+                        res = arg2 % arg1;
+                        lastOperation = "%" + arg1;
+                        if (res.isNaN() || res.isInfinite())
+                            throw new ArithmeticException("Division by zero");
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "u-":
+                        arg1 = Double.valueOf(stack.pop());
+                        res = -arg1;
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "sin":
+                        arg1 = Double.valueOf(stack.pop());
+                        res = Math.sin(Math.toRadians(arg1));
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "cos":
+                        arg1 = Double.valueOf(stack.pop());
+                        res = Math.cos(Math.toRadians(arg1));
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "log":
+                        arg1 = Double.valueOf(stack.pop());
+                        res = Math.log(arg1);
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    case "sqrt":
+                        arg1 = Double.valueOf(stack.pop());
+                        res = Math.sqrt(arg1);
+                        stack.push(String.format(Locale.getDefault(), "%.12f", res).replace(",", "."));
+                        break;
+                    default: // Операнды
+                        stack.push(token);
+                }
+            }
+        } catch (NumberFormatException e) {
+            isExpressionCorrect = false;
+            lastError = "#NaN";
+            return "";
+        } catch (ArithmeticException e) {
+            isExpressionCorrect = false;
+            lastError = "#ZERODIV";
+            return "";
+        }
+        return String.format(Locale.getDefault(), "%.8f", Double.valueOf(stack.pop())).replace(",", ".");
+    }
+
     @Override
     public boolean calculate(String expression) {
-        //String postfix = infix2postfix(expression);
-        lastResult = infix2postfix(expression);
+        isExpressionCorrect = true;
+        lastOperation = "";
+        lastResult = "";
+        lastError = "";
+
+        if (expression.equals(lastResult))
+            expression = expression + lastOperation;
+
+        String postfix = infix2postfix(expression);
+        if (isExpressionCorrect)
+            lastResult = postfixCalc(postfix);
         return isExpressionCorrect;
     }
 
@@ -153,7 +255,7 @@ public enum ScientificCalculator implements Calculator {
 
     @Override
     public String result() {
-        return lastResult;
+        return isExpressionCorrect ? lastResult : lastError;
     }
 
     /**
@@ -164,11 +266,17 @@ public enum ScientificCalculator implements Calculator {
 
         calc.calculate("92/10");
         System.out.println(calc.result());
+        calc.calculate(calc.result());
+        System.out.println(calc.result());
         calc.calculate("2+2-2*2/2");
         System.out.println(calc.result());
-        calc.calculate("1 5 * -((3) - (4))");
+        calc.calculate(calc.result());
         System.out.println(calc.result());
-        calc.calculate("(25+sqrt(4)*5)/10--5%sin(45+90/2)");
+        calc.calculate("15 * -((3) - (4))");
+        System.out.println(calc.result());
+        calc.calculate(calc.result());
+        System.out.println(calc.result());
+        calc.calculate("(25+sqrt(4)*5)/10--5%cos(45+90/2)");
         System.out.println(calc.result());
     }
 }
