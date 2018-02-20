@@ -45,7 +45,7 @@ public enum ScientificCalculator implements Calculator {
     private String lastResult = "";
     private String lastError = "";
 
-    private boolean isOperator(String x) {
+    public boolean isOperator(String x) {
         return Arrays.asList(operators).contains(x);
     }
 
@@ -57,7 +57,7 @@ public enum ScientificCalculator implements Calculator {
         return isOperator(x) && !isBinaryOperator(x);
     }
 
-    private boolean isOperand(String x) {
+    public boolean isOperand(String x) {
         try {
             Double.valueOf(x);
             return true;
@@ -251,19 +251,19 @@ public enum ScientificCalculator implements Calculator {
             isExpressionCorrect = false;
             String wrongArgument = e.getMessage().substring(e.getMessage().indexOf("\"")).replace("\"", "");
             lastError = String.format("#NaN (%s)", wrongArgument);
-            return "";
+            return lastResult;
         } catch (ArithmeticException e) {
             isExpressionCorrect = false;
             lastError = "#ZERODIV";
-            return "";
+            return lastResult;
         }
         try {
             res = Double.valueOf(stack.pop());
-            return String.format(Locale.getDefault(), "%.8f", res).replace(",", ".");
+            return String.format(Locale.getDefault(), "%f", res).replace(",", ".");
         } catch (NumberFormatException e) {
             isExpressionCorrect = false;
             lastError = "#EMPTY";
-            return "";
+            return lastResult;
         }
     }
 
@@ -273,8 +273,6 @@ public enum ScientificCalculator implements Calculator {
 
         isExpressionCorrect = true;
         lastOperation = "";
-        lastResult = "";
-        lastError = "";
 
         String postfix = infix2postfix(infix);
         if (isExpressionCorrect)
@@ -289,40 +287,6 @@ public enum ScientificCalculator implements Calculator {
 
     @Override
     public String result() {
-        return isExpressionCorrect ? lastResult : lastError;
-    }
-
-    /**
-     * Функция для тестирования работоспособности. Будет удалена после окончания работы над классом
-     */
-    public static void main(String[] args) {
-        ScientificCalculator calc = ScientificCalculator.INSTANCE;
-
-        calc.calculate("");
-        System.out.println(calc.result()); // #EMPTY
-        calc.calculate("50");
-        System.out.println(calc.result()); // 50
-        calc.calculate(calc.result() + "=");
-        System.out.println(calc.result()); // 50
-        calc.calculate("2+");
-        System.out.println(calc.result()); // #WRONGEXP
-        calc.calculate("4+=");
-        System.out.println(calc.result()); // 8
-        calc.calculate("7=");
-        System.out.println(calc.result()); // 11
-        calc.calculate("92/10=");
-        System.out.println(calc.result()); // 9.2
-        calc.calculate(calc.result() + "=");
-        System.out.println(calc.result()); // 0.92
-        calc.calculate("2+2-2*2/2");
-        System.out.println(calc.result()); // 2
-        calc.calculate(calc.result() + "=");
-        System.out.println(calc.result()); // 0
-        calc.calculate("15 * -((3) - (4))=");
-        System.out.println(calc.result()); // 15
-        calc.calculate(calc.result() + "=");
-        System.out.println(calc.result()); // 15
-        calc.calculate("(25+sqrt(4)*5)/10--5%cos(45+90/2)=");
-        System.out.println(calc.result()); // #ZERODIV
+        return lastResult;
     }
 }

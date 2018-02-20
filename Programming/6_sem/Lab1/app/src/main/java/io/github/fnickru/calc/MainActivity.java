@@ -5,153 +5,112 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.math.BigDecimal;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
-    private EditText editText;
-    private Integer arg1;
-    private Integer arg2;
-    private OperationClicked currOp;
-    private boolean isNumberClicked;
-
-    private enum OperationClicked {
-        ADD, SUB, MUL, DIV, EQU
-    }
-
-    int doOperation() {
-        try {
-            switch (currOp) {
-                case ADD: arg1 += arg2; break;
-                case SUB: arg1 -= arg2; break;
-                case MUL: arg1 *= arg2; break;
-                case DIV: arg1 /= arg2; break;
-            }
-            arg2 = 0;
-        } catch (ArithmeticException e) {
-            editText.setText("ERR");
-            return 1;
-        }
-        return 0;
-    }
+    private TextView textView;
+    private ScientificCalculator calc = ScientificCalculator.INSTANCE;
+    private String lastOperand = "";
+    private boolean error = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        final Button button0 = findViewById(R.id.button0);
-        final Button button1 = findViewById(R.id.button1);
-        final Button button2 = findViewById(R.id.button2);
-        final Button button3 = findViewById(R.id.button3);
-        final Button button4 = findViewById(R.id.button4);
-        final Button button5 = findViewById(R.id.button5);
-        final Button button6 = findViewById(R.id.button6);
-        final Button button7 = findViewById(R.id.button7);
-        final Button button8 = findViewById(R.id.button8);
-        final Button button9 = findViewById(R.id.button9);
-        final Button buttonC = findViewById(R.id.buttonC);
-        final Button buttonA = findViewById(R.id.buttonA);
-        final Button buttonS = findViewById(R.id.buttonS);
-        final Button buttonM = findViewById(R.id.buttonM);
-        final Button buttonD = findViewById(R.id.buttonD);
-        final Button buttonE = findViewById(R.id.buttonE);
-
-        editText = findViewById(R.id.editText);
-
-        button0.setOnClickListener(this);
-        button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
-        button3.setOnClickListener(this);
-        button4.setOnClickListener(this);
-        button5.setOnClickListener(this);
-        button6.setOnClickListener(this);
-        button7.setOnClickListener(this);
-        button8.setOnClickListener(this);
-        button9.setOnClickListener(this);
-        buttonC.setOnClickListener(this);
-        buttonA.setOnClickListener(this);
-        buttonS.setOnClickListener(this);
-        buttonM.setOnClickListener(this);
-        buttonD.setOnClickListener(this);
-        buttonE.setOnClickListener(this);
-
-        arg1 = arg2 = 0;
-        currOp = OperationClicked.EQU;
-        isNumberClicked = false;
+        textView = findViewById(R.id.textView);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button0:
-            case R.id.button1:
-            case R.id.button2:
-            case R.id.button3:
-            case R.id.button4:
-            case R.id.button5:
-            case R.id.button6:
-            case R.id.button7:
-            case R.id.button8:
-            case R.id.button9:
-                if (currOp == OperationClicked.EQU) {
-                    arg1 = 0;
-                    currOp = OperationClicked.ADD;
+    public void onClick(View view) {
+        Button button = (Button) view;
+        int butId = button.getId();
+
+        String text = textView.getText().toString();
+
+        switch(butId) {
+            case R.id.num0:
+            case R.id.num1:
+            case R.id.num2:
+            case R.id.num3:
+            case R.id.num4:
+            case R.id.num5:
+            case R.id.num6:
+            case R.id.num7:
+            case R.id.num8:
+            case R.id.num9:
+                if (error) {
+                    text = "";
+                    error = false;
                 }
-                arg2 = arg2 * 10 + new Integer(((Button)v).getText().toString());
-                isNumberClicked = true;
+                text = text.concat(button.getText().toString());
+                lastOperand = lastOperand.concat(button.getText().toString());
                 break;
-            case R.id.buttonC:
-                arg1 = arg2 = 0;
-                currOp = OperationClicked.ADD;
+
+            case R.id.splitter:
+                if (!error && !lastOperand.contains(button.getText().toString())) {
+                    text = text.concat(button.getText().toString());
+                    lastOperand = lastOperand.concat(button.getText().toString());
+                }
                 break;
-            case R.id.buttonA:
-                if (isNumberClicked) {
-                    isNumberClicked = false;
-                    if (doOperation() == 0) {
-                        currOp = OperationClicked.ADD;
-                        break;
-                    }
-                    return;
+
+            case R.id.openBrack:
+            case R.id.clBrack:
+                if (error) {
+                    text = "";
+                    error = false;
                 }
-            case R.id.buttonS:
-                if (isNumberClicked) {
-                    isNumberClicked = false;
-                    if (doOperation() == 0) {
-                        currOp = OperationClicked.SUB;
-                        break;
-                    }
-                    return;
-                }
-            case R.id.buttonM:
-                if (isNumberClicked) {
-                    isNumberClicked = false;
-                    if (doOperation() == 0) {
-                        currOp = OperationClicked.MUL;
-                        break;
-                    }
-                    return;
-                }
-            case R.id.buttonD:
-                if (isNumberClicked) {
-                    isNumberClicked = false;
-                    if (doOperation() == 0) {
-                        currOp = OperationClicked.DIV;
-                        break;
-                    }
-                    return;
-                }
-            case R.id.buttonE:
-                if (isNumberClicked) {
-                    isNumberClicked = false;
-                    if (doOperation() == 0) {
-                        currOp = OperationClicked.EQU;
-                        break;
-                    }
-                    return;
+                text = text.concat(button.getText().toString());
+                lastOperand = "";
+                break;
+
+            case R.id.add:
+            case R.id.sub:
+            case R.id.mul:
+            case R.id.div:
+                if (!error) text = text.concat(button.getText().toString());
+                lastOperand = "";
+                break;
+
+            case R.id.mod:
+                if (!error) text = text + "%";
+                lastOperand = "";
+                break;
+
+            case R.id.sin:
+            case R.id.cos:
+            case R.id.sqrt:
+            case R.id.log:
+                if (!error) text = text.concat(button.getText().toString() + "(");
+                lastOperand = "";
+                break;
+
+            case R.id.butC:
+                text = "";
+                lastOperand = "";
+                break;
+
+            case R.id.inv:
+                String newOperand;
+                if (lastOperand.startsWith("-"))
+                    newOperand = lastOperand.replace("-", "");
+                else
+                    newOperand = "-" + lastOperand;
+                text = text.substring(0, text.lastIndexOf(lastOperand)) + newOperand;
+                lastOperand = newOperand;
+                break;
+
+            case R.id.equal:
+                text = text.concat(button.getText().toString());
+                if (calc.calculate(text)) {
+                    text = calc.result();
+                } else {
+                    text = calc.errorMessage();
+                    error = true;
                 }
         }
-        editText.setText(currOp == OperationClicked.EQU && !isNumberClicked ? arg1.toString() : arg2.toString());
+        textView.setText(text);
     }
+
 }
