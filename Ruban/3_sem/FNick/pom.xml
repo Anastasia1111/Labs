@@ -12,6 +12,7 @@
         <junit.ver>4.12</junit.ver>
         <commons.io.ver>2.6</commons.io.ver>
         <java.ver>1.8</java.ver>
+        <xchart.ver>3.5.0</xchart.ver>
     </properties>
 
     <dependencies>
@@ -27,6 +28,12 @@
             <artifactId>junit</artifactId>
             <version>${junit.ver}</version>
             <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.knowm.xchart/xchart -->
+        <dependency>
+            <groupId>org.knowm.xchart</groupId>
+            <artifactId>xchart</artifactId>
+            <version>${xchart.ver}</version>
         </dependency>
     </dependencies>
 

@@ -22,17 +22,19 @@ public class Fraction extends Number implements Comparable<Fraction> {
         this(BigInteger.valueOf(numerator));
     }
 
-    /**
-     * Constructs a BigFraction from a floating-point number.
-     *
-     * @author Kip Robinson, <a href="https://github.com/kiprobinson">https://github.com/kiprobinson</a>
-     */
     public Fraction(double d)
     {
-        if(Double.isInfinite(d))
-            throw new IllegalArgumentException("Double value is infinite");
-        if(Double.isNaN(d))
-            throw new IllegalArgumentException("Double value is NaN");
+        this(d, 8);
+    }
+
+    public Fraction(double d, int precision)
+    {
+        if (precision <= 0)
+            throw new IllegalArgumentException("Wrong precision!");
+        if (Double.isInfinite(d))
+            throw new IllegalArgumentException("Double value is infinite!");
+        if (Double.isNaN(d))
+            throw new IllegalArgumentException("Double value is NaN!");
 
         if(d == 0.0)
         {
@@ -40,42 +42,13 @@ public class Fraction extends Number implements Comparable<Fraction> {
             this.denominator = BigInteger.ONE;
             return;
         }
+        long denominator = (long) Math.pow(10, precision);
+        long numerator = (long) (d * denominator);
 
-        final int sign = (int)((Double.doubleToRawLongBits(d) & 0x8000000000000000L) >>> 63);
-        final int exponent = (int)((Double.doubleToRawLongBits(d) & 0x7ff0000000000000L) >>> 52) - 0x3ff;
-        final long mantissa = Double.doubleToRawLongBits(d) & 0xfffffffffffffL;
-        final boolean isSubnormal = ((Double.doubleToRawLongBits(d) & 0x7ff0000000000000L) == 0) && ((Double.doubleToRawLongBits(d) & 0xfffffffffffffL) != 0);
+        this.numerator = BigInteger.valueOf(numerator);
+        this.denominator = BigInteger.valueOf(denominator);
 
-        BigInteger tmpNumerator = BigInteger.valueOf((isSubnormal ? 0L : 0x10000000000000L) + mantissa);
-        BigInteger tmpDenominator = BigInteger.ONE;
-
-        if(exponent > 52)
-        {
-            tmpNumerator = tmpNumerator.shiftLeft(exponent - 52);
-        }
-        else if (exponent < 52)
-        {
-            if(!isSubnormal)
-            {
-                int y = Math.min(tmpNumerator.getLowestSetBit(), 52 - exponent);
-
-                tmpNumerator = tmpNumerator.shiftRight(y);
-                tmpDenominator = tmpDenominator.shiftLeft(52 - exponent - y);
-            }
-            else
-            {
-                int y = Math.min(tmpNumerator.getLowestSetBit(), 1074);
-
-                tmpNumerator = tmpNumerator.shiftRight(y);
-                tmpDenominator = tmpDenominator.shiftLeft(1074 - y);
-            }
-        }
-
-        if(sign != 0)
-            tmpNumerator = tmpNumerator.negate();
-
-        this.numerator = tmpNumerator;
-        this.denominator = tmpDenominator;
+        reduce();
     }
 
     public Fraction(BigInteger numerator, BigInteger denominator) {
@@ -104,6 +77,41 @@ public class Fraction extends Number implements Comparable<Fraction> {
         this.denominator = BigInteger.valueOf(denominator);
 
         reduce();
+    }
+
+    public Fraction(String value)
+    {
+        try {
+            if (value.contains(".")) {
+                double d = Double.valueOf(value);
+                if(d == 0.0)
+                {
+                    this.numerator = BigInteger.ZERO;
+                    this.denominator = BigInteger.ONE;
+                    return;
+                }
+                long denominator = (long) Math.pow(10, 16);
+                long numerator = (long) (d * denominator);
+
+                this.numerator = BigInteger.valueOf(numerator);
+                this.denominator = BigInteger.valueOf(denominator);
+
+                reduce();
+                return;
+            }
+            if (value.contains("/")) {
+                String[] parts = value.split("/");
+                this.numerator = new BigInteger(parts[0]);
+                this.denominator = new BigInteger(parts[1]);
+
+                reduce();
+            } else {
+                this.numerator = new BigInteger(value);
+                this.denominator = BigInteger.ONE;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void reduce() {
