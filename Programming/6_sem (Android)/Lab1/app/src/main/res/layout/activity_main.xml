@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.monstruos.calc.MainActivity">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="io.github.fnickru.calc.MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+<LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:orientation="vertical" tools:layout_editor_absoluteY="8dp" tools:layout_editor_absoluteX="8dp">
 
-        <TextView
+    <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <GridLayout
+    <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -35,7 +35,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <Button
+        <Button
                 android:id="@+id/equal"
                 android:layout_width="180dp"
                 android:layout_height="90dp"
@@ -50,7 +50,7 @@
                 android:text="="
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/log"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -63,7 +63,7 @@
                 android:text="log"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/sqrt"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -76,7 +76,7 @@
                 android:text="sqrt"
                 android:textSize="12sp" />
 
-            <Button
+        <Button
                 android:id="@+id/cos"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -89,7 +89,7 @@
                 android:text="cos"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/sin"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -102,7 +102,7 @@
                 android:text="sin"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/div"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -115,7 +115,7 @@
                 android:text="/"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/sub"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -128,7 +128,7 @@
                 android:text="-"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/mul"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -141,7 +141,7 @@
                 android:text="*"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/add"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -154,7 +154,7 @@
                 android:text="+"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/mod"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -167,7 +167,7 @@
                 android:text="mod"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/clBrack"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -180,8 +180,8 @@
                 android:text=")"
                 android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/unarSub"
+        <Button
+                android:id="@+id/inv"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
                 android:layout_column="3"
@@ -193,7 +193,7 @@
                 android:text="+/-"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/openBrack"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -206,7 +206,7 @@
                 android:text="("
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/butC"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -219,7 +219,7 @@
                 android:text="C"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/splitter"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -229,10 +229,10 @@
                 android:layout_rowWeight="1"
                 android:elegantTextHeight="false"
                 android:onClick="onClick"
-                android:text=","
-                android:textSize="16sp" />
+                android:text="."
+                android:textSize="16sp"/>
 
-            <Button
+        <Button
                 android:id="@+id/num9"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -245,7 +245,7 @@
                 android:text="9"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num8"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -258,7 +258,7 @@
                 android:text="8"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num7"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -271,7 +271,7 @@
                 android:text="7"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num6"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -284,7 +284,7 @@
                 android:text="6"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num0"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -297,7 +297,7 @@
                 android:text="0"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num1"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -310,7 +310,7 @@
                 android:text="1"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num2"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -323,7 +323,7 @@
                 android:text="2"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num3"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -336,7 +336,7 @@
                 android:text="3"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num4"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -349,7 +349,7 @@
                 android:text="4"
                 android:textSize="16sp" />
 
-            <Button
+        <Button
                 android:id="@+id/num5"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
@@ -361,8 +361,8 @@
                 android:onClick="onClick"
                 android:text="5"
                 android:textSize="16sp" />
-        </GridLayout>
+    </GridLayout>
 
-    </LinearLayout>
+</LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
