@@ -1,7 +1,9 @@
 #include "cartesiansystem.h"
 
-CartesianSystem::CartesianSystem(double (*calcFunction)(double)) : calcFunc(calcFunction), scale(0.5f)
+CartesianSystem::CartesianSystem(std::vector<UserFunc *> calcFunc) : scale(0.5f)
 {
+    textFont.loadFromFile("Symbola_hint.ttf");
+    functions = calcFunc;
     window = new RenderWindow(VideoMode(500, 500), "CarteSystem");
     view = new View(Vector2f(0, 0), Vector2f(500, 500));
     view->zoom(scale);
@@ -13,7 +15,10 @@ void CartesianSystem::run()
     while(window->isOpen()) {
         Event event;
         while(window->pollEvent(event)) {
+
             Vector2f buff = view->getCenter();
+            int fromCenterToEdge = window->getSize().x / 2;
+
             switch(event.type) {
             case Event::Closed:
                 window->close();
@@ -24,7 +29,7 @@ void CartesianSystem::run()
                 break;
             case Event::MouseWheelScrolled:
                 if(event.mouseWheelScroll.delta > 0) {
-                    if((scale /= 2) < 0.01) {
+                    if((scale /= 2) < 0.05) {
                         scale *= 2;
                     } else {
                         view->zoom(0.5f);
@@ -40,38 +45,41 @@ void CartesianSystem::run()
             case Event::KeyPressed:
                 switch (event.key.code) {
                 case Keyboard::Left:
-                    buff.x += -50;
-                    if((buff.x - window->getSize().x / 2) < -5000)
-                        buff.x -= -50;
+                    buff.x += (int)(-50 * scale);
                     break;
                 case Keyboard::Right:
-                    buff.x += 50;
-                    if((buff.x + window->getSize().x / 2) > 5000)
-                        buff.x -= 50;
+                    buff.x += (int)(50 * scale);
                     break;
                 case Keyboard::Up:
-                    buff.y += -50;
-                    if((buff.y - window->getSize().y / 2) < -5000)
-                        buff.y -= -50;
+                    buff.y += (int)(-50 * scale);
                     break;
                 case Keyboard::Down:
-                    buff.y += 50;
-                    if((buff.y + window->getSize().y / 2) > 5000)
-                        buff.x -= 50;
+                    buff.y += (int)(50 * scale);
                     break;
                 default:
                     break;
                 }
-                view->setCenter(buff);
                 break;
             default:
                 break;
             }
+
+            fromCenterToEdge *= scale;
+            if(buff.x + fromCenterToEdge > 5000)
+                buff.x = 5000 - fromCenterToEdge;
+            if(buff.x - fromCenterToEdge < -5000)
+                buff.x = -5000 + fromCenterToEdge;
+            if(buff.y + fromCenterToEdge > 5000)
+                buff.y = 5000 - fromCenterToEdge;
+            if(buff.y - fromCenterToEdge < -5000)
+                buff.y = -5000 + fromCenterToEdge;
+            view->setCenter(buff);
         }
+
         window->setView(*view);
         window->clear(Color::White);
         drawCoordSystem();
-        drawFunction();
+        drawFunctions();
         window->display();
     }
 }
@@ -90,6 +98,11 @@ void CartesianSystem::drawCoordSystem()
     yAxis.setFillColor(axisColor);
     window->draw(yAxis);
 
+    Text text;
+    text.setFont(textFont);
+    text.setColor(Color::Black);
+    text.setCharacterSize(14);
+
     VertexArray xLine(Lines, 2);
     VertexArray yLine(Lines, 2);
     xLine[0].color = axisColor;
@@ -104,22 +117,53 @@ void CartesianSystem::drawCoordSystem()
         yLine[1].position = Vector2f(i, 5000);
         window->draw(xLine);
         window->draw(yLine);
+        if(i % 50 == 0) {
+
+            std::stringstream intStr;
+            intStr << (i / -10);
+            text.setString(String(intStr.str()));
+            text.setPosition(0, i);
+            window->draw(text);
+
+            intStr.str("");
+            intStr << (i / 10);
+            text.setString(String(intStr.str()));
+            text.setPosition(i, 0);
+            window->draw(text);
+
+            if(i != 0) {
+                RectangleShape yAxisNotch(Vector2f(6, 3));
+                yAxisNotch.setPosition(-3, i - 2);
+                yAxisNotch.setFillColor(axisColor);
+                window->draw(yAxisNotch);
+
+                RectangleShape xAxisNotch(Vector2f(3, 6));
+                xAxisNotch.setPosition(i - 2, -3);
+                xAxisNotch.setFillColor(axisColor);
+                window->draw(xAxisNotch);
+            }
+        }
     }
 }
 
-void CartesianSystem::drawFunction()
+void CartesianSystem::drawFunctions()
 {
-    VertexArray fLine(Lines, 2);
-    fLine[0].color = Color::Black;
-    fLine[1].color = Color::Black;
-    fLine[0].position = Vector2f(-5001, calcFunc(-500.1) * -10); // calcFunc(i * 0.1) for right value and * -10 for right drawing and scaling
-    fLine[1].position = Vector2f(-5000, calcFunc(-500) * -10);
+    for(int j = 0; j < functions.size(); ++j) {
+        VertexArray fLine(Lines, 2);
+        fLine[0].color = Color::Black;
+        fLine[1].color = Color::Black;
+
+        // f(i * 0.1) for right value and * -10 for right drawing and scaling
+        fLine[1].position = Vector2f(-5000, functions[j]->func(-500) * -10);
 
 
-    for(int i = -5000 + 1; i < 5000; i++) {
-        fLine[0].position = fLine[1].position;
-        fLine[1].position = Vector2f(i, calcFunc(i * 0.1) * -10);
-        if(fLine[1].position.y < 500.0f || fLine[1].position.y > 500.0f)
-            window->draw(fLine);
+        for(int i = -5000 + 1; i < 5000; i++) {
+            fLine[0].position = fLine[1].position;
+            fLine[1].position = Vector2f(i, functions[j]->func(i * 0.1) * -10);
+
+            if(fLine[0].position.y < 500.0f || fLine[0].position.y > 500.0f)
+                if(fLine[1].position.y < 500.0f || fLine[1].position.y > 500.0f)
+                    window->draw(fLine);
+        }
     }
 }
