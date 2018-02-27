@@ -1,21 +1,18 @@
 package io.github.fnickru.math.util;
 
 import com.udojava.evalex.Expression;
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
+import org.math.plot.Plot2DPanel;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Plotter {
-    private static int precision = 100;
-    private static XYChart chart = new XYChartBuilder()
-            .width(800)
-            .height(600)
-            .title("Plotter")
-            .xAxisTitle("X")
-            .yAxisTitle("Y")
-            .build();
-    private static SwingWrapper<XYChart> wrapper = new SwingWrapper<>(chart);
-    private static boolean isFirstDisplay = true;
+    private static final double X_MAX = 10000;
+
+    private static double step = 1;
+    private static Plot2DPanel plot = new Plot2DPanel();
+    private static JFrame frame = new JFrame("Plotter");
 
     /**
      * Метод отрисовки графика заданной функции
@@ -24,56 +21,43 @@ public class Plotter {
      */
     public static void addFunction(String expression)
     {
-        addFunction(expression, 0, 100);
-    }
+        List<Double> x = new ArrayList<>();
+        List<Double> y = new ArrayList<>();
 
-    /**
-     * Метод отрисовки графика заданной функции
-     * @param expression - матматическое выражение формата "y=expression(x)",
-     *                   где expression(x) - любое корректное выражение с переменной х
-     * @param xmin - минимальное значение х на экране
-     * @param xmax - максимальное значение х на экране
-     */
-    public static void addFunction(String expression, double xmin, double xmax)
-    {
-        double[] xData = new double[precision + 1];
-        double[] yData = new double[precision + 1];
-
-        for (int i = 0; i <= precision; ++i) {
-            xData[i] = xmin + i * (xmax - xmin) / precision;
-            yData[i] = new Expression(expression.replaceFirst("y=", ""))
-                    .with("x", Double.valueOf(xData[i]).toString()).eval().doubleValue();
+        for (double i = 0; i <= X_MAX; i += step) {
+            x.add(i);
+            y.add(new Expression(expression.replaceFirst("y=", ""))
+                    .with("x", Double.valueOf(i).toString()).eval().doubleValue());
         }
 
-        chart.addSeries(expression, xData, yData);
+        double[] x_values = new double[x.size()];
+        double[] y_values = new double[y.size()];
+        for (int i = 0; i < x.size(); ++i)
+        {
+            x_values[i] = x.get(i);
+            y_values[i] = y.get(i);
+        }
+
+        plot.addLinePlot(expression, x_values, y_values);
     }
 
     public static void show()
     {
-        if (isFirstDisplay) {
-            wrapper.displayChart();
-            isFirstDisplay = false;
-        } else {
-            wrapper.repaintChart();
-        }
+        frame.setContentPane(plot);
+        frame.setVisible(true);
     }
 
     public static void clear()
     {
-        chart = new XYChartBuilder()
-                .width(800)
-                .height(600)
-                .title("Plotter")
-                .xAxisTitle("X")
-                .yAxisTitle("Y")
-                .build();
+        frame.setVisible(false);
+        frame.setContentPane(null);
     }
 
-    public static int getPrecision() {
-        return precision;
+    public static double getStep() {
+        return step;
     }
 
-    public static void setPrecision(int precision) {
-        Plotter.precision = precision;
+    public static void setStep(int step) {
+        Plotter.step = step;
     }
 }
