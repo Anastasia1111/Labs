@@ -1,6 +1,6 @@
 #include "cartesiansystem.h"
 
-CartesianSystem::CartesianSystem(std::vector<UserFunc *> calcFunc) : scale(0.5f)
+CartesianSystem::CartesianSystem(std::vector<UserFunc *> calcFunc) : scale(1.0f)
 {
     textFont.loadFromFile("Symbola_hint.ttf");
     functions = calcFunc;
@@ -25,36 +25,29 @@ void CartesianSystem::run()
                 break;
             case Event::Resized:
                 view->setSize(event.size.width, event.size.height);
-                view->zoom(0.5f);
                 break;
             case Event::MouseWheelScrolled:
                 if(event.mouseWheelScroll.delta > 0) {
-                    if((scale /= 2) < 0.05) {
+                    if((scale /= 2) < 0.05)
                         scale *= 2;
-                    } else {
-                        view->zoom(0.5f);
-                    }
                 } else {
-                    if((scale *= 2) > 3.0) {
+                    if((scale *= 2) > 3.0)
                         scale /= 2;
-                    } else {
-                        view->zoom(2.0f);
-                    }
                 }
                 break;
             case Event::KeyPressed:
                 switch (event.key.code) {
                 case Keyboard::Left:
-                    buff.x += (int)(-50 * scale);
+                    buff.x += (int)(-50);
                     break;
                 case Keyboard::Right:
-                    buff.x += (int)(50 * scale);
+                    buff.x += (int)(50);
                     break;
                 case Keyboard::Up:
-                    buff.y += (int)(-50 * scale);
+                    buff.y += (int)(-50);
                     break;
                 case Keyboard::Down:
-                    buff.y += (int)(50 * scale);
+                    buff.y += (int)(50);
                     break;
                 default:
                     break;
@@ -64,7 +57,6 @@ void CartesianSystem::run()
                 break;
             }
 
-            fromCenterToEdge *= scale;
             if(buff.x + fromCenterToEdge > 5000)
                 buff.x = 5000 - fromCenterToEdge;
             if(buff.x - fromCenterToEdge < -5000)
@@ -120,13 +112,13 @@ void CartesianSystem::drawCoordSystem()
         if(i % 50 == 0) {
 
             std::stringstream intStr;
-            intStr << (i / -10);
+            intStr << (i / -10 * scale);
             text.setString(String(intStr.str()));
             text.setPosition(0, i);
             window->draw(text);
 
             intStr.str("");
-            intStr << (i / 10);
+            intStr << (i / 10 * scale);
             text.setString(String(intStr.str()));
             text.setPosition(i, 0);
             window->draw(text);
@@ -154,16 +146,61 @@ void CartesianSystem::drawFunctions()
         fLine[1].color = Color::Black;
 
         // f(i * 0.1) for right value and * -10 for right drawing and scaling
-        fLine[1].position = Vector2f(-5000, functions[j]->func(-500) * -10);
+        fLine[1].position = Vector2f(-5000, functions[j]->func(-500.0 * scale) * -10 / scale);
 
 
         for(int i = -5000 + 1; i < 5000; i++) {
             fLine[0].position = fLine[1].position;
-            fLine[1].position = Vector2f(i, functions[j]->func(i * 0.1) * -10);
+            fLine[1].position = Vector2f(i, functions[j]->func(i * 0.1 * scale) * -10 / scale);
 
-            if(fLine[0].position.y < 500.0f || fLine[0].position.y > 500.0f)
-                if(fLine[1].position.y < 500.0f || fLine[1].position.y > 500.0f)
+            if(fLine[0].position.y < 500.0f * scale || fLine[0].position.y > 500.0f * scale)
+                if(fLine[1].position.y < 500.0f * scale || fLine[1].position.y > 500.0f * scale)
                     window->draw(fLine);
+        }
+    }
+    painting();
+}
+
+void CartesianSystem::painting()
+{
+    if(functions.empty()) {
+        return;
+    }
+    int upper, down;
+    for(int i = -5000; i <= 5000; ++i) {
+        upper = 5000;
+        down = -5000;
+        for(int j = 0; j < functions.size(); ++j) {
+            int res = (int)(functions[j]->func(i * 0.1 * scale) * 10 / scale);
+            switch (functions[j]->getSolution()) {
+            case 0:
+                upper = down = res;
+                break;
+            case 1:
+                if(down < res)
+                    down = res;
+                break;
+            case -1:
+                if(upper > res)
+                    upper = res;
+                break;
+            default:
+                break;
+            }
+        }
+        if(upper >= down) {
+            VertexArray fill(sf::Quads, 4);
+
+            fill[0].position = Vector2f(i, -1 * upper);
+            fill[1].position = Vector2f(i+1, -1 * upper);
+            fill[2].position = Vector2f(i+1, -1 * down);
+            fill[3].position = Vector2f(i, -1 * down);
+
+            fill[0].color = Color::Red;
+            fill[1].color = Color::Red;
+            fill[2].color = Color::Green;
+            fill[3].color = Color::Green;
+            window->draw(fill);
         }
     }
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "cartesiansystem.h"
 #include <math.h>
+#include <limits>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ class NewFunc1 : public UserFunc
 public:
     NewFunc1() {}
     double func(double x) {
-        return x;
+        return tan(x*x*x);
     }
 };
 
@@ -18,34 +19,15 @@ class NewFunc2 : public UserFunc
 public:
     NewFunc2() {}
     double func(double x) {
-        return x * x;
+        return 10 - x*x*x*x;
     }
 };
-
 class NewFunc3 : public UserFunc
 {
 public:
     NewFunc3() {}
     double func(double x) {
-        return x * x * x;
-    }
-};
-
-class NewFunc4 : public UserFunc
-{
-public:
-    NewFunc4() {}
-    double func(double x) {
-        return x * x * x * x;
-    }
-};
-
-class NewFunc5 : public UserFunc
-{
-public:
-    NewFunc5() {}
-    double func(double x) {
-        return x * x * x * x * x;
+        return 10 * cos(x*x) - 7.5;
     }
 };
 

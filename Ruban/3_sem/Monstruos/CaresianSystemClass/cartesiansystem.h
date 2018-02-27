@@ -15,6 +15,7 @@ public:
     UserFunc() : relSolution(0) {}
     virtual double func(double x) = 0;
     void setSolution(int solution) { relSolution = solution; }
+    int getSolution() { return relSolution; }
 private :
     // relSolution defines how is the solution related to the function
     // -1 - smaller
@@ -33,6 +34,7 @@ private:
     void drawLineWithAffinage(const VertexArray vertices);
     void drawCoordSystem();
     void drawFunctions();
+    void painting();
 
     std::vector<UserFunc *> functions;
     RenderWindow *window;
