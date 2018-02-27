@@ -13,6 +13,7 @@
         <commons.io.ver>2.6</commons.io.ver>
         <java.ver>1.8</java.ver>
         <xchart.ver>3.5.0</xchart.ver>
+        <eval.ver>2.0</eval.ver>
     </properties>
 
     <dependencies>
@@ -34,6 +35,12 @@
             <groupId>org.knowm.xchart</groupId>
             <artifactId>xchart</artifactId>
             <version>${xchart.ver}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.udojava/EvalEx -->
+        <dependency>
+            <groupId>com.udojava</groupId>
+            <artifactId>EvalEx</artifactId>
+            <version>${eval.ver}</version>
         </dependency>
     </dependencies>
 
