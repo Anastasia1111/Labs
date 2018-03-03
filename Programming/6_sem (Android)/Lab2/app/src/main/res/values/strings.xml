@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MyTabs</string>
+    <string name="first_tab_string">This is tab with picture</string>
+    <string name="first_tab_name">Picture</string>
+    <string name="second_tab_name">List</string>
+    <string name="third_tab_name">Table</string>
 </resources>

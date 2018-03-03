@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Мои вкладки</string>
+    <string name="first_tab_string">Это вкладка с картинкой</string>
+    <string name="first_tab_name">Картинка</string>
+    <string name="second_tab_name">Список</string>
+    <string name="third_tab_name">Таблица</string>
+</resources>
