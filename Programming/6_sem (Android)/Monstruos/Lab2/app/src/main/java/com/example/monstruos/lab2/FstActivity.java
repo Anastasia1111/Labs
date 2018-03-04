@@ -1,9 +1,9 @@
 package com.example.monstruos.lab2;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
-public class FstActivity extends AppCompatActivity {
+public class FstActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

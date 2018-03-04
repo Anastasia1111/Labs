@@ -18,10 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SecActivity"/>
-        <activity android:name=".ThirdActivity">
-        </activity>
-        <activity android:name=".FstActivity">
-        </activity>
+        <activity android:name=".ThirdActivity"/>
+        <activity android:name=".FstActivity"/>
     </application>
 
 </manifest>
