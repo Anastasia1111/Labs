@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
-#include "frac.h"
+#include "fracmatrixsymplex.h"
+
 
 using namespace std;
 
@@ -8,15 +9,10 @@ using namespace std;
 Frac **arr;
 int sizex, sizey;
 
-void print_arr();
-void rebaseGauss(int *basis);
-
-
 //matrix[sizex][sizey]
 int main()
 {
     int i, j;
-    int *basis;
 
     FILE *f = fopen("matrix.txt", "r+");
     fscanf(f, "%i %i", &sizex, &sizey);
@@ -35,54 +31,16 @@ int main()
         }
         cout << endl;
     }
-    basis = new int[sizex];
+    vector<int> basis;
+    int buf;
     for(i = 0; i < sizex; ++i) {
         cout << "basis[" << i << "] = ";
-        cin >> basis[i];
+        cin >> buf;
+        basis.push_back(buf);
     }
-    rebaseGauss(basis);
-    cout << "Result:" << endl;
-    print_arr();
+    FracMatrixSymplex matrix(arr, sizex, sizey, basis);
+    matrix.printInfo();
 
     return 0;
 }
 
-void rebaseGauss(int *basis)
-{
-    int i, j, k;
-    Frac q;
-    for(i = 0; i < sizex; ++i)
-    {
-        Frac buf = arr[i][basis[i]];
-        if(arr[i][basis[i]] == 0) {
-            cout << "Cannot make basis(zero);" << endl;
-            return;
-        }
-        for(j = 0; j < sizey; ++j)
-            arr[i][j] /= buf;
-
-        print_arr();
-        for(j = 0; j < sizex; ++j)
-        {
-            if(j == i) continue;
-            q = arr[j][basis[i]];
-
-            for(k = 0; k < sizey; ++k)
-                arr[j][k] -= arr[i][k] * q;
-        }
-        print_arr();
-    }
-    return;
-}
-
-void print_arr() {
-    for(int k = 0; k < sizex; ++k)
-    {
-        for(int l = 0; l < sizey; ++l) {
-            arr[k][l].print();
-            cout << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
-}

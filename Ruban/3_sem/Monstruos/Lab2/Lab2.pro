@@ -4,7 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    frac.cpp
+    ../FracClass/frac.cpp \
+    fracmatrixsymplex.cpp
 
 HEADERS += \
-    frac.h
+    ../FracClass/frac.h \
+    fracmatrixsymplex.h
