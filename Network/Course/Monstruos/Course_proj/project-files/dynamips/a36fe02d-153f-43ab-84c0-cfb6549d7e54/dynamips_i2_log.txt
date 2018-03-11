@@ -1,0 +1,37 @@
+Mar 10 19:08:04.382 HYPERVISOR: Release 0.2.14-amd64/Linux (tag 2014092320)
+Mar 10 19:08:04.382 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 42191.
+Mar 10 19:08:04.391 HYPERVISOR: exec_cmd: hypervisor version 
+Mar 10 19:08:04.392 HYPERVISOR: exec_cmd: hypervisor working_dir /home/monstruos/Github/Labs/Network/Course/Monstruos/Course_proj/project-files/dynamips 
+Mar 10 19:08:04.392 GENERAL: working_dir=/home/monstruos/Github/Labs/Network/Course/Monstruos/Course_proj/project-files/dynamips
+Mar 10 19:08:04.393 HYPERVISOR: exec_cmd: hypervisor working_dir /home/monstruos/Github/Labs/Network/Course/Monstruos/Course_proj/project-files/dynamips/5719009c-d309-402d-b6e1-2fb568a333cc 
+Mar 10 19:08:04.393 GENERAL: working_dir=/home/monstruos/Github/Labs/Network/Course/Monstruos/Course_proj/project-files/dynamips/5719009c-d309-402d-b6e1-2fb568a333cc
+Mar 10 19:08:04.393 HYPERVISOR: exec_cmd: vm create R4 4 c3725 
+Mar 10 19:08:04.393 VM: VM R4 created.
+Mar 10 19:08:04.394 HYPERVISOR: exec_cmd: vm set_con_tcp_port R4 5019 
+Mar 10 19:08:04.395 HYPERVISOR: exec_cmd: c3725 get_mac_addr R4 
+Mar 10 19:08:04.396 HYPERVISOR: exec_cmd: vm set_nvram R4 256 
+Mar 10 19:08:04.397 HYPERVISOR: exec_cmd: c3725 set_mac_addr R4 c204.150c.0000 
+Mar 10 19:08:04.398 HYPERVISOR: exec_cmd: vm get_status R4 
+Mar 10 19:08:04.399 HYPERVISOR: exec_cmd: vm set_idle_pc R4 0x60264f28 
+Mar 10 19:08:04.401 HYPERVISOR: exec_cmd: vm set_ios R4 /home/monstruos/GNS3/images/IOS/c3725-adventerprisek9-mz124-15.image 
+Mar 10 19:08:04.402 HYPERVISOR: exec_cmd: vm set_disk0 R4 0 
+Mar 10 19:08:04.403 HYPERVISOR: exec_cmd: vm get_status R4 
+Mar 10 19:08:04.403 HYPERVISOR: exec_cmd: vm slot_add_binding R4 1 0 NM-1FE-TX 
+Mar 10 19:08:05.135 HYPERVISOR: exec_cmd: nio create_udp udp-405b317e-6ffc-468f-acfe-c989773512be 10004 127.0.0.1 10005 
+Mar 10 19:08:05.174 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R4 0 1 udp-405b317e-6ffc-468f-acfe-c989773512be 
+Mar 10 19:08:05.175 HYPERVISOR: exec_cmd: vm get_status R4 
+Mar 10 19:08:05.845 HYPERVISOR: exec_cmd: nio create_udp udp-7d59a4da-2d38-47ee-9aa2-de8703b721a3 10020 127.0.0.1 10021 
+Mar 10 19:08:05.849 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R4 1 0 udp-7d59a4da-2d38-47ee-9aa2-de8703b721a3 
+Mar 10 19:08:05.850 HYPERVISOR: exec_cmd: vm get_status R4 
+Mar 10 19:08:06.605 HYPERVISOR: exec_cmd: nio create_udp udp-a134f401-2e3d-43a0-92bd-ac9358ccc984 10030 127.0.0.1 10031 
+Mar 10 19:08:06.609 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R4 0 0 udp-a134f401-2e3d-43a0-92bd-ac9358ccc984 
+Mar 10 19:08:06.610 HYPERVISOR: exec_cmd: vm get_status R4 
+Mar 10 19:09:04.931 HYPERVISOR: exec_cmd: vm get_status R4 
+Mar 10 19:09:04.933 HYPERVISOR: exec_cmd: vm extract_config R4 
+Mar 10 19:09:05.249 HYPERVISOR: exec_cmd: vm get_status R4 
+Mar 10 19:09:05.251 HYPERVISOR: exec_cmd: vm extract_config R4 
+Mar 10 19:09:05.253 HYPERVISOR: exec_cmd: vm delete R4 
+Mar 10 19:09:05.254 VM: VM R4 destroyed.
+Mar 10 19:09:05.254 HYPERVISOR: exec_cmd: hypervisor stop 
+Mar 10 19:09:05.468 HYPERVISOR: Stopped.
+Mar 10 19:09:05.469 GENERAL: reset done.

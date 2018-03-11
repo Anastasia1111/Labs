@@ -1,0 +1,19 @@
+Mar 10 19:08:04.596 HYPERVISOR: Release 0.2.14-amd64/Linux (tag 2014092320)
+Mar 10 19:08:04.596 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 46413.
+Mar 10 19:08:04.603 HYPERVISOR: exec_cmd: hypervisor version 
+Mar 10 19:08:04.603 HYPERVISOR: exec_cmd: hypervisor working_dir /home/monstruos/Github/Labs/Network/Course/Monstruos/Course_proj/project-files/dynamips 
+Mar 10 19:08:04.603 GENERAL: working_dir=/home/monstruos/Github/Labs/Network/Course/Monstruos/Course_proj/project-files/dynamips
+Mar 10 19:08:04.604 HYPERVISOR: exec_cmd: ethsw create SW4 
+Mar 10 19:08:06.037 HYPERVISOR: exec_cmd: nio create_udp udp-237b4e88-f3ab-430b-a74a-691fad517ada 10022 127.0.0.1 10023 
+Mar 10 19:08:06.038 HYPERVISOR: exec_cmd: ethsw add_nio SW4 udp-237b4e88-f3ab-430b-a74a-691fad517ada 
+Mar 10 19:08:06.050 HYPERVISOR: exec_cmd: ethsw set_access_port SW4 udp-237b4e88-f3ab-430b-a74a-691fad517ada 1 
+Mar 10 19:08:06.359 HYPERVISOR: exec_cmd: nio create_udp udp-1c187b86-675a-4f0e-b435-6c61982f0def 10024 127.0.0.1 10025 
+Mar 10 19:08:06.360 HYPERVISOR: exec_cmd: ethsw add_nio SW4 udp-1c187b86-675a-4f0e-b435-6c61982f0def 
+Mar 10 19:08:06.375 HYPERVISOR: exec_cmd: ethsw set_access_port SW4 udp-1c187b86-675a-4f0e-b435-6c61982f0def 1 
+Mar 10 19:08:06.808 HYPERVISOR: exec_cmd: nio create_udp udp-996b05fe-ceb6-4a08-83e2-1135608e66dc 10033 127.0.0.1 10032 
+Mar 10 19:08:06.811 HYPERVISOR: exec_cmd: ethsw add_nio SW4 udp-996b05fe-ceb6-4a08-83e2-1135608e66dc 
+Mar 10 19:08:06.821 HYPERVISOR: exec_cmd: ethsw set_access_port SW4 udp-996b05fe-ceb6-4a08-83e2-1135608e66dc 1 
+Mar 10 19:09:05.006 HYPERVISOR: exec_cmd: ethsw delete SW4 
+Mar 10 19:09:05.061 HYPERVISOR: exec_cmd: hypervisor stop 
+Mar 10 19:09:05.176 HYPERVISOR: Stopped.
+Mar 10 19:09:05.176 GENERAL: reset done.
