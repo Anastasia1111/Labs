@@ -254,7 +254,6 @@ ModelManifest.xml
 project-builds/
 save/
 *.save
-*.cfg
 RAMsave.txt
 ara.txt
 
