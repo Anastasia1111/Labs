@@ -11,6 +11,8 @@ using namespace std;
 class FracMatrixSymplex
 {
 public:
+    FracMatrixSymplex();
+    void rowMulti(int row, Frac mult);
 
 private:
     Frac **m;

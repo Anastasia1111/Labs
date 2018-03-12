@@ -1,0 +1,54 @@
+Mar 12 11:40:53.935 HYPERVISOR: Release 0.2.14-amd64/Linux (tag 2014092320)
+Mar 12 11:40:53.936 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 52433.
+Mar 12 11:40:53.949 HYPERVISOR: exec_cmd: hypervisor version 
+Mar 12 11:40:53.950 HYPERVISOR: exec_cmd: hypervisor working_dir /home/monstruos/Github/Labs/Network/Lab3/lab/project-files/dynamips 
+Mar 12 11:40:53.950 GENERAL: working_dir=/home/monstruos/Github/Labs/Network/Lab3/lab/project-files/dynamips
+Mar 12 11:40:53.951 HYPERVISOR: exec_cmd: hypervisor working_dir /home/monstruos/Github/Labs/Network/Lab3/lab/project-files/dynamips/5d583845-1037-4a92-85f0-3b8ca120167d 
+Mar 12 11:40:53.951 GENERAL: working_dir=/home/monstruos/Github/Labs/Network/Lab3/lab/project-files/dynamips/5d583845-1037-4a92-85f0-3b8ca120167d
+Mar 12 11:40:53.952 HYPERVISOR: exec_cmd: vm create R1 1 c3725 
+Mar 12 11:40:53.952 VM: VM R1 created.
+Mar 12 11:40:53.954 HYPERVISOR: exec_cmd: vm set_con_tcp_port R1 5002 
+Mar 12 11:40:53.955 HYPERVISOR: exec_cmd: c3725 get_mac_addr R1 
+Mar 12 11:40:53.956 HYPERVISOR: exec_cmd: vm set_nvram R1 256 
+Mar 12 11:40:53.958 HYPERVISOR: exec_cmd: vm set_disk0 R1 0 
+Mar 12 11:40:53.959 HYPERVISOR: exec_cmd: vm get_status R1 
+Mar 12 11:40:53.960 HYPERVISOR: exec_cmd: vm slot_add_binding R1 1 0 NM-1FE-TX 
+Mar 12 11:40:53.960 HYPERVISOR: exec_cmd: c3725 set_mac_addr R1 c201.1b1c.0000 
+Mar 12 11:40:53.962 HYPERVISOR: exec_cmd: vm set_con_tcp_port R1 5002 
+Mar 12 11:40:53.963 HYPERVISOR: exec_cmd: vm set_ios R1 /home/monstruos/GNS3/images/IOS/c3725-adventerprisek9-mz124-15.image 
+Mar 12 11:40:53.964 HYPERVISOR: exec_cmd: vm get_status R1 
+Mar 12 11:40:53.965 HYPERVISOR: exec_cmd: vm set_idle_pc R1 0x60bf8ba0 
+Mar 12 11:40:55.702 HYPERVISOR: exec_cmd: nio create_udp udp-4929cbfd-e8d1-4277-a7d9-1789eddacb5d 10010 127.0.0.1 10011 
+Mar 12 11:40:55.746 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R1 0 0 udp-4929cbfd-e8d1-4277-a7d9-1789eddacb5d 
+Mar 12 11:40:55.747 HYPERVISOR: exec_cmd: vm get_status R1 
+Mar 12 11:40:56.563 HYPERVISOR: exec_cmd: nio create_udp udp-1102eee4-a6b4-403f-b069-b2cf2b11171f 10022 127.0.0.1 10023 
+Mar 12 11:40:56.569 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R1 0 1 udp-1102eee4-a6b4-403f-b069-b2cf2b11171f 
+Mar 12 11:40:56.570 HYPERVISOR: exec_cmd: vm get_status R1 
+Mar 12 11:40:56.988 HYPERVISOR: exec_cmd: nio create_udp udp-64bfabb3-a180-4301-bdd7-307b0c1b0b9b 10034 127.0.0.1 10035 
+Mar 12 11:40:56.993 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R1 1 0 udp-64bfabb3-a180-4301-bdd7-307b0c1b0b9b 
+Mar 12 11:40:56.994 HYPERVISOR: exec_cmd: vm get_status R1 
+Mar 12 11:41:37.186 HYPERVISOR: exec_cmd: vm create Ghost 0 c3725 
+Mar 12 11:41:37.186 VM: VM Ghost created.
+Mar 12 11:41:37.187 HYPERVISOR: exec_cmd: vm set_ios Ghost /home/monstruos/GNS3/images/IOS/c3725-adventerprisek9-mz124-15.image 
+Mar 12 11:41:37.188 HYPERVISOR: exec_cmd: vm set_ghost_status Ghost 1 
+Mar 12 11:41:37.189 HYPERVISOR: exec_cmd: vm set_ghost_file Ghost /home/monstruos/Github/Labs/Network/Lab3/lab/project-files/dynamips/c3725-adventerprisek9-mz124-15.image-128.ghost 
+Mar 12 11:41:37.189 HYPERVISOR: exec_cmd: vm get_status Ghost 
+Mar 12 11:41:37.190 HYPERVISOR: exec_cmd: vm set_config Ghost configs/i0_startup-config.cfg 
+Mar 12 11:41:37.191 HYPERVISOR: exec_cmd: vm start Ghost 
+Mar 12 11:41:38.447 HYPERVISOR: exec_cmd: vm get_status Ghost 
+Mar 12 11:41:38.448 HYPERVISOR: exec_cmd: vm stop Ghost 
+Mar 12 11:41:38.613 VM: VM Ghost shutdown.
+Mar 12 11:41:38.615 HYPERVISOR: exec_cmd: vm extract_config Ghost 
+Mar 12 11:41:38.617 HYPERVISOR: exec_cmd: vm clean_delete Ghost 
+Mar 12 11:41:38.617 VM: VM Ghost destroyed.
+Mar 12 11:41:38.623 HYPERVISOR: exec_cmd: vm set_ghost_status R1 2 
+Mar 12 11:41:38.624 HYPERVISOR: exec_cmd: vm set_ghost_file R1 /home/monstruos/Github/Labs/Network/Lab3/lab/project-files/dynamips/c3725-adventerprisek9-mz124-15.image-128.ghost 
+Mar 12 11:41:38.625 HYPERVISOR: exec_cmd: vm get_status R1 
+Mar 12 11:41:38.627 HYPERVISOR: exec_cmd: vm set_config R1 configs/i1_startup-config.cfg 
+Mar 12 11:41:38.628 HYPERVISOR: exec_cmd: vm start R1 
+Mar 12 11:42:08.903 HYPERVISOR: exec_cmd: vm extract_config R1 
+Mar 12 11:42:08.948 HYPERVISOR: exec_cmd: vm extract_config R1 
+Mar 12 12:43:00.523 HYPERVISOR: exec_cmd: vm get_status R1 
+Mar 12 12:43:00.526 HYPERVISOR: exec_cmd: vm stop R1 
+Mar 12 12:43:00.661 VM: VM R1 shutdown.
+Mar 12 12:43:00.663 HYPERVISOR: exec_cmd: vm extract_config R1 
