@@ -186,6 +186,10 @@ public class Fraction extends Number implements Comparable<Fraction> {
         return new Fraction(numerator.negate(), denominator);
     }
 
+    public boolean isNegative() {
+        return this.numerator.signum() == -1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

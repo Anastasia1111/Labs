@@ -2,7 +2,7 @@ package io.github.fnickru.math.labs;
 
 import io.github.fnickru.math.util.Plotter;
 
-public class Lab3 {
+public class Graph {
 
     public static void main(String[] args) {
         Plotter.addFunction("y=sin(x)");

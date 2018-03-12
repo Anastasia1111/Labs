@@ -2,7 +2,6 @@ package io.github.fnickru.math.util;
 
 import io.github.fnickru.math.types.Fraction;
 import io.github.fnickru.math.types.Matrix;
-import io.github.fnickru.math.types.SquareMatrix;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -41,19 +40,20 @@ public class FileWorker {
         return (Fraction[]) fractions.toArray();
     }
 
-    public static SquareMatrix readSquareMatrix(String filename) {
+    public static Matrix readMatrix(String filename) {
+        Matrix matrix = null;
         try {
             List<String> lines = Files.readAllLines(Paths.get(filename));
-            SquareMatrix matrix = new SquareMatrix(lines.size());
-            for (int i = 0; i < matrix.size(); ++i) {
-                String[] values = lines.get(i).split(" ");
-                for (int j = 0; j < matrix.size(); ++j)
+            String[] size = lines.get(0).split(" ");
+            matrix = new Matrix(Integer.valueOf(size[0]), Integer.valueOf(size[1]));
+            for (int i = 0; i < matrix.rows(); ++i) {
+                String[] values = lines.get(i + 1).split(" ");
+                for (int j = 0; j < matrix.columns(); ++j)
                     matrix.set(new Fraction(values[j]), i, j);
             }
-            return matrix;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return matrix;
     }
 }

@@ -1,24 +1,124 @@
 package io.github.fnickru.math.types;
 
-public interface Matrix {
+import com.sun.istack.internal.NotNull;
 
-    Fraction get(int i, int j);
+import java.util.Arrays;
 
-    void set(Fraction value, int i, int j);
+public class Matrix {
 
-    int size();
+    private boolean isSquare;
 
-    Fraction[][] getMatrix();
+    private Fraction[][] matrix;
 
-    static Fraction determinant(Matrix matrix) {
+    public Matrix()
+    {
+        this(1);
+    }
+
+    public Matrix(int size)
+    {
+        this(size, size);
+    }
+
+    public Matrix(int rows, int columns)
+    {
+        if (rows <= 0 || columns <= 0)
+            throw new IllegalArgumentException("Wrong size!");
+
+        isSquare = rows == columns;
+        matrix = new Fraction[rows][columns];
+    }
+
+    public Matrix(Fraction[][] matrix)
+    {
         if (matrix == null)
             throw new IllegalArgumentException("Matrix is null!");
 
-        int n = matrix.size();
+        int rows = matrix.length;
+        int columns = matrix[0].length;
 
-        Fraction[][] m = new Fraction[n][n];
-        for (int i = 0; i < n; ++i)
-            System.arraycopy(matrix.getMatrix()[i], 0, m[i], 0, n);
+        isSquare = rows == columns;
+
+        this.matrix = new Fraction[rows][];
+        for (int i = 0; i < rows; ++i)
+            this.matrix[i] = Arrays.copyOf(matrix[i], columns);
+    }
+
+    public Fraction get(int i, int j)
+    {
+        Fraction element = null;
+        try {
+            element = matrix[i][j];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return element;
+    }
+
+    public void set(Fraction value, int i, int j)
+    {
+        try {
+            matrix[i][j] = value;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int rows() {
+        return matrix.length;
+    }
+
+    public int columns() {
+        return matrix[0].length;
+    }
+
+    private Fraction[][] getMatrix() {
+        return matrix.clone();
+    }
+
+    public void resize(int rows, int columns) {
+        if (rows <= 0 || columns <= 0)
+            throw new IllegalArgumentException("Wrong size!");
+
+        isSquare = rows == columns;
+
+        Fraction[][] newMatrix = new Fraction[rows][];
+        for (int i = 0; i < rows; ++i)
+            newMatrix[i] = Arrays.copyOf(matrix[i], columns);
+        this.matrix = newMatrix;
+    }
+
+    public void addRow(Fraction[] row)
+    {
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+
+        this.resize(rows + 1, columns);
+
+        for (int i = 0; i < columns; ++i)
+            this.set(row[i], rows, i);
+    }
+
+    public void addColumn(Fraction[] column)
+    {
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+
+        this.resize(rows, columns + 1);
+
+        for (int i = 0; i < columns; ++i)
+            this.set(column[i], i, columns);
+    }
+
+    static public Fraction determinant(Matrix matrix) {
+        if (matrix == null)
+            throw new IllegalArgumentException("Matrix is null!");
+        if (matrix.rows() != matrix.columns())
+            throw new IllegalArgumentException("Matrix is not square!");
+
+        int n = matrix.rows();
+
+        Fraction[][] m = matrix.getMatrix();
 
         int sign = 1;
         Fraction det = Fraction.ONE;
@@ -56,5 +156,17 @@ public interface Matrix {
         if (sign < 0)
             det = det.negate();
         return det;
+    }
+
+    @Override
+    public String toString() {
+        String res = "";
+        for (Fraction[] row : matrix) {
+            for (Fraction el : row) {
+                res = res.concat(el.toString() + "\t");
+            }
+            res = res.concat("\n");
+        }
+        return res;
     }
 }
