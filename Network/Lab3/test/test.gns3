@@ -81,7 +81,7 @@
         "nodes": [
             {
                 "compute_id": "local",
-                "console": 2001,
+                "console": 5000,
                 "console_type": "telnet",
                 "first_port_name": null,
                 "height": 45,
@@ -133,41 +133,7 @@
             },
             {
                 "compute_id": "local",
-                "console": 2002,
-                "console_type": "telnet",
-                "first_port_name": "",
-                "height": 59,
-                "label": {
-                    "rotation": 0,
-                    "style": "font-family: TypeWriter;font-size: 10;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
-                    "text": "server2012-1",
-                    "x": null,
-                    "y": -40
-                },
-                "name": "server2012-1",
-                "node_id": "4de43ec1-f27f-46f7-bd75-47aa3da20152",
-                "node_type": "virtualbox",
-                "port_name_format": "Ethernet{0}",
-                "port_segment_size": 0,
-                "properties": {
-                    "acpi_shutdown": false,
-                    "adapter_type": "Intel PRO/1000 MT Desktop (82540EM)",
-                    "adapters": 1,
-                    "headless": false,
-                    "linked_clone": false,
-                    "ram": 2048,
-                    "use_any_adapter": false,
-                    "vmname": "server 2012"
-                },
-                "symbol": ":/symbols/vbox_guest.svg",
-                "width": 65,
-                "x": -140,
-                "y": -215,
-                "z": 0
-            },
-            {
-                "compute_id": "local",
-                "console": 2003,
+                "console": 5002,
                 "console_type": "telnet",
                 "first_port_name": "",
                 "height": 59,
@@ -191,12 +157,46 @@
                     "linked_clone": false,
                     "ram": 2048,
                     "use_any_adapter": false,
-                    "vmname": "windows 7"
+                    "vmname": "Windows 7"
                 },
                 "symbol": ":/symbols/vbox_guest.svg",
                 "width": 65,
                 "x": -133,
                 "y": -84,
+                "z": 0
+            },
+            {
+                "compute_id": "local",
+                "console": 5001,
+                "console_type": "telnet",
+                "first_port_name": "",
+                "height": 59,
+                "label": {
+                    "rotation": 0,
+                    "style": "font-family: TypeWriter;font-size: 10;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                    "text": "server2012-1",
+                    "x": null,
+                    "y": -40
+                },
+                "name": "server2012-1",
+                "node_id": "4de43ec1-f27f-46f7-bd75-47aa3da20152",
+                "node_type": "virtualbox",
+                "port_name_format": "Ethernet{0}",
+                "port_segment_size": 0,
+                "properties": {
+                    "acpi_shutdown": false,
+                    "adapter_type": "Intel PRO/1000 MT Desktop (82540EM)",
+                    "adapters": 1,
+                    "headless": false,
+                    "linked_clone": false,
+                    "ram": 2048,
+                    "use_any_adapter": false,
+                    "vmname": "Server 2012"
+                },
+                "symbol": ":/symbols/vbox_guest.svg",
+                "width": 65,
+                "x": -140,
+                "y": -215,
                 "z": 0
             }
         ]
