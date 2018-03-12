@@ -51,6 +51,8 @@ class Frac
         bool operator< (const double& sec);
         bool operator== (const Frac& sec);
         bool operator== (const double& sec);
+        bool operator!= (const Frac& sec);
+        bool operator!= (const double& sec);
 
 
         Frac invert();

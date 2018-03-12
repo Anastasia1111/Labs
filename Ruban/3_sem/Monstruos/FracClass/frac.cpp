@@ -145,13 +145,25 @@ bool Frac::operator<(const double &sec) {
 }
 
 bool Frac::operator==(const Frac &sec) {
-    int resNumer = this->numer - sec.numer;
-    return resNumer == 0;
+    Frac resNumer = *this - sec;
+    return resNumer.numer == 0;
 }
 
 bool Frac::operator==(const double &sec) {
     Frac tmpSec(sec);
     return *this == tmpSec;
+}
+
+bool Frac::operator!=(const Frac &sec)
+{
+    Frac resNumer = *this - sec;
+    return !(resNumer.numer == 0);
+}
+
+bool Frac::operator!=(const double &sec)
+{
+    Frac tmpSec(sec);
+    return (*this != tmpSec);
 }
 
 Frac Frac::invert() {
