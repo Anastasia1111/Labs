@@ -1,6 +1,7 @@
 package io.github.fnickru.math.util;
 
 import io.github.fnickru.math.types.Fraction;
+import io.github.fnickru.math.types.Function;
 import io.github.fnickru.math.types.Matrix;
 
 import java.io.*;
@@ -37,7 +38,7 @@ public class FileWorker {
             e.printStackTrace();
         }
 
-        return (Fraction[]) fractions.toArray();
+        return fractions.toArray(new Fraction[fractions.size()]);
     }
 
     public static Matrix readMatrix(String filename) {
@@ -55,5 +56,24 @@ public class FileWorker {
             e.printStackTrace();
         }
         return matrix;
+    }
+
+    public static Function[] readAllFunction(String filename) {
+        List<Function> functions = new ArrayList<>();
+
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(filename));
+            for (String line : lines) {
+                String[] values = line.split(" ");
+                Fraction[] args = new Fraction[values.length];
+                for (int i = 0; i < values.length; ++i)
+                    args[i] = new Fraction(values[i]);
+                functions.add(new Function(args));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return functions.toArray(new Function[functions.size()]);
     }
 }
