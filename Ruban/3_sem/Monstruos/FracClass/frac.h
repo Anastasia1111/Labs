@@ -57,6 +57,7 @@ class Frac
 
         Frac invert();
         Frac pow(int x);
+        Frac abs();
 
         void setNewNum(int newNumer, int newDenom);
         int intPart();

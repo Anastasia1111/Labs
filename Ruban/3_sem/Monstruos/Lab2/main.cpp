@@ -26,12 +26,11 @@ int main()
         for(j = 0; j < sizey; ++j) {
             fscanf(f, "%i/%i", &bufNumer, &bufDenom);
             arr[i][j].setNewNum(bufNumer, bufDenom);
-            arr[i][j].print();
-            cout << " ";
         }
         cout << endl;
     }
     FracMatrixSymplex a(arr, sizex, sizey);
+    a.symplexMethod();
     a.printMatrix();
 
     return 0;

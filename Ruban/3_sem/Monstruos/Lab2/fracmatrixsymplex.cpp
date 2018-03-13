@@ -2,12 +2,13 @@
 
 using namespace std;
 
-FracMatrixSymplex::FracMatrixSymplex(Frac **matrix, int x, int y) : m(matrix), xsize(x), ysize(y)
+FracMatrixSymplex::FracMatrixSymplex(Frac **matrix, int x, int y, bool isMin) : m(matrix), xsize(x), ysize(y)
 {
-    for(int i = 0; i < xsize; ++i) {
-        setBasisInColumn(i, i);
+    if(isMin) {
+        for(int i = 0; i < ysize; ++i)
+            m[xsize][i] *= -1.0;
     }
-    m[xsize][ysize - 1] = 0.0;
+    setNewSnapshot();
 }
 
 void FracMatrixSymplex::rowAdd(int row, Frac *add)
@@ -81,7 +82,12 @@ bool FracMatrixSymplex::columnIsBasis(int col, int row)
 
 void FracMatrixSymplex::symplexMethod()
 {
-
+    int lRow, lCol;
+    while(!isOptimal()) {
+        findLeadForBasisPlan(lRow, lCol);
+        rectangleMethod(lRow, lCol);
+        printMatrix();
+    }
 }
 
 bool FracMatrixSymplex::rebase(int inputColumn, int outputColumn)
@@ -163,7 +169,73 @@ void FracMatrixSymplex::setBasisInColumn(int column, int row)
     delete bufRow;
 }
 
-void FracMatrixSymplex::findOptimal(int &row, int &column)
+void FracMatrixSymplex::findOptForBasisPlan(int &optimalRow, int &optimalCol)
 {
+    Frac min = m[0][ysize - 1];
+    for(int i = 1; i <= xsize; ++i) {
+        if(m[i][ysize - 1] < 0.0)
+            if(m[i][ysize - 1] < min) {
+                min = m[i][ysize - 1];
+                optimalRow = i;
+            }
+    }
 
+    optimalCol = 0;
+    min = m[optimalRow][0];
+    for(int j = 1; j < ysize; ++j) {
+        if(m[optimalRow][j] < min) {
+            min = m[optimalRow][j];
+            optimalCol = j;
+        }
+    }
+    if(min > 0.0 && min == 0.0) {
+        cout << "CRITICAL ERROR! WTF IS GOING ON!" << endl;
+    }
+
+
+}
+
+void FracMatrixSymplex::findLeadForBasisPlan(int &leadRow, int &leadCol)
+{
+    Frac min = m[xsize][0];
+    for(int i = 1; i < ysize - 1; ++i) {
+        if(m[xsize][i] < min) {
+            min = m[xsize][i];
+            leadCol = i;
+        }
+    }
+
+    leadRow = 0;
+    Frac k = m[0][ysize - 1] / m[0][leadCol];
+    for(int i = 0; i < xsize; ++i) {
+        Frac kbuf = m[i][ysize - 1] / m[i][leadCol];
+        if(kbuf < k) {
+            leadRow = i;
+            k = kbuf;
+        }
+    }
+}
+
+void FracMatrixSymplex::rectangleMethod(int optRow, int optColumn)
+{
+    rowMulti(optRow, m[optRow][optColumn]);
+    for(int i = 0; i < xsize + 1; ++i) {
+        if(i != optRow)
+            for(int j = 0; j < ysize; ++j) {
+                if(j != optColumn) {
+                    m[i][j] = m[i][j] - (m[i][optColumn] * m[optRow][j]) / m[optRow][optColumn];
+                } else {
+                    m[i][j] = 0;
+                }
+            }
+    }
+}
+
+bool FracMatrixSymplex::isOptimal()
+{
+    for(int i = 0; i < ysize; ++i) {
+        if(m[xsize][i] < 0.0)
+            return false;
+    }
+    return true;
 }

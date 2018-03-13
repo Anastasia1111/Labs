@@ -186,6 +186,15 @@ Frac Frac::pow(int x) {
     return res;
 }
 
+Frac Frac::abs()
+{
+    if(*this > 0.0) {
+        return *this;
+    } else {
+        return (*this * -1.0);
+    }
+}
+
 void Frac::setNewNum(int newNumer, int newDenom) {
     numer = newNumer;
     denom = newDenom;

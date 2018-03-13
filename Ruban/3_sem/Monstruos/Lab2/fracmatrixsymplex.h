@@ -11,7 +11,7 @@ using namespace std;
 class FracMatrixSymplex
 {
 public:
-    FracMatrixSymplex(Frac **matrix, int x, int y);
+    FracMatrixSymplex(Frac **matrix, int x, int y, bool isMin = true);
     void rowAdd(int row, Frac *add);
     void rowMulti(int row, Frac mult);
     void colMulti(int col, Frac mult);
@@ -23,14 +23,16 @@ public:
     void setBasis(int *columns);
     bool basisWasBefore(int *columns);
 
-
 private:
     Frac **m;//[xsize][ysize]
     vector<pair<Frac **, int *>> baseSnapshot;
     int xsize;
     int ysize;
     void setBasisInColumn(int column, int row);
-    void findOptimal(int &row, int &column);
+    void findOptForBasisPlan(int &optimalRow, int &optimalCol);
+    void findLeadForBasisPlan(int &leadRow, int &leadCol);
+    void rectangleMethod(int optRow, int optColumn);
+    bool isOptimal();
 };
 
 #endif // FRACMATRIXSYMPLEX_H
