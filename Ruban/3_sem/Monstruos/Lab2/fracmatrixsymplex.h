@@ -11,12 +11,12 @@ using namespace std;
 class FracMatrixSymplex
 {
 public:
-    FracMatrixSymplex(Frac **matrix, int x, int y, bool isMin = true);
+    FracMatrixSymplex(Frac **matrix, int x, int y, bool toMin = false);
     void rowAdd(int row, Frac *add);
     void rowMulti(int row, Frac mult);
     void colMulti(int col, Frac mult);
     bool setNewSnapshot(); // return false if snapshot was set before
-    bool columnIsBasis(int col, int row);
+    int columnIsBasis(int col);
     void symplexMethod();
     bool rebase(int inputColumn, int outputColumn);
     void printMatrix();
@@ -28,6 +28,7 @@ private:
     vector<pair<Frac **, int *>> baseSnapshot;
     int xsize;
     int ysize;
+    bool toMin;
     void setBasisInColumn(int column, int row);
     void findOptForBasisPlan(int &optimalRow, int &optimalCol);
     void findLeadForBasisPlan(int &leadRow, int &leadCol);

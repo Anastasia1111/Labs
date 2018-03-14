@@ -27,11 +27,9 @@ int main()
             fscanf(f, "%i/%i", &bufNumer, &bufDenom);
             arr[i][j].setNewNum(bufNumer, bufDenom);
         }
-        cout << endl;
     }
     FracMatrixSymplex a(arr, sizex, sizey);
     a.symplexMethod();
-    a.printMatrix();
 
     return 0;
 }

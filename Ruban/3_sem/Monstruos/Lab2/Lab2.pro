@@ -5,8 +5,10 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     ../FracClass/frac.cpp \
-    fracmatrixsymplex.cpp
+    fracmatrixsymplex.cpp \
+    matrixlimitation.cpp
 
 HEADERS += \
     ../FracClass/frac.h \
-    fracmatrixsymplex.h
+    fracmatrixsymplex.h \
+    matrixlimitation.h

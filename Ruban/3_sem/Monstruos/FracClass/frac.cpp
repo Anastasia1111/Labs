@@ -125,8 +125,8 @@ Frac Frac::operator/=(const double &sec) {
 }
 
 bool Frac::operator>(const Frac &sec) {
-    int resNumer = this->numer - sec.numer;
-    return resNumer > 0;
+    Frac resNumer = *this - sec;
+    return resNumer.numer > 0;
 }
 
 bool Frac::operator>(const double &sec) {
@@ -135,8 +135,8 @@ bool Frac::operator>(const double &sec) {
 }
 
 bool Frac::operator<(const Frac &sec) {
-    int resNumer = this->numer - sec.numer;
-    return resNumer < 0;
+    Frac resNumer = *this - sec;
+    return resNumer.numer < 0;
 }
 
 bool Frac::operator<(const double &sec) {
@@ -210,6 +210,11 @@ int Frac::intPart()
 int Frac::fracPart()
 {
     return numer % denom;
+}
+
+double Frac::toDouble()
+{
+    return (double)numer / denom;
 }
 
 void Frac::print(FRAC_VISUAL regime)
