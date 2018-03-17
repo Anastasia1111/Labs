@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Жуки</string>
-    <string name="title_activity_main_menu">Жуки</string>
-    <string name="start_game">Начать игру</string>
-    <string name="menu_settings">Настройки</string>
-    <string name="game_description">Раздави их всех!</string>
 </resources>

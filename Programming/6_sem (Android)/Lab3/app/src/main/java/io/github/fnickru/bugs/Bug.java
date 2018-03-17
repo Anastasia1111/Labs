@@ -1,88 +1,82 @@
 package io.github.fnickru.bugs;
 
-import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.content.res.Resources;
+import android.graphics.*;
+import android.view.View;
 
 public class Bug implements Runnable {
-	
-	public static final float initSpeed = 5;
-	public static final long initTimeBetweenBugs = 1800;
-	
-	public static float speed;
-	public static long timeBetweenBugs;
-	
-	public static long timeOfLastBug;
-	
-	private static boolean toRight = true;
-	
-	public static long timeBetweenSpeedups = 250;
-	public static long timeOfLastSpeedup;
-	
-	
-	private float x;
-	private float y;
-	
-	private float velocity;
-	
-	public Bug(int y){
-		this.y = y;
-		
-		if (Bug.toRight) {
-			this.x = Game.width;
-			velocity = speed * -1;
-		} else {
-			this.x = 0 - Game.bugImage.getWidth();
-			velocity = speed;
-		}
+    private Paint p;
 
-		Bug.toRight = !Bug.toRight;
-	}
+    private float x = 100;
+    private float y = 100;
+    private int size = 250;
+    private float speed = 10;
 
-	public float getX() {
-		return x;
-	}
+    private Bitmap bitmap;
+    private View view;
 
-	public void setX(float x) {
-		this.x = x;
-	}
+    private boolean isMoving;
 
-	public float getY() {
-		return y;
-	}
+    public Bug(View view) {
+        this.view = view;
 
-	public void setY(float y) {
-		this.y = y;
-	}
+        p = new Paint();
+        p.setColor(Color.GREEN);
+        Resources res = view.getResources();
+        bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.bug), size, size, false);
+    }
 
-	private void update() {
-		this.x += velocity;
-	}
-	
-	public void draw(Canvas canvas) {
-		if(velocity < 0)
-			canvas.drawBitmap(Game.bugImage, x, y, null);
-		else
-			canvas.drawBitmap(Game.bugRightImage, x, y, null);
-	}
+    public float getX() {
+        return x;
+    }
 
-	public boolean isTouched(int touchX, int touchY) {
-		Rect bugRect = new Rect((int)this.x, (int)this.y, (int)this.x + Game.bugImage.getWidth(), (int)this.y + Game.bugImage.getHeight());
-		
-		return bugRect.contains(touchX, touchY);
-	}
+    public void setX(float x) {
+        this.x = x;
+    }
 
-	@Override
-	public void run() {
-		update();
+    public float getY() {
+        return y;
+    }
 
-		while (x < Game.width && x > 0 - Game.bugImage.getWidth()) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} finally {
-				update();
-			}
-		}
-	}
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public boolean isMoving() {
+        return isMoving;
+    }
+
+    public void draw(Canvas canvas) {
+        canvas.drawBitmap(bitmap, x, y, p);
+    }
+
+    public boolean isTouched(float touchX, float touchY) {
+        return touchX >= x && touchX <= x + bitmap.getWidth() && touchY >= y && touchY <= y + bitmap.getHeight();
+    }
+
+    public void stop() {
+        isMoving = false;
+    }
+
+    @Override
+    public void run() {
+        isMoving = true;
+
+        while (isMoving && x < view.getWidth()) {
+            x += speed;
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
