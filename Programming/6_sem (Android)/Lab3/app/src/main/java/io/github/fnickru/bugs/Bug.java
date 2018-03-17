@@ -3,7 +3,7 @@ package io.github.fnickru.bugs;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-public class Bug {
+public class Bug implements Runnable {
 	
 	public static final float initSpeed = 5;
 	public static final long initTimeBetweenBugs = 1800;
@@ -13,14 +13,14 @@ public class Bug {
 	
 	public static long timeOfLastBug;
 	
-	public static boolean toRight = true;
+	private static boolean toRight = true;
 	
 	public static long timeBetweenSpeedups = 250;
 	public static long timeOfLastSpeedup;
 	
 	
-	public float x;
-	public float y;
+	private float x;
+	private float y;
 	
 	private float velocity;
 	
@@ -28,7 +28,7 @@ public class Bug {
 		this.y = y;
 		
 		if (Bug.toRight) {
-			this.x = Game.screenWidth;
+			this.x = Game.width;
 			velocity = speed * -1;
 		} else {
 			this.x = 0 - Game.bugImage.getWidth();
@@ -37,8 +37,24 @@ public class Bug {
 
 		Bug.toRight = !Bug.toRight;
 	}
-	
-	public void update() {
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	private void update() {
 		this.x += velocity;
 	}
 	
@@ -50,9 +66,23 @@ public class Bug {
 	}
 
 	public boolean isTouched(int touchX, int touchY) {
-		Rect duckRect = new Rect((int)this.x, (int)this.y, (int)this.x + Game.bugImage.getWidth(), (int)this.y + Game.bugImage.getHeight());
+		Rect bugRect = new Rect((int)this.x, (int)this.y, (int)this.x + Game.bugImage.getWidth(), (int)this.y + Game.bugImage.getHeight());
 		
-		return duckRect.contains(touchX, touchY);
+		return bugRect.contains(touchX, touchY);
 	}
 
+	@Override
+	public void run() {
+		update();
+
+		while (x < Game.width && x > 0 - Game.bugImage.getWidth()) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				update();
+			}
+		}
+	}
 }

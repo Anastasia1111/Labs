@@ -15,9 +15,9 @@ import android.view.MotionEvent;
 
 public class Game {
 	
-	public static int screenWidth;
-	public static int screenHeight;
-	public static float screenDensity;
+	public static int width;
+	public static int height;
+	private static float screenDensity;
 	
 	private boolean gameOver;
 	
@@ -41,14 +41,14 @@ public class Game {
 	private float textForRestart_y;
 
 	
-	public Game(int screenWidth, int screenHeight, Resources resources) {
-		Game.screenWidth = screenWidth;
-		Game.screenHeight = screenHeight;
+	public Game(int width, int height, Resources resources) {
+		Game.width = width;
+		Game.height = height;
 		Game.screenDensity = resources.getDisplayMetrics().density;
 		
 		this.loadContent(resources);
 		
-		destBackgroundImage = new Rect(0, 0, screenWidth, screenHeight);
+		destBackgroundImage = new Rect(0, 0, width, height);
 		
 		paintForImages = new Paint();
 		paintForImages.setFilterBitmap(true);
@@ -60,8 +60,8 @@ public class Game {
 		paintText.setColor(Color.BLACK);
 		paintText.setTextSize(textSize * Game.screenDensity);
 
-		textForRestart_x = Game.screenWidth/2 - 95 * Game.screenDensity;
-		textForRestart_y = Game.screenHeight / 2 - 20;
+		textForRestart_x = Game.width /2 - 95 * Game.screenDensity;
+		textForRestart_y = Game.height / 2 - 20;
 		
 		this.resetGame();
 	}
@@ -103,21 +103,6 @@ public class Game {
 			this.addNewBug();
 		}
 		
-		for (int i = 0; i < aliveBugs.size(); i++) {
-			Bug Bug = aliveBugs.get(i);
-			
-			Bug.update();
-			
-			if(Bug.x > Game.screenWidth || Bug.x < 0 - Game.bugImage.getWidth()){
-				gameOver = true;
-				
-				if(bugsKilled > HighScore.highScore){
-					HighScore.highScore = bugsKilled;
-					HighScore.saveHighScore();
-				}
-			}
-		}
-		
 		if( (gameTime - Bug.timeOfLastSpeedup) > Bug.timeBetweenSpeedups ){
 			Bug.timeOfLastSpeedup = gameTime;
 			
@@ -127,25 +112,25 @@ public class Game {
 		}
 	}
 
-	public void Draw(Canvas canvas) {
+	public void draw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 
 		canvas.drawBitmap(Game.backgroundImage, null, this.destBackgroundImage, this.paintForImages);
 
-		for (int i = 0; i < aliveBugs.size(); i++) {
-			aliveBugs.get(i).draw(canvas);
-		}
+        for (Bug bug : aliveBugs) {
+            bug.draw(canvas);
+        }
 
-		canvas.drawText("Score: "      + Integer.toString(this.bugsKilled), 8.0f, 25.0f * Game.screenDensity, paintText);
+        canvas.drawText("Score: "      + Integer.toString(this.bugsKilled), 8.0f, 25.0f * Game.screenDensity, paintText);
 		canvas.drawText("High score: " + Integer.toString(HighScore.highScore),  8.0f, textSize * 2 * Game.screenDensity, paintText);
 		
 		if (gameOver) {
-			canvas.drawText("Game over", Game.screenWidth/2 - 65 * Game.screenDensity, Game.screenHeight / 3, paintText);
+			canvas.drawText("Game over", Game.width /2 - 65 * Game.screenDensity, Game.height / 3, paintText);
 			canvas.drawText("Touch to restart", textForRestart_x, textForRestart_y, paintText);
 		}
 	}
 
-	public void touchEvent_actionDown(MotionEvent event){
+	public void touchEvent(MotionEvent event){
     	if(!gameOver){
     		this.checkIfAnyBugSmashed(event.getX(), event.getY());
     	} else {
@@ -154,14 +139,6 @@ public class Game {
     			this.resetGame();
     		}
     	}
-    }
-
-    public void touchEvent_actionMove(MotionEvent event){
-    	
-    }
-
-    public void touchEvent_actionUp(MotionEvent event){
-    	
     }
 
     private void checkIfAnyBugSmashed(float touchX, float touchY){
@@ -176,8 +153,8 @@ public class Game {
     }
 
     private int newYcoordinate(){
-    	int min = (Game.screenHeight /2) + Game.bugImage.getHeight();
-    	int max = Game.screenHeight;
+    	int min = (Game.height /2) + Game.bugImage.getHeight();
+    	int max = Game.height;
     	
     	int height = Math.abs(max - min);
     	
@@ -187,7 +164,9 @@ public class Game {
     }
 
     private void addNewBug() {
-    	this.aliveBugs.add(new Bug(newYcoordinate()));
+		Bug bug = new Bug(newYcoordinate());
+    	this.aliveBugs.add(bug);
+		bug.run();
     }
     
 }

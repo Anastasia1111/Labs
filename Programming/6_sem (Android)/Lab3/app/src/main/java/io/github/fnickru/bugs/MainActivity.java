@@ -6,38 +6,36 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean showingMainMenu;
+    private boolean isMenuShown;
     private GamePanel gamePanel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        //isMenuShown = true;
 
-        showingMainMenu = true;
+        onClickStartGame(null);
     }
 
-    @Override
+    /*@Override
     public void onBackPressed(){
-        if(!showingMainMenu) {
-            showingMainMenu = true;
+        if(!isMenuShown) {
+            isMenuShown = true;
 
             gamePanel.surfaceDestroyed(null);
             setContentView(R.layout.activity_main);
         } else {
-
             super.onBackPressed();
         }
-    }
+    }*/
 
     public void onClickStartGame(View v){
-        showingMainMenu = false;
+        isMenuShown = false;
 
-        // High score
         HighScore.ctx = this.getBaseContext();
-        HighScore.loadHighScore();
+        HighScore.load();
 
-        // Start and show game.
         gamePanel = new GamePanel(this);
         setContentView(gamePanel);
     }

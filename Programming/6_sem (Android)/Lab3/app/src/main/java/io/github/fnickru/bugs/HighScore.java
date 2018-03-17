@@ -10,14 +10,13 @@ import java.io.OutputStreamWriter;
 import android.content.Context;
 
 public class HighScore {
-	
 	public static Context ctx;
 	
 	private static final String HIGHSCORE_FILE_NAME = "high_score";
 	
 	public static int highScore = 0;
 
-	public static void loadHighScore() {
+    public static void load() {
     	try {
 	        File file = HighScore.ctx.getFileStreamPath(HIGHSCORE_FILE_NAME);
 
@@ -39,7 +38,7 @@ public class HighScore {
         }
 	}
 	
-	public static void saveHighScore() {
+	public static void save() {
     	try {
             FileOutputStream out = HighScore.ctx.openFileOutput(HIGHSCORE_FILE_NAME, Context.MODE_PRIVATE);
             OutputStreamWriter writer = new OutputStreamWriter(out);
