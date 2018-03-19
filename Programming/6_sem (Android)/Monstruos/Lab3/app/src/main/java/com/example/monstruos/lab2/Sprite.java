@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import java.util.Random;
 import android.graphics.Rect;
-public class Sprite {
+import android.media.MediaPlayer;
+
+public class Sprite implements Runnable{
 
     /**Объект класса GameView*/
     private GameView gameView;
@@ -21,6 +23,8 @@ public class Sprite {
 
     private int width;
     private int height;
+
+    private boolean isAlive = false;
 
     /**Конструктор*/
     public Sprite(GameView gameView, Bitmap bmp)
@@ -55,13 +59,34 @@ public class Sprite {
     }
 
     /**Рисуем наши спрайты*/
-    public void onDraw(Canvas canvas)
+    public void draw(Canvas canvas)
     {
-        update();
+        //update();
         int srcX = 0;
         int srcY = 0;
         Rect src = new Rect(0, 0, srcX + width, srcY + height);
         Rect dst = new Rect(x, y, x + width, y + height);
         canvas.drawBitmap(bmp, src, dst, null);
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    @Override
+    public void run() {
+        isAlive = true;
+        while (isAlive) {
+            update();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
