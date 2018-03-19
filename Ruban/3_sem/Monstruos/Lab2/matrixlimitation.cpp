@@ -1,16 +1,17 @@
 #include "matrixlimitation.h"
 
-MatrixLimitation::MatrixLimitation(Frac *task, int size, int limit) : line(task), length(size), lim(limit)
+MatrixLimitation::MatrixLimitation(vector<Frac> task, int limit)
 {
-
+    line = task;
+    lim = limit;
 }
 
-void MatrixLimitation::setLine(Frac *task)
+void MatrixLimitation::setLine(vector<Frac> task)
 {
     line = task;
 }
 
-Frac *MatrixLimitation::getLine()
+vector<Frac> MatrixLimitation::getLine()
 {
     return line;
 }

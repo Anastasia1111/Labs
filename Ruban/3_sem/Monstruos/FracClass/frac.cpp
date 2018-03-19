@@ -234,7 +234,7 @@ int Frac::GCD(int a, int b) {
 }
 
 int Frac::LCM(int a, int b) {
-    return a / GCD(a, b) * b;
+    return a * b / GCD(a, b);
 }
 
 void Frac::toShorten() {

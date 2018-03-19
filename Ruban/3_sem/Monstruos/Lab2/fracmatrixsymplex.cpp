@@ -4,7 +4,84 @@ using namespace std;
 
 FracMatrixSymplex::FracMatrixSymplex(Frac **matrix, int x, int y, bool isMin) : m(matrix), xsize(x), ysize(y)
 {
+    toMin = isMin;
+    if(toMin) {
+        xmainvar = xsize - 2;
+    } else {
+        xmainvar = xsize - 1;
+    }
     setNewSnapshot();
+}
+
+FracMatrixSymplex::FracMatrixSymplex(vector <MatrixLimitation> matrix, MatrixLimitation target)
+{
+//    xsize = matrix.size();
+//    ysize = 0;
+//    int numOfAddVar = 0; // after m[i][numOfAddVar] - artifical variables
+//    int numOfMainVar = 0;
+
+//    for(int i = 0; i < matrix.size(); ++i) { // def size
+//        if(ysize < matrix[i].getLine().size())
+//            ysize = matrix[i].getLine().size();
+//    }
+//    numOfMainVar = ysize;
+
+//    for(int i = 0; i < matrix.size(); ++i) { // def num of additional variables
+//        int bufLim = matrix[i].getLimit();
+//        if(bufLim != 0) {
+//            if(bufLim < 0)
+//                ysize++;
+//            if(bufLim > 0) {
+//                ysize += 2;
+//            }
+//            numOfAddVar++;
+//        }
+//    }
+
+//    int addVarCount = 0, addVarArtifCount = 0;
+
+//    m = new Frac *[xsize + 1];
+//    if(target.getLimit() > 0) {
+//        for(int i = 0; i < xsize; ++i) {
+//            m[i] = new Frac[ysize];
+//            for(int j = 0; j < ysize; ++j) {
+//                m[i][j] = matrix[i].getLine()[j];
+//            }
+
+//            switch(matrix[i].getLimit()) {
+//            case 1:
+//                m[i][numOfMainVar + addVarCount] = -1.0;
+//                m[i][numOfMainVar + numOfaddVar + addVarArtifCount] = 1.0;
+//                addVarCount++;
+//                break;
+
+//            case -1:
+//                m[i][numOfMainVar + addVarCount] = 1.0;
+//                addVarCount++;
+//                break;
+//            }
+
+//        }
+//        m[xsize] = new Frac[ysize];
+//        for(int j = 0; j < ysize; ++j) {
+//            m[xsize][j] = target.getLine()[j];
+//        }
+//        isMin = false;
+//    }
+
+//    if(target.getLimit() < 0) {
+//        for(int i = 0; i < xsize; ++i) {
+//            m[i] = new Frac[ysize];
+//            for(int j = 0; j < ysize; ++j) {
+//                m[i][j] = matrix[i].getLine()[j];
+//            }
+//        }
+//        m[xsize] = new Frac[ysize];
+//        for(int j = 0; j < ysize; ++j) {
+//            m[xsize][j] = target.getLine()[j];
+//        }
+//        isMin = true;
+//    }
 }
 
 void FracMatrixSymplex::rowAdd(int row, Frac *add)
@@ -29,8 +106,8 @@ void FracMatrixSymplex::colMulti(int col, Frac mult)
 bool FracMatrixSymplex::setNewSnapshot()
 {
     Frac **snapshot;
-    snapshot = new Frac *[xsize + 1];
-    for(int i = 0; i < xsize + 1; ++i) {
+    snapshot = new Frac *[xsize];
+    for(int i = 0; i < xsize; ++i) {
         snapshot[i] = new Frac[ysize];
         for(int j = 0; j < ysize; ++j) {
             snapshot[i][j] = m[i][j];
@@ -39,7 +116,7 @@ bool FracMatrixSymplex::setNewSnapshot()
     bool res;
     for(int i = 0; i < baseSnapshot.size(); ++i) {
         res = true;
-        for(int j = 0; j < xsize + 1; ++j) {
+        for(int j = 0; j < xsize; ++j) {
             for(int k = 0; k < ysize; ++k) {
                 if(!(snapshot[j][k] == (baseSnapshot[i].first)[j][k])) {
                     res = false; // vector[i] is diff
@@ -80,7 +157,7 @@ bool FracMatrixSymplex::setNewSnapshot()
 int FracMatrixSymplex::columnIsBasis(int col)
 {
     int basisRow = -1;
-    for(int i = 0; i < xsize; ++i) {
+    for(int i = 0; i < xmainvar; ++i) {
         if(m[i][col] == 1) {
             if(basisRow == -1) {
                 basisRow = i;
@@ -100,13 +177,17 @@ void FracMatrixSymplex::symplexMethod()
     int lRow, lCol;
     printMatrix();
     cout << endl << endl;
+    if(toMin) {
+        setZeroInArtif();
+        setNewSnapshot();
+    }
     while(!isOptimal()) {
         findLeadForBasisPlan(lRow, lCol);
         rectangleMethod(lRow, lCol);
         setNewSnapshot();
         printMatrix();
-        cout << endl << "THAT'S ALL, FOLKS!!!" << endl;
     }
+    cout << endl << "THAT'S ALL, FOLKS!!!" << endl;
 }
 
 bool FracMatrixSymplex::rebase(int inputColumn, int outputColumn)
@@ -125,7 +206,7 @@ bool FracMatrixSymplex::rebase(int inputColumn, int outputColumn)
 void FracMatrixSymplex::printMatrix()
 {
     cout << "Matrix:" << endl;
-    for(int i = 0; i < xsize; ++i) {
+    for(int i = 0; i < xmainvar; ++i) {
         for(int j = 0; j < ysize; ++j) {
             m[i][j].print();
             cout << " ";
@@ -134,19 +215,27 @@ void FracMatrixSymplex::printMatrix()
     }
 
     cout << "Target function:" << endl;
-    for(int j = 0; j < ysize - 1; ++j) {
-        (m[xsize][j] * -1).print();
-        cout << "*x[" << j + 1 << "] + ";
+    for(int i = xmainvar; i < xsize; ++i) {
+        for(int j = 0; j < ysize - 1; ++j) {
+            if(!toMin)
+                (m[i][j] * -1.0).print();
+            else
+                m[i][j].print();
+            cout << "*x[" << j + 1 << "] + ";
+        }
+        cout << "\b\b";
+        cout << "= ";
+        if(toMin)
+            (m[i][ysize - 1] * -1.0).print();
+        else
+            m[i][ysize - 1].print();
+        cout << endl;
     }
-    cout << "\b\b";
-    cout << "= ";
-    m[xsize][ysize - 1].print();
-    cout << endl;
 }
 
 void FracMatrixSymplex::setBasis(int *columns)
 {
-    for(int i = 0; i < xsize; ++i) {
+    for(int i = 0; i < xmainvar; ++i) {
         setBasisInColumn(columns[i], i);
     }
 }
@@ -156,7 +245,7 @@ bool FracMatrixSymplex::basisWasBefore(int *columns)
     bool res;
     for(int i = 0; i < baseSnapshot.size(); ++i) { // for every snapshot...
         res = true;
-        for(int j = 0; j < xsize; ++j) { // if input basis was exist, res will be true
+        for(int j = 0; j < xmainvar; ++j) { // if input basis was exist, res will be true
             if(columns[j] != (baseSnapshot[i].second)[j]) {
                 res = false;
                 break;
@@ -168,11 +257,27 @@ bool FracMatrixSymplex::basisWasBefore(int *columns)
     return false;
 }
 
+void FracMatrixSymplex::setZeroInArtif()
+{
+    for(int bi = 0; bi < xmainvar; ++bi) {
+        int i = ysize - 2 - bi;
+        int basRow = columnIsBasis(i);
+        if(basRow == -1) {
+            cout << "CRITICAL ERROR! CRITICAL ERROR!" << endl;
+            return;
+        }
+        Frac a = m[xsize - 1][i];
+        for(int j = 0; j < ysize; ++j) {
+            m[xsize - 1][j] -= m[basRow][j] * a;
+        }
+    }
+}
+
 void FracMatrixSymplex::setBasisInColumn(int column, int row)
 {
     Frac *bufRow = new Frac[ysize]; // buffer for making '0'
     rowMulti(row, m[row][column].invert()); // making '1' in m[row][column]
-    for(int i = 0; i < xsize + 1; ++i) { // for every row
+    for(int i = 0; i < xsize; ++i) { // for every row
 
         if(i != row) {
             for(int j = 0; j < ysize; ++j) { // "(i) - (row) * m[i][column]"
@@ -187,7 +292,7 @@ void FracMatrixSymplex::setBasisInColumn(int column, int row)
 void FracMatrixSymplex::findOptForBasisPlan(int &optimalRow, int &optimalCol)
 {
     Frac min = m[0][ysize - 1];
-    for(int i = 1; i <= xsize; ++i) {
+    for(int i = 1; i < xsize; ++i) {
         if(m[i][ysize - 1] < 0.0)
             if(m[i][ysize - 1] < min) {
                 min = m[i][ysize - 1];
@@ -212,17 +317,17 @@ void FracMatrixSymplex::findOptForBasisPlan(int &optimalRow, int &optimalCol)
 
 void FracMatrixSymplex::findLeadForBasisPlan(int &leadRow, int &leadCol)
 {
-    Frac min = m[xsize][0];
+    Frac min = m[xsize - 1][0];
     for(int i = 1; i < ysize - 1; ++i) {
-        if(m[xsize][i] < min) {
-            min = m[xsize][i];
+        if(m[xsize - 1][i] < min) {
+            min = m[xsize - 1][i];
             leadCol = i;
         }
     }
 
     leadRow = 0;
     Frac k = m[0][ysize - 1] / m[0][leadCol];
-    for(int i = 0; i < xsize; ++i) {
+    for(int i = 0; i < xmainvar; ++i) {
         Frac kbuf = m[i][ysize - 1] / m[i][leadCol];
         if(kbuf < k && m[i][leadCol] > 0) {
             leadRow = i;
@@ -238,7 +343,7 @@ void FracMatrixSymplex::rectangleMethod(int optRow, int optColumn)
 //    m[optRow][optColumn].invert().print();
 //    cout << endl;
     rowMulti(optRow, m[optRow][optColumn].invert());
-    for(int i = 0; i < xsize + 1; ++i) {
+    for(int i = 0; i < xsize; ++i) {
         if(i != optRow)
             for(int j = 0; j < ysize; ++j) {
                 if(j != optColumn) {
@@ -246,7 +351,7 @@ void FracMatrixSymplex::rectangleMethod(int optRow, int optColumn)
                 }
             }
     }
-    for(int i = 0; i < xsize + 1; ++i)
+    for(int i = 0; i < xsize; ++i)
         if(i != optRow)
             m[i][optColumn] = 0;
 }
@@ -257,7 +362,7 @@ bool FracMatrixSymplex::isOptimal()
     for(int i = 0; i < ysize; ++i) {
 //        m[xsize][i].print();
 //        cout << " ";
-        if(m[xsize][i] < 0.0) {
+        if(m[xsize - 1][i] < 0.0) {
 //            cout << endl;
             return false;
         }

@@ -2,19 +2,21 @@
 #define MATRIXLIMITATION_H
 
 #include "../FracClass/frac.h"
+#include <vector>
+
+using namespace std;
 
 class MatrixLimitation
 {
 public:
-    MatrixLimitation(Frac *task, int size, int limit = 0);
-    void setLine(Frac *task);
-    Frac *getLine();
+    MatrixLimitation(vector <Frac> task, int limit = 0);
+    void setLine(vector <Frac> task);
+    vector <Frac> getLine();
     void setLimit(int limit);
     int getLimit();
 
 private:
-    Frac *line;
-    int length;
+    vector <Frac> line; // started from free
     int lim;
     /*
      * limit:
