@@ -1,4 +1,4 @@
-package io.github.fnickru.math.types;
+package io.github.fnickru.math.struct;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -184,6 +184,10 @@ public class Fraction extends Number implements Comparable<Fraction> {
 
     public Fraction negate() {
         return new Fraction(numerator.negate(), denominator);
+    }
+
+    public Fraction invert() {
+        return new Fraction(denominator, numerator);
     }
 
     public boolean isNegative() {

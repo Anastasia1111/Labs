@@ -1,45 +1,13 @@
 package io.github.fnickru.math.util;
 
-import io.github.fnickru.math.types.Fraction;
-import io.github.fnickru.math.types.Function;
-import io.github.fnickru.math.types.Matrix;
+import io.github.fnickru.math.struct.*;
 
-import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileWorker {
-
-    // In development
-    /*
-    public static void writeFraction(Fraction fraction, String filename)
-    {
-    }
-
-    public static void writeMatrix(Matrix matrix, String filename)
-    {
-    }
-    */
-
-    public static Fraction[] readAllFraction(String filename) {
-        List<Fraction> fractions = new ArrayList<>();
-
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(filename));
-            for (String line : lines) {
-                String[] values = line.split(" ");
-                for (String value : values) {
-                    fractions.add(new Fraction(value));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return fractions.toArray(new Fraction[fractions.size()]);
-    }
 
     public static Matrix readMatrix(String filename) {
         Matrix matrix = null;
@@ -58,22 +26,19 @@ public class FileWorker {
         return matrix;
     }
 
-    public static Function[] readAllFunction(String filename) {
-        List<Function> functions = new ArrayList<>();
-
+    public static Simplex readSimplex(String filename) {
+        Simplex simplex = null;
         try {
             List<String> lines = Files.readAllLines(Paths.get(filename));
+            List<Limitation> limitations = new ArrayList<>();
+            CostFunction costFunction = CostFunction.valueOf(lines.remove(0));
             for (String line : lines) {
-                String[] values = line.split(" ");
-                Fraction[] args = new Fraction[values.length];
-                for (int i = 0; i < values.length; ++i)
-                    args[i] = new Fraction(values[i]);
-                functions.add(new Function(args));
+                limitations.add(Limitation.valueOf(line));
             }
-        } catch (IOException e) {
+            simplex = new Simplex(costFunction, limitations.toArray(new Limitation[0]));
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return functions.toArray(new Function[functions.size()]);
+        return simplex;
     }
 }

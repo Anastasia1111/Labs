@@ -1,7 +1,7 @@
 package io.github.fnickru.math.labs;
 
-import io.github.fnickru.math.types.Fraction;
-import io.github.fnickru.math.types.Matrix;
+import io.github.fnickru.math.struct.Fraction;
+import io.github.fnickru.math.struct.Matrix;
 import io.github.fnickru.math.util.FileWorker;
 
 import java.math.BigInteger;

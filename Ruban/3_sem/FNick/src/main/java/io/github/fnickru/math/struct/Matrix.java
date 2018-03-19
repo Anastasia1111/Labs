@@ -1,6 +1,4 @@
-package io.github.fnickru.math.types;
-
-import com.sun.istack.internal.NotNull;
+package io.github.fnickru.math.struct;
 
 import java.util.Arrays;
 
