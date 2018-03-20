@@ -11,7 +11,9 @@ abstract class Function {
             String[] pair = atom.replace("\\+", "").split("x");
             Fraction coef = new Fraction(pair[0]);
             int var = Integer.valueOf(pair[1]);
-            coefs.add(var, coef);
+            while (var >= coefs.size())
+                coefs.add(Fraction.ZERO);
+            coefs.set(var, coef);
         }
         return coefs;
     }

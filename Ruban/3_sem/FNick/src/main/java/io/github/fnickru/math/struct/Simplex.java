@@ -1,17 +1,20 @@
 package io.github.fnickru.math.struct;
 
+import io.github.fnickru.math.exeptions.NoSolutionException;
 import io.github.fnickru.math.util.FileWorker;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Simplex {
     private CostFunction costFunction;
     private Limitation[] limitations;
     private SimplexTable simplexTable;
+    private Answer answer;
     private int[] rowId;
     private int[] colId;
-    private boolean isFirstStepDone;
 
     public Simplex(CostFunction function, Limitation... limitations) {
         this.costFunction = function;
@@ -60,11 +63,83 @@ public class Simplex {
 
         rowId = new int[simplexTable.rows() - 1];
         colId = new int[simplexTable.cols() - 1];
-        isFirstStepDone = false;
     }
 
-    public void solve() {
+    private void createAnswer() {
+        answer = new Answer(simplexTable);
 
+        System.out.println(costFunction.getLength());
+        for (int v = 0; v < costFunction.getLength(); ++v) {
+            int j = 0;
+            while(j < simplexTable.rows() - 1 && rowId[j] != (v + 1))
+                ++j;
+            if (j == simplexTable.rows() - 1)
+                answer.addItem("x" + j, Fraction.ZERO);
+            else
+                answer.addItem("x" + j, simplexTable.getElement(j, 0));
+        }
+
+        String optimizationDirection = costFunction.shouldBeMinimized() ? "min" : "max";
+        Fraction costFunctionValue = costFunction.shouldBeMinimized() ? simplexTable.getElement(simplexTable.rows() - 1, 0).negate() : simplexTable.getElement(simplexTable.rows() - 1, 0);
+        answer.addItem(optimizationDirection + " F", costFunctionValue);
+    }
+
+    public String getAnswer() {
+        return answer.toString();
+    }
+
+    public void solve() throws NoSolutionException {
+        boolean solved = false;
+
+        for (int i = 0; i < simplexTable.cols() - 1; ++i) {
+            colId[i] = i + 1;
+        }
+        for (int i = 0; i < simplexTable.rows() - 1; ++i) {
+            rowId[i] = i + simplexTable.cols();
+        }
+
+        while (!solved) {
+            int col = simplexTable.getNegativeCol();
+            if(simplexTable.getNegativeCol() != 0) {
+                int resRow = simplexTable.getResRow(col);
+                if (resRow == -1) {
+                    throw new NoSolutionException("No solution");
+                } else {
+                    int resCol = simplexTable.getResCol(resRow, true);
+                    rowId[resRow] += colId[resCol - 1];
+                    colId[resCol - 1] = rowId[resRow] - colId[resCol - 1];
+                    rowId[resRow] -= colId[resCol - 1];
+                    simplexTable.step(resRow, resCol);
+                }
+            } else {
+                int resRow = simplexTable.getResRow();
+                if (resRow == -1) {
+                    solved = true;
+                } else {
+                    int resCol = simplexTable.getResCol(resRow, false);
+                    if (resCol == -1) {
+                        throw new NoSolutionException("No solution");
+                    } else {
+                        rowId[resRow] += colId[resCol - 1];
+                        colId[resCol - 1] = rowId[resRow] - colId[resCol - 1];
+                        rowId[resRow] -= colId[resCol - 1];
+                        simplexTable.step(resRow, resCol);
+                    }
+                }
+            }
+        }
+
+        createAnswer();
+    }
+
+    public String getHistory() {
+        List<SimplexTable> stateList = simplexTable.getStateList();
+        String string = "";
+        for (SimplexTable table : stateList) {
+            string = string.concat(table + "\n");
+        }
+        string += simplexTable;
+        return string;
     }
 
     @Override
@@ -79,6 +154,13 @@ public class Simplex {
     public static void main(String[] args) {
         Simplex simplex = FileWorker.readSimplex("./src/main/resources/simplex.txt");
         System.out.println(simplex);
+        try {
+            simplex.solve();
+            System.out.println(simplex.getHistory());
+            System.out.println(simplex.getAnswer());
+        } catch (NoSolutionException e) {
+            e.printStackTrace();
+        }
     }
 
     private class SimplexTable {
@@ -87,7 +169,9 @@ public class Simplex {
         private List<SimplexTable> stateList;
 
         private SimplexTable(Fraction[][] table) {
-            this.table = table;
+            this.table = table.clone();
+            for(int i = 0; i < this.table.length; i++)
+                this.table[i] = table[i].clone();
             stateList = new ArrayList<>();
         }
 
@@ -103,16 +187,53 @@ public class Simplex {
             return table[row][column];
         }
 
-        private int findResCol() {
-            for (int i = 1; i < cols(); ++i)
+        private int getNegativeCol() {
+            for (int i = 1; i < cols(); i++)
                 if (table[rows() - 1][i].isNegative())
                     return i;
             return 0;
         }
 
-        private int findResRow(int col) {
+        private int getResCol(int resRow, boolean firstHalf) {
+            Fraction r, maxR = Fraction.ZERO;
+            boolean firstRatio = true;
+            int resCol = 0;
+
+            for (int i = 1; i < cols(); ++i) {
+                if (firstHalf) {
+                    if (!table[resRow][i].equals(Fraction.ZERO)) {
+                        r = table[rows() - 1][i].divide(table[resRow][i]);
+                        if (r.isNegative() || (r.equals(Fraction.ZERO) && table[resRow][i].isNegative())) {
+                            maxR = r;
+                            resCol = i;
+                        }
+                    }
+                } else {
+                    if (table[resRow][i].isNegative()) {
+                        r = table[rows() - 1][i].divide(table[resRow][i]);
+                        if ((r.compareTo(Fraction.ZERO) <= 0) && (firstRatio || r.compareTo(maxR) > 0)) {
+                            firstRatio = false;
+                            maxR = r;
+                            resCol = i;
+                        }
+                    }
+                }
+            }
+
+            return resCol;
+        }
+
+        private int getResRow(int col) {
             for (int i = 0; i < rows() - 1; ++i) {
-                if (!table[i][col].isNegative())
+                if (table[i][col].compareTo(Fraction.ZERO) > 0)
+                    return i;
+            }
+            return -1;
+        }
+
+        private int getResRow() {
+            for (int i = 0; i < rows() - 1; ++i) {
+                if (table[i][0].isNegative())
                     return i;
             }
             return -1;
@@ -151,21 +272,45 @@ public class Simplex {
 
             for (int i = 0; i < rows(); i++) {
                 for (int j = 0; j < cols(); j++) {
-                    int resCol = findResCol();
-                    int resRow = findResRow(resCol);
+                    int resCol = getNegativeCol();
+                    int resRow = getResRow(resCol);
 
                     if (i == resRow && j == resCol)
                         string = string.concat("*" + getElement(i, j) + "*");
                     else
                         string = string.concat(getElement(i, j).toString());
 
-                    string = string.concat(" ");
+                    string = string.concat("\t");
                 }
 
                 string = string.concat("\n");
             }
 
             return string;
+        }
+    }
+
+    private class Answer {
+
+        private Map<String, Fraction> items;
+        private SimplexTable simplexTable;
+
+        Answer(SimplexTable simplexTable) {
+            this.simplexTable = simplexTable;
+            items = new LinkedHashMap<>();
+        }
+
+        private void addItem(String key, Fraction value) {
+            items.put(key, value);
+        }
+
+        public String toString() {
+            String string = "";
+
+            for (Map.Entry<String, Fraction> item : items.entrySet())
+                string = string.concat("\n" + item.getKey() + " = " + item.getValue());
+
+            return string.substring(1);
         }
     }
 }
