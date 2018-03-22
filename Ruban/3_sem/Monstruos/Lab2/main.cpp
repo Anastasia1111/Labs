@@ -28,7 +28,7 @@ int main()
             arr[i][j].setNewNum(bufNumer, bufDenom);
         }
     }
-    FracMatrixSymplex a(arr, sizex, sizey, true);
+    FracMatrixSymplex a(arr, sizex, sizey, true, false);
     a.symplexMethod();
 
     return 0;

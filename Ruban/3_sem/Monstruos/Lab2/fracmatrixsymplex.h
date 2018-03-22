@@ -12,7 +12,7 @@ using namespace std;
 class FracMatrixSymplex
 {
 public:
-    FracMatrixSymplex(Frac **matrix, int x, int y, bool toMin = false);
+    FracMatrixSymplex(Frac **matrix, int x, int y, bool toMin = false, bool fake = false);
     FracMatrixSymplex(vector<MatrixLimitation> matrix, MatrixLimitation target);
     void rowAdd(int row, Frac *add);
     void rowMulti(int row, Frac mult);
@@ -26,6 +26,7 @@ public:
     bool basisWasBefore(int *columns);
     void setZeroInArtif();
 
+
 private:
     Frac **m;//[xsize][ysize]
     vector<pair<Frac **, int *>> baseSnapshot;
@@ -33,6 +34,7 @@ private:
     int ysize;
     int xmainvar;
     bool toMin;
+    bool isFake;
     void setBasisInColumn(int column, int row);
     void findOptForBasisPlan(int &optimalRow, int &optimalCol);
     void findLeadForBasisPlan(int &leadRow, int &leadCol);
