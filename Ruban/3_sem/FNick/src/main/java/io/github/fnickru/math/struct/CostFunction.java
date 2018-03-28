@@ -66,6 +66,6 @@ public class CostFunction extends Function {
 
         List<Fraction> coefs = parseAtoms(atoms);
 
-        return new CostFunction(coefs.toArray(new Fraction[coefs.size()]), shouldBeMinimized);
+        return new CostFunction(coefs.toArray(new Fraction[0]), shouldBeMinimized);
     }
 }

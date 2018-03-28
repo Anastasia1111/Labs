@@ -6,6 +6,7 @@ import java.util.List;
 abstract class Function {
 
     static List<Fraction> parseAtoms(List<String> atoms) {
+        while (atoms.remove(""));
         List<Fraction> coefs = new ArrayList<>();
         for (String atom : atoms) {
             String[] pair = atom.replace("\\+", "").split("x");

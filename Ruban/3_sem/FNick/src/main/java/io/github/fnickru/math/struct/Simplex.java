@@ -3,10 +3,7 @@ package io.github.fnickru.math.struct;
 import io.github.fnickru.math.exeptions.NoSolutionException;
 import io.github.fnickru.math.util.FileWorker;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Simplex {
     private CostFunction costFunction;
@@ -68,15 +65,14 @@ public class Simplex {
     private void createAnswer() {
         answer = new Answer(simplexTable);
 
-        System.out.println(costFunction.getLength());
         for (int v = 0; v < costFunction.getLength(); ++v) {
             int j = 0;
             while(j < simplexTable.rows() - 1 && rowId[j] != (v + 1))
                 ++j;
             if (j == simplexTable.rows() - 1)
-                answer.addItem("x" + j, Fraction.ZERO);
+                answer.addItem("x" + v, Fraction.ZERO);
             else
-                answer.addItem("x" + j, simplexTable.getElement(j, 0));
+                answer.addItem("x" + v, simplexTable.getElement(j, 0));
         }
 
         String optimizationDirection = costFunction.shouldBeMinimized() ? "min" : "max";
@@ -99,47 +95,36 @@ public class Simplex {
         }
 
         while (!solved) {
-            int col = simplexTable.getNegativeCol();
-            if(simplexTable.getNegativeCol() != 0) {
-                int resRow = simplexTable.getResRow(col);
-                if (resRow == -1) {
+            int row = simplexTable.getResRow();
+            if (row != -1) {
+                int col = simplexTable.getResCol(row);
+                if (col != -1) {
+                    rowId[row] += colId[col - 1];
+                    colId[col - 1] = rowId[row] - colId[col - 1];
+                    rowId[row] -= colId[col - 1];
+                    simplexTable.setResElement(row, col);
+                    simplexTable.step(row, col);
+                } else
                     throw new NoSolutionException("No solution");
-                } else {
-                    int resCol = simplexTable.getResCol(resRow, true);
-                    rowId[resRow] += colId[resCol - 1];
-                    colId[resCol - 1] = rowId[resRow] - colId[resCol - 1];
-                    rowId[resRow] -= colId[resCol - 1];
-                    simplexTable.step(resRow, resCol);
-                }
             } else {
-                int resRow = simplexTable.getResRow();
-                if (resRow == -1) {
-                    solved = true;
+                int col = simplexTable.getResCol(simplexTable.rows() - 1);
+                if (col != -1) {
+                    row = simplexTable.getResRow(col);
+                    if (row != -1) {
+                        rowId[row] += colId[col - 1];
+                        colId[col - 1] = rowId[row] - colId[col - 1];
+                        rowId[row] -= colId[col - 1];
+                        simplexTable.setResElement(row, col);
+                        simplexTable.step(row, col);
+                    } else
+                        throw new NoSolutionException("No solution\n" + simplexTable);
                 } else {
-                    int resCol = simplexTable.getResCol(resRow, false);
-                    if (resCol == -1) {
-                        throw new NoSolutionException("No solution");
-                    } else {
-                        rowId[resRow] += colId[resCol - 1];
-                        colId[resCol - 1] = rowId[resRow] - colId[resCol - 1];
-                        rowId[resRow] -= colId[resCol - 1];
-                        simplexTable.step(resRow, resCol);
-                    }
+                    solved = true;
                 }
             }
         }
 
         createAnswer();
-    }
-
-    public String getHistory() {
-        List<SimplexTable> stateList = simplexTable.getStateList();
-        String string = "";
-        for (SimplexTable table : stateList) {
-            string = string.concat(table + "\n");
-        }
-        string += simplexTable;
-        return string;
     }
 
     @Override
@@ -156,7 +141,6 @@ public class Simplex {
         System.out.println(simplex);
         try {
             simplex.solve();
-            System.out.println(simplex.getHistory());
             System.out.println(simplex.getAnswer());
         } catch (NoSolutionException e) {
             e.printStackTrace();
@@ -166,6 +150,8 @@ public class Simplex {
     private class SimplexTable {
 
         private Fraction[][] table;
+        private int resRow = -1;
+        private int resCol = -1;
         private List<SimplexTable> stateList;
 
         private SimplexTable(Fraction[][] table) {
@@ -173,6 +159,15 @@ public class Simplex {
             for(int i = 0; i < this.table.length; i++)
                 this.table[i] = table[i].clone();
             stateList = new ArrayList<>();
+        }
+
+        private SimplexTable(Fraction[][] table, int resRow, int resCol) {
+            this.table = table.clone();
+            for(int i = 0; i < this.table.length; i++)
+                this.table[i] = table[i].clone();
+            stateList = new ArrayList<>();
+            this.resRow = resRow;
+            this.resCol = resCol;
         }
 
         private int rows() {
@@ -187,60 +182,45 @@ public class Simplex {
             return table[row][column];
         }
 
-        private int getNegativeCol() {
-            for (int i = 1; i < cols(); i++)
-                if (table[rows() - 1][i].isNegative())
-                    return i;
-            return 0;
-        }
-
-        private int getResCol(int resRow, boolean firstHalf) {
-            Fraction r, maxR = Fraction.ZERO;
-            boolean firstRatio = true;
-            int resCol = 0;
-
-            for (int i = 1; i < cols(); ++i) {
-                if (firstHalf) {
-                    if (!table[resRow][i].equals(Fraction.ZERO)) {
-                        r = table[rows() - 1][i].divide(table[resRow][i]);
-                        if (r.isNegative() || (r.equals(Fraction.ZERO) && table[resRow][i].isNegative())) {
-                            maxR = r;
-                            resCol = i;
-                        }
-                    }
-                } else {
-                    if (table[resRow][i].isNegative()) {
-                        r = table[rows() - 1][i].divide(table[resRow][i]);
-                        if ((r.compareTo(Fraction.ZERO) <= 0) && (firstRatio || r.compareTo(maxR) > 0)) {
-                            firstRatio = false;
-                            maxR = r;
-                            resCol = i;
-                        }
-                    }
-                }
-            }
-
-            return resCol;
-        }
-
-        private int getResRow(int col) {
-            for (int i = 0; i < rows() - 1; ++i) {
-                if (table[i][col].compareTo(Fraction.ZERO) > 0)
-                    return i;
-            }
-            return -1;
+        public void setResElement(int row, int column) {
+            resCol = column;
+            resRow = row;
         }
 
         private int getResRow() {
-            for (int i = 0; i < rows() - 1; ++i) {
-                if (table[i][0].isNegative())
-                    return i;
+            int index = 0;
+            for (int i = 1; i < rows() - 1; ++i) {
+                if (table[i][0].isNegative() && table[index][0].compareTo(table[i][0]) > 0)
+                    index = i;
             }
-            return -1;
+            return table[index][0].isNegative() ? index : -1;
+        }
+
+        private int getResRow(int resCol) {
+            int index = -1;
+            Fraction ratio = Fraction.INFINITY;
+            for (int i = 0; i < rows() - 1; ++i) {
+                if (table[i][0].compareTo(Fraction.ZERO) > 0
+                    && table[i][resCol].compareTo(Fraction.ZERO) > 0
+                    && table[i][0].divide(table[i][resCol]).compareTo(ratio) < 0) {
+                    index = i;
+                    ratio = table[i][0].divide(table[i][resCol]);
+                }
+            }
+            return index;
+        }
+
+        private int getResCol(int resRow) {
+            int index = 1;
+            for (int i = 2; i < cols(); ++i) {
+                if (table[resRow][i].isNegative() && table[resRow][index].compareTo(table[resRow][i]) > 0)
+                    index = i;
+            }
+            return table[resRow][index].isNegative() ? index : -1;
         }
 
         private void step(int resRow, int resCol) {
-            stateList.add(new SimplexTable(table));
+            stateList.add(new SimplexTable(table, resRow, resCol));
 
             for (int i = 0; i < rows(); ++i)
                 if (i != resRow)
@@ -268,21 +248,16 @@ public class Simplex {
         }
 
         public String toString() {
-            String string = "";
+            String string = resRow + " " + resCol + "\n";
 
             for (int i = 0; i < rows(); i++) {
                 for (int j = 0; j < cols(); j++) {
-                    int resCol = getNegativeCol();
-                    int resRow = getResRow(resCol);
-
                     if (i == resRow && j == resCol)
                         string = string.concat("*" + getElement(i, j) + "*");
                     else
                         string = string.concat(getElement(i, j).toString());
-
                     string = string.concat("\t");
                 }
-
                 string = string.concat("\n");
             }
 
@@ -307,10 +282,16 @@ public class Simplex {
         public String toString() {
             String string = "";
 
+            List<SimplexTable> stateList = simplexTable.getStateList();
+            for (SimplexTable table : stateList) {
+                string = string.concat(table + "\n");
+            }
+            string += simplexTable;
+
             for (Map.Entry<String, Fraction> item : items.entrySet())
                 string = string.concat("\n" + item.getKey() + " = " + item.getValue());
 
-            return string.substring(1);
+            return string;
         }
     }
 }

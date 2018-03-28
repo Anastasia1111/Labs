@@ -11,7 +11,7 @@ public class Fraction extends Number implements Comparable<Fraction> {
 
     public static final Fraction ZERO = new Fraction(BigInteger.ZERO);
     public static final Fraction ONE = new Fraction(BigInteger.ONE);
-    public static final Fraction TENTH = new Fraction(BigInteger.ONE, BigInteger.TEN);
+    public static final Fraction INFINITY = new Fraction(Long.MAX_VALUE);
 
     public Fraction(BigInteger numerator) {
         this.numerator = numerator;
