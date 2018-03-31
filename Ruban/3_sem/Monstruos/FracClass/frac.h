@@ -61,7 +61,7 @@ class Frac
 
         void setNewNum(int newNumer, int newDenom);
         int intPart();
-        int fracPart();
+        Frac fracPart();
         double toDouble();
         void print(FRAC_VISUAL regime = IMPROP);
 private:

@@ -204,12 +204,15 @@ void Frac::setNewNum(int newNumer, int newDenom) {
 
 int Frac::intPart()
 {
-    return numer / denom;
+    if(numer < 0)
+        (numer - denom) / denom;
+    else
+        return numer / denom;
 }
 
-int Frac::fracPart()
+Frac Frac::fracPart()
 {
-    return numer % denom;
+    return Frac(intPart()) - *this;
 }
 
 double Frac::toDouble()

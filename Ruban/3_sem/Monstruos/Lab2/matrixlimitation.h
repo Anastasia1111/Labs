@@ -4,12 +4,17 @@
 #include "../FracClass/frac.h"
 #include <vector>
 
+#define MLIMIT_EQSMALLER -1
+#define MLIMIT_EQUAL 0
+#define MLIMIT_EQBIGGER 1
+
 using namespace std;
 
 class MatrixLimitation
 {
 public:
-    MatrixLimitation(vector <Frac> task, int limit = 0);
+    MatrixLimitation();
+    MatrixLimitation(vector <Frac> task, int limit = MLIMIT_EQUAL);
     void setLine(vector <Frac> task);
     vector <Frac> getLine();
     void setLimit(int limit);

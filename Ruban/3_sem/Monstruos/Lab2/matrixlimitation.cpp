@@ -1,5 +1,12 @@
 #include "matrixlimitation.h"
 
+MatrixLimitation::MatrixLimitation()
+{
+    line.push_back(Frac(0.0));
+    line.push_back(Frac(0.0));
+    lim = 0;
+}
+
 MatrixLimitation::MatrixLimitation(vector<Frac> task, int limit)
 {
     line = task;

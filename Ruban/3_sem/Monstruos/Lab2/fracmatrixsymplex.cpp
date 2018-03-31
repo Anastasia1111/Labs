@@ -16,6 +16,42 @@ FracMatrixSymplex::FracMatrixSymplex(Frac **matrix, int x, int y, bool isMin, bo
 
 FracMatrixSymplex::FracMatrixSymplex(vector <MatrixLimitation> matrix, MatrixLimitation target)
 {
+    //all limitations is equal length
+//    vector <Frac> buffer;
+//    for(int i = 0; i < matrix[0].getLine().size(); ++i) {
+//        m2.push_back(buffer);
+//        for(int j = 0; j < matrix.size(); ++j) {
+//            m2[i].push_back(matrix[j].getLine()[i]);
+//        }
+//    }
+
+    m2.resize(matrix[0].getLine().size());
+    for(unsigned int i = 0; i < m2.size(); ++i) {
+        m2[i].resize(matrix.size());
+    }
+    int basei = 0;
+    for(unsigned int i = 0; i < matrix.size(); ++i) {
+        vector<Frac> buffer;
+        buffer.resize(m2[0].size());
+        switch(matrix[i].getLimit()) {
+        case MLIMIT_EQSMALLER:
+            buffer[basei] = Frac(1, 0);
+            colInsert(m2.size() - 1, buffer);
+            // cases for all
+        }
+        buffer.clear();
+    }
+
+    for(unsigned int i = 0; i < m2[0].size(); ++i) {
+        for(unsigned int j = 0; j < m2.size(); ++j) {
+            m2[j][i].print();
+            cout << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+
+
 //    xsize = matrix.size();
 //    ysize = 0;
 //    int numOfAddVar = 0; // after m[i][numOfAddVar] - artifical variables
@@ -104,6 +140,47 @@ void FracMatrixSymplex::colMulti(int col, Frac mult)
         m[i][col] *= mult;
 }
 
+void FracMatrixSymplex::rowInsert(int row, vector<Frac> add)
+{
+
+    for(unsigned int i = 0; i < m2.size(); ++i) {
+        vector<Frac>::iterator it = m2[i].begin() + row;
+        m2[i].insert(it, add[i]);
+    }
+}
+
+void FracMatrixSymplex::colInsert(int col, vector<Frac> add)
+{
+    if(add.size() != m2[0].size())
+        add.resize(m2[0].size());
+    vector<vector<Frac>>::iterator it = m2.begin() + col;
+    m2.insert(it, add);
+}
+
+void FracMatrixSymplex::rowAdd(int row, vector<Frac> add)
+{
+    if(add.size() != m2.size()) {
+        cout << "Error in rowAdd<" << row << ">" << endl;
+        return;
+    }
+    for(unsigned int i = 0; i < m2.size(); ++i) {
+        m2[i][row] += add[i];
+    }
+}
+
+void FracMatrixSymplex::rowMulti2(int row, Frac mult)
+{
+    for(unsigned int i = 0; i < m2.size(); ++i) {
+        m2[i][row] *= mult;
+    }
+}
+
+void FracMatrixSymplex::colMulti2(int col, Frac mult)
+{
+    for(unsigned int i = 0; i < m2[col].size(); ++i)
+        m2[col][i] *= mult;
+}
+
 bool FracMatrixSymplex::setNewSnapshot()
 {
     Frac **snapshot;
@@ -115,7 +192,7 @@ bool FracMatrixSymplex::setNewSnapshot()
         }
     }
     bool res;
-    for(int i = 0; i < baseSnapshot.size(); ++i) {
+    for(unsigned int i = 0; i < baseSnapshot.size(); ++i) {
         res = true;
         for(int j = 0; j < xsize; ++j) {
             for(int k = 0; k < ysize; ++k) {
@@ -245,7 +322,7 @@ void FracMatrixSymplex::setBasis(int *columns)
 bool FracMatrixSymplex::basisWasBefore(int *columns)
 {
     bool res;
-    for(int i = 0; i < baseSnapshot.size(); ++i) { // for every snapshot...
+    for(unsigned int i = 0; i < baseSnapshot.size(); ++i) { // for every snapshot...
         res = true;
         for(int j = 0; j < xmainvar; ++j) { // if input basis was exist, res will be true
             if(columns[j] != (baseSnapshot[i].second)[j]) {

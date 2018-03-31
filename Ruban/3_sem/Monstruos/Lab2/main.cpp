@@ -14,6 +14,11 @@ int main()
 {
     int i, j;
 
+    vector<MatrixLimitation> m;
+    vector<Frac> task;
+    MatrixLimitation pointFunc;
+    Frac buff;
+
     FILE *f = fopen("matrix.txt", "r+");
     fscanf(f, "%i %i", &sizex, &sizey);
     cout << "sizex = " << sizex << endl
@@ -26,10 +31,18 @@ int main()
         for(j = 0; j < sizey; ++j) {
             fscanf(f, "%i/%i", &bufNumer, &bufDenom);
             arr[i][j].setNewNum(bufNumer, bufDenom);
+            buff.setNewNum(bufNumer, bufDenom);
+            task.push_back(buff);
         }
+        pointFunc.setLine(task);
+        task.clear();
+        if(i != sizex - 1)
+            m.push_back(pointFunc);
     }
-    FracMatrixSymplex a(arr, sizex, sizey, true, false);
-    a.symplexMethod();
+
+
+    FracMatrixSymplex a(m, pointFunc);
+//    a.symplexMethod();
 
     return 0;
 }
