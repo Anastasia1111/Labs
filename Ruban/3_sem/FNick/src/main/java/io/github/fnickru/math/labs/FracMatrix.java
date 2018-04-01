@@ -6,7 +6,7 @@ import io.github.fnickru.math.util.FileWorker;
 
 import java.math.BigInteger;
 
-public class Lab2 {
+public class FracMatrix {
 
     public static void main(String[] args) {
         System.out.println(new Fraction(1.0f/3, 3));

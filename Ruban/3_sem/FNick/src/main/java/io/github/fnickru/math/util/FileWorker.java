@@ -1,6 +1,9 @@
 package io.github.fnickru.math.util;
 
 import io.github.fnickru.math.struct.*;
+import io.github.fnickru.math.struct.simplex.CostFunction;
+import io.github.fnickru.math.struct.simplex.Limitation;
+import io.github.fnickru.math.struct.simplex.Problem;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,8 +29,8 @@ public class FileWorker {
         return matrix;
     }
 
-    public static Simplex readSimplex(String filename) {
-        Simplex simplex = null;
+    public static Problem readLPP(String filename) {
+        Problem problem = null;
         try {
             List<String> lines = Files.readAllLines(Paths.get(filename));
             List<Limitation> limitations = new ArrayList<>();
@@ -35,10 +38,10 @@ public class FileWorker {
             for (String line : lines) {
                 limitations.add(Limitation.valueOf(line));
             }
-            simplex = new Simplex(costFunction, limitations.toArray(new Limitation[0]));
+            problem = new Problem(costFunction, limitations.toArray(new Limitation[0]));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return simplex;
+        return problem;
     }
 }
