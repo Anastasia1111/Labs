@@ -138,13 +138,13 @@ class SimplexTable {
     }
 
     public String toString() {
-        String string = "               ";
+        String string = String.format("%14s ", "B");
         for (int i : colId) {
             string = string.concat(String.format("%10s ", "x" + i));
         }
         string += '\n';
         for (int i = 0; i < rows(); i++) {
-            string = string.concat(String.format("%3s ", i < rowId.length ? "x" + rowId[i] : ""));
+            string = string.concat(String.format("%3s ", i < rowId.length ? "x" + rowId[i] : "F"));
             for (int j = 0; j < cols(); j++) {
                 if (i == resRow && j == resCol)
                     string = string.concat(String.format("%10s ","*" + getElement(i, j) + "*"));
