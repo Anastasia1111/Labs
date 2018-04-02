@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <fstream>
 #define SM_PRES 1000
 #define PRES 1000000
 #define BG_PRES 1000000000
@@ -54,6 +55,9 @@ class Frac
         bool operator!= (const Frac& sec);
         bool operator!= (const double& sec);
 
+        //input, output
+        friend std::ostream &operator<<(std::ostream &str, const Frac& outFrac);
+        friend std::istream &operator>>(std::istream &str, const Frac& inFrac);
 
         Frac invert();
         Frac pow(int x);
@@ -72,5 +76,6 @@ private:
         void toShorten();
         void setSign();
 };
+
 
 #endif // FRAC_H

@@ -166,6 +166,28 @@ bool Frac::operator!=(const double &sec)
     return (*this != tmpSec);
 }
 
+
+std::ostream &operator<<(std::ostream &str, const Frac &outFrac)
+{
+    str << "(" << outFrac.numer << "/" << outFrac.denom << ")";
+    return str;
+}
+
+std::istream &Frac::operator>>(std::istream &str, const Frac &inFrac)
+{
+    int num, den;
+    char buffer;
+    str >> num >> buffer >> den;
+    if(buffer == '/' && den != 0) {
+        inFrac.numer = num;
+        inFrac.denom = den;
+    } else {
+        inFrac.numer = 0;
+        inFrac.denom = 1;
+    }
+    return str;
+}
+
 Frac Frac::invert() {
     Frac tmp (denom, numer);
     return tmp;
@@ -227,7 +249,7 @@ void Frac::print(FRAC_VISUAL regime)
         printf("(%i/%i)", numer, denom);
         break;
     case PROP:
-        printf("(%i|%i/%i)", intPart(), fracPart(), denom);
+        //printf("(%i|%i/%i)", intPart(), fracPart(), denom);
         break;
     }
 }

@@ -40,7 +40,6 @@ int main()
             m.push_back(pointFunc);
     }
 
-
     FracMatrixSymplex a(m, pointFunc);
 //    a.symplexMethod();
 

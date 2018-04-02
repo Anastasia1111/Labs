@@ -44,8 +44,7 @@ FracMatrixSymplex::FracMatrixSymplex(vector <MatrixLimitation> matrix, MatrixLim
 
     for(unsigned int i = 0; i < m2[0].size(); ++i) {
         for(unsigned int j = 0; j < m2.size(); ++j) {
-            m2[j][i].print();
-            cout << " ";
+            //cout << m2[j][i] << " ";
         }
         cout << endl;
     }
