@@ -81,15 +81,17 @@
         <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/labs/Smplx.java" />
         <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/Limitation.java" />
         <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/CostFunction.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/simplex1.txt" />
         <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/SimplexAnswer.java" />
         <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/Function.java" />
         <option value="$PROJECT_DIR$/src/main/resources/simplex2.txt" />
         <option value="$PROJECT_DIR$/src/main/resources/simplex3.txt" />
         <option value="$PROJECT_DIR$/src/main/resources/simplex4.txt" />
-        <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/labs/Simplex.java" />
         <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/SimplexTable.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/simplex5.txt" />
         <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/Problem.java" />
+        <option value="$PROJECT_DIR$/src/main/java/io/github/fnickru/math/labs/Simplex.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/simplex6.txt" />
+        <option value="$PROJECT_DIR$/src/main/resources/simplex1.txt" />
       </list>
     </option>
   </component>
@@ -118,10 +120,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="687" />
-    <option name="y" value="128" />
-    <option name="width" value="725" />
-    <option name="height" value="695" />
+    <option name="x" value="216" />
+    <option name="y" value="-1" />
+    <option name="width" value="723" />
+    <option name="height" value="687" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -129,7 +131,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -211,8 +213,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -378,15 +380,16 @@
       <workItem from="1522234935916" duration="39000" />
       <workItem from="1522555468457" duration="3326000" />
       <workItem from="1522567721976" duration="9887000" />
-      <workItem from="1522730114479" duration="6091000" />
+      <workItem from="1522730114479" duration="7641000" />
+      <workItem from="1522738371498" duration="4642000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="121358000" />
+    <option name="totallyTimeSpent" value="127550000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-11" width="1368" height="731" extended-state="6" />
+    <frame x="0" y="-4" width="1366" height="723" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -398,11 +401,11 @@
       <window_info anchor="right" id="Maven Projects" order="9" weight="0.32977587" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" x="0" y="52" width="458" height="979" id="Run" order="2" weight="0.44949496" />
-      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" x="0" y="24" width="1366" height="695" id="Run" order="2" weight="0.44949496" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32996634" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.2969697" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.24848485" />
       <window_info anchor="right" id="Database" order="6" weight="0.32954547" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -420,12 +423,13 @@
       <window_info anchor="bottom" id="Find" order="1" weight="0.3289183" />
     </layout>
     <layout-to-restore>
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="Designer" order="3" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info id="Image Layers" order="6" />
-      <window_info anchor="bottom" x="0" y="52" width="458" height="979" id="Run" order="2" visible="true" weight="0.46578366" />
+      <window_info anchor="bottom" x="0" y="52" width="458" height="979" id="Run" order="2" weight="0.44949496" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.32894737" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="9" />
@@ -439,17 +443,16 @@
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Maven Projects" order="9" weight="0.32977587" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18356457" />
-      <window_info anchor="right" id="Database" order="6" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24848485" />
+      <window_info anchor="right" id="Database" order="6" weight="0.32954547" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="4" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.32894737" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3289183" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39845476" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3956229" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -462,13 +465,13 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/Problem.java</url>
-          <line>104</line>
+          <url>file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/SimplexTable.java</url>
+          <line>128</line>
           <properties />
-          <option name="timeStamp" value="30" />
+          <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="31" />
+      <option name="time" value="33" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -476,23 +479,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/Fraction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3474">
-          <caret line="193" selection-start-line="193" selection-end-line="193" />
-          <folding>
-            <element signature="e#5683#5684#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/labs/FracMatrix.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="23" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/labs/Simplex.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
@@ -760,9 +746,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="367">
           <caret line="60" selection-start-line="60" selection-end-line="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -770,9 +753,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="206">
           <caret line="43" selection-start-line="43" selection-end-line="43" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -780,16 +760,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret selection-end-line="3" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/SimplexAnswer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="34" column="27" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -807,6 +777,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/Function.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/SimplexTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="732">
+          <caret line="126" column="39" selection-start-line="126" selection-start-column="39" selection-end-line="126" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1133#1134#0" expanded="true" />
+            <element signature="e#1171#1172#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/simplex6.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="25" lean-forward="true" selection-start-line="2" selection-start-column="25" selection-end-line="2" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/labs/Simplex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/simplex1.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -814,27 +817,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/Function.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/simplex5.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="54">
+          <caret line="3" column="18" lean-forward="true" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/labs/Simplex.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/SimplexAnswer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/SimplexTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="380">
+          <caret line="34" column="27" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -843,11 +836,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/io/github/fnickru/math/struct/simplex/Problem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="112" column="74" lean-forward="true" selection-start-line="112" selection-start-column="74" selection-end-line="112" selection-end-column="74" />
+        <state relative-caret-position="792">
+          <caret line="87" column="65" selection-start-line="87" selection-start-column="65" selection-end-line="87" selection-end-column="65" />
           <folding>
-            <element signature="e#3362#3363#0" expanded="true" />
-            <element signature="e#3402#3403#0" expanded="true" />
+            <element signature="e#3710#3711#0" expanded="true" />
+            <element signature="e#3750#3751#0" expanded="true" />
           </folding>
         </state>
       </provider>

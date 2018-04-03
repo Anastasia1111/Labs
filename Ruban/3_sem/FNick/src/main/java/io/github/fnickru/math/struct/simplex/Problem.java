@@ -69,18 +69,25 @@ public class Problem {
             }
             ++index;
         }
+        for (int i = 0; i < rowId.length; ++i)
+            if (rowId[i].startsWith("r"))
+                for (int j = 0; j <= varnum; ++j)
+                    table[limitations.length + 1][j] = table[limitations.length + 1][j].subtract(table[i][j]);
 
         simplexTable = new SimplexTable(table, rowId, colId);
     }
 
-    private void createAnswer() {
+    private void createAnswer() throws NoSolutionException {
         answer = new SimplexAnswer(simplexTable);
         String[] rowId = simplexTable.getRowId();
 
         for (int v = 0; v < costFunction.getLength(); ++v) {
             int j = 0;
-            while(j < rowId.length && !rowId[j].equals("x" + v))
+            while(j < rowId.length && !rowId[j].equals("x" + v)) {
+                if (rowId[j].startsWith("r"))
+                    throw new NoSolutionException("No solution");
                 ++j;
+            }
             if (j == rowId.length)
                 answer.addItem("x" + v, Fraction.ZERO);
             else
@@ -88,7 +95,7 @@ public class Problem {
         }
 
         String optimizationDirection = costFunction.shouldBeMinimized() ? "min" : "max";
-        Fraction costFunctionValue = costFunction.shouldBeMinimized() ? simplexTable.getElement(simplexTable.rows() - 1, 0).negate() : simplexTable.getElement(simplexTable.rows() - 1, 0);
+        Fraction costFunctionValue = costFunction.shouldBeMinimized() ? simplexTable.getElement(rowId.length, 0).negate() : simplexTable.getElement(rowId.length, 0);
         answer.addItem(optimizationDirection + " F", costFunctionValue);
     }
 
@@ -110,7 +117,8 @@ public class Problem {
                 else
                     throw new NoSolutionException("No solution");
             } else {
-                int col = simplexTable.getResCol(simplexTable.rows() - 2);
+                int col = simplexTable.getResCol(simplexTable.rows() - 1);
+                col = col == -1 ? simplexTable.getResCol(simplexTable.rows() - 2) : col;
                 if (col != -1) {
                     row = simplexTable.getResRow(col);
                     if (row != -1)

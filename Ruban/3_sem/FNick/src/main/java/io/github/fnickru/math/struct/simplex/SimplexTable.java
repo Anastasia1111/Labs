@@ -97,8 +97,9 @@ class SimplexTable {
 
     void step(int resRow, int resCol) {
         setResElement(resRow, resCol);
-
         stateList.add(new SimplexTable(this));
+
+        switchBasis(resRow, resCol);
 
         for (int i = 0; i <= rowId.length; ++i)
             if (i != resRow)
@@ -110,16 +111,22 @@ class SimplexTable {
                                         .divide(table[resRow][resCol])
                         );
 
-        for (int j = 0; j < cols(); ++j)
+        for (int j = 0; j < cols(); ++j) {
             if (j != resCol)
                 table[resRow][j] = table[resRow][j].divide(table[resRow][resCol]);
+            table[rows() - 1][j] = Fraction.ZERO;
+        }
 
         for (int i = 0; i <= rowId.length; ++i)
             if (i != resRow)
                 table[i][resCol] = table[i][resCol].divide(table[resRow][resCol].negate());
 
         table[resRow][resCol] = table[resRow][resCol].invert();
-        switchBasis(resRow, resCol);
+
+        for (int i = 0; i < rowId.length; ++i)
+            if (rowId[i].startsWith("r"))
+                for (int j = 0; j < cols(); ++j)
+                    table[rows() - 1][j] = table[rows() - 1][j].subtract(table[i][j]);
     }
 
     List<SimplexTable> getStateList() {
