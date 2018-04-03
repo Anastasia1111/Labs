@@ -7,10 +7,11 @@ import io.github.fnickru.math.util.FileWorker;
 public class Simplex {
 
     public static void main(String[] args) {
-        Problem[] problems = new Problem[4];
-        for (int i = 0; i < 4; ++i)
+        final int n = 6;
+        Problem[] problems = new Problem[n];
+        for (int i = 0; i < n; ++i)
             problems[i] = FileWorker.readLPP(String.format("./src/main/resources/simplex%d.txt", i + 1));
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < n; ++i) {
             Problem problem = problems[i];
             System.out.println(problem);
             try {
@@ -18,7 +19,7 @@ public class Simplex {
                 System.out.println(problem.getAnswer());
             } catch (NoSolutionException e) {
                 e.printStackTrace();
-                if (i == 3) System.err.println("...and that's ok!");
+                if (i == 3 || i == 4) System.err.println("...and that's ok!");
             }
         }
     }

@@ -19,17 +19,19 @@ public class Problem {
         int varnum = costFunction.getLength();
         for (Limitation limitation : limitations)
             varnum = Math.max(limitation.getLength(), varnum);
-        int rows = limitations.length + 1;
-        int cols = varnum + 1;
+        int rows = limitations.length + 2; // F & M
+        int cols = varnum + 1; // B
         Fraction[][] table = new Fraction[rows][cols];
 
         table[rows - 1][0] = Fraction.ZERO;
+        table[rows - 2][0] = Fraction.ZERO;
 
         for (int v = 0; v < varnum; ++v) {
             if (costFunction.shouldBeMinimized())
-                table[rows - 1][v + 1] = costFunction.getCoef(v);
+                table[rows - 2][v + 1] = costFunction.getCoef(v);
             else
-                table[rows - 1][v + 1] = costFunction.getCoef(v).negate();
+                table[rows - 2][v + 1] = costFunction.getCoef(v).negate();
+            table[rows - 1][v + 1] = Fraction.ZERO;
         }
 
         int index = 0;
@@ -43,34 +45,57 @@ public class Problem {
             ++index;
         }
 
-        index = 0;
-        for (Limitation l : limitations) {
-            if (l.getSign() == Limitation.LimitationSign.GE)
-                table[index][0] = l.getFreeTerm().negate();
-            else
-                table[index][0] = l.getFreeTerm();
-            ++index;
+        String[] rowId = new String[limitations.length];
+        String[] colId = new String[varnum];
+        for (int i = 0; i < colId.length; ++i) {
+            colId[i] = "x" + i;
         }
 
-        simplexTable = new SimplexTable(table);
+        index = 0;
+        for (Limitation l : limitations) {
+            switch (l.getSign()) {
+                case GE:
+                    table[index][0] = l.getFreeTerm().negate();
+                    rowId[index] = "x" + (index + table[0].length - 1);
+                    break;
+                case EQ:
+                    table[index][0] = l.getFreeTerm();
+                    rowId[index] = "r" + (index + table[0].length - 1);
+                    break;
+                case LE:
+                    table[index][0] = l.getFreeTerm();
+                    rowId[index] = "x" + (index + table[0].length - 1);
+                    break;
+            }
+            ++index;
+        }
+        for (int i = 0; i < rowId.length; ++i)
+            if (rowId[i].startsWith("r"))
+                for (int j = 0; j <= varnum; ++j)
+                    table[limitations.length + 1][j] = table[limitations.length + 1][j].subtract(table[i][j]);
+
+        simplexTable = new SimplexTable(table, rowId, colId);
     }
 
-    private void createAnswer() {
+    private void createAnswer() throws NoSolutionException {
         answer = new SimplexAnswer(simplexTable);
-        int[] rowId = simplexTable.getRowId();
+        String[] rowId = simplexTable.getRowId();
 
         for (int v = 0; v < costFunction.getLength(); ++v) {
             int j = 0;
-            while(j < simplexTable.rows() - 1 && rowId[j] != v)
+            while(j < rowId.length && !rowId[j].equals("x" + v)) {
+                if (rowId[j].startsWith("r"))
+                    throw new NoSolutionException("No solution");
                 ++j;
-            if (j == simplexTable.rows() - 1)
+            }
+            if (j == rowId.length)
                 answer.addItem("x" + v, Fraction.ZERO);
             else
                 answer.addItem("x" + v, simplexTable.getElement(j, 0));
         }
 
         String optimizationDirection = costFunction.shouldBeMinimized() ? "min" : "max";
-        Fraction costFunctionValue = costFunction.shouldBeMinimized() ? simplexTable.getElement(simplexTable.rows() - 1, 0).negate() : simplexTable.getElement(simplexTable.rows() - 1, 0);
+        Fraction costFunctionValue = costFunction.shouldBeMinimized() ? simplexTable.getElement(rowId.length, 0).negate() : simplexTable.getElement(rowId.length, 0);
         answer.addItem(optimizationDirection + " F", costFunctionValue);
     }
 
@@ -93,6 +118,7 @@ public class Problem {
                     throw new NoSolutionException("No solution");
             } else {
                 int col = simplexTable.getResCol(simplexTable.rows() - 1);
+                col = col == -1 ? simplexTable.getResCol(simplexTable.rows() - 2) : col;
                 if (col != -1) {
                     row = simplexTable.getResRow(col);
                     if (row != -1)
