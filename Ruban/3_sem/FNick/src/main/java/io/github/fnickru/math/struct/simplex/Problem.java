@@ -43,25 +43,41 @@ public class Problem {
             ++index;
         }
 
+        String[] rowId = new String[table.length - 1];
+        String[] colId = new String[table[0].length - 1];
+        for (int i = 0; i < colId.length; ++i) {
+            colId[i] = "x" + i;
+        }
+
         index = 0;
         for (Limitation l : limitations) {
-            if (l.getSign() == Limitation.LimitationSign.GE)
-                table[index][0] = l.getFreeTerm().negate();
-            else
-                table[index][0] = l.getFreeTerm();
+            switch (l.getSign()) {
+                case GE:
+                    table[index][0] = l.getFreeTerm().negate();
+                    rowId[index] = "x" + (index + table[0].length - 1);
+                    break;
+                case EQ:
+                    table[index][0] = l.getFreeTerm();
+                    rowId[index] = "r" + (index + table[0].length - 1);
+                    break;
+                case LE:
+                    table[index][0] = l.getFreeTerm();
+                    rowId[index] = "x" + (index + table[0].length - 1);
+                    break;
+            }
             ++index;
         }
 
-        simplexTable = new SimplexTable(table);
+        simplexTable = new SimplexTable(table, rowId, colId);
     }
 
     private void createAnswer() {
         answer = new SimplexAnswer(simplexTable);
-        int[] rowId = simplexTable.getRowId();
+        String[] rowId = simplexTable.getRowId();
 
         for (int v = 0; v < costFunction.getLength(); ++v) {
             int j = 0;
-            while(j < simplexTable.rows() - 1 && rowId[j] != v)
+            while(j < simplexTable.rows() - 1 && !rowId[j].equals("x" + v))
                 ++j;
             if (j == simplexTable.rows() - 1)
                 answer.addItem("x" + v, Fraction.ZERO);

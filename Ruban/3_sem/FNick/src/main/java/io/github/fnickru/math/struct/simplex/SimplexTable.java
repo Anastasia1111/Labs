@@ -12,43 +12,27 @@ class SimplexTable {
     private int resRow;
     private int resCol;
     private List<SimplexTable> stateList;
-    private int[] rowId;
-    private int[] colId;
+    private String[] rowId;
+    private String[] colId;
 
-    SimplexTable(Fraction[][] table) {
-        this(table, -1, -1);
-    }
-
-    private SimplexTable(Fraction[][] table, int resRow, int resCol) {
+    SimplexTable(Fraction[][] table, String[] rowId, String[] colId) {
         this.table = table.clone();
         for(int i = 0; i < this.table.length; ++i)
             this.table[i] = table[i].clone();
         stateList = new ArrayList<>();
 
-        this.resRow = resRow;
-        this.resCol = resCol;
-
-        rowId = new int[table.length - 1];
-        colId = new int[table[0].length - 1];
-        for (int i = 0; i < colId.length; ++i) {
-            colId[i] = i;
-        }
-        for (int i = 0; i < rowId.length; ++i) {
-            rowId[i] = i + table[0].length -1;
-        }
+        setResElement(-1, -1);
+        setId(rowId, colId);
     }
 
-    private SimplexTable(Fraction[][] table, int resRow, int resCol, int[] rowId, int[] colId) {
-        this.table = table.clone();
+    private SimplexTable(SimplexTable simplexTable) {
+        this.table = simplexTable.table.clone();
         for(int i = 0; i < this.table.length; ++i)
-            this.table[i] = table[i].clone();
+            this.table[i] = simplexTable.table[i].clone();
         stateList = new ArrayList<>();
 
-        this.resRow = resRow;
-        this.resCol = resCol;
-
-        this.rowId = Arrays.copyOf(rowId, rowId.length);
-        this.colId = Arrays.copyOf(colId, colId.length);
+        setResElement(simplexTable.resRow, simplexTable.resCol);
+        setId(simplexTable.rowId, simplexTable.colId);
     }
 
     int rows() {
@@ -59,14 +43,24 @@ class SimplexTable {
         return table[0].length;
     }
 
+    private void setResElement(int row, int column) {
+        resRow = row;
+        resCol = column;
+    }
+
+    private void setId(String[] rowId, String[] colId) {
+        this.rowId = Arrays.copyOf(rowId, rowId.length);
+        this.colId = Arrays.copyOf(colId, colId.length);
+    }
+
     Fraction getElement(int row, int column) {
         return table[row][column];
     }
 
     private void switchBasis(int row, int col) {
-        rowId[row] += colId[col - 1];
-        colId[col - 1] = rowId[row] - colId[col - 1];
-        rowId[row] -= colId[col - 1];
+        rowId[row] = rowId[row] + colId[col - 1];
+        colId[col - 1] = rowId[row].substring(0, (rowId[row].length() - colId[col - 1].length()));
+        rowId[row] = rowId[row].substring(colId[col - 1].length());
     }
 
     int getResRow() {
@@ -102,10 +96,9 @@ class SimplexTable {
     }
 
     void step(int resRow, int resCol) {
-        this.resCol = resCol;
-        this.resRow = resRow;
+        setResElement(resRow, resCol);
 
-        stateList.add(new SimplexTable(table, resRow, resCol, rowId, colId));
+        stateList.add(new SimplexTable(this));
 
         for (int i = 0; i < rows(); ++i)
             if (i != resRow)
@@ -133,18 +126,18 @@ class SimplexTable {
         return stateList;
     }
 
-    int[] getRowId() {
+    String[] getRowId() {
         return rowId;
     }
 
     public String toString() {
         String string = String.format("%14s ", "B");
-        for (int i : colId) {
-            string = string.concat(String.format("%10s ", "x" + i));
+        for (String i : colId) {
+            string = string.concat(String.format("%10s ", i));
         }
         string += '\n';
         for (int i = 0; i < rows(); i++) {
-            string = string.concat(String.format("%3s ", i < rowId.length ? "x" + rowId[i] : "F"));
+            string = string.concat(String.format("%3s ", i < rowId.length ? rowId[i] : "F"));
             for (int j = 0; j < cols(); j++) {
                 if (i == resRow && j == resCol)
                     string = string.concat(String.format("%10s ","*" + getElement(i, j) + "*"));
