@@ -65,7 +65,7 @@ class SimplexTable {
 
     int getResRow() {
         int index = 0;
-        for (int i = 1; i < rows() - 1; ++i) {
+        for (int i = 1; i < rowId.length; ++i) {
             if (table[i][0].isNegative() && table[index][0].compareTo(table[i][0]) > 0)
                 index = i;
         }
@@ -75,7 +75,7 @@ class SimplexTable {
     int getResRow(int resCol) {
         int index = -1;
         Fraction ratio = Fraction.INFINITY;
-        for (int i = 0; i < rows() - 1; ++i) {
+        for (int i = 0; i < rowId.length; ++i) {
             if (table[i][0].compareTo(Fraction.ZERO) >= 0
                     && table[i][resCol].compareTo(Fraction.ZERO) > 0
                     && table[i][0].divide(table[i][resCol]).compareTo(ratio) < 0) {
@@ -100,7 +100,7 @@ class SimplexTable {
 
         stateList.add(new SimplexTable(this));
 
-        for (int i = 0; i < rows(); ++i)
+        for (int i = 0; i <= rowId.length; ++i)
             if (i != resRow)
                 for (int j = 0; j < cols(); ++j)
                     if (j != resCol)
@@ -114,7 +114,7 @@ class SimplexTable {
             if (j != resCol)
                 table[resRow][j] = table[resRow][j].divide(table[resRow][resCol]);
 
-        for (int i = 0; i < rows(); ++i)
+        for (int i = 0; i <= rowId.length; ++i)
             if (i != resRow)
                 table[i][resCol] = table[i][resCol].divide(table[resRow][resCol].negate());
 
@@ -137,7 +137,8 @@ class SimplexTable {
         }
         string += '\n';
         for (int i = 0; i < rows(); i++) {
-            string = string.concat(String.format("%3s ", i < rowId.length ? rowId[i] : "F"));
+            String index = i < rowId.length ? rowId[i] : (i == rowId.length ? "F" : "M");
+            string = string.concat(String.format("%3s ", index));
             for (int j = 0; j < cols(); j++) {
                 if (i == resRow && j == resCol)
                     string = string.concat(String.format("%10s ","*" + getElement(i, j) + "*"));
