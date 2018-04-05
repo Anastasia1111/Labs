@@ -35,6 +35,8 @@ public:
     bool basisWasBefore(int *columns);
     void setZeroInArtif();
 
+    friend std::ostream &operator<<(std::ostream &str, const FracMatrixSymplex& outMatrix);
+
 
 private:
     Frac **m;//[xsize][ysize]

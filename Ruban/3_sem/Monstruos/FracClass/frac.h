@@ -57,7 +57,7 @@ class Frac
 
         //input, output
         friend std::ostream &operator<<(std::ostream &str, const Frac& outFrac);
-        friend std::istream &operator>>(std::istream &str, const Frac& inFrac);
+        friend std::istream &operator>>(std::istream &str, Frac& inFrac);
 
         Frac invert();
         Frac pow(int x);

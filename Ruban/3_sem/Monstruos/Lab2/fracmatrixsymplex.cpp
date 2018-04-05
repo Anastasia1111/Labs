@@ -26,29 +26,56 @@ FracMatrixSymplex::FracMatrixSymplex(vector <MatrixLimitation> matrix, MatrixLim
 //    }
 
     m2.resize(matrix[0].getLine().size());
-    for(unsigned int i = 0; i < m2.size(); ++i) {
-        m2[i].resize(matrix.size());
+    for(unsigned int i = 0; i < matrix.size(); ++i) {
+        rowInsert(i, matrix[i].getLine());
     }
+    rowInsert(matrix.size(), target.getLine());
+
     int basei = 0;
     for(unsigned int i = 0; i < matrix.size(); ++i) {
         vector<Frac> buffer;
         buffer.resize(m2[0].size());
         switch(matrix[i].getLimit()) {
         case MLIMIT_EQSMALLER:
-            buffer[basei] = Frac(1, 0);
+            buffer[basei] = Frac(1, 1);
             colInsert(m2.size() - 1, buffer);
+            basei++;
+            break;
+        case MLIMIT_EQBIGGER:
+            buffer[basei] = Frac(1, 1);
+            colInsert(m2.size() - 1, buffer);
+            rowMulti2(basei, Frac(-1, 1));
+            basei++;
+            break;
             // cases for all
         }
         buffer.clear();
     }
 
-    for(unsigned int i = 0; i < m2[0].size(); ++i) {
-        for(unsigned int j = 0; j < m2.size(); ++j) {
-            //cout << m2[j][i] << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
+//    vector <Frac> matrBuff; // buffer for limitations/pointerf
+//    for(unsigned int i = 0; i < m2[0].size(); ++i) {
+//        matrBuff = matrix[i].getLine();
+//        for(unsigned int j = 0; j < m2.size(); ++j) {
+//            m2[j][i] = matrBuff[j];
+//        }
+//        matrBuff.clear();
+//    }
+
+//    for(unsigned int i = 0; i < m2.size(); ++i) {
+//        m2[i].resize(matrix.size() + 1);
+//    }
+//    matrBuff = target.getLine();
+//    for(unsigned int j = 0; j < m2.size(); ++j) {
+//        m2[j][m2[0].size() - 1] = matrBuff[j];
+//    }
+//    cout << endl << endl << "constructor:" << endl;
+//    for(unsigned int i = 0; i < m2[0].size(); ++i) {
+//        for(unsigned int j = 0; j < m2.size(); ++j) {
+//            cout << m2[j][i] << " ";
+//        }
+//        cout << endl;
+//    }
+//    cout << endl;
 
 
 //    xsize = matrix.size();
@@ -349,6 +376,17 @@ void FracMatrixSymplex::setZeroInArtif()
             m[xsize - 1][j] -= m[basRow][j] * a;
         }
     }
+}
+
+ostream &operator<<(ostream &str, const FracMatrixSymplex &outMatrix)
+{
+    for(unsigned int i = 0; i < outMatrix.m2[0].size(); ++i) {
+        str << endl;
+        for(unsigned int j = 0; j < outMatrix.m2.size(); ++j) {
+            str << outMatrix.m2[j][i] << " ";
+        }
+    }
+    return str;
 }
 
 void FracMatrixSymplex::setBasisInColumn(int column, int row)

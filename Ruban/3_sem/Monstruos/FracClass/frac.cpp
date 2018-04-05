@@ -173,7 +173,7 @@ std::ostream &operator<<(std::ostream &str, const Frac &outFrac)
     return str;
 }
 
-std::istream &Frac::operator>>(std::istream &str, const Frac &inFrac)
+std::istream &operator>>(std::istream &str, Frac &inFrac)
 {
     int num, den;
     char buffer;
