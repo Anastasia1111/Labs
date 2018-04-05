@@ -22,10 +22,10 @@ public class MainActivity extends Activity {
         DatabaseHelper dataHelper = new DatabaseHelper(this);
         Random rand = new Random();
         for (int i = 0; i < 10; ++i) {
-            String name = UUID.randomUUID().toString();
-            int weight = rand.nextInt();
-            int height = rand.nextInt();
-            int age = rand.nextInt();
+            String name = UUID.randomUUID().toString().substring(0, 10);
+            int weight = rand.nextInt() % 100;
+            int height = rand.nextInt() % 100;
+            int age = rand.nextInt() % 100;
             dataHelper.insertData(name, weight, height, age);
         }
 
