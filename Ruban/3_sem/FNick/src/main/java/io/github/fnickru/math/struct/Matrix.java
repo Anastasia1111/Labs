@@ -70,7 +70,7 @@ public class Matrix {
         return matrix[0].length;
     }
 
-    private Fraction[][] getMatrix() {
+    public Fraction[][] getMatrix() {
         return matrix.clone();
     }
 
@@ -104,7 +104,7 @@ public class Matrix {
 
         this.resize(rows, columns + 1);
 
-        for (int i = 0; i < columns; ++i)
+        for (int i = 0; i < rows; ++i)
             this.set(column[i], i, columns);
     }
 

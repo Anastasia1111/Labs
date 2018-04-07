@@ -13,6 +13,10 @@ public class Fraction extends Number implements Comparable<Fraction> {
     public static final Fraction ONE = new Fraction(BigInteger.ONE);
     public static final Fraction INFINITY = new Fraction(Long.MAX_VALUE);
 
+    public Fraction() {
+        this(BigInteger.ZERO);
+    }
+
     public Fraction(BigInteger numerator) {
         this.numerator = numerator;
         this.denominator = BigInteger.ONE;
@@ -192,6 +196,14 @@ public class Fraction extends Number implements Comparable<Fraction> {
 
     public boolean isNegative() {
         return this.numerator.signum() == -1;
+    }
+
+    public static Fraction min(Fraction a, Fraction b) {
+        return a.compareTo(b) < 0 ? a : b;
+    }
+
+    public static Fraction max(Fraction a, Fraction b) {
+        return a.compareTo(b) > 0 ? a : b;
     }
 
     @Override

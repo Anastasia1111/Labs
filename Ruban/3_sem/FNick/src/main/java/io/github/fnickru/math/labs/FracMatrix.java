@@ -12,7 +12,7 @@ public class FracMatrix {
         System.out.println(new Fraction(1.0f/3, 3));
         System.out.println(new Fraction(BigInteger.ONE, new BigInteger("3")));
         System.out.println();
-        Matrix matrix = FileWorker.readMatrix("./src/main/resources/matrix.txt");
+        Matrix matrix = FileWorker.readMatrix("./src/main/resources/matrix/matrix.txt");
         System.out.println(matrix);
         System.out.println(Matrix.determinant(matrix));
     }

@@ -1,12 +1,13 @@
 package io.github.fnickru.math.struct.simplex;
 
 import io.github.fnickru.math.struct.Fraction;
+import io.github.fnickru.math.struct.Memento;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class SimplexTable {
+class SimplexTable implements Memento<SimplexTable> {
 
     private Fraction[][] table;
     private int resRow;
@@ -17,7 +18,7 @@ class SimplexTable {
 
     SimplexTable(Fraction[][] table, String[] rowId, String[] colId) {
         this.table = table.clone();
-        for(int i = 0; i < this.table.length; ++i)
+        for (int i = 0; i < this.table.length; ++i)
             this.table[i] = table[i].clone();
         stateList = new ArrayList<>();
 
@@ -27,7 +28,7 @@ class SimplexTable {
 
     private SimplexTable(SimplexTable simplexTable) {
         this.table = simplexTable.table.clone();
-        for(int i = 0; i < this.table.length; ++i)
+        for (int i = 0; i < this.table.length; ++i)
             this.table[i] = simplexTable.table[i].clone();
         stateList = new ArrayList<>();
 
@@ -129,7 +130,8 @@ class SimplexTable {
                     table[rows() - 1][j] = table[rows() - 1][j].subtract(table[i][j]);
     }
 
-    List<SimplexTable> getStateList() {
+    @Override
+    public List<SimplexTable> getStateList() {
         return stateList;
     }
 
@@ -148,9 +150,9 @@ class SimplexTable {
             string = string.concat(String.format("%3s ", index));
             for (int j = 0; j < cols(); j++) {
                 if (i == resRow && j == resCol)
-                    string = string.concat(String.format("%10s ","*" + getElement(i, j) + "*"));
+                    string = string.concat(String.format("%10s ","*" + table[i][j] + "*"));
                 else
-                    string = string.concat(String.format("%10s ",getElement(i, j)));
+                    string = string.concat(String.format("%10s ", table[i][j]));
             }
             string = string.concat("\n");
         }

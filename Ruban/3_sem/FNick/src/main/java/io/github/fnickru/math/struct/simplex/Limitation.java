@@ -60,7 +60,7 @@ public class Limitation extends Function {
 
         List<Fraction> coefs = parseAtoms(atoms);
 
-        return new Limitation(coefs.toArray(new Fraction[coefs.size()]), sign, freeTerm);
+        return new Limitation(coefs.toArray(new Fraction[0]), sign, freeTerm);
     }
 
     public String toString() {

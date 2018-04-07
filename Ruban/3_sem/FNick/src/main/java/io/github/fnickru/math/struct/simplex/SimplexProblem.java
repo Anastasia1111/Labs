@@ -2,14 +2,16 @@ package io.github.fnickru.math.struct.simplex;
 
 import io.github.fnickru.math.exeptions.NoSolutionException;
 import io.github.fnickru.math.struct.Fraction;
+import io.github.fnickru.math.struct.LinearProgrammingProblem;
+import io.github.fnickru.math.struct.Solution;
 
-public class Problem {
+public class SimplexProblem implements LinearProgrammingProblem {
     private CostFunction costFunction;
     private Limitation[] limitations;
-    private SimplexTable simplexTable;
-    private SimplexAnswer answer;
+    private SimplexTable table;
+    private Solution<SimplexTable> solution;
 
-    public Problem(CostFunction function, Limitation... limitations) {
+    public SimplexProblem(CostFunction function, Limitation... limitations) {
         this.costFunction = function;
         this.limitations = limitations;
         setup();
@@ -74,12 +76,12 @@ public class Problem {
                 for (int j = 0; j <= varnum; ++j)
                     table[limitations.length + 1][j] = table[limitations.length + 1][j].subtract(table[i][j]);
 
-        simplexTable = new SimplexTable(table, rowId, colId);
+        this.table = new SimplexTable(table, rowId, colId);
     }
 
-    private void createAnswer() throws NoSolutionException {
-        answer = new SimplexAnswer(simplexTable);
-        String[] rowId = simplexTable.getRowId();
+    private void createSolution() throws NoSolutionException {
+        solution = new Solution<>(table);
+        String[] rowId = table.getRowId();
 
         for (int v = 0; v < costFunction.getLength(); ++v) {
             int j = 0;
@@ -89,40 +91,40 @@ public class Problem {
                 ++j;
             }
             if (j == rowId.length)
-                answer.addItem("x" + v, Fraction.ZERO);
+                solution.addItem("x" + v, Fraction.ZERO);
             else
-                answer.addItem("x" + v, simplexTable.getElement(j, 0));
+                solution.addItem("x" + v, table.getElement(j, 0));
         }
 
         String optimizationDirection = costFunction.shouldBeMinimized() ? "min" : "max";
-        Fraction costFunctionValue = costFunction.shouldBeMinimized() ? simplexTable.getElement(rowId.length, 0).negate() : simplexTable.getElement(rowId.length, 0);
-        answer.addItem(optimizationDirection + " F", costFunctionValue);
+        Fraction costFunctionValue = costFunction.shouldBeMinimized() ? table.getElement(rowId.length, 0).negate() : table.getElement(rowId.length, 0);
+        solution.addItem(optimizationDirection + " F", costFunctionValue);
     }
 
-    public String getAnswer() {
-        return answer.toString();
+    public String getSolution() {
+        return solution.toString();
     }
 
     public void solve() throws NoSolutionException {
         boolean solved = false;
 
-        System.out.println(simplexTable);
+        System.out.println(table);
 
         while (!solved) {
-            int row = simplexTable.getResRow();
+            int row = table.getResRow();
             if (row != -1) {
-                int col = simplexTable.getResCol(row);
+                int col = table.getResCol(row);
                 if (col != -1)
-                    simplexTable.step(row, col);
+                    table.step(row, col);
                 else
                     throw new NoSolutionException("No solution");
             } else {
-                int col = simplexTable.getResCol(simplexTable.rows() - 1);
-                col = col == -1 ? simplexTable.getResCol(simplexTable.rows() - 2) : col;
+                int col = table.getResCol(table.rows() - 1);
+                col = col == -1 ? table.getResCol(table.rows() - 2) : col;
                 if (col != -1) {
-                    row = simplexTable.getResRow(col);
+                    row = table.getResRow(col);
                     if (row != -1)
-                        simplexTable.step(row, col);
+                        table.step(row, col);
                     else
                         throw new NoSolutionException("No solution");
                 } else {
@@ -131,7 +133,7 @@ public class Problem {
             }
         }
 
-        createAnswer();
+        createSolution();
     }
 
     @Override
