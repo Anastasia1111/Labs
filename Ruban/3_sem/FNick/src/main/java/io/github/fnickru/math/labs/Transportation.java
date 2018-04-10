@@ -14,7 +14,7 @@ public class Transportation {
         for (int i = 0; i < n; ++i) {
             TransportationProblem problem = problems[i];
             System.out.println(problem);
-            //LinearProgrammingProblem.printSolution(problem);
+            LinearProgrammingProblem.printSolution(problem);
         }
     }
 
