@@ -13,13 +13,14 @@ class TransportationTable implements Memento<TransportationTable> {
         Fraction cost;
 
         Variable() {
-            quantity = Fraction.ZERO;
+            quantity = null;
             cost = Fraction.ZERO;
         }
 
         @Override
         public String toString() {
-            return String.format("(%s|%s)", quantity, cost);
+            String var = quantity != null ? quantity.toString() : "-";
+            return String.format("(%s|%s)", var, cost);
         }
     }
 
@@ -63,6 +64,60 @@ class TransportationTable implements Memento<TransportationTable> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    Fraction getQuantity(int i, int j) {
+        return table[i][j].quantity;
+    }
+
+    Fraction getCost(int i, int j) {
+        return table[i][j].cost;
+    }
+
+
+
+    private boolean leftBottom(Integer bottom, Integer left, int top, int right) {
+        boolean found = false;
+
+        all :
+        for (left = right - 1; left >= 0; --left)
+            if (table[top][left].quantity != null)
+                for (bottom = top + 1; bottom < stock.length; ++bottom)
+                    if (table[bottom][left].quantity != null) {
+                        found = true;
+                        break all;
+                    }
+
+        return found;
+    }
+
+    private boolean rightTop(int bottom, int left, Integer top, Integer right) {
+        boolean found = false;
+
+        all :
+        for (right = left + 1; right < required.length; ++right)
+            if (table[bottom][right].quantity != null)
+                for (top = bottom - 1; top >= 0; --top)
+                    if (table[top][right].quantity != null) {
+                        found = true;
+                        break all;
+                    }
+
+        return found;
+    }
+
+    void step(int maxi, int maxj) {
+        stateList.add(new TransportationTable(this));
+
+        Integer plusi = -1, plusj = -1;
+        if (!leftBottom(plusi, plusj, maxi, maxj))
+            rightTop(maxi, maxj, plusi, plusj);
+        Fraction min = Fraction.min(table[maxi][plusj].quantity, table[plusi][maxj].quantity);
+
+        table[maxi][maxj].quantity = min;
+        table[plusi][maxj].quantity = table[plusi][maxj].quantity.subtract(min);
+        table[maxi][plusj].quantity = table[maxi][plusj].quantity.subtract(min);
+        table[plusi][plusj].quantity = table[plusi][plusj].quantity.add(min);
     }
 
     public List<TransportationTable> getStateList() {

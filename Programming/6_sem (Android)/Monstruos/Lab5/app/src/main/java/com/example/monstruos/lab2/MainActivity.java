@@ -8,8 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import java.util.Random;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,50 +25,56 @@ public class MainActivity extends AppCompatActivity {
         db = dbHelper.getWritableDatabase();
 
         TableLayout table = findViewById(R.id.sqldbtable);
-
-
-        for(int i = 0; i < 50; ++i) {
-            Random rand = new Random();
-            Integer randInt = rand.nextInt(5)  + i * 5;
-            String st_name = "st" + randInt.toString();
-            randInt = rand.nextInt(7) + 18;
-            String st_age = randInt.toString();
-            randInt = rand.nextInt(40) + 70;
-            String st_weight = randInt.toString();
-            randInt = rand.nextInt(100) + 140;
-            String st_height = randInt.toString();
-            db.execSQL("INSERT INTO StudTable ('name', 'weight', 'height', 'age') " +
-                    "VALUES ('" + st_name + "', '" + st_weight + "', '" +
-                    st_height + "', '" + st_age + "')");
-
-        }
+        TableRow headtr = new TableRow(this);
+        headtr.setPadding(2, 0, 10, 0);
+        TextView htv1 = new TextView(this);
+        htv1.setText("ID");
+        headtr.addView(htv1);
+        TextView htv2 = new TextView(this);
+        htv2.setText("Name");
+        headtr.addView(htv2);
+        TextView htv3 = new TextView(this);
+        htv3.setText("Weight");
+        headtr.addView(htv3);
+        TextView htv4 = new TextView(this);
+        htv4.setText("Height");
+        headtr.addView(htv4);
+        TextView htv5 = new TextView(this);
+        htv5.setText("Age");
+        headtr.addView(htv5);
+        table.addView(headtr);
 
         Cursor c;
 
-        c = db.rawQuery("SELECT * FROM StudTable WHERE ?>0", new String[]{"_id"});
+        c = db.rawQuery("SELECT * FROM StudTable ORDER BY age DESC", null);
+
         if(c.moveToFirst()) {
             do {
                 TableRow tr = new TableRow(this);
-                tr.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT, 1.0f));
+                tr.setPadding(2, 0, 10, 0);
+
 
                 int index = c.getColumnIndex("_id");
                 TextView labeldbId = new TextView(this);
+                labeldbId.setPadding(0, 0 ,30 ,0);
                 labeldbId.setText(c.getString(index));
                 tr.addView(labeldbId);
 
                 index = c.getColumnIndex("name");
                 TextView labeldbName = new TextView(this);
+                labeldbName.setPadding(0, 0 ,30 ,0);
                 labeldbName.setText(c.getString(index));
                 tr.addView(labeldbName);
 
                 index = c.getColumnIndex("weight");
                 TextView labeldbWeight = new TextView(this);
+                labeldbWeight.setPadding(0, 0 ,30 ,0);
                 labeldbWeight.setText(c.getString(index));
                 tr.addView(labeldbWeight);
 
                 index = c.getColumnIndex("height");
                 TextView labeldbHeight = new TextView(this);
+                labeldbHeight.setPadding(0, 0 ,30 ,0);
                 labeldbHeight.setText(c.getString(index));
                 tr.addView(labeldbHeight);
 
@@ -77,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 TextView labeldbAge = new TextView(this);
                 labeldbAge.setText(c.getString(index));
                 tr.addView(labeldbAge);
+                tr.setPadding(0, 0, 0, 10);
+
+
 
                 table.addView(tr);
 

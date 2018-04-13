@@ -108,8 +108,6 @@ public class SimplexProblem implements LinearProgrammingProblem {
     public void solve() throws NoSolutionException {
         boolean solved = false;
 
-        System.out.println(table);
-
         while (!solved) {
             int row = table.getResRow();
             if (row != -1) {
