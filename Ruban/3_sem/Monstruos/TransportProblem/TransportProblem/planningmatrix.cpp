@@ -21,7 +21,8 @@ PlanningMatrix::PlanningMatrix(vector<vector<VolumeAndCost> > m, vector<Containe
     xsize = matrix.size();
     ysize = matrix[0].size();
 
-
+    potU.resize(xsize);
+    potV.resize(ysize);
 }
 
 int PlanningMatrix::planCost()
@@ -82,13 +83,19 @@ bool PlanningMatrix::isCloseSystem()
 
 ostream &operator<<(ostream &str, const PlanningMatrix &outM)
 {
+    str << "[   u\\v   ] ";
+    for(int i = 0; i < outM.ysize; ++i)
+        str << "[" << outM.potV[i] << "] ";
+    str << endl;
     for(int i = 0; i < outM.xsize + 1; ++i) {
         if(i != outM.xsize) {
+            str << "[" << outM.potU[i] << "] ";
             for(unsigned int j = 0; j < outM.matrix[i].size(); ++j) {
-                str << outM.matrix[i][j] << "  ";
+                str << outM.matrix[i][j] << " ";
             }
             str << outM.storage[i] << endl;
         } else {
+            str << "            ";
             for(unsigned int j = 0; j < outM.consumption.size(); ++j) {
                 str << outM.consumption[j] << " ";
             }
@@ -194,6 +201,19 @@ void PlanningMatrix::checkMinsInCol(int col, vector<int> &checkCol)
     }
 }
 
+bool PlanningMatrix::potIsDefined()
+{
+    for(int i = 0; i < xsize; ++i) {
+        if(!potU[i].defined())
+            return false;
+    }
+    for(int i = 0; i < ysize; ++i) {
+        if(!potV[i].defined())
+            return false;
+    }
+    return true;
+}
+
 void PlanningMatrix::northWestAngle()
 {
     // make consumption empty
@@ -263,5 +283,35 @@ void PlanningMatrix::doublePrefMethod()
 
 //    while(!checkLimit()) {
 
-//    }
+    //    }
+}
+
+void PlanningMatrix::potentialMethod()
+{
+    potU[0].setValue(0);
+
+    while(!potIsDefined()) {
+        for(int i = 0; i < xsize; ++i) { // find C[i]
+            if(potU[i].defined()) {
+                cout << "Found u[" << i << "]" << endl;
+                for(int j = 0; j < ysize; ++j) { // calc all what we can
+                    if(matrix[i][j].isWorking() && !potV[j].defined())
+                        potV[j].setValue(matrix[i][j].getV() - potU[i].getValue()); // C[i][j] - U[i] = V[j]
+                }
+            }
+        }
+
+        for(int j = 0; j < ysize; ++j) {
+            if(potV[j].defined()) { // find V[j]
+                cout << "Found v[" << j << "]" << endl;
+                for(int i = 0; i < xsize; ++i) { // calc all what we can
+                    if(matrix[i][j].isWorking())
+                        potU[i].setValue(matrix[i][j].getV() - potU[j].getValue()); // C[i][j] - V[j] = U[i]
+                }
+            }
+        }
+    }
+
+    cout << "Defined potential" << endl;
+    cout << *this;
 }

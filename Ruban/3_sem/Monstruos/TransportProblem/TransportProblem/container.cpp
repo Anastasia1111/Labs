@@ -77,7 +77,7 @@ int Container::getStore() const
 
 std::ostream &operator<<(std::ostream &str, const Container &outC)
 {
-    str << "[" << outC.store << "|" << outC.size << "]";
+    str << "[" << std::setw(4) << outC.store << "|" << std::setw(4) << outC.size << "]";
     return str;
 }
 

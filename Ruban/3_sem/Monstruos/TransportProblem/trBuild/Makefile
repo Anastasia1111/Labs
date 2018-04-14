@@ -54,12 +54,14 @@ SOURCES       = ../TransportProblem/main.cpp \
 		../TransportProblem/volumeandcost.cpp \
 		../../FracClass/frac.cpp \
 		../TransportProblem/planningmatrix.cpp \
-		../TransportProblem/container.cpp 
+		../TransportProblem/container.cpp \
+		../TransportProblem/potential.cpp 
 OBJECTS       = main.o \
 		volumeandcost.o \
 		frac.o \
 		planningmatrix.o \
-		container.o
+		container.o \
+		potential.o
 DIST          = /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/common/unix.conf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/common/linux.conf \
@@ -223,6 +225,7 @@ DIST          = /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/qt_config.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/spec_post.prf \
+		../TransportProblem/.qmake.stash \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/toolchain.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/default_pre.prf \
@@ -239,11 +242,13 @@ DIST          = /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../TransportProblem/TransportProblem.pro volumeandcost.h \
 		../../FracClass/frac.h \
 		planningmatrix.h \
-		container.h ../TransportProblem/main.cpp \
+		container.h \
+		potential.h ../TransportProblem/main.cpp \
 		../TransportProblem/volumeandcost.cpp \
 		../../FracClass/frac.cpp \
 		../TransportProblem/planningmatrix.cpp \
-		../TransportProblem/container.cpp
+		../TransportProblem/container.cpp \
+		../TransportProblem/potential.cpp
 QMAKE_TARGET  = TransportProblem
 DESTDIR       = 
 TARGET        = TransportProblem
@@ -418,6 +423,7 @@ Makefile: ../TransportProblem/TransportProblem.pro /home/monstruos/Qt/5.10.0/gcc
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/qt_config.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/toolchain.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/default_pre.prf \
@@ -596,6 +602,7 @@ Makefile: ../TransportProblem/TransportProblem.pro /home/monstruos/Qt/5.10.0/gcc
 /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/qt_config.prf:
 /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/linux-g++/qmake.conf:
 /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/exclusive_builds.prf:
 /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/toolchain.prf:
 /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/default_pre.prf:
@@ -655,12 +662,10 @@ compiler_clean:
 
 main.o: ../TransportProblem/main.cpp ../TransportProblem/planningmatrix.h \
 		../TransportProblem/volumeandcost.h \
-		../../FracClass/frac.h \
 		../TransportProblem/container.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../TransportProblem/main.cpp
 
-volumeandcost.o: ../TransportProblem/volumeandcost.cpp ../TransportProblem/volumeandcost.h \
-		../../FracClass/frac.h
+volumeandcost.o: ../TransportProblem/volumeandcost.cpp ../TransportProblem/volumeandcost.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o volumeandcost.o ../TransportProblem/volumeandcost.cpp
 
 frac.o: ../../FracClass/frac.cpp ../../FracClass/frac.h
@@ -668,12 +673,14 @@ frac.o: ../../FracClass/frac.cpp ../../FracClass/frac.h
 
 planningmatrix.o: ../TransportProblem/planningmatrix.cpp ../TransportProblem/planningmatrix.h \
 		../TransportProblem/volumeandcost.h \
-		../../FracClass/frac.h \
 		../TransportProblem/container.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o planningmatrix.o ../TransportProblem/planningmatrix.cpp
 
 container.o: ../TransportProblem/container.cpp ../TransportProblem/container.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o container.o ../TransportProblem/container.cpp
+
+potential.o: ../TransportProblem/potential.cpp ../TransportProblem/potential.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o potential.o ../TransportProblem/potential.cpp
 
 ####### Install
 
