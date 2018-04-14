@@ -7,10 +7,12 @@ SOURCES += main.cpp \
     volumeandcost.cpp \
     ../../FracClass/frac.cpp \
     planningmatrix.cpp \
-    container.cpp
+    container.cpp \
+    potential.cpp
 
 HEADERS += \
     volumeandcost.h \
     ../../FracClass/frac.h \
     planningmatrix.h \
-    container.h
+    container.h \
+    potential.h

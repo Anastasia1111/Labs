@@ -7,7 +7,7 @@ VolumeAndCost::VolumeAndCost(int volume, int cost) : v(volume), c(cost)
 
 int VolumeAndCost::fullCost()
 {
-    return v*c;
+    return work ? v*c : 0;
 }
 
 int VolumeAndCost::getV() const
@@ -51,13 +51,20 @@ bool VolumeAndCost::isWorking() const
 
 void VolumeAndCost::setWork(bool value)
 {
-    if(value == false)
-        v = 0;
+    work = value;
+    if(!work)
+        value = 0;
 }
 
 std::ostream &operator<<(std::ostream &str, const VolumeAndCost &outVC)
 {
-    str << "(" << outVC.v << "/" << outVC.c << ")";
+    str << "(";
+    if(outVC.work) {
+        str << std::setw(4) << outVC.v;
+    } else {
+        str << "   -";
+    }
+    str << "/" << std::setw(4) << outVC.c << ")";
     return str;
 }
 

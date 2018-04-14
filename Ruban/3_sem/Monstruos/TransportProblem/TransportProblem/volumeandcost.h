@@ -1,7 +1,9 @@
 #ifndef VOLUMEANDCOST_H
 #define VOLUMEANDCOST_H
 
-#include "../../FracClass/frac.h"
+#include <cstdio>
+#include <fstream>
+#include <iomanip>
 
 #define FREE -100000000
 

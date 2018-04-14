@@ -6,8 +6,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "potential.h"
 
 using namespace std;
+
 
 class PlanningMatrix
 {
@@ -19,6 +21,7 @@ public:
     void northWestAngle();
     void minCostMethod();
     void doublePrefMethod();
+    void potentialMethod();
 
     friend std::ostream &operator<<(std::ostream &str, const PlanningMatrix& outM);
 
@@ -38,9 +41,13 @@ private:
     void checkMinsInRow(int row, vector<int> &checkRow);
     void checkMinsInCol(int col, vector<int> &checkCol);
 
+    bool potIsDefined();
+
     vector<vector<VolumeAndCost>> matrix;
     vector<Container> storage;
     vector<Container> consumption;
+    vector <Potential> potU;
+    vector <Potential> potV;
     int xsize, ysize;
 };
 

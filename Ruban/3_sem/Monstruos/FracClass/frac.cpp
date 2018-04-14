@@ -227,7 +227,7 @@ void Frac::setNewNum(int newNumer, int newDenom) {
 int Frac::intPart()
 {
     if(numer < 0)
-        (numer - denom) / denom;
+        return (numer - denom) / denom;
     else
         return numer / denom;
 }
