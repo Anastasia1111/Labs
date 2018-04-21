@@ -4,6 +4,7 @@
 #include "volumeandcost.h"
 #include "container.h"
 #include <vector>
+#include <utility>
 #include <string>
 #include <iostream>
 #include "potential.h"
@@ -42,7 +43,14 @@ private:
     void checkMinsInCol(int col, vector<int> &checkCol);
 
     bool potIsDefined();
+    void DFSCircle(int xstart, int ystart);
 
+    void DFSInit();
+    void DFS(int x, int y, int xfr, int yfr, int xfin, int yfin);
+    void DFSFree();
+
+    vector<vector<bool>> mark;
+    vector<vector<pair<int, int>>> from;
     vector<vector<VolumeAndCost>> matrix;
     vector<Container> storage;
     vector<Container> consumption;

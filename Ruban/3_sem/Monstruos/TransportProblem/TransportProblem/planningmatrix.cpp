@@ -214,6 +214,42 @@ bool PlanningMatrix::potIsDefined()
     return true;
 }
 
+void PlanningMatrix::DFSCircle(int xstart, int ystart)
+{
+    DFSInit();
+    DFS();
+    DFSFree();
+}
+
+void PlanningMatrix::DFSInit()
+{
+    mark.resize(xsize);
+    for(int i = 0; i < xsize; ++i) {
+        mark[i].resize(ysize, false);
+    }
+    from.resize(xsize);
+    for(int i = 0; i < xsize; ++i) {
+        from[i].resize(ysize, make_pair(-1, -1));
+    }
+}
+
+void PlanningMatrix::DFS(int x, int y, int xfr, int yfr, int xfin, int yfin)
+{
+    if(mark[x][y])
+        return;
+
+    mark[x][y] = true;
+    from[x][y] = make_pair(xfr, yfr);
+    if(x == xfin && y == yfin)
+
+}
+
+void PlanningMatrix::DFSFree()
+{
+    mark.clear();
+    from.clear();
+}
+
 void PlanningMatrix::northWestAngle()
 {
     // make consumption empty
@@ -296,7 +332,7 @@ void PlanningMatrix::potentialMethod()
                 cout << "Found u[" << i << "]" << endl;
                 for(int j = 0; j < ysize; ++j) { // calc all what we can
                     if(matrix[i][j].isWorking() && !potV[j].defined())
-                        potV[j].setValue(matrix[i][j].getV() - potU[i].getValue()); // C[i][j] - U[i] = V[j]
+                        potV[j].setValue(matrix[i][j].getC() - potU[i].getValue()); // C[i][j] - U[i] = V[j]
                 }
             }
         }
@@ -305,8 +341,8 @@ void PlanningMatrix::potentialMethod()
             if(potV[j].defined()) { // find V[j]
                 cout << "Found v[" << j << "]" << endl;
                 for(int i = 0; i < xsize; ++i) { // calc all what we can
-                    if(matrix[i][j].isWorking())
-                        potU[i].setValue(matrix[i][j].getV() - potU[j].getValue()); // C[i][j] - V[j] = U[i]
+                    if(matrix[i][j].isWorking() && !potU[i].defined())
+                        potU[i].setValue(matrix[i][j].getC() - potV[j].getValue()); // C[i][j] - V[j] = U[i]
                 }
             }
         }
