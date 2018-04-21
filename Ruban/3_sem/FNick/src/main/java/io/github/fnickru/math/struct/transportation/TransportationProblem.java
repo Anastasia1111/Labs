@@ -96,7 +96,7 @@ public class TransportationProblem implements LinearProgrammingProblem {
                     Fraction x = table.getQuantity(i, j);
                     if (x != null && reqPotentials[j] != null) {
                         Fraction c = table.getCost(i, j);
-                        stockPotentials[j] = reqPotentials[j].subtract(c);
+                        stockPotentials[i] = reqPotentials[j].subtract(c);
                         break;
                     }
                 }
@@ -139,7 +139,7 @@ public class TransportationProblem implements LinearProgrammingProblem {
         stockPotentials[0] = Fraction.ZERO;
         do {
             isPotentialsSet = setRequiredPotentials(stockPotentials, reqPotentials);
-            isPotentialsSet = isPotentialsSet && setStockPotentials(stockPotentials, reqPotentials);
+            isPotentialsSet = setStockPotentials(stockPotentials, reqPotentials) && isPotentialsSet;
         } while (!isPotentialsSet);
 
         while (!solved) {

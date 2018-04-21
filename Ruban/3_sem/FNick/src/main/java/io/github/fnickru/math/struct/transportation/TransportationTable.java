@@ -4,6 +4,7 @@ import io.github.fnickru.math.struct.Fraction;
 import io.github.fnickru.math.struct.Memento;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 class TransportationTable implements Memento<TransportationTable> {
@@ -74,36 +75,16 @@ class TransportationTable implements Memento<TransportationTable> {
         return table[i][j].cost;
     }
 
+    private List<Variable> pathFinder(int i, int j) {
+        List<Variable> path = new LinkedList<>();
+        List<Variable> vertical = new LinkedList<>();
+        List<Variable> horizontal = new LinkedList<>();
+        boolean isVertical = false;
+
+        horizontal.add(table[i][j]);
 
 
-    private boolean leftBottom(Integer bottom, Integer left, int top, int right) {
-        boolean found = false;
-
-        all :
-        for (left = right - 1; left >= 0; --left)
-            if (table[top][left].quantity != null)
-                for (bottom = top + 1; bottom < stock.length; ++bottom)
-                    if (table[bottom][left].quantity != null) {
-                        found = true;
-                        break all;
-                    }
-
-        return found;
-    }
-
-    private boolean rightTop(int bottom, int left, Integer top, Integer right) {
-        boolean found = false;
-
-        all :
-        for (right = left + 1; right < required.length; ++right)
-            if (table[bottom][right].quantity != null)
-                for (top = bottom - 1; top >= 0; --top)
-                    if (table[top][right].quantity != null) {
-                        found = true;
-                        break all;
-                    }
-
-        return found;
+        return path;
     }
 
     void step(int maxi, int maxj) {
