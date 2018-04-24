@@ -42,12 +42,16 @@ private:
     void checkMinsInRow(int row, vector<int> &checkRow);
     void checkMinsInCol(int col, vector<int> &checkCol);
 
+    void setPotential();
+    bool findMinNegRating(int &x, int &y);
     bool potIsDefined();
-    void DFSCircle(int xstart, int ystart);
 
-    void DFSInit();
-    void DFS(int x, int y, int xfr, int yfr, int xfin, int yfin);
-    void DFSFree();
+    void DFSCircle(int x, int y);
+
+    bool findRight(int origx, int origy, int &resx, int &resy);
+    bool findUp(int origx, int origy, int &resx, int &resy);
+    bool findLeft(int origx, int origy, int &resx, int &resy);
+    bool findDown(int origx, int origy, int &resx, int &resy);
 
     vector<vector<bool>> mark;
     vector<vector<pair<int, int>>> from;

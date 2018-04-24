@@ -52,13 +52,11 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../TransportProblem/main.cpp \
 		../TransportProblem/volumeandcost.cpp \
-		../../FracClass/frac.cpp \
 		../TransportProblem/planningmatrix.cpp \
 		../TransportProblem/container.cpp \
 		../TransportProblem/potential.cpp 
 OBJECTS       = main.o \
 		volumeandcost.o \
-		frac.o \
 		planningmatrix.o \
 		container.o \
 		potential.o
@@ -240,12 +238,10 @@ DIST          = /home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/yacc.prf \
 		/home/monstruos/Qt/5.10.0/gcc_64/mkspecs/features/lex.prf \
 		../TransportProblem/TransportProblem.pro volumeandcost.h \
-		../../FracClass/frac.h \
 		planningmatrix.h \
 		container.h \
 		potential.h ../TransportProblem/main.cpp \
 		../TransportProblem/volumeandcost.cpp \
-		../../FracClass/frac.cpp \
 		../TransportProblem/planningmatrix.cpp \
 		../TransportProblem/container.cpp \
 		../TransportProblem/potential.cpp
@@ -662,18 +658,17 @@ compiler_clean:
 
 main.o: ../TransportProblem/main.cpp ../TransportProblem/planningmatrix.h \
 		../TransportProblem/volumeandcost.h \
-		../TransportProblem/container.h
+		../TransportProblem/container.h \
+		../TransportProblem/potential.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../TransportProblem/main.cpp
 
 volumeandcost.o: ../TransportProblem/volumeandcost.cpp ../TransportProblem/volumeandcost.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o volumeandcost.o ../TransportProblem/volumeandcost.cpp
 
-frac.o: ../../FracClass/frac.cpp ../../FracClass/frac.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o frac.o ../../FracClass/frac.cpp
-
 planningmatrix.o: ../TransportProblem/planningmatrix.cpp ../TransportProblem/planningmatrix.h \
 		../TransportProblem/volumeandcost.h \
-		../TransportProblem/container.h
+		../TransportProblem/container.h \
+		../TransportProblem/potential.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o planningmatrix.o ../TransportProblem/planningmatrix.cpp
 
 container.o: ../TransportProblem/container.cpp ../TransportProblem/container.h

@@ -43,6 +43,7 @@ int main()
          << "MinCost method:" << endl;
     plan.minCostMethod();
 
-    plan.potentialMethod();
+//    plan.potentialMethod();
+//    cout << endl;
     return 0;
 }

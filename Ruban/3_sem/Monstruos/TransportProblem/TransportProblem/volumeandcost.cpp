@@ -18,7 +18,7 @@ int VolumeAndCost::getV() const
 void VolumeAndCost::setV(int value)
 {
     v = value;
-    work = (v == 0 ? false : true);
+    work = true;
 }
 
 int VolumeAndCost::getC() const
@@ -53,7 +53,7 @@ void VolumeAndCost::setWork(bool value)
 {
     work = value;
     if(!work)
-        value = 0;
+        v = 0;
 }
 
 std::ostream &operator<<(std::ostream &str, const VolumeAndCost &outVC)
