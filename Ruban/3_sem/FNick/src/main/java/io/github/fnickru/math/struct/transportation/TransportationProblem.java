@@ -163,6 +163,7 @@ public class TransportationProblem implements LinearProgrammingProblem {
             }
             if (!max.equals(Fraction.ZERO)) {
                 table.step(maxi, maxj);
+                System.out.println(table);
             } else {
                 solved = true;
             }

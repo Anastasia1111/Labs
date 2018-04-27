@@ -3,9 +3,7 @@ package io.github.fnickru.math.struct.transportation;
 import io.github.fnickru.math.struct.Fraction;
 import io.github.fnickru.math.struct.Memento;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 class TransportationTable implements Memento<TransportationTable> {
 
@@ -23,12 +21,29 @@ class TransportationTable implements Memento<TransportationTable> {
             String var = quantity != null ? quantity.toString() : "-";
             return String.format("(%s|%s)", var, cost);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Variable variable = (Variable) o;
+            return Objects.equals(quantity, variable.quantity) &&
+                    Objects.equals(cost, variable.cost);
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(quantity, cost);
+        }
     }
 
     private Variable[][] table;
     private List<TransportationTable> stateList;
     private Fraction[] stock;
     private Fraction[] required;
+    private int resRow = -1;
+    private int resCol = -1;
 
     TransportationTable(Fraction[][] cost, Fraction[] stock, Fraction[] required) {
         table = new Variable[stock.length][required.length];
@@ -44,10 +59,14 @@ class TransportationTable implements Memento<TransportationTable> {
 
     private TransportationTable(TransportationTable transportationTable) {
         this.table = transportationTable.table.clone();
-        for(int i = 0; i < this.table.length; ++i)
+        for (int i = 0; i < this.table.length; ++i)
             this.table[i] = transportationTable.table[i].clone();
-        this.stock = transportationTable.stock;
-        this.required = transportationTable.required;
+        this.stock = transportationTable.stock.clone();
+        this.required = transportationTable.required.clone();
+
+        this.resRow = transportationTable.resRow;
+        this.resCol = transportationTable.resCol;
+
         stateList = new ArrayList<>();
     }
 
@@ -75,30 +94,121 @@ class TransportationTable implements Memento<TransportationTable> {
         return table[i][j].cost;
     }
 
-    private List<Variable> pathFinder(int i, int j) {
-        List<Variable> path = new LinkedList<>();
-        List<Variable> vertical = new LinkedList<>();
-        List<Variable> horizontal = new LinkedList<>();
-        boolean isVertical = false;
+    private LinkedList<Integer> dfsHorizontal(int start, int finish, Integer previous, List<Integer> cycle) {
+        LinkedList<Integer> path = new LinkedList<>(cycle);
+        if (start != finish || previous < 0) {
+            int n = table[0].length;
 
-        horizontal.add(table[i][j]);
+            int st_i = start / n;
+            int st_j = start % n;
 
+            List<Integer> neighbours = new LinkedList<>();
+
+            for (int j = 0; j < n; ++j) {
+                if (j != st_j && table[st_i][j].quantity != null) {
+                    neighbours.add(st_i * n + j);
+                }
+            }
+
+            neighbours.removeAll(cycle);
+            neighbours.remove(previous);
+
+            for (Integer neighbour : neighbours) {
+                LinkedList<Integer> newPath = new LinkedList<>(cycle);
+                newPath.add(neighbour);
+                newPath = dfsVertical(neighbour, finish, start, newPath);
+                if (newPath.getLast() == finish) {
+                    path = newPath;
+                    break;
+                }
+            }
+        }
 
         return path;
     }
 
-    void step(int maxi, int maxj) {
+    private LinkedList<Integer> dfsVertical(int start, int finish, Integer previous, List<Integer> cycle) {
+        LinkedList<Integer> path = new LinkedList<>(cycle);
+        if (start != finish || previous < 0) {
+            int n = table[0].length;
+            int m = table.length;
+
+            int st_i = start / n;
+            int st_j = start % n;
+
+            List<Integer> neighbours = new LinkedList<>();
+
+            for (int i = 0; i < m; ++i) {
+                if (i != st_i && table[i][st_j].quantity != null) {
+                    neighbours.add(i * n + st_j);
+                }
+            }
+
+            neighbours.removeAll(cycle);
+            neighbours.remove(previous);
+
+            for (Integer neighbour : neighbours) {
+                LinkedList<Integer> newPath = new LinkedList<>(cycle);
+                newPath.add(neighbour);
+                newPath = dfsHorizontal(neighbour, finish, start, newPath);
+                if (newPath.getLast() == finish) {
+                    path = newPath;
+                    break;
+                }
+            }
+        }
+
+        return path;
+    }
+
+    private List<Integer> findCycle(int i, int j) {
+        LinkedList<Integer> cycle = new LinkedList<>();
+
+        int start = i * table[0].length + j;
+
+        cycle = dfsHorizontal(start, start, -1, cycle);
+        cycle.removeLast();
+
+        return new ArrayList<>(cycle);
+    }
+
+    void step(int i, int j) {
+        resRow = i;
+        resCol = j;
+
         stateList.add(new TransportationTable(this));
 
-        Integer plusi = -1, plusj = -1;
-        if (!leftBottom(plusi, plusj, maxi, maxj))
-            rightTop(maxi, maxj, plusi, plusj);
-        Fraction min = Fraction.min(table[maxi][plusj].quantity, table[plusi][maxj].quantity);
+        table[i][j].quantity = Fraction.ZERO;
 
-        table[maxi][maxj].quantity = min;
-        table[plusi][maxj].quantity = table[plusi][maxj].quantity.subtract(min);
-        table[maxi][plusj].quantity = table[maxi][plusj].quantity.subtract(min);
-        table[plusi][plusj].quantity = table[plusi][plusj].quantity.add(min);
+        List<Integer> cycle = findCycle(i, j);
+
+        Fraction min = Fraction.INFINITY;
+        int mini = -1, minj = -1;
+        for (int k = 0; k < cycle.size(); k += 2) {
+            int element = cycle.get(k);
+            int el_i = element / table[0].length;
+            int el_j = element % table[0].length;
+            min = Fraction.min(min, table[el_i][el_j].quantity);
+            if (min.equals(table[el_i][el_j].quantity)) {
+                mini = el_i;
+                minj = el_j;
+            }
+        }
+        for (int k = 0; k < cycle.size(); k += 2) { // -
+            int element = cycle.get(k);
+            int el_i = element / table[0].length;
+            int el_j = element % table[0].length;
+            table[el_i][el_j].quantity = table[el_i][el_j].quantity.subtract(min);
+        }
+        for (int k = 1; k < cycle.size(); k += 2) { // +
+            int element = cycle.get(k);
+            int el_i = element / table[0].length;
+            int el_j = element % table[0].length;
+            table[el_i][el_j].quantity = table[el_i][el_j].quantity.add(min);
+        }
+
+        table[i][j].quantity = min;
+        table[mini][minj].quantity = null;
     }
 
     public List<TransportationTable> getStateList() {
@@ -114,7 +224,8 @@ class TransportationTable implements Memento<TransportationTable> {
         for (int i = 0; i < rows(); i++) {
             string = string.concat(String.format("%14s ", stock[i]));
             for (int j = 0; j < cols(); j++) {
-                string = string.concat(String.format("%10s ", table[i][j]));
+                String sign = (i == resRow && j == resCol) ? "*" : "";
+                string = string.concat(String.format("%10s ", sign + table[i][j] + sign));
             }
             string = string.concat("\n");
         }
@@ -122,5 +233,25 @@ class TransportationTable implements Memento<TransportationTable> {
         return string;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TransportationTable that = (TransportationTable) o;
+        return resRow == that.resRow &&
+                resCol == that.resCol &&
+                Arrays.equals(table, that.table) &&
+                Arrays.equals(stock, that.stock) &&
+                Arrays.equals(required, that.required);
+    }
 
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(resRow, resCol);
+        result = 31 * result + Arrays.hashCode(table);
+        result = 31 * result + Arrays.hashCode(stock);
+        result = 31 * result + Arrays.hashCode(required);
+        return result;
+    }
 }
