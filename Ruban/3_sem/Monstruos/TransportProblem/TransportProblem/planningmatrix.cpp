@@ -227,7 +227,7 @@ void PlanningMatrix::setPotential()
     }
 
     cout << "Defined potential" << endl;
-    cout << *this;
+    cout << *this << endl;
 
 }
 
@@ -262,6 +262,72 @@ bool PlanningMatrix::potIsDefined()
     }
     return true;
 }
+
+void PlanningMatrix::DFSCircle(int x, int y)
+{
+
+//    DFSSearch(stx, sty);
+
+
+    vertex.clear();
+}
+
+void PlanningMatrix::DFSInit(int x, int y)
+{
+    cout << "DFSInit" << endl;
+    vertex.resize(xsize * ysize, 0);
+    stx = x;
+    sty = y;
+    refer.resize(xsize * ysize);
+    for(int i = 0; i < xsize; ++i) {
+        for(int j = 0; j < ysize; ++j) {
+            for(int k = 0; k < xsize; ++k) { // search refer in col
+                if(matrix[k][j].isWorking() && k != i)
+                    refer[i*ysize + j].push_back(k*ysize + j);
+            }
+            for(int k = 0; k < ysize; ++k) { // search refer in row
+                if(matrix[i][k].isWorking() && k != j)
+                    refer[i*ysize + j].push_back(i*ysize + k);
+            }
+        }
+    }
+    cout << "References: " << endl;
+    for(int i = 0; i < refer.size(); ++i) {
+        for(int j = 0; j < refer[i].size(); ++j) {
+            cout << refer[i][j]<< " ";
+        }
+        cout << endl;
+    }
+}
+
+
+bool PlanningMatrix::DFSSearch(int v)
+{
+    vertex[v] = 1;
+    for(int i = 0; i < refer[v].size(); ++i) {
+        int to = refer[v][i];
+        if(vertex[to] == 0) {
+            path[to] = v;
+            if(DFSSearch(to)) return true;
+        } else if (vertex[to] == 1) {
+            if(to == path[v])
+                continue;
+            else {
+                if(to == (stx * ysize + sty)) {
+                    endx = to / ysize;
+                    endy = to % ysize;
+                } else {
+                    cout << "Something wrong! {" << to/ysize << "," << to%ysize << "]" << endl;
+                }
+                return true;
+            }
+
+        }
+    }
+    vertex[v] = 2;
+    return false;
+}
+
 
 bool PlanningMatrix::findRight(int origx, int origy, int &resx, int &resy)
 {
@@ -392,7 +458,11 @@ void PlanningMatrix::potentialMethod()
 {
     int x, y;
     setPotential();
+    DFSInit(0, 0);
     while(findMinNegRating(x, y)) {
-
+        stx = x;
+        sty = y;
+        DFSSearch(x * ysize + y);
     }
+//    DFSEnd();
 }

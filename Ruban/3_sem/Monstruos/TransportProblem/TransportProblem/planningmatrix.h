@@ -47,6 +47,9 @@ private:
     bool potIsDefined();
 
     void DFSCircle(int x, int y);
+    void DFSInit(int x, int y);
+    void DFSEnd();
+    bool DFSSearch(int v);
 
     bool findRight(int origx, int origy, int &resx, int &resy);
     bool findUp(int origx, int origy, int &resx, int &resy);
@@ -60,7 +63,16 @@ private:
     vector<Container> consumption;
     vector <Potential> potU;
     vector <Potential> potV;
+
+    vector <int> vertex;
+//    0 is white
+//    1 is grey
+//    2 is black
+    vector< vector <int>> refer;
+    vector<int> path;
+
     int xsize, ysize;
+    int stx, sty, endx, endy;
 };
 
 #endif // PLANNINGMATRIX_H
