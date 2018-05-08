@@ -21,21 +21,6 @@ class TransportationTable implements Memento<TransportationTable> {
             String var = quantity != null ? quantity.toString() : "-";
             return String.format("(%s|%s)", var, cost);
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Variable variable = (Variable) o;
-            return Objects.equals(quantity, variable.quantity) &&
-                    Objects.equals(cost, variable.cost);
-        }
-
-        @Override
-        public int hashCode() {
-
-            return Objects.hash(quantity, cost);
-        }
     }
 
     private Variable[][] table;
@@ -231,27 +216,5 @@ class TransportationTable implements Memento<TransportationTable> {
         }
 
         return string;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TransportationTable that = (TransportationTable) o;
-        return resRow == that.resRow &&
-                resCol == that.resCol &&
-                Arrays.equals(table, that.table) &&
-                Arrays.equals(stock, that.stock) &&
-                Arrays.equals(required, that.required);
-    }
-
-    @Override
-    public int hashCode() {
-
-        int result = Objects.hash(resRow, resCol);
-        result = 31 * result + Arrays.hashCode(table);
-        result = 31 * result + Arrays.hashCode(stock);
-        result = 31 * result + Arrays.hashCode(required);
-        return result;
     }
 }

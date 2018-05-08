@@ -133,16 +133,16 @@ public class TransportationProblem implements LinearProgrammingProblem {
     public void solve() {
         boolean solved = false, isPotentialsSet;
 
-        Fraction[] stockPotentials = new Fraction[stock.size()]; // u
-        Fraction[] reqPotentials = new Fraction[required.size()]; // v
-
-        stockPotentials[0] = Fraction.ZERO;
-        do {
-            isPotentialsSet = setRequiredPotentials(stockPotentials, reqPotentials);
-            isPotentialsSet = setStockPotentials(stockPotentials, reqPotentials) && isPotentialsSet;
-        } while (!isPotentialsSet);
-
         while (!solved) {
+            Fraction[] stockPotentials = new Fraction[stock.size()]; // u
+            Fraction[] reqPotentials = new Fraction[required.size()]; // v
+
+            stockPotentials[0] = Fraction.ZERO;
+            do {
+                isPotentialsSet = setRequiredPotentials(stockPotentials, reqPotentials);
+                isPotentialsSet = setStockPotentials(stockPotentials, reqPotentials) && isPotentialsSet;
+            } while (!isPotentialsSet);
+
             Fraction max = Fraction.ZERO;
             int maxi = -1, maxj = -1;
             for (int i = 0; i < stock.size(); ++i) {
@@ -163,7 +163,7 @@ public class TransportationProblem implements LinearProgrammingProblem {
             }
             if (!max.equals(Fraction.ZERO)) {
                 table.step(maxi, maxj);
-                System.out.println(table);
+                //System.out.println(table);
             } else {
                 solved = true;
             }
