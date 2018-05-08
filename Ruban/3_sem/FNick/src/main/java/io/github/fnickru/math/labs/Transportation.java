@@ -13,7 +13,7 @@ public class Transportation {
             problems[i] = FileWorker.readTP(String.format("./src/main/resources/transportation/problem%d.txt", i + 1));
         /*
         p1 = 790
-        p2 = ?
+        p2 = 330
         p3 = 4150
         p4 = 693
          */
