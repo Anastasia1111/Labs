@@ -10,9 +10,9 @@ int Potential::getValue() const
     return value;
 }
 
-void Potential::setValue(int value)
+void Potential::setValue(int v)
 {
-    value = value;
+    value = v;
     set = true;
 }
 

@@ -202,12 +202,17 @@ void PlanningMatrix::checkMinsInCol(int col, vector<int> &checkCol)
 
 void PlanningMatrix::setPotential()
 {
+    for(int i = 0; i < xsize; ++i)
+        potU[i].setSet(false);
+    for(int i = 0; i < ysize; ++i)
+        potV[i].setSet(false);
+
     potU[0].setValue(0);
 
     while(!potIsDefined()) {
         for(int i = 0; i < xsize; ++i) { // find C[i]
             if(potU[i].defined()) {
-                cout << "Found u[" << i << "]" << endl;
+//                cout << "Found u[" << i << "]" << endl;
                 for(int j = 0; j < ysize; ++j) { // calc all what we can
                     if(matrix[i][j].isWorking() && !potV[j].defined())
                         potV[j].setValue(matrix[i][j].getC() - potU[i].getValue()); // C[i][j] - U[i] = V[j]
@@ -217,7 +222,7 @@ void PlanningMatrix::setPotential()
 
         for(int j = 0; j < ysize; ++j) {
             if(potV[j].defined()) { // find V[j]
-                cout << "Found v[" << j << "]" << endl;
+//                cout << "Found v[" << j << "]" << endl;
                 for(int i = 0; i < xsize; ++i) { // calc all what we can
                     if(matrix[i][j].isWorking() && !potU[i].defined())
                         potU[i].setValue(matrix[i][j].getC() - potV[j].getValue()); // C[i][j] - V[j] = U[i]
@@ -225,15 +230,11 @@ void PlanningMatrix::setPotential()
             }
         }
     }
-
-    cout << "Defined potential" << endl;
-    cout << *this << endl;
-
 }
 
 bool PlanningMatrix::findMinNegRating(int &x, int &y)
 {
-    int min = 100000000;
+    int min = 999999;
     int buf;
     for(int i = 0; i < xsize; ++i) {
         for(int j = 0; j < ysize; ++j) {
@@ -247,7 +248,7 @@ bool PlanningMatrix::findMinNegRating(int &x, int &y)
             }
         }
     }
-    return buf < 0 ? true : false;
+    return min < 0 ? true : false;
 }
 
 bool PlanningMatrix::potIsDefined()
@@ -263,118 +264,198 @@ bool PlanningMatrix::potIsDefined()
     return true;
 }
 
-void PlanningMatrix::DFSCircle(int x, int y)
+list<pair<int, int> > PlanningMatrix::DFSH(pair<int, int> start, pair<int, int> finish,
+                                            pair<int, int> previous, list<pair<int, int> > cycle)
 {
+    list <pair<int, int> > path = cycle;
+//    cout << "start: (" << start.first<< "," << start.second << ") ";
+//    cout << "finish: (" << finish.first << "," << finish.second << ") " << endl;
+//    cout << "previous: (" << previous.first << "," << previous.second << ") ";
+//    cout << endl;
+    if(!(start.first == finish.first && start.second == finish.second) || previous.first < 0 || previous.second < 0) {
+        list <pair<int, int> > neighbours;
 
-//    DFSSearch(stx, sty);
+        for (int j = 0; j < ysize; ++j) {
 
-
-    vertex.clear();
-}
-
-void PlanningMatrix::DFSInit(int x, int y)
-{
-    cout << "DFSInit" << endl;
-    vertex.resize(xsize * ysize, 0);
-    stx = x;
-    sty = y;
-    refer.resize(xsize * ysize);
-    for(int i = 0; i < xsize; ++i) {
-        for(int j = 0; j < ysize; ++j) {
-            for(int k = 0; k < xsize; ++k) { // search refer in col
-                if(matrix[k][j].isWorking() && k != i)
-                    refer[i*ysize + j].push_back(k*ysize + j);
-            }
-            for(int k = 0; k < ysize; ++k) { // search refer in row
-                if(matrix[i][k].isWorking() && k != j)
-                    refer[i*ysize + j].push_back(i*ysize + k);
-            }
-        }
-    }
-    cout << "References: " << endl;
-    for(int i = 0; i < refer.size(); ++i) {
-        for(int j = 0; j < refer[i].size(); ++j) {
-            cout << refer[i][j]<< " ";
-        }
-        cout << endl;
-    }
-}
-
-
-bool PlanningMatrix::DFSSearch(int v)
-{
-    vertex[v] = 1;
-    for(int i = 0; i < refer[v].size(); ++i) {
-        int to = refer[v][i];
-        if(vertex[to] == 0) {
-            path[to] = v;
-            if(DFSSearch(to)) return true;
-        } else if (vertex[to] == 1) {
-            if(to == path[v])
-                continue;
-            else {
-                if(to == (stx * ysize + sty)) {
-                    endx = to / ysize;
-                    endy = to % ysize;
-                } else {
-                    cout << "Something wrong! {" << to/ysize << "," << to%ysize << "]" << endl;
+            bool inCycle = false;
+            if (j != start.second && matrix[start.first][j].isWorking()) {
+                for(list<pair<int, int>>::iterator it = cycle.begin(); it != cycle.end(); ++it) {
+                    if(it->first == start.first && it->second == j) {
+                        inCycle = true;
+                        break;
+                    }
                 }
-                return true;
+                if(!inCycle)
+                    neighbours.push_back(make_pair(start.first, j));
             }
+        }
 
+        neighbours.remove(previous);
+
+//        cout << "neighbours: ";
+//        for(list<pair<int, int>>::iterator i = neighbours.begin(); i != neighbours.end(); ++i) {
+//            cout << "(" << i->first << "," << i->second << ") ";
+//        }
+//        cout << endl;
+
+        for(list<pair<int, int>>::iterator it = neighbours.begin(); it != neighbours.end(); ++it) {
+            list<pair<int, int>> newPath = cycle;
+            pair<int, int> neighbour = make_pair(it->first, it->second);
+            newPath.push_back(neighbour);
+
+//            cout << "DFSH:" << endl;
+//            cout << "neighbour: (" << neighbour.first << "," << neighbour.second << ")" << endl;
+//            cout << "finish: (" << finish.first << "," << finish.second << ")" << endl;
+//            cout << "start: (" << start.first << "," << start.second << ")" << endl;
+//            cout << "DFSH newPath (before):";
+//            for(list<pair<int, int>>::iterator i = newPath.begin(); i != newPath.end(); ++i) {
+//                cout << "(" << i->first << "," << i->second << ") ";
+//            }
+//            cout << endl;
+
+            newPath = DFSV(neighbour, finish, start, newPath);
+
+//            cout << "DFSH newPath (after):";
+//            for(list<pair<int, int>>::iterator i = newPath.begin(); i != newPath.end(); ++i) {
+//                cout << "(" << i->first << "," << i->second << ") ";
+//            }
+//            cout << endl;
+
+            if(newPath.back().first == finish.first && newPath.back().second == finish.second) {
+                path = newPath;
+                break;
+            }
         }
     }
-    vertex[v] = 2;
-    return false;
+
+    return path;
 }
 
-
-bool PlanningMatrix::findRight(int origx, int origy, int &resx, int &resy)
+list<pair<int, int> > PlanningMatrix::DFSV(pair<int, int> start,
+                                           pair<int, int> finish,
+                                           pair<int, int> previous,
+                                           list<pair<int, int> > cycle)
 {
-    for(int i = origy + 1; i < ysize; ++i) {
-        if(matrix[origx][i].isWorking()) {
-            resx = origx;
-            resy = i;
-            return true;
+    list <pair<int, int> > path = cycle;
+//    cout << "DFSV: ";
+//    cout << "start: (" << start.first<< "," << start.second << ") ";
+//    cout << "finish: (" << finish.first << "," << finish.second << ") " << endl;
+//    cout << "previous: (" << previous.first << "," << previous.second << ") ";
+//    cout << endl;
+    if(!(start.first == finish.first && start.second == finish.second) || previous.first < 0 || previous.second < 0) {
+        list <pair<int, int> > neighbours;
+
+        for (int i = 0; i < xsize; ++i) {
+            if (i != start.first && matrix[i][start.second].isWorking()) {
+                bool inCycle = false;
+                for(list<pair<int, int>>::iterator it = cycle.begin(); it != cycle.end(); ++it) {
+                    if(it->second == start.second && it->first == i) {
+                        inCycle = true;
+                        break;
+                    }
+                }
+                if(!inCycle)
+                    neighbours.push_back(make_pair(i, start.second));
+            }
+        }
+
+        neighbours.remove(previous);
+
+//        cout << "neighbours: ";
+//        for(list<pair<int, int>>::iterator i = neighbours.begin(); i != neighbours.end(); ++i) {
+//            cout << "(" << i->first << "," << i->second << ") ";
+//        }
+//        cout << endl;
+
+        for(list<pair<int, int>>::iterator it = neighbours.begin(); it != neighbours.end(); ++it) {
+            list<pair<int, int>> newPath = cycle;
+            pair<int, int> neighbour = make_pair(it->first, it->second);
+            newPath.push_back(neighbour);
+
+//            cout << "DFSV:" << endl;
+//            cout << "neighbour: (" << neighbour.first << "," << neighbour.second << ")" << endl;
+//            cout << "finish: (" << finish.first << "," << finish.second << ")" << endl;
+//            cout << "start: (" << start.first << "," << start.second << ")" << endl;
+//            cout << "DFSV newPath (before):";
+//            for(list<pair<int, int>>::iterator i = newPath.begin(); i != newPath.end(); ++i) {
+//                cout << "(" << i->first << "," << i->second << ") ";
+//            }/*
+//            cout << endl;*/
+
+            newPath = DFSH(neighbour, finish, start, newPath);
+
+//            cout << "DFSV newPath (after):";
+//            for(list<pair<int, int>>::iterator i = newPath.begin(); i != newPath.end(); ++i) {
+//                cout << "(" << i->first << "," << i->second << ") ";
+//            }
+//            cout << endl;
+
+            if(newPath.back().first == finish.first && newPath.back().second == finish.second) {
+                path = newPath;
+                break;
+            }
         }
     }
-    return false;
+
+    return path;
 }
 
-bool PlanningMatrix::findUp(int origx, int origy, int &resx, int &resy)
+list<pair<int, int> > PlanningMatrix::findCycle(int x, int y)
 {
-    for(int i = origx - 1; i >= 0; --i) {
-        if(matrix[i][origy].isWorking()) {
-            resx = i;
-            resy = origy;
-            return true;
-        }
-    }
-    return false;
+    matrix[x][y].setV(0);
+    mainCycle.clear();
+    pair<int, int> start = make_pair(x, y);
+    cout << "Start/finish: (" << x << "," << y << ")" << endl;
+    cout << "Finding..." << endl;
+    mainCycle = DFSH(start, start, make_pair(-1, -1), mainCycle);
+    mainCycle.pop_back();
+
+    return mainCycle;
 }
 
-bool PlanningMatrix::findLeft(int origx, int origy, int &resx, int &resy)
+void PlanningMatrix::remakeCycle(int stx, int sty)
 {
-    for(int i = origy - 1; i >= 0; --i) {
-        if(matrix[origx][i].isWorking()) {
-            resx = origx;
-            resy = i;
-            return true;
-        }
-    }
-    return false;
-}
+    pair<int, int> min = make_pair(-1, -1);
+    int minV = 9999999;
+    bool parity = false; // 0 is start element (enpty field), so substract from 1, 3, 5 & addition for 2, 4, 6...
+    for(list<pair<int, int>>::iterator k = mainCycle.begin(); k != mainCycle.end(); k++) {
+        if(!parity) {
+            int x = k->first;
+            int y = k->second;
 
-bool PlanningMatrix::findDown(int origx, int origy, int &resx, int &resy)
-{
-    for(int i = origx + 1; i < xsize; ++i) {
-        if(matrix[i][origy].isWorking()) {
-            resx = i;
-            resy = origy;
-            return true;
+            if(minV > matrix[x][y].getV()) {
+                min = make_pair(x, y);
+                minV = matrix[x][y].getV();
+            }
         }
+        parity = !parity;
     }
-    return false;
+
+    parity = false;
+    for(list<pair<int, int>>::iterator k = mainCycle.begin(); k != mainCycle.end(); k++) {
+        if(!parity) {
+            int x = k->first;
+            int y = k->second;
+            int sub = matrix[x][y].getV() - minV;
+
+            (sub > 0) ? matrix[x][y].setV(sub) : matrix[x][y].setWork(false);
+        }
+        parity = !parity;
+    }
+
+    parity = false;
+    for(list<pair<int, int>>::iterator k = mainCycle.begin(); k != mainCycle.end(); k++) {
+        if(parity) {
+            int x = k->first;
+            int y = k->second;
+            int add = matrix[x][y].getV() + minV;
+
+            matrix[x][y].setV(add);
+        }
+        parity = !parity;
+    }
+
+    matrix[stx][sty].setV(minV);
 }
 
 
@@ -394,8 +475,9 @@ void PlanningMatrix::northWestAngle()
 
         while(!consumption[iterc].isFull()) {
             transfering(iters, iterc);
-            if(storage[iters].isEmpty())
+            if(storage[iters].isEmpty()) {
                 iters++;
+            }
 
             cout << *this << endl << endl;
         }
@@ -432,37 +514,21 @@ void PlanningMatrix::minCostMethod()
     cout << endl << "Z = " << planCost() << endl;
 }
 
-void PlanningMatrix::doublePrefMethod()
-{
-//    setConsEmpty();
-//    setStorFull();
-//    clearMatrix();
-
-//    vector<vector<int>> checkCol;
-//    vector<vector<int>> checkRow;
-
-//    checkCol.resize(xsize);
-//    checkRow.resize(ysize);
-
-//    for(int i = 0; i < xsize; ++i)
-//        checkMinsInRow(i, checkRow[i]);
-//    for(int j = 0; j < ysize; ++j)
-//        checkMinsInCol(j, checkCol[j]);
-
-//    while(!checkLimit()) {
-
-    //    }
-}
-
 void PlanningMatrix::potentialMethod()
 {
     int x, y;
     setPotential();
-    DFSInit(0, 0);
     while(findMinNegRating(x, y)) {
-        stx = x;
-        sty = y;
-        DFSSearch(x * ysize + y);
+        cout << *this << endl << endl;
+        cout << "Setting potential..." << endl;
+        setPotential();
+        mainCycle = findCycle(x, y);
+        cout << "Cycle:" << endl << "(" << x << "," << y << ")" << endl;
+        for(list<pair<int, int>>::iterator k = mainCycle.begin(); k != mainCycle.end(); k++) {
+            cout << "(" << k->first << "," << k->second << ")" << endl;
+        }
+        cout << "(" << x << "," << y << ")" << endl;
+        remakeCycle(x, y);
     }
-//    DFSEnd();
+    cout << "RESULT:" << endl << *this << endl << endl;
 }

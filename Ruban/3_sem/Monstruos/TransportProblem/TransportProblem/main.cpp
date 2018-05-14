@@ -37,12 +37,12 @@ int main()
     }
 
     PlanningMatrix plan(inpM, inpStore, inpCons);
-    cout << "NWAngle method:" << endl;
-    plan.northWestAngle();
+//    cout << "NWAngle method:" << endl;
+//    plan.northWestAngle();
     cout << endl << endl
          << "MinCost method:" << endl;
     plan.minCostMethod();
-
+    cout << plan << endl << endl;
     plan.potentialMethod();
     cout << endl;
     return 0;

@@ -9,7 +9,7 @@ class Potential
 public:
     Potential();
     int getValue() const;
-    void setValue(int value);
+    void setValue(int v);
 
     bool defined() const;
     void setSet(bool value);
