@@ -1,0 +1,55 @@
+May 18 20:29:44.529 HYPERVISOR: Release 0.2.18-amd64/Linux (tag 2018033112)
+May 18 20:29:44.529 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 39703.
+May 18 20:29:44.540 HYPERVISOR: exec_cmd: hypervisor version 
+May 18 20:29:44.540 HYPERVISOR: exec_cmd: hypervisor working_dir /home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips 
+May 18 20:29:44.541 GENERAL: working_dir=/home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips
+May 18 20:29:44.541 HYPERVISOR: exec_cmd: hypervisor working_dir /home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips/d7ab0911-6f09-497a-aa7b-42faebadecce 
+May 18 20:29:44.541 GENERAL: working_dir=/home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips/d7ab0911-6f09-497a-aa7b-42faebadecce
+May 18 20:29:44.542 HYPERVISOR: exec_cmd: vm create R2 3 c3725 
+May 18 20:29:44.542 VM: VM R2 created.
+May 18 20:29:44.543 HYPERVISOR: exec_cmd: vm set_con_tcp_port R2 5015 
+May 18 20:29:44.543 HYPERVISOR: exec_cmd: c3725 get_mac_addr R2 
+May 18 20:29:44.544 HYPERVISOR: exec_cmd: vm get_status R2 
+May 18 20:29:44.544 HYPERVISOR: exec_cmd: vm set_idle_pc R2 0x60bf8ba0 
+May 18 20:29:44.545 HYPERVISOR: exec_cmd: vm set_nvram R2 256 
+May 18 20:29:44.546 HYPERVISOR: exec_cmd: vm get_status R2 
+May 18 20:29:44.546 HYPERVISOR: exec_cmd: vm slot_add_binding R2 1 0 NM-1FE-TX 
+May 18 20:29:44.547 HYPERVISOR: exec_cmd: c3725 set_mac_addr R2 c203.12a8.0000 
+May 18 20:29:44.548 HYPERVISOR: exec_cmd: vm set_ios R2 /home/fnick/GNS3/images/IOS/c3725-adventerprisek9-mz124-15.image 
+May 18 20:29:44.549 HYPERVISOR: exec_cmd: vm set_disk0 R2 0 
+May 18 20:29:46.237 HYPERVISOR: exec_cmd: nio create_udp udp-405f74c9-ab0a-4970-899f-edfce113e915 10010 127.0.0.1 10011 
+May 18 20:29:46.273 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R2 0 0 udp-405f74c9-ab0a-4970-899f-edfce113e915 
+May 18 20:29:46.274 HYPERVISOR: exec_cmd: vm get_status R2 
+May 18 20:29:46.839 HYPERVISOR: exec_cmd: nio create_udp udp-44691146-789e-49be-b5f5-89b32f8b4bd2 10030 127.0.0.1 10031 
+May 18 20:29:46.842 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R2 1 0 udp-44691146-789e-49be-b5f5-89b32f8b4bd2 
+May 18 20:29:46.843 HYPERVISOR: exec_cmd: vm get_status R2 
+May 18 20:29:46.960 HYPERVISOR: exec_cmd: nio create_udp udp-4656e331-e503-4c32-8427-c0940d0003e3 10036 127.0.0.1 10037 
+May 18 20:29:46.963 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R2 0 1 udp-4656e331-e503-4c32-8427-c0940d0003e3 
+May 18 20:29:46.964 HYPERVISOR: exec_cmd: vm get_status R2 
+May 18 20:30:05.908 HYPERVISOR: exec_cmd: vm set_ghost_status R2 2 
+May 18 20:30:05.909 HYPERVISOR: exec_cmd: vm set_ghost_file R2 /home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips/c3725-adventerprisek9-mz124-15.image-128.ghost 
+May 18 20:30:05.910 HYPERVISOR: exec_cmd: vm get_status R2 
+May 18 20:30:05.911 HYPERVISOR: exec_cmd: vm set_config R2 configs/i3_startup-config.cfg 
+May 18 20:30:05.911 HYPERVISOR: exec_cmd: vm start R2 
+May 18 20:30:36.125 HYPERVISOR: exec_cmd: vm extract_config R2 
+May 18 20:30:36.127 HYPERVISOR: exec_cmd: vm extract_config R2 
+May 18 20:30:54.339 HYPERVISOR: exec_cmd: nio bind_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 capture 
+May 18 20:30:54.340 HYPERVISOR: exec_cmd: nio setup_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 en10mb /home/fnick/Repositories/Labs/Network/Course/FNick/tmp/captures/R2_FastEthernet10_to_R5_FastEthernet00.pcap 
+May 18 20:33:06.011 HYPERVISOR: exec_cmd: nio unbind_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 
+May 18 20:33:09.202 HYPERVISOR: exec_cmd: nio bind_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 capture 
+May 18 20:33:09.203 HYPERVISOR: exec_cmd: nio setup_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 en10mb /home/fnick/Repositories/Labs/Network/Course/FNick/tmp/captures/R2_FastEthernet10_to_R5_FastEthernet00.pcap 
+May 18 20:36:53.651 HYPERVISOR: exec_cmd: nio unbind_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 
+May 18 20:36:56.057 HYPERVISOR: exec_cmd: nio bind_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 capture 
+May 18 20:36:56.057 HYPERVISOR: exec_cmd: nio setup_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 en10mb /home/fnick/Repositories/Labs/Network/Course/FNick/tmp/captures/R2_FastEthernet10_to_R5_FastEthernet00.pcap 
+May 18 20:45:39.777 HYPERVISOR: exec_cmd: vm get_status R2 
+May 18 20:45:39.778 HYPERVISOR: exec_cmd: vm stop R2 
+May 18 20:45:40.012 VM: VM R2 shutdown.
+May 18 20:45:40.013 HYPERVISOR: exec_cmd: vm extract_config R2 
+May 18 20:45:40.027 HYPERVISOR: exec_cmd: nio unbind_filter udp-44691146-789e-49be-b5f5-89b32f8b4bd2 2 
+May 18 20:45:42.149 HYPERVISOR: exec_cmd: vm get_status R2 
+May 18 20:45:42.150 HYPERVISOR: exec_cmd: vm extract_config R2 
+May 18 20:45:42.151 HYPERVISOR: exec_cmd: vm delete R2 
+May 18 20:45:42.151 VM: VM R2 destroyed.
+May 18 20:45:42.152 HYPERVISOR: exec_cmd: hypervisor stop 
+May 18 20:45:42.421 HYPERVISOR: Stopped.
+May 18 20:45:42.422 GENERAL: reset done.
