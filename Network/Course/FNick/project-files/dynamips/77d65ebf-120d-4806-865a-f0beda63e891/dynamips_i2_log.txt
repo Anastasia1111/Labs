@@ -1,0 +1,25 @@
+May 15 12:53:32.048 HYPERVISOR: Release 0.2.17-amd64/Linux (tag 2017072410)
+May 15 12:53:32.049 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 37351.
+May 15 12:53:32.058 HYPERVISOR: exec_cmd: hypervisor version 
+May 15 12:53:32.059 HYPERVISOR: exec_cmd: hypervisor working_dir /home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips 
+May 15 12:53:32.059 GENERAL: working_dir=/home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips
+May 15 12:53:32.059 HYPERVISOR: exec_cmd: hypervisor working_dir /home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips/0ddd0079-e1ad-4f7b-9b37-1ce919ba7c47 
+May 15 12:53:32.059 GENERAL: working_dir=/home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips/0ddd0079-e1ad-4f7b-9b37-1ce919ba7c47
+May 15 12:53:32.060 HYPERVISOR: exec_cmd: vm create R3 5 c3725 
+May 15 12:53:32.060 VM: VM R3 created.
+May 15 12:53:32.061 HYPERVISOR: exec_cmd: vm set_con_tcp_port R3 5013 
+May 15 12:53:32.061 HYPERVISOR: exec_cmd: c3725 get_mac_addr R3 
+May 15 12:53:32.063 HYPERVISOR: exec_cmd: vm set_ios R3 /home/fnick/GNS3/images/IOS/c3725-adventerprisek9-mz124-15.image 
+May 15 12:53:32.064 HYPERVISOR: exec_cmd: vm get_status R3 
+May 15 12:53:32.064 HYPERVISOR: exec_cmd: vm set_idle_pc R3 0x60bf8ba0 
+May 15 12:53:32.065 HYPERVISOR: exec_cmd: vm set_disk0 R3 0 
+May 15 12:53:32.065 HYPERVISOR: exec_cmd: c3725 set_mac_addr R3 c205.12a0.0000 
+May 15 12:53:32.066 HYPERVISOR: exec_cmd: vm set_nvram R3 256 
+May 15 12:53:35.391 HYPERVISOR: exec_cmd: nio create_udp udp-d710d9d2-a75b-4be8-8143-3f7d48a523dc 10002 127.0.0.1 10003 
+May 15 12:53:35.601 HYPERVISOR: exec_cmd: vm get_status R3 
+May 15 12:53:35.605 HYPERVISOR: exec_cmd: vm extract_config R3 
+May 15 12:53:35.608 HYPERVISOR: exec_cmd: vm delete R3 
+May 15 12:53:35.608 VM: VM R3 destroyed.
+May 15 12:53:35.611 HYPERVISOR: exec_cmd: hypervisor stop 
+May 15 12:53:36.060 HYPERVISOR: Stopped.
+May 15 12:53:36.061 GENERAL: reset done.

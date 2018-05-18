@@ -1,0 +1,26 @@
+May 15 12:53:34.700 HYPERVISOR: Release 0.2.17-amd64/Linux (tag 2017072410)
+May 15 12:53:34.701 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 47425.
+May 15 12:53:34.712 HYPERVISOR: exec_cmd: hypervisor version 
+May 15 12:53:34.712 HYPERVISOR: exec_cmd: hypervisor working_dir /home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips 
+May 15 12:53:34.712 GENERAL: working_dir=/home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips
+May 15 12:53:34.713 HYPERVISOR: exec_cmd: hypervisor working_dir /home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips/281a70d2-a296-4a10-b2a9-8e9db82d99af 
+May 15 12:53:34.713 GENERAL: working_dir=/home/fnick/Repositories/Labs/Network/Course/FNick/project-files/dynamips/281a70d2-a296-4a10-b2a9-8e9db82d99af
+May 15 12:53:34.713 HYPERVISOR: exec_cmd: vm create R1 1 c3725 
+May 15 12:53:34.714 VM: VM R1 created.
+May 15 12:53:34.714 HYPERVISOR: exec_cmd: vm set_con_tcp_port R1 5002 
+May 15 12:53:34.714 HYPERVISOR: exec_cmd: c3725 get_mac_addr R1 
+May 15 12:53:34.715 HYPERVISOR: exec_cmd: c3725 set_mac_addr R1 c201.1b1c.0000 
+May 15 12:53:34.716 HYPERVISOR: exec_cmd: vm set_ios R1 /home/fnick/GNS3/images/IOS/c3725-adventerprisek9-mz124-15.image 
+May 15 12:53:34.717 HYPERVISOR: exec_cmd: vm get_status R1 
+May 15 12:53:34.717 HYPERVISOR: exec_cmd: vm set_idle_pc R1 0x60bf8ba0 
+May 15 12:53:34.718 HYPERVISOR: exec_cmd: vm set_disk0 R1 0 
+May 15 12:53:34.718 HYPERVISOR: exec_cmd: vm get_status R1 
+May 15 12:53:34.719 HYPERVISOR: exec_cmd: vm slot_add_binding R1 1 0 NM-1FE-TX 
+May 15 12:53:34.719 HYPERVISOR: exec_cmd: vm set_nvram R1 256 
+May 15 12:53:35.592 HYPERVISOR: exec_cmd: vm get_status R1 
+May 15 12:53:35.604 HYPERVISOR: exec_cmd: vm extract_config R1 
+May 15 12:53:35.607 HYPERVISOR: exec_cmd: vm delete R1 
+May 15 12:53:35.607 VM: VM R1 destroyed.
+May 15 12:53:35.610 HYPERVISOR: exec_cmd: hypervisor stop 
+May 15 12:53:35.711 HYPERVISOR: Stopped.
+May 15 12:53:35.711 GENERAL: reset done.
