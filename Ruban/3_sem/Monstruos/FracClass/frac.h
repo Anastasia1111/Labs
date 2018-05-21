@@ -56,7 +56,7 @@ class Frac
         bool operator!= (const double& sec);
 
         //input, output
-        friend std::ostream &operator<<(std::ostream &str, const Frac& outFrac);
+        friend std::ostream &operator<<(std::ostream &str, Frac& outFrac);
         friend std::istream &operator>>(std::istream &str, Frac& inFrac);
 
         Frac invert();

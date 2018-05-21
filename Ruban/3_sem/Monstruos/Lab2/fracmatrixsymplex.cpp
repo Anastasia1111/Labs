@@ -279,7 +279,7 @@ int FracMatrixSymplex::columnIsBasis(int col)
 void FracMatrixSymplex::symplexMethod()
 {
     int lRow, lCol;
-    cout << "START M:" << endl;
+    cout << endl << "START M:" << endl;
     printMatrix();
     cout << endl << endl;
     if(toMin && isFake) {
@@ -292,7 +292,6 @@ void FracMatrixSymplex::symplexMethod()
         if(!setNewSnapshot())
             break;
     }
-    cout << endl << "THAT'S ALL, FOLKS!!!" << endl;
 }
 
 bool FracMatrixSymplex::rebase(int inputColumn, int outputColumn)
@@ -378,13 +377,13 @@ void FracMatrixSymplex::setZeroInArtif()
     }
 }
 
-ostream &operator<<(ostream &str, const FracMatrixSymplex &outMatrix)
+ostream &operator<<(ostream &str, FracMatrixSymplex &outMatrix)
 {
-    for(unsigned int i = 0; i < outMatrix.m2[0].size(); ++i) {
-        str << endl;
-        for(unsigned int j = 0; j < outMatrix.m2.size(); ++j) {
-            str << outMatrix.m2[j][i] << " ";
+    for(unsigned int i = 0; i < outMatrix.xsize; ++i) {
+        for(unsigned int j = 0; j < outMatrix.ysize; ++j) {
+            str << outMatrix.m[i][j] << " ";
         }
+        str << endl;
     }
     return str;
 }
@@ -434,7 +433,7 @@ void FracMatrixSymplex::findOptForBasisPlan(int &optimalRow, int &optimalCol)
 void FracMatrixSymplex::findLeadForBasisPlan(int &leadRow, int &leadCol)
 {
     leadCol = 0;
-//    Frac min = (m[xsize - 1][0] < 0.0) ? m[xsize - 1][0] : 0.0;
+    Frac min = (m[xsize - 1][0] < 0.0) ? m[xsize - 1][0] : 0.0;
     if(toMin && !isFake) {
         for(int i = 0; i < ysize - 1; ++i) {
             if(m[xsize - 1][i] > 0.0) {
@@ -444,7 +443,8 @@ void FracMatrixSymplex::findLeadForBasisPlan(int &leadRow, int &leadCol)
         }
     } else {
         for(int i = 0; i < ysize - 1; ++i) {
-            if(m[xsize - 1][i] < 0.0) {
+            if(m[xsize - 1][i] < min) {
+                min = m[xsize - 1][i];
                 leadCol = i;
             }
         }
@@ -471,9 +471,9 @@ void FracMatrixSymplex::findLeadForBasisPlan(int &leadRow, int &leadCol)
 
 void FracMatrixSymplex::rectangleMethod(int optRow, int optColumn)
 {
-//    cout << "Multiplcation: (" << optRow << ") * ";
-//    m[optRow][optColumn].invert().print();
-//    cout << endl;
+    cout << "Multiplcation: (" << optRow << ") * ";
+    m[optRow][optColumn].invert().print();
+    cout << endl;
     rowMulti(optRow, m[optRow][optColumn].invert());
     for(int i = 0; i < xsize; ++i) {
         if(i != optRow)

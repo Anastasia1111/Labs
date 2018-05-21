@@ -167,7 +167,7 @@ bool Frac::operator!=(const double &sec)
 }
 
 
-std::ostream &operator<<(std::ostream &str, const Frac &outFrac)
+std::ostream &operator<<(std::ostream &str, Frac &outFrac)
 {
     str << "(" << outFrac.numer << "/" << outFrac.denom << ")";
     return str;
