@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <string>
 #include <iostream>
-#include <iomanip>
+#include <string>
+#include <math.h>
 
 using namespace std;
 
@@ -92,85 +92,7 @@ void Omega(string &m3, short int &j, short int &i)
     }
 }
 
-/*void LenSer(string mess)
-{
-	while (i < mess.length())
-    {
-        for(j = 7; j >= 0; --j)
-        {
-            if((mess[i] >> j) % 2 == 1)
-            {
-                cout << "1";
-            } else {
-                cout << "0";
-            }
-        }
-        cout << " ";
-        i++;
-    }
-    cout << endl;
-    string mbuff = "";
-    int count = 0;
-    char buff;
-    i = 0;
-    cout << "\n\nCode string:\n\n" << endl;
-    while (i < mess.length())
-    {
-        for(j = 7; j >= 0; --j)
-        {
-            count++;
-            if(((mess[i] >> j) % 2 == 1))
-            {
-                buff = (char)count;
-                count = 7;
-                while (((buff >> count) % 2) == 0 && count >= 0)
-                {
-                    count--;
-                }
-                for (k = count; k > 0; --k)//print exponenta
-                {
-                    mbuff = mbuff + "0";
-                }
-                mbuff = mbuff + "1";
-                for (k = count - 1; k >= 0; --k)//print mantissa
-                {
-                    if((buff >> k) % 2 == 1)
-                    {
-                        mbuff = mbuff + "1";
-                    } else {
-                        mbuff = mbuff + "0";
-                    }
-                }
-                count = 0;
-            }
-        }
-        ++i;
-    }
-    count++;
-    buff = (char)count;
-    count = 7;
-    while (((buff >> count) % 2) == 0 && count >= 0)
-    {
-        count--;
-    }
-    for (k = count; k > 0; --k)//print exponenta
-    {
-        mbuff = mbuff + '0';
-    }
-    mbuff = mbuff + "1";
-    for (k = count - 1; k >= 0; --k)//print mantissa
-    {
-        if((buff >> k) % 2 == 1)
-        {
-            mbuff = mbuff + "1";
-        } else {
-            mbuff = mbuff + "0";
-        }
-    }
-    cout << mbuff << endl;
-}*/
-
-void FileReCoWrite(const char *filename, void (*f)(string &, short int &, short int &))
+void FileRead(const char *filename,void (*f)(string &, short int &, short int &))
 {
 	int i;
     char buff[] = {0, 0};
@@ -183,37 +105,25 @@ void FileReCoWrite(const char *filename, void (*f)(string &, short int &, short 
     do
     {
         fgets(buff, 2, pF);
-        for(int l = 7; l >= 0; --l)
+        if(buff[0] == '0')
         {
-	        if((buff[0] >> l) % 2 == 0)
-	        {
-				lenc++;
-			} else {
-				j = sizeof(short int) * 8 - 1;
-				while (((lenc >> j) % 2) == 0 && j >= 0)
-			    {
-			        j--;
-			    }
-				f(m,j,lenc);
-				lenc = 0;
-				i = 0;
-				while(i < m.length())
-				{
-					for(int k = 0; k < 8; ++k)
-					{
-						if(i < m.length())
-						{
-							buf[0] += (m[i] - '0');
-						}
-						++i;
-						buf[0] = buf[0] << 1;
-					}
-					fputc(buf[0], pF1);
-					buf[0] = 0;
-				}
-				
-				m.clear();
+			lenc++;
+		} else {
+			j = sizeof(short int) * 8 - 1;
+			while (((lenc >> j) % 2) == 0 && j >= 0)
+		    {
+		        j--;
+		    }
+			f(m,j,lenc);
+			lenc = 0;
+			
+			for(i = 0; i < m.length(); ++i)
+			{
+				buf[0] = m[i];
+				fputc(buf[0], pF1);
 			}
+			
+			m.clear();
 		}
     }while( !(feof(pF)) );
     
@@ -228,140 +138,15 @@ void FileReCoWrite(const char *filename, void (*f)(string &, short int &, short 
     fclose(pF1);
 }
 
-
-int main(void)
+main()
 {
-    printf("\nsizeof( short int) = %i bites\n\n",sizeof(short int) * 8);
-    puts("+-----+-----------------------------------------------------------------------+");
-    puts("| num |                    cod name                                           |");
-    puts("|     +------------------------+------------------------+---------------------+");
-    puts("|     |     F + V              |     Gamma-code         |  Omega-code         |");
-    puts("+-----+------------------------+------------------------+---------------------+");
-    short int i = 0;
-    short int j;
-    int k;
-    string m1, m2, m3;
-    string mbuff = " ";
-    while (i < 10)
-    {
-        cout << "|" << setw(5) << i << "|";
-        m1 = m2 = m3 = "";
-        j = sizeof(short int) * 8 - 1;//exponenta
-
-        FixVar(m1, j, i);
-
-        cout << setw(24) << m1 << "|";
-//**************************Gamma***********************************************
-        Gamma(m2, j, i);
-        if(i) {cout << setw(24) << m2 << "|";}
-        else {cout << "------------------------+";}
-//**************************Omega***********************************************
-        Omega(m3, j, i);
-        if(i){cout << setw(21) << m3 << "|" << endl;}
-        else {cout << "---------------------+ ";}
-        cout << "+-----+------------------------+------------------------+---------------------+" << endl;
-        ++i;
-    }
-
-//******************************************************************************
-//coding length series
-//******************************************************************************
-    i = 0;
-    char mess[] = "     `````   `` ```";
-    cout << "String for length series:" << endl;
-    cout << mess << "endl" << endl;
-    cout << "String for length series:\n\n" << endl;
-    while (i < strlen(mess))
-    {
-        for(j = 7; j >= 0; --j)
-        {
-            if((mess[i] >> j) % 2 == 1)
-            {
-                cout << "1";
-            } else {
-                cout << "0";
-            }
-        }
-        cout << " ";
-        i++;
-    }
-    cout << endl;
-    mbuff = "";
-    int count = 0;
-    char buff;
-    i = 0;
-    cout << "\n\nCode string:\n\n" << endl;
-    while (i < strlen(mess))
-    {
-        for(j = 7; j >= 0; --j)
-        {
-            count++;
-            if(((mess[i] >> j) % 2 == 1))
-            {
-                buff = (char)count;
-                count = 7;
-                while (((buff >> count) % 2) == 0 && count >= 0)
-                {
-                    count--;
-                }
-                for (k = count; k > 0; --k)//print exponenta
-                {
-                    mbuff = mbuff + '0';
-                }
-                mbuff = mbuff + "1";
-                for (k = count - 1; k >= 0; --k)//print mantissa
-                {
-                    if((buff >> k) % 2 == 1)
-                    {
-                        mbuff = mbuff + "1";
-                    } else {
-                        mbuff = mbuff + "0";
-                    }
-                }
-                mbuff += " ";
-                count = 0;
-            }
-        }
-        ++i;
-    }
-    count++;
-    buff = (char)count;
-    count = 7;
-    while (((buff >> count) % 2) == 0 && count >= 0)
-    {
-        count--;
-    }
-    for (k = count; k > 0; --k)//print exponenta
-    {
-        mbuff = mbuff + '0';
-    }
-    mbuff = mbuff + "1";
-    for (k = count - 1; k >= 0; --k)//print mantissa
-    {
-        if((buff >> k) % 2 == 1)
-        {
-            mbuff = mbuff + "1";
-        } else {
-            mbuff = mbuff + "0";
-        }
-    }
-    cout << mbuff << endl;
-    
-    system("pause");
-    
-    void (*f)(string &, short int &, short int &);
-    cout << endl << "F+V:" << endl;
+	void (*f)(string &, short int &, short int &);
 	f = FixVar;
-	FileReCoWrite("FixVar.dat", f);
-	cout << endl << "Omega:" << endl;
+	FileRead("FixVar.dat", f);
 	f = Omega;
-	FileReCoWrite("Omega.dat", f);
-	cout << endl << "Gamma:" << endl;
+	FileRead("Omega.dat", f);
 	f = Gamma;
-	FileReCoWrite("Gamma.dat", f);
+	FileRead("Gamma.dat", f);
 	system("pause");
-	
-    return 0;
+	return 0;
 }
-
-//для вывода есть функция sprintf!!!

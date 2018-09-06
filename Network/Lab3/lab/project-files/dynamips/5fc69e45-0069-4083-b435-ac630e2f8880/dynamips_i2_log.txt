@@ -1,9 +1,0 @@
-Mar 12 11:40:52.968 HYPERVISOR: Release 0.2.14-amd64/Linux (tag 2014092320)
-Mar 12 11:40:52.968 HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 48165.
-Mar 12 11:40:52.980 HYPERVISOR: exec_cmd: hypervisor version 
-Mar 12 11:40:52.981 HYPERVISOR: exec_cmd: hypervisor working_dir /home/monstruos/Github/Labs/Network/Lab3/lab/project-files/dynamips 
-Mar 12 11:40:52.981 GENERAL: working_dir=/home/monstruos/Github/Labs/Network/Lab3/lab/project-files/dynamips
-Mar 12 11:40:52.982 HYPERVISOR: exec_cmd: ethsw create SW3 
-Mar 12 11:40:57.385 HYPERVISOR: exec_cmd: nio create_udp udp-950aa26e-d8b1-480d-8a90-489fa522e5ed 10043 127.0.0.1 10042 
-Mar 12 11:40:57.385 HYPERVISOR: exec_cmd: ethsw add_nio SW3 udp-950aa26e-d8b1-480d-8a90-489fa522e5ed 
-Mar 12 11:40:57.401 HYPERVISOR: exec_cmd: ethsw set_access_port SW3 udp-950aa26e-d8b1-480d-8a90-489fa522e5ed 1 
